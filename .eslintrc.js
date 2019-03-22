@@ -14,10 +14,12 @@ module.exports = {
     'prettier',
     'prettier/vue'
   ],
-  plugins: [
-    'prettier'
-  ],
+  plugins: ['prettier'],
   // add your custom rules here
+  globals: {
+    console: false
+  },
   rules: {
+    'no-console': 'off'
   }
 }
