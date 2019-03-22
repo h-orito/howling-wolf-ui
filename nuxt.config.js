@@ -32,7 +32,8 @@ export default {
   plugins: ['~/plugins/axios'],
 
   axios: {
-    port: 8086
+    host: process.env.WOLF4BUSY_API_HOST || 'localhost',
+    port: process.env.WOLF4BUSY_API_PORT || 8086
   },
 
   /*
