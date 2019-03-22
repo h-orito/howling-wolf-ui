@@ -17,7 +17,7 @@
       </card>
 
       <card title="Lightweight" icon="arrange-bring-to-front"
-        >No other internal dependency {{ info }}</card
+        >No other internal dependency {{ info == 0 ? 'hoge' : 'fuga' }}</card
       >
     </div>
   </section>
@@ -42,7 +42,7 @@ export default {
 
   async created() {
     const self = this
-    await axios.get('http://localhost:8086/wolf4busy/').then(res => {
+    await axios.get('/wolf4busy/').then(res => {
       self.info = res.data.hoge
     })
   }
