@@ -25,7 +25,6 @@
 
 <script>
 import Card from '~/components/Card'
-import axios from 'axios'
 
 export default {
   name: 'HomePage',
@@ -42,8 +41,8 @@ export default {
 
   async created() {
     const self = this
-    await axios.get('/wolf4busy/').then(res => {
-      self.info = res.data.hoge
+    await this.$axios.$get('/wolf4busy/').then(res => {
+      self.info = res.hoge
     })
   }
 }

@@ -24,12 +24,16 @@ export default {
   /*
    ** Global CSS
    */
-  css: [],
+  css: ['assets/wolf4busy.scss'],
 
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [],
+  plugins: ['~/plugins/axios'],
+
+  axios: {
+    port: 8086
+  },
 
   /*
    ** Nuxt.js modules
@@ -40,13 +44,6 @@ export default {
     // Doc: https://buefy.github.io/#/documentation
     'nuxt-buefy'
   ],
-  /*
-   ** Axios module configuration
-   */
-  axios: {
-    // See https://github.com/nuxt-community/axios-module#options
-    baseURL: process.env.baseUrl || 'http://localhost:8086'
-  },
 
   /*
    ** Build configuration
