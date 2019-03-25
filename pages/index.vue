@@ -36,46 +36,17 @@
     <section class="section">
       <div class="container">
         <h1 class="title is-5">村一覧</h1>
-        <p v-if="rooms == null || rooms.length == 0" class="content">
+        <p v-if="villages == null || villages.length == 0" class="content">
           現在部屋がありません。
         </p>
         <br />
-        <table
-          v-if="rooms && rooms.length > 0"
-          class="table is-striped is-fullwidth is-size-7"
-        >
-          <thead>
-            <tr>
-              <th>部屋名</th>
-              <th>作成者</th>
-              <th>人数</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="room in rooms" :key="room['key']">
-              <td>
-                <span
-                  v-if="
-                    room['roomPassword'] != null && room['roomPassword'] !== ''
-                  "
-                  class="fas fa-key"
-                ></span>
-                <span
-                  v-if="
-                    room['roomRating'] === 'R15' || room['roomRating'] === 'R18'
-                  "
-                  class="tag reverse-danger"
-                  >{{ room['roomRating'] }}</span
-                >
-                <nuxt-link :to="{ path: 'room', query: { id: room.key } }">{{
-                  room.name
-                }}</nuxt-link>
-              </td>
-              <td>{{ room['creatorName'] }}</td>
-              <td>{{ room['membersNum'] }}人</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="columns">
+          <village-card
+            v-for="village in villages"
+            :key="village['key']"
+            :village="village"
+          ></village-card>
+        </div>
         <nuxt-link
           v-if="isLogin && user.emailVerified"
           class="button is-primary"
@@ -232,6 +203,7 @@
 </template>
 
 <script>
+import VillageCard from '~/components/VillageCard.vue'
 import Terms from '~/components/Terms.vue'
 import Policy from '~/components/Policy.vue'
 
@@ -245,13 +217,40 @@ export default {
   name: 'HomePage',
 
   components: {
+    VillageCard,
     Terms,
     Policy
   },
 
   data() {
     return {
-      info: 1
+      info: 1,
+      villages: [
+        {
+          id: 1,
+          name: '村名XXXXXXXX',
+          status: '進行中',
+          talkType: 'BBS',
+          progress: '1日目',
+          parcicipateNum: 12,
+          participateCapacity: 16,
+          spectateNum: 5,
+          creator: 'ort',
+          comment: '22時開始です。誰でも来てください。'
+        },
+        {
+          id: 1,
+          name: '村名YYYYYYY',
+          status: '進行中',
+          talkType: 'BBS',
+          progress: '1日目',
+          parcicipateNum: 12,
+          participateCapacity: 16,
+          spectateNum: 5,
+          creator: 'ort',
+          comment: '22時開始です。誰でも来てください。'
+        }
+      ]
     }
   },
 
