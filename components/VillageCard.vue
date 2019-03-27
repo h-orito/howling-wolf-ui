@@ -3,8 +3,8 @@
     <div class="card">
       <header class="card-header">
         <nuxt-link
-          class="card-header-title has-text-grey"
           :to="{ path: 'village', query: { id: village.id } }"
+          class="card-header-title has-text-grey"
           >{{ village.name }}</nuxt-link
         >
       </header>

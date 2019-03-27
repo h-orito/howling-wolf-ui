@@ -1,12 +1,11 @@
 {
   "eslint.autoFixOnSave": true,
-  "editor.formatOnSave": true,
-  "vetur.format.defaultFormatter.js": "vscode-typescript",
-  "javascript.format.insertSpaceBeforeFunctionParenthesis": true,
-  "typescript.format.insertSpaceBeforeFunctionParenthesis": true,
   "eslint.validate": [
     "javascript",
-    "javascriptreact",
+    {
+      "language": "typescript",
+      "autoFix": true
+    },
     {
       "language": "vue",
       "autoFix": true

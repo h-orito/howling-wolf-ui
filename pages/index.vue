@@ -1,5 +1,6 @@
 <template>
   <div>
+    <HelloWorld />
     <section class="section">
       <div class="container">
         <h1 class="title is-5">人狼で寝不足になっていませんか？</h1>
@@ -16,20 +17,20 @@
       <div class="container">
         <div v-if="!isLogin">
           <h1 class="title is-5">はじめる</h1>
-          <nuxt-link class="button is-primary" :to="{ path: 'signup' }"
+          <nuxt-link :to="{ path: 'signup' }" class="button is-primary"
             >新規登録</nuxt-link
           >
-          <nuxt-link class="button is-primary" :to="{ path: 'signin' }"
+          <nuxt-link :to="{ path: 'signin' }" class="button is-primary"
             >ログイン</nuxt-link
           >
         </div>
         <div v-if="isLogin">
           <h1 class="title is-5">ようこそ</h1>
           <p class="content">{{ user.email }} さん</p>
-          <nuxt-link class="button is-primary" :to="{ path: 'user' }"
+          <nuxt-link :to="{ path: 'user' }" class="button is-primary"
             >ユーザ情報編集</nuxt-link
           >
-          <button class="button" @click="logout">ログアウト</button>
+          <button @click="logout" class="button">ログアウト</button>
         </div>
       </div>
     </section>
@@ -45,7 +46,7 @@
             v-for="village in villages"
             :key="village['key']"
             :village="village"
-          ></village-card>
+          />
         </div>
         <nuxt-link
           v-if="isLogin && user.emailVerified"
@@ -63,7 +64,7 @@
         <h1 class="title is-5">よくある質問</h1>
         <div class="columns">
           <div class="column">
-            <nuxt-link class="button is-primary" :to="{ path: 'faq' }"
+            <nuxt-link :to="{ path: 'faq' }" class="button is-primary"
               >よくある質問を見る</nuxt-link
             >
           </div>
@@ -81,7 +82,7 @@
             >
               <li>2019/03/25 作成中</li>
             </ul>
-            <nuxt-link class="button is-primary" :to="{ path: 'release-note' }"
+            <nuxt-link :to="{ path: 'release-note' }" class="button is-primary"
               >過去の更新情報を見る</nuxt-link
             >
           </div>
@@ -105,16 +106,16 @@
               </li>
               <li>
                 投げ銭いただける方は
-                <a href="javascript:void(0);" @click="openKampaModal">こちら</a
+                <a @click="openKampaModal" href="javascript:void(0);">こちら</a
                 >からお願いします
               </li>
               <li>
-                <a href="javascript:void(0);" @click="openTermsModal"
+                <a @click="openTermsModal" href="javascript:void(0);"
                   >利用規約</a
                 >
               </li>
               <li>
-                <a href="javascript:void(0);" @click="openPolicyModal"
+                <a @click="openPolicyModal" href="javascript:void(0);"
                   >プライバシーポリシー</a
                 >
               </li>
@@ -122,7 +123,7 @@
           </div>
         </div>
         <div id="kampa-modal" class="modal">
-          <div class="modal-background"></div>
+          <div class="modal-background" />
           <div class="modal-content">
             <div class="box">
               <h4 class="is-size-5">投げ銭について</h4>
@@ -178,7 +179,7 @@
       </div>
     </section>
     <div id="terms-modal" class="modal">
-      <div class="modal-background"></div>
+      <div class="modal-background" />
       <div class="modal-content">
         <div class="box">
           <h4 class="is-size-5">利用規約</h4>
@@ -189,7 +190,7 @@
       </div>
     </div>
     <div id="policy-modal" class="modal">
-      <div class="modal-background"></div>
+      <div class="modal-background" />
       <div class="modal-content">
         <div class="box">
           <h4 class="is-size-5">プライバシーポリシー</h4>
@@ -206,6 +207,7 @@
 import VillageCard from '~/components/VillageCard.vue'
 import Terms from '~/components/Terms.vue'
 import Policy from '~/components/Policy.vue'
+import HelloWorld from '~/components/HelloWorld.vue'
 
 export default {
   head() {
@@ -219,12 +221,14 @@ export default {
   components: {
     VillageCard,
     Terms,
-    Policy
+    Policy,
+    HelloWorld
   },
 
   data() {
     return {
       info: 1,
+      isLogin: false,
       villages: [
         {
           id: 1,
@@ -256,9 +260,27 @@ export default {
 
   async created() {
     const self = this
-    await this.$axios.$get('/wolf4busy/').then(res => {
-      self.info = res.hoge
-    })
+    await this.$axios
+      .$get('/wolf4busy/')
+      .then(res => {
+        self.info = res.hoge
+      })
+      .catch(err => {
+        this.$snackbar.open({
+          duration: 5000,
+          message: 'サーバとの接続に失敗しました。',
+          type: 'is-danger',
+          position: 'is-top-right',
+          actionText: '',
+          queue: false,
+          onAction: () => {
+            this.$toast.open({
+              message: 'Action pressed',
+              queue: false
+            })
+          }
+        })
+      })
   },
 
   methods: {
