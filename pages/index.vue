@@ -1,6 +1,5 @@
 <template>
   <div>
-    <HelloWorld />
     <section class="section">
       <div class="container">
         <h1 class="title is-5">人狼で寝不足になっていませんか？</h1>
@@ -37,17 +36,7 @@
     <section class="section">
       <div class="container">
         <h1 class="title is-5">村一覧</h1>
-        <p v-if="villages == null || villages.length == 0" class="content">
-          現在部屋がありません。
-        </p>
-        <br />
-        <div class="columns">
-          <village-card
-            v-for="village in villages"
-            :key="village['key']"
-            :village="village"
-          />
-        </div>
+        <village-list />
         <nuxt-link
           v-if="isLogin && user.emailVerified"
           class="button is-primary"
@@ -106,16 +95,19 @@
               </li>
               <li>
                 投げ銭いただける方は
-                <a @click="openKampaModal" href="javascript:void(0);">こちら</a
+                <a @click="openModal('#kampa-modal')" href="javascript:void(0);"
+                  >こちら</a
                 >からお願いします
               </li>
               <li>
-                <a @click="openTermsModal" href="javascript:void(0);"
+                <a @click="openModal('#terms-modal')" href="javascript:void(0);"
                   >利用規約</a
                 >
               </li>
               <li>
-                <a @click="openPolicyModal" href="javascript:void(0);"
+                <a
+                  @click="openModal('#policy-modal')"
+                  href="javascript:void(0);"
                   >プライバシーポリシー</a
                 >
               </li>
@@ -203,61 +195,32 @@
   </div>
 </template>
 
-<script>
-import VillageCard from '~/components/VillageCard.vue'
-import Terms from '~/components/Terms.vue'
-import Policy from '~/components/Policy.vue'
-import HelloWorld from '~/components/HelloWorld.vue'
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
+import Terms from '~/components/terms.vue'
+import Policy from '~/components/policy.vue'
+import VillageList from '~/components/village-list.vue'
+import axios from '@nuxtjs/axios'
+// import { SnackBar, Toast } from 'nuxt-buefy'
 
-export default {
-  head() {
-    return {
-      title: ''
-    }
-  },
-
-  name: 'HomePage',
-
+@Component({
   components: {
-    VillageCard,
     Terms,
     Policy,
-    HelloWorld
-  },
+    VillageList
+  }
+})
+export default class extends Vue {
+  /** head */
+  private head() {
+    return { title: '' }
+  }
 
-  data() {
-    return {
-      info: 1,
-      isLogin: false,
-      villages: [
-        {
-          id: 1,
-          name: '村名XXXXXXXX',
-          status: '進行中',
-          talkType: 'BBS',
-          progress: '1日目',
-          parcicipateNum: 12,
-          participateCapacity: 16,
-          spectateNum: 5,
-          creator: 'ort',
-          comment: '22時開始です。誰でも来てください。'
-        },
-        {
-          id: 1,
-          name: '村名YYYYYYY',
-          status: '進行中',
-          talkType: 'BBS',
-          progress: '1日目',
-          parcicipateNum: 12,
-          participateCapacity: 16,
-          spectateNum: 5,
-          creator: 'ort',
-          comment: '22時開始です。誰でも来てください。'
-        }
-      ]
-    }
-  },
+  /** data */
+  private info: number = 0
+  private isLogin: boolean = false
 
+  /** created */
   async created() {
     const self = this
     await this.$axios
@@ -266,66 +229,31 @@ export default {
         self.info = res.hoge
       })
       .catch(err => {
-        this.$snackbar.open({
+        Vue.prototype.$snackbar.open({
           duration: 5000,
           message: 'サーバとの接続に失敗しました。',
           type: 'is-danger',
           position: 'is-top-right',
           actionText: '',
           queue: false,
-          onAction: () => {
-            this.$toast.open({
-              message: 'Action pressed',
-              queue: false
-            })
-          }
+          onAction: () => {}
         })
       })
-  },
+  }
 
-  methods: {
-    openKampaModal() {
-      const modal = document.querySelector('#kampa-modal')
-      const html = document.querySelector('html')
-      modal.classList.add('is-active')
-      html.classList.add('is-clipped')
-
-      modal
-        .querySelector('.modal-background')
-        .addEventListener('click', function(e) {
-          e.preventDefault()
-          modal.classList.remove('is-active')
-          html.classList.remove('is-clipped')
-        })
-    },
-    openTermsModal() {
-      const modal = document.querySelector('#terms-modal')
-      const html = document.querySelector('html')
-      modal.classList.add('is-active')
-      html.classList.add('is-clipped')
-
-      modal
-        .querySelector('.modal-background')
-        .addEventListener('click', function(e) {
-          e.preventDefault()
-          modal.classList.remove('is-active')
-          html.classList.remove('is-clipped')
-        })
-    },
-    openPolicyModal() {
-      const modal = document.querySelector('#policy-modal')
-      const html = document.querySelector('html')
-      modal.classList.add('is-active')
-      html.classList.add('is-clipped')
-
-      modal
-        .querySelector('.modal-background')
-        .addEventListener('click', function(e) {
-          e.preventDefault()
-          modal.classList.remove('is-active')
-          html.classList.remove('is-clipped')
-        })
-    }
+  /** methods */
+  private openModal(selector: string): void {
+    const modal = document.querySelector(selector)
+    const html = document.querySelector('html')
+    modal!.classList.add('is-active')
+    html!.classList.add('is-clipped')
+    modal!
+      .querySelector('.modal-background')!
+      .addEventListener('click', function(e) {
+        e.preventDefault()
+        modal!.classList.remove('is-active')
+        html!.classList.remove('is-clipped')
+      })
   }
 }
 </script>
