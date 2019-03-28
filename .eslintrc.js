@@ -4,22 +4,27 @@ module.exports = {
     browser: true,
     node: true
   },
+  parser: 'vue-eslint-parser',
   parserOptions: {
-    parser: 'babel-eslint'
+    parser: '@typescript-eslint/parser'
   },
   extends: [
-    '@nuxtjs',
-    'plugin:nuxt/recommended',
+    'plugin:vue/recommended',
     'plugin:prettier/recommended',
-    'prettier',
-    'prettier/vue'
+    'prettier/vue',
+    'prettier/@typescript-eslint'
   ],
-  plugins: ['prettier'],
-  // add your custom rules here
   globals: {
     console: false
   },
   rules: {
-    'no-console': 'off'
+    'no-console': 'off',
+    'prettier/prettier': [
+      'error',
+      {
+        singleQuote: true,
+        semi: false
+      }
+    ]
   }
 }

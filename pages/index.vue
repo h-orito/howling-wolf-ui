@@ -16,37 +16,27 @@
       <div class="container">
         <div v-if="!isLogin">
           <h1 class="title is-5">はじめる</h1>
-          <nuxt-link class="button is-primary" :to="{ path: 'signup' }"
+          <nuxt-link :to="{ path: 'signup' }" class="button is-primary"
             >新規登録</nuxt-link
           >
-          <nuxt-link class="button is-primary" :to="{ path: 'signin' }"
+          <nuxt-link :to="{ path: 'signin' }" class="button is-primary"
             >ログイン</nuxt-link
           >
         </div>
         <div v-if="isLogin">
           <h1 class="title is-5">ようこそ</h1>
           <p class="content">{{ user.email }} さん</p>
-          <nuxt-link class="button is-primary" :to="{ path: 'user' }"
+          <nuxt-link :to="{ path: 'user' }" class="button is-primary"
             >ユーザ情報編集</nuxt-link
           >
-          <button class="button" @click="logout">ログアウト</button>
+          <button @click="logout" class="button">ログアウト</button>
         </div>
       </div>
     </section>
     <section class="section">
       <div class="container">
         <h1 class="title is-5">村一覧</h1>
-        <p v-if="villages == null || villages.length == 0" class="content">
-          現在部屋がありません。
-        </p>
-        <br />
-        <div class="columns">
-          <village-card
-            v-for="village in villages"
-            :key="village['key']"
-            :village="village"
-          ></village-card>
-        </div>
+        <village-list />
         <nuxt-link
           v-if="isLogin && user.emailVerified"
           class="button is-primary"
@@ -63,7 +53,7 @@
         <h1 class="title is-5">よくある質問</h1>
         <div class="columns">
           <div class="column">
-            <nuxt-link class="button is-primary" :to="{ path: 'faq' }"
+            <nuxt-link :to="{ path: 'faq' }" class="button is-primary"
               >よくある質問を見る</nuxt-link
             >
           </div>
@@ -81,7 +71,7 @@
             >
               <li>2019/03/25 作成中</li>
             </ul>
-            <nuxt-link class="button is-primary" :to="{ path: 'release-note' }"
+            <nuxt-link :to="{ path: 'release-note' }" class="button is-primary"
               >過去の更新情報を見る</nuxt-link
             >
           </div>
@@ -105,16 +95,19 @@
               </li>
               <li>
                 投げ銭いただける方は
-                <a href="javascript:void(0);" @click="openKampaModal">こちら</a
+                <a @click="openModal('#kampa-modal')" href="javascript:void(0);"
+                  >こちら</a
                 >からお願いします
               </li>
               <li>
-                <a href="javascript:void(0);" @click="openTermsModal"
+                <a @click="openModal('#terms-modal')" href="javascript:void(0);"
                   >利用規約</a
                 >
               </li>
               <li>
-                <a href="javascript:void(0);" @click="openPolicyModal"
+                <a
+                  @click="openModal('#policy-modal')"
+                  href="javascript:void(0);"
                   >プライバシーポリシー</a
                 >
               </li>
@@ -122,7 +115,7 @@
           </div>
         </div>
         <div id="kampa-modal" class="modal">
-          <div class="modal-background"></div>
+          <div class="modal-background" />
           <div class="modal-content">
             <div class="box">
               <h4 class="is-size-5">投げ銭について</h4>
@@ -178,7 +171,7 @@
       </div>
     </section>
     <div id="terms-modal" class="modal">
-      <div class="modal-background"></div>
+      <div class="modal-background" />
       <div class="modal-content">
         <div class="box">
           <h4 class="is-size-5">利用規約</h4>
@@ -189,7 +182,7 @@
       </div>
     </div>
     <div id="policy-modal" class="modal">
-      <div class="modal-background"></div>
+      <div class="modal-background" />
       <div class="modal-content">
         <div class="box">
           <h4 class="is-size-5">プライバシーポリシー</h4>
@@ -202,108 +195,65 @@
   </div>
 </template>
 
-<script>
-import VillageCard from '~/components/VillageCard.vue'
-import Terms from '~/components/Terms.vue'
-import Policy from '~/components/Policy.vue'
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
+import Terms from '~/components/terms.vue'
+import Policy from '~/components/policy.vue'
+import VillageList from '~/components/village-list.vue'
+import axios from '@nuxtjs/axios'
+// import { SnackBar, Toast } from 'nuxt-buefy'
 
-export default {
-  head() {
-    return {
-      title: ''
-    }
-  },
-
-  name: 'HomePage',
-
+@Component({
   components: {
-    VillageCard,
     Terms,
-    Policy
-  },
+    Policy,
+    VillageList
+  }
+})
+export default class extends Vue {
+  /** head */
+  private head() {
+    return { title: '' }
+  }
 
-  data() {
-    return {
-      info: 1,
-      villages: [
-        {
-          id: 1,
-          name: '村名XXXXXXXX',
-          status: '進行中',
-          talkType: 'BBS',
-          progress: '1日目',
-          parcicipateNum: 12,
-          participateCapacity: 16,
-          spectateNum: 5,
-          creator: 'ort',
-          comment: '22時開始です。誰でも来てください。'
-        },
-        {
-          id: 1,
-          name: '村名YYYYYYY',
-          status: '進行中',
-          talkType: 'BBS',
-          progress: '1日目',
-          parcicipateNum: 12,
-          participateCapacity: 16,
-          spectateNum: 5,
-          creator: 'ort',
-          comment: '22時開始です。誰でも来てください。'
-        }
-      ]
-    }
-  },
+  /** data */
+  private info: number = 0
+  private isLogin: boolean = false
 
+  /** created */
   async created() {
     const self = this
-    await this.$axios.$get('/wolf4busy/').then(res => {
-      self.info = res.hoge
-    })
-  },
-
-  methods: {
-    openKampaModal() {
-      const modal = document.querySelector('#kampa-modal')
-      const html = document.querySelector('html')
-      modal.classList.add('is-active')
-      html.classList.add('is-clipped')
-
-      modal
-        .querySelector('.modal-background')
-        .addEventListener('click', function(e) {
-          e.preventDefault()
-          modal.classList.remove('is-active')
-          html.classList.remove('is-clipped')
+    await this.$axios
+      .$get('/wolf4busy/')
+      .then(res => {
+        self.info = res.hoge
+      })
+      .catch(err => {
+        Vue.prototype.$snackbar.open({
+          duration: 5000,
+          message: 'サーバとの接続に失敗しました。',
+          type: 'is-danger',
+          position: 'is-top-right',
+          actionText: '',
+          queue: false,
+          onAction: () => {}
         })
-    },
-    openTermsModal() {
-      const modal = document.querySelector('#terms-modal')
-      const html = document.querySelector('html')
-      modal.classList.add('is-active')
-      html.classList.add('is-clipped')
+      })
+  }
 
-      modal
-        .querySelector('.modal-background')
-        .addEventListener('click', function(e) {
-          e.preventDefault()
-          modal.classList.remove('is-active')
-          html.classList.remove('is-clipped')
-        })
-    },
-    openPolicyModal() {
-      const modal = document.querySelector('#policy-modal')
-      const html = document.querySelector('html')
-      modal.classList.add('is-active')
-      html.classList.add('is-clipped')
-
-      modal
-        .querySelector('.modal-background')
-        .addEventListener('click', function(e) {
-          e.preventDefault()
-          modal.classList.remove('is-active')
-          html.classList.remove('is-clipped')
-        })
-    }
+  /** methods */
+  private openModal(selector: string): void {
+    const modal = document.querySelector(selector)
+    const html = document.querySelector('html')
+    modal!.classList.add('is-active')
+    html!.classList.add('is-clipped')
+    modal!
+      .querySelector('.modal-background')!
+      .addEventListener('click', function(e) {
+        e.preventDefault()
+        modal!.classList.remove('is-active')
+        html!.classList.remove('is-clipped')
+      })
   }
 }
 </script>
