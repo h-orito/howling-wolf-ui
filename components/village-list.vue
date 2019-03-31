@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="m-b-15">
     <p v-if="villages == null || villages.length == 0" class="content">
       現在部屋がありません。
     </p>

@@ -37,10 +37,7 @@
       <div class="container">
         <h1 class="title is-5">村一覧</h1>
         <village-list />
-        <nuxt-link
-          v-if="isLogin && user.emailVerified"
-          class="button is-primary"
-          to="/create-room"
+        <nuxt-link class="button is-primary" to="/create-village"
           >部屋を作成</nuxt-link
         >
         <div style="margin-top: 15px;">
@@ -255,5 +252,22 @@ export default class extends Vue {
         html!.classList.remove('is-clipped')
       })
   }
+
+  // private createVillage(): void {
+  //   this.$axios
+  //     .$post('/wolf4busy/village/confirm', {
+  //       village_name: 'ほげ'
+  //     })
+  //     .then(res => {
+  //       console.log(res)
+  //       return null
+  //     })
+  //     .catch(err => {
+  //       if (err && err.response && err.response.data) {
+  //         console.log(err!.response!.data!.errors)
+  //       }
+  //       return null
+  //     })
+  // }
 }
 </script>

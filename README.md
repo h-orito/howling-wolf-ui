@@ -25,6 +25,7 @@
 - 起動
 
   ```
+  npm ci
   npm run dev
   ```
 
