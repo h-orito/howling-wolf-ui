@@ -27,7 +27,13 @@ export default {
   /*
    ** Global CSS
    */
-  css: ['assets/wolf4busy.scss'],
+  css: [
+    '@fortawesome/fontawesome-free-webfonts',
+    '@fortawesome/fontawesome-free-webfonts/css/fa-brands.css',
+    '@fortawesome/fontawesome-free-webfonts/css/fa-regular.css',
+    '@fortawesome/fontawesome-free-webfonts/css/fa-solid.css',
+    'assets/wolf4busy.scss'
+  ],
 
   /*
    ** Plugins to load before mounting the App
@@ -49,7 +55,7 @@ export default {
     [
       'nuxt-buefy',
       {
-        defaultIconPack: 'fas'
+        materialDesignIcons: false
       }
     ]
   ],
