@@ -6,7 +6,7 @@
         <div class="columns">
           <div class="column">
             <p class="content">
-              汝は多忙なりや？は多忙な方向けのオプションルールを盛り込んだオンライン人狼が遊べるサービスです。
+              汝は多忙なりやは多忙な方向けのオプションルールを盛り込んだオンライン人狼が遊べるサービスです。
             </p>
           </div>
         </div>
@@ -35,8 +35,14 @@
     </section>
     <section class="section">
       <div class="container">
+        <h1 class="title is-5">次に作成される村</h1>
+        <next-village :nextVillage="nextVillage"></next-village>
+      </div>
+    </section>
+    <section class="section has-background-light">
+      <div class="container">
         <h1 class="title is-5">村一覧</h1>
-        <village-list />
+        <village-list :villages="villages" />
         <nuxt-link class="button is-primary" to="/create-village"
           >部屋を作成</nuxt-link
         >
@@ -45,7 +51,7 @@
         </div>
       </div>
     </section>
-    <section class="section has-background-light">
+    <section class="section">
       <div class="container">
         <h1 class="title is-5">よくある質問</h1>
         <div class="columns">
@@ -57,7 +63,7 @@
         </div>
       </div>
     </section>
-    <section class="section">
+    <section class="section has-background-light">
       <div class="container">
         <h1 class="title is-5">更新情報</h1>
         <div class="columns">
@@ -75,7 +81,7 @@
         </div>
       </div>
     </section>
-    <section class="section has-background-light">
+    <section class="section">
       <div class="container">
         <h1 class="title is-5">その他情報</h1>
         <div class="columns">
@@ -197,6 +203,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import Terms from '~/components/terms.vue'
 import Policy from '~/components/policy.vue'
 import VillageList from '~/components/village-list.vue'
+import NextVillage from '~/components/next-village.vue'
 import axios from '@nuxtjs/axios'
 // import { SnackBar, Toast } from 'nuxt-buefy'
 
@@ -204,7 +211,8 @@ import axios from '@nuxtjs/axios'
   components: {
     Terms,
     Policy,
-    VillageList
+    VillageList,
+    NextVillage
   }
 })
 export default class extends Vue {
@@ -216,26 +224,25 @@ export default class extends Vue {
   /** data */
   private info: number = 0
   private isLogin: boolean = false
+  // 自動作成予定の村
+  private nextVillage: any = null
+  // 村一覧
+  private villages: any = null
 
   /** created */
   async created() {
     const self = this
-    await this.$axios
-      .$get('/wolf4busy/')
-      .then(res => {
-        self.info = res.hoge
-      })
-      .catch(err => {
-        Vue.prototype.$snackbar.open({
-          duration: 5000,
-          message: 'サーバとの接続に失敗しました。',
-          type: 'is-danger',
-          position: 'is-top-right',
-          actionText: '',
-          queue: false,
-          onAction: () => {}
-        })
-      })
+    await this.$axios.$get('/').then(res => {
+      self.info = res.hoge
+    })
+    // 次に開催される村
+    this.$axios.$get('/village/next-planed').then(res => {
+      self.nextVillage = res.next_village
+    })
+    // 村一覧
+    this.$axios.$get('/village/list').then(res => {
+      self.villages = res.village_list
+    })
   }
 
   /** methods */

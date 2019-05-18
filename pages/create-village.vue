@@ -4,121 +4,129 @@
       <h1 class="title is-5">村を作成</h1>
       <div class="columns">
         <div class="column">
+          <!-- 村名 -->
           <div class="field">
             <label class="label">村名</label>
-            <div class="control has-icons-left has-icons-right">
+            <div class="control">
               <input
                 v-model="villageName"
-                @keyup="validateVillageName"
-                :class="
-                  !hasRoomName
-                    ? ''
-                    : hasRoomNameError
-                    ? 'is-danger'
-                    : 'is-success'
-                "
+                :class="villageNameError ? 'is-danger' : 'is-success'"
                 class="input"
                 type="text"
                 placeholder="村名"
               />
-              <span class="icon is-small is-left">
-                <i class="fas fa-comments"></i>
-              </span>
-              <span v-if="hasVillageName" class="icon is-small is-right">
-                <i
-                  v-if="hasVillageNameError"
-                  class="fas fa-exclamation-triangle"
-                ></i>
-                <i v-if="!hasVillageNameError" class="fas fa-check"></i>
-              </span>
             </div>
-            <p v-if="hasRoomName" class="help is-danger">
+            <p v-if="villageNameError" class="help is-danger">
               {{ villageNameError }}
             </p>
           </div>
-          <!-- <div class="field">
-            <label class="label">自分のニックネーム</label>
-            <div class="control has-icons-left has-icons-right">
+
+          <!-- 最低人数 -->
+          <div class="field">
+            <label class="label">最低人数</label>
+            <div class="control">
               <input
-                :class="
-                  !hasPlayerName
-                    ? ''
-                    : hasPlayerNameError
-                    ? 'is-danger'
-                    : 'is-success'
-                "
+                v-model="personNumMin"
+                :class="personNumMinError ? 'is-danger' : 'is-success'"
                 class="input"
-                type="text"
-                v-model="playerName"
-                placeholder="ニックネーム"
-                @keyup="validatePlayerName"
+                type="number"
+                step="1"
+                min="10"
+                max="17"
               />
-              <span class="icon is-small is-left">
-                <i class="fas fa-user-circle"></i>
-              </span>
-              <span v-if="hasPlayerName" class="icon is-small is-right">
-                <i
-                  v-if="hasPlayerNameError"
-                  class="fas fa-exclamation-triangle"
-                ></i>
-                <i v-if="!hasPlayerNameError" class="fas fa-check"></i>
-              </span>
             </div>
-            <p v-if="hasPlayerName" class="help is-danger">
-              {{ this.playerNameError }}
+            <p v-if="personNumMinError" class="help is-danger">
+              {{ personNumMinError }}
             </p>
           </div>
+
+          <!-- 最大人数 -->
           <div class="field">
-            <label class="label">部屋パスワード（任意）</label>
-            <div class="control has-icons-left has-icons-right">
+            <label class="label">最大人数</label>
+            <div class="control">
               <input
-                :class="
-                  !hasRoomPassword
-                    ? ''
-                    : hasRoomPasswordError
-                    ? 'is-danger'
-                    : 'is-success'
-                "
+                v-model="personNumMax"
+                :class="personNumMaxError ? 'is-danger' : 'is-success'"
                 class="input"
-                type="text"
-                v-model="roomPassword"
-                placeholder="パスワード"
-                @keyup="validateRoomPassword"
+                type="number"
+                step="1"
+                min="10"
+                max="17"
               />
-              <span class="icon is-small is-left">
-                <i class="fas fa-key"></i>
-              </span>
-              <span v-if="hasRoomPassword" class="icon is-small is-right">
-                <i
-                  v-if="hasRoomPasswordError"
-                  class="fas fa-exclamation-triangle"
-                ></i>
-                <i v-if="!hasRoomPasswordError" class="fas fa-check"></i>
-              </span>
             </div>
-            <p v-if="hasRoomPassword" class="help is-danger">
-              {{ this.roomPasswordError }}
+            <p v-if="personNumMaxError" class="help is-danger">
+              {{ personNumMaxError }}
             </p>
           </div>
+
+          <!-- 昼時間 -->
           <div class="field">
-            <label class="label">レーティング</label>
-            <div class="control has-text-centered">
-              <div class="select">
-                <select v-model="roomRating" :disabled="!hasRoomPassword">
-                  <option value="">全年齢</option>
-                  <option value="R15">R15</option>
-                  <option value="R18">R18</option>
-                </select>
-              </div>
+            <label class="label">昼時間（秒）</label>
+            <div class="control">
+              <input
+                v-model="noonSeconds"
+                :class="noonSecondsError ? 'is-danger' : 'is-success'"
+                class="input"
+                type="number"
+                step="30"
+                min="180"
+                max="86400"
+              />
             </div>
-            <p v-if="hasRoomPassword" class="help is-danger">
-              {{ this.roomPasswordError }}
+            <p v-if="noonSecondsError" class="help is-danger">
+              {{ noonSecondsError }}
             </p>
-          </div> -->
+          </div>
+
+          <!-- 夜時間 -->
+          <div class="field">
+            <label class="label">夜時間（秒）</label>
+            <div class="control">
+              <input
+                v-model="nightSeconds"
+                :class="nightSecondsError ? 'is-danger' : 'is-success'"
+                class="input"
+                type="number"
+                step="30"
+                min="0"
+                max="600"
+              />
+            </div>
+            <p v-if="nightSecondsError" class="help is-danger">
+              {{ nightSecondsError }}
+            </p>
+          </div>
+
+          <div class="field">
+            <label class="label">開始日時</label>
+            <div class="control">
+              <datetime
+                v-model="startDatetime"
+                :minute-step="10"
+                type="datetime"
+                input-class="input"
+                value-zone="Asia/Tokyo"
+                zone="Asia/Tokyo"
+                title="開始日時"
+                format="yyyy/MM/dd HH:mm"
+              ></datetime>
+            </div>
+            <p v-if="startDatetimeError" class="help is-danger">
+              {{ startDatetimeError }}
+            </p>
+          </div>
+
           <div class="field" style="margin-top: 40px;">
             <div class="control has-text-centered">
               <button
-                :disabled="!canSubmit || submitting"
+                :disabled="submitting"
+                @click="checkCreateVillage"
+                class="button is-primary"
+              >
+                エラーチェック
+              </button>
+              <button
+                :disabled="submitting"
                 @click="createVillage"
                 class="button is-primary"
               >
@@ -147,19 +155,125 @@ export default class extends Vue {
 
   /** data */
   private villageName: string = ''
+  private villageNameError: string = ''
+  private personNumMin: number = 10
+  private personNumMinError: string = ''
+  private personNumMax: number = 17
+  private personNumMaxError: string = ''
+  private noonSeconds: number = 86400
+  private noonSecondsError: string = ''
+  private nightSeconds: number = 0
+  private nightSecondsError: string = ''
+  private startDatetime: string = '2019-01-01T00:00:00.000Z'
+  private startDatetimeError: string = ''
+  private submitting: boolean = false // todo
 
   /** computed */
-  private get hasRoomName(): boolean {
-    return this.villageName != null && this.villageName !== ''
-  }
-  private get canSubmit(): boolean {
-    return true // todo
-  }
+  // private get hasVillageNameError(): boolean {
+  //   return this.villageNameError != null && this.villageNameError !== ''
+  // }
 
   /** created */
   async created() {}
 
   /** methods */
-  private validateVillageName(): void {}
+  private checkCreateVillage(): void {
+    this.$axios
+      .$post('/village/confirm', {
+        village_name: this.villageName,
+        person_min_num: this.personNumMin,
+        person_max_num: this.personNumMax,
+        noon_seconds: this.noonSeconds,
+        night_seconds: this.nightSeconds,
+        start_datetime: formatDateTime(new Date(this.startDatetime))
+      })
+      .then(res => {
+        Vue.prototype.$snackbar.open({
+          duration: 5000,
+          message: 'エラーなし',
+          type: 'is-success',
+          position: 'is-top-right',
+          actionText: '',
+          queue: false,
+          onAction: () => {}
+        })
+      })
+      .catch(err => {
+        const code = parseInt(err.response && err.response.status)
+        if (code !== 400) {
+          return // validation error以外だったら何もしない
+        }
+        if (!err || !err.response || !err.response.data) {
+          return // エラー内容なし
+        }
+        const errorFields = err!.response!.data!.errors.map(
+          error => error.field
+        )
+        // エラー項目表示
+        this.showErrorFields(errorFields)
+      })
+  }
+  private createVillage(): void {
+    this.$axios
+      .$post('/village/confirm', {
+        village_name: this.villageName,
+        person_min_num: this.personNumMin,
+        person_max_num: this.personNumMax,
+        noon_seconds: this.noonSeconds,
+        night_seconds: this.nightSeconds,
+        start_datetime: formatDateTime(new Date(this.startDatetime))
+      })
+      .then(res => {
+        const villageId = 1 // todo
+        location.href = `/village?id=${villageId}`
+      })
+      .catch(err => {
+        const code = parseInt(err.response && err.response.status)
+        if (code !== 400) {
+          return // validation error以外だったら何もしない
+        }
+        if (!err || !err.response || !err.response.data) {
+          return // エラー内容なし
+        }
+        const errorFields = err!.response!.data!.errors.map(
+          error => error.field
+        )
+        // エラー項目表示
+        this.showErrorFields(errorFields)
+      })
+  }
+  private showErrorFields(errorFields: Array<string>): void {
+    if (errorFields.some(fieldName => fieldName === 'villageName')) {
+      this.villageNameError = '村名は5文字以上40文字以内で入力してください'
+    }
+    if (errorFields.some(fieldName => fieldName === 'personMinNum')) {
+      this.personNumMinError = '最低人数は10名以上17名以下で入力してください'
+    }
+    if (errorFields.some(fieldName => fieldName === 'personMaxNum')) {
+      this.personNumMaxError =
+        '最大人数は10名以上17名以下かつ最低人数以上で入力してください'
+    }
+    if (errorFields.some(fieldName => fieldName === 'noonSeconds')) {
+      this.noonSecondsError = '昼時間は3分以上24時間以内で入力してください'
+    }
+    if (errorFields.some(fieldName => fieldName === 'nightSeconds')) {
+      this.nightSecondsError = '夜時間は0秒以上10分以内で入力してください'
+    }
+  }
+}
+
+function formatDateTime(date) {
+  return formatDateByFormat(date, 'yyyy-MM-ddTHH:mm:ss')
+}
+
+function formatDateByFormat(date, format) {
+  format = format.replace(/yyyy/g, date.getFullYear())
+  format = format.replace(/MM/g, ('0' + (date.getMonth() + 1)).slice(-2))
+  format = format.replace(/dd/g, ('0' + date.getDate()).slice(-2))
+  format = format.replace(/HH/g, ('0' + date.getHours()).slice(-2))
+  format = format.replace(/mm/g, ('0' + date.getMinutes()).slice(-2))
+  format = format.replace(/ss/g, ('0' + date.getSeconds()).slice(-2))
+  format = format.replace(/SSS/g, ('00' + date.getMilliseconds()).slice(-3))
+  return format
 }
 </script>

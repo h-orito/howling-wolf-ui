@@ -5,7 +5,7 @@ export default {
    ** Headers of the page
    */
   head: {
-    titleTemplate: '汝は多忙なりや？',
+    titleTemplate: '汝は多忙なりや',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -31,18 +31,18 @@ export default {
     '@fortawesome/fontawesome-free-webfonts',
     '@fortawesome/fontawesome-free-webfonts/css/fa-brands.css',
     '@fortawesome/fontawesome-free-webfonts/css/fa-regular.css',
-    '@fortawesome/fontawesome-free-webfonts/css/fa-solid.css',
-    'assets/wolf4busy.scss'
+    '@fortawesome/fontawesome-free-webfonts/css/fa-solid.css'
+    // '@/assets/sass/wolf4busy.scss'
   ],
 
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['~/plugins/axios'],
+  plugins: ['~/plugins/axios', '~/plugins/vue-datetime'],
 
   axios: {
-    host: process.env.WOLF4BUSY_API_HOST || 'localhost',
-    port: process.env.WOLF4BUSY_API_PORT || 8086
+    baseURL:
+      process.env.WOLF4BUSY_API_BASEURL || 'http://localhost:8086/wolf4busy'
   },
 
   /*
@@ -57,9 +57,14 @@ export default {
       {
         materialDesignIcons: false
       }
-    ]
+    ],
+    // 各pageでsassの変数を使えるようにしたい
+    '@nuxtjs/style-resources'
   ],
 
+  styleResources: {
+    sass: ['~/assets/sass/wolf4busy.scss']
+  },
   /*
    ** Build configuration
    */
