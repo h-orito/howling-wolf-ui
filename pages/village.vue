@@ -112,6 +112,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import axios from '@nuxtjs/axios'
 
 @Component({
+  // @ts-ignore
   components: {},
   async asyncData({ query }) {
     return { villageId: query.id }

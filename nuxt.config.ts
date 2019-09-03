@@ -1,9 +1,9 @@
-export default {
+import { Configuration } from '@nuxt/types'
+
+const nuxtConfig: Configuration = {
   mode: 'spa',
 
-  /*
-   ** Headers of the page
-   */
+  /* Headers of the page */
   head: {
     titleTemplate: '汝は多忙なりや',
     meta: [
@@ -19,35 +19,25 @@ export default {
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },
 
-  /*
-   ** Customize the progress-bar color
-   */
+  /* Customize the progress-bar color */
   loading: { color: '#3B8070' },
 
-  /*
-   ** Global CSS
-   */
+  /* Global CSS */
   css: [
     '@fortawesome/fontawesome-free-webfonts',
     '@fortawesome/fontawesome-free-webfonts/css/fa-brands.css',
     '@fortawesome/fontawesome-free-webfonts/css/fa-regular.css',
     '@fortawesome/fontawesome-free-webfonts/css/fa-solid.css'
-    // '@/assets/sass/wolf4busy.scss'
   ],
 
-  /*
-   ** Plugins to load before mounting the App
-   */
+  /* Plugins to load before mounting the App */
   plugins: ['~/plugins/axios', '~/plugins/vue-datetime'],
-
   axios: {
     baseURL:
       process.env.WOLF4BUSY_API_BASEURL || 'http://localhost:8086/wolf4busy'
   },
 
-  /*
-   ** Nuxt.js modules
-   */
+  /* Nuxt.js modules */
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
@@ -61,21 +51,18 @@ export default {
     // 各pageでsassの変数を使えるようにしたい
     '@nuxtjs/style-resources'
   ],
-
   styleResources: {
-    sass: ['~/assets/sass/wolf4busy.scss']
+    scss: ['~/assets/sass/wolf4busy.scss']
   },
-  /*
-   ** Build configuration
-   */
+  /* Build configuration */
+  buildModules: ['@nuxt/typescript-build'],
+
   build: {
-    /*
-     ** You can extend webpack config here
-     */
+    /* You can extend webpack config here */
     extend(config, ctx) {
       // Run ESLint on save
       if (ctx.isDev && ctx.isClient) {
-        config.module.rules.push({
+        config.module!.rules.push({
           enforce: 'pre',
           test: /\.(js|vue)$/,
           loader: 'eslint-loader',
@@ -85,3 +72,5 @@ export default {
     }
   }
 }
+
+export default nuxtConfig
