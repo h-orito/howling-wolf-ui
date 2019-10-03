@@ -16,16 +16,17 @@
       <div class="container">
         <div v-if="!isLogin">
           <h1 class="title is-5">はじめる</h1>
-          <nuxt-link :to="{ path: 'signup' }" class="button is-primary"
-            >新規登録</nuxt-link
-          >
-          <nuxt-link :to="{ path: 'signin' }" class="button is-primary"
-            >ログイン</nuxt-link
-          >
+          <button @click="signup" class="button is-primary">
+            Twitterアカウントでログイン
+          </button>
+          <p class="m-t-10 is-size-7">
+            アプリ連携が必要ですが、ログイン認証以外の目的で利用する予定はありません。
+          </p>
         </div>
         <div v-if="isLogin">
           <h1 class="title is-5">ようこそ</h1>
-          <p class="content">{{ user.email }} さん</p>
+          <img v-if="user.photoURL != null" :src="user.photoURL" />
+          <p class="content">displayName: {{ user.displayName }} さん</p>
           <nuxt-link :to="{ path: 'user' }" class="button is-primary"
             >ユーザ情報編集</nuxt-link
           >
@@ -205,6 +206,9 @@ import Policy from '~/components/policy.vue'
 import VillageList from '~/components/village-list.vue'
 import NextVillage from '~/components/next-village.vue'
 import axios from '@nuxtjs/axios'
+import Village from '~/components/type/village/village.ts'
+import firebase from '~/plugins/firebase'
+import * as actionType from '~/store/action-types'
 // import { SnackBar, Toast } from 'nuxt-buefy'
 
 @Component({
@@ -223,22 +227,34 @@ export default class extends Vue {
 
   /** data */
   private info: number = 0
-  private isLogin: boolean = false
   // 自動作成予定の村
   private nextVillage: any = null
   // 村一覧
-  private villages: any = null
+  private villages: Village[] = []
+
+  /** computed */
+  public get user(): any {
+    return this.$store.getters.getUser
+  }
+  public get isLogin(): boolean {
+    return this.$store.getters.isLogin
+  }
 
   /** created */
   async created() {
+    // ログイン状態の変更を検知
+    firebase.auth().onAuthStateChanged(user => {
+      this.$store.dispatch(actionType.LOGINOUT, {
+        user: user
+      })
+      if (user) {
+        user.getIdToken(false).then(idToken => {
+          console.log(idToken)
+        })
+      }
+    })
+
     const self = this
-    await this.$axios.$get('/').then(res => {
-      self.info = res.hoge
-    })
-    // 次に開催される村
-    this.$axios.$get('/village/next-planed').then(res => {
-      self.nextVillage = res.next_village
-    })
     // 村一覧
     this.$axios.$get('/village/list').then(res => {
       self.villages = res.village_list
@@ -260,6 +276,25 @@ export default class extends Vue {
       })
   }
 
+  private signup(): void {
+    const provider = new firebase.auth.TwitterAuthProvider()
+    firebase
+      .auth()
+      .signInWithRedirect(provider)
+      .then(result => {
+        // TODO: login handling
+        console.log(result)
+      })
+      .catch(error => {
+        // TODO: error handling
+        console.log(error)
+      })
+  }
+
+  private logout(): void {
+    firebase.auth().signOut()
+  }
+
   // private createVillage(): void {
   //   this.$axios
   //     .$post('/wolf4busy/village/confirm', {
@@ -278,3 +313,9 @@ export default class extends Vue {
   // }
 }
 </script>
+
+<style lang="scss" scoped>
+.hoge {
+  /* */
+}
+</style>
