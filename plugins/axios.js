@@ -2,7 +2,10 @@ import { Vue } from 'vue-property-decorator'
 
 export default function({ $axios, redirect }) {
   $axios.onRequest(config => {
-    console.log('Making request to ' + config.url)
+    const token = localStorage.getItem('idtoken')
+    if (token) {
+      config.headers.common['Authorization'] = 'Bearer ' + token
+    }
   })
 
   $axios.onError(error => {
