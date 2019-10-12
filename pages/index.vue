@@ -25,8 +25,9 @@
         </div>
         <div v-if="isLogin">
           <h1 class="title is-5">ようこそ</h1>
-          <img v-if="user.photoURL != null" :src="user.photoURL" />
-          <p class="content">displayName: {{ user.displayName }} さん</p>
+          <img v-if="photoURL != null" :src="photoURL" />
+          <p class="content">displayName: {{ user.nickname }} さん</p>
+          <p class="content">username: {{ user.twitter_user_name }} さん</p>
           <nuxt-link :to="{ path: 'user' }" class="button is-primary"
             >ユーザ情報編集</nuxt-link
           >
@@ -162,9 +163,12 @@ import kampa from '~/components/kampa.vue'
 import VillageList from '~/components/village-list.vue'
 import NextVillage from '~/components/next-village.vue'
 import axios from '@nuxtjs/axios'
+import cookies from 'cookie-universal-nuxt'
 import Village from '~/components/type/village/village.ts'
+import Player from '~/components/type/player/player.ts'
 import firebase from '~/plugins/firebase'
 import * as actionType from '~/store/action-types'
+import { resolve } from 'dns'
 // import { SnackBar, Toast } from 'nuxt-buefy'
 
 @Component({
@@ -190,8 +194,11 @@ export default class extends Vue {
   private villages: Village[] = []
 
   /** computed */
-  public get user(): any {
-    return this.$store.getters.getUser
+  public get user(): Player {
+    return this.$store.getters.getPlayer
+  }
+  public get photoURL(): any {
+    return this.$store.getters.getPhotoUrl
   }
   public get isLogin(): boolean {
     return this.$store.getters.isLogin
@@ -199,31 +206,17 @@ export default class extends Vue {
 
   /** created */
   async created() {
+    const self = this
+    // ログイン後のリダイレクトの際、ユーザ情報をサーバに保存
+    await this.registerUserIfNeeded()
+
     // ログイン状態の変更を検知
-    firebase.auth().onAuthStateChanged(user => {
-      this.$store.dispatch(actionType.LOGINOUT, {
+    firebase.auth().onAuthStateChanged(async user => {
+      await this.$store.dispatch(actionType.LOGINOUT, {
         user: user
       })
-      if (user) {
-        user.getIdToken(false).then(idToken => {
-          localStorage.setItem('idtoken', idToken)
-          this.$axios
-            .$post('/player/nickname', {
-              nickname: user.displayName
-            })
-            .then(res => {
-              console.log(res)
-            })
-            .catch(e => {
-              console.log(e)
-            })
-        })
-      } else {
-        localStorage.removeItem('idtoken')
-      }
     })
 
-    const self = this
     // 村一覧
     this.$axios.$get('/village/list').then(res => {
       self.villages = res.village_list
@@ -258,6 +251,24 @@ export default class extends Vue {
         // TODO: error handling
         console.log(error)
       })
+  }
+
+  private async registerUserIfNeeded(): Promise<void> {
+    const redirectResult = await firebase.auth().getRedirectResult()
+    if (!redirectResult.additionalUserInfo || !redirectResult.user) {
+      return
+    }
+    const twitterUsername = redirectResult.additionalUserInfo.username
+    const user = redirectResult.user
+    const idToken = await user.getIdToken(false)
+    this.$cookies.set('id-token', idToken, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 30
+    })
+    return this.$axios.$post('/player/nickname', {
+      nickname: user.displayName,
+      twitter_user_name: twitterUsername
+    })
   }
 
   private logout(): void {

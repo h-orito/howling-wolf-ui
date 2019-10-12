@@ -52,16 +52,13 @@ const nuxtConfig: Configuration = {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     // Doc: https://buefy.github.io/#/documentation
-    [
-      'nuxt-buefy',
-      {
-        materialDesignIcons: false
-      }
-    ],
+    ['nuxt-buefy', { materialDesignIcons: false }],
     // 各pageでsassの変数を使えるようにしたい
     '@nuxtjs/style-resources',
     // dotenv
-    '@nuxtjs/dotenv'
+    '@nuxtjs/dotenv',
+    // cookie-universal-nuxt
+    'cookie-universal-nuxt'
   ],
   styleResources: {
     scss: ['~/assets/sass/wolf4busy.scss']
