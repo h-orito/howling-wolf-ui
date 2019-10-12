@@ -1,8 +1,8 @@
 import { Vue } from 'vue-property-decorator'
 
-export default function({ $axios, redirect }) {
+export default function({ $axios, app }) {
   $axios.onRequest(config => {
-    const token = localStorage.getItem('idtoken')
+    const token = app.$cookies.get('id-token')
     if (token) {
       config.headers.common['Authorization'] = 'Bearer ' + token
     }
