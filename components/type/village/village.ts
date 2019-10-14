@@ -6,7 +6,7 @@ import VillageVisitors from '~/components/type/village/village-visitors'
 interface Village {
   id: number
   name: string
-  creator_player_id: number
+  creator_player_name: string
   status: VillageStatus
   setting: VillageSettings | null
   participant: VillageParticipants

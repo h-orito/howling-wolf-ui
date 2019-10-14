@@ -1,6 +1,6 @@
 <template>
   <div class="column is-half-tablet">
-    <div class="card">
+    <div v-if="village != null" class="card">
       <header class="card-header">
         <nuxt-link
           :to="{ path: 'village', query: { id: village.id } }"
@@ -10,22 +10,16 @@
       </header>
       <div class="card-content">
         <div class="content has-text-left">
-          <b-tag rounded>{{ village.status }}</b-tag>
-          <b-tag rounded>{{ village.talkType + '形式' }}</b-tag>
-          <b-tag rounded>{{ village.progress }}</b-tag>
+          <b-tag rounded>{{ village.status.name }}</b-tag>
+          <b-tag rounded>{{ '長期' }}</b-tag>
         </div>
         <div class="content has-text-left">
-          <p class="has-text-left is-size-7">作成者: {{ village.creator }}</p>
+          <p class="has-text-left is-size-7">
+            作成者: {{ village.creator_player_name }}
+          </p>
           <p class="has-text-left is-size-7">
             参加人数:
-            {{
-              village.parcicipateNum +
-                '/' +
-                village.participateCapacity +
-                ' (見学 ' +
-                village.spectateNum +
-                '名)'
-            }}
+            {{ participantStatus(village) }}
           </p>
         </div>
       </div>
@@ -38,13 +32,22 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    village: {
-      type: Object,
-      required: true
-    }
+<script lang="ts">
+import { Component, Vue, Prop } from 'vue-property-decorator'
+import Village from '~/components/type/village/village'
+@Component({})
+export default class VillageCard extends Vue {
+  @Prop({ type: Object })
+  private village!: Village
+
+  private participantStatus(village: Village): string {
+    const participantCount: number = village.participant.count
+    const visitorCount: number = village.visitor.count
+    return (
+      `${participantCount}` +
+      `${village.setting ? '/' + village.setting.max_person_num : ''}` +
+      `+${visitorCount}`
+    )
   }
 }
 </script>

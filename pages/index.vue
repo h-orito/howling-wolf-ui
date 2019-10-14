@@ -20,17 +20,18 @@
             Twitterアカウントでログイン
           </button>
           <p class="m-t-10 is-size-7">
-            アプリ連携が必要ですが、ログイン認証以外の目的で利用する予定はありません。
+            参加にはアプリ連携が必要です。名前とユーザ名がエピローグで表示されます。
           </p>
         </div>
         <div v-if="isLogin">
           <h1 class="title is-5">ようこそ</h1>
-          <img v-if="photoURL != null" :src="photoURL" />
-          <p class="content">displayName: {{ user.nickname }} さん</p>
-          <p class="content">username: {{ user.twitter_user_name }} さん</p>
-          <nuxt-link :to="{ path: 'user' }" class="button is-primary"
-            >ユーザ情報編集</nuxt-link
+          <img v-if="photoURL != null" :src="photoURL" /><br />
+          <a
+            :href="'https://twitter.com/' + user.twitter_user_name"
+            target="_blank"
+            >{{ user.nickname }}</a
           >
+          さん<br />
           <button @click="logout" class="button">ログアウト</button>
         </div>
       </div>
@@ -168,8 +169,6 @@ import Village from '~/components/type/village/village.ts'
 import Player from '~/components/type/player/player.ts'
 import firebase from '~/plugins/firebase'
 import * as actionType from '~/store/action-types'
-import { resolve } from 'dns'
-// import { SnackBar, Toast } from 'nuxt-buefy'
 
 @Component({
   components: {
@@ -238,19 +237,9 @@ export default class extends Vue {
       })
   }
 
-  private signin(): void {
+  private async signin(): Promise<void> {
     const provider = new firebase.auth.TwitterAuthProvider()
-    firebase
-      .auth()
-      .signInWithRedirect(provider)
-      .then(result => {
-        // TODO: login handling
-        console.log(result)
-      })
-      .catch(error => {
-        // TODO: error handling
-        console.log(error)
-      })
+    await firebase.auth().signInWithRedirect(provider)
   }
 
   private async registerUserIfNeeded(): Promise<void> {
