@@ -45,7 +45,7 @@ export default class VillageCard extends Vue {
     const visitorCount: number = village.visitor.count
     return (
       `${participantCount}` +
-      `${village.setting ? '/' + village.setting.max_person_num : ''}` +
+      `'/'${village.setting.capacity.max}` +
       `+${visitorCount}`
     )
   }
