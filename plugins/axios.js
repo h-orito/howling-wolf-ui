@@ -1,4 +1,5 @@
 import { Vue } from 'vue-property-decorator'
+import { SnackbarProgrammatic as Snackbar } from 'buefy'
 
 export default function({ $axios, app }) {
   $axios.onRequest(config => {
@@ -15,13 +16,13 @@ export default function({ $axios, app }) {
       return
     }
     // todo 業務エラーも何もしないようにする
-    Vue.prototype.$snackbar.open({
-      duration: 5000,
-      message: 'サーバとの接続でエラーが発生しました。',
+    Snackbar.open({
       type: 'is-danger',
+      message: 'サーバとの接続でエラーが発生しました。',
       position: 'is-top-right',
-      actionText: '',
+      duration: 5000,
       queue: false,
+      actionText: '',
       onAction: () => {}
     })
   })

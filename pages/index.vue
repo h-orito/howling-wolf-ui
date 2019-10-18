@@ -47,7 +47,7 @@
         <h1 class="title is-5">村一覧</h1>
         <village-list :villages="villages" />
         <nuxt-link class="button is-primary" to="/create-village"
-          >部屋を作成</nuxt-link
+          >村を作成</nuxt-link
         >
         <div style="margin-top: 15px;">
           <nuxt-link to="/room-list">終了した部屋を見る</nuxt-link>
