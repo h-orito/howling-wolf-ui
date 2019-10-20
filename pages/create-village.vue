@@ -213,8 +213,8 @@ export default class extends Vue {
         this.showErrorFields(errorFields)
       })
   }
-  private async createVillage(): Promise<any> {
-    const res = this.$axios
+  private async createVillage() {
+    const res = await this.$axios
       .$post('/village', {
         village_name: this.villageName,
         person_min_num: this.personNumMin,
@@ -231,13 +231,11 @@ export default class extends Vue {
         if (!err || !err.response || !err.response.data) {
           return // エラー内容なし
         }
-        const errorFields = err!.response!.data!.errors.map(
-          error => error.field
-        )
+        const errorFields = err.response.data.errors.map(error => error.field)
         // エラー項目表示
         this.showErrorFields(errorFields)
       })
-    return Promise.resolve()
+    location.href = `/village?id=${res.village_id}`
   }
   private showErrorFields(errorFields: Array<string>): void {
     if (errorFields.some(fieldName => fieldName === 'villageName')) {

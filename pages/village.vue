@@ -45,12 +45,12 @@ export default class extends Vue {
   }
   private get isLong(): boolean {
     return (
-      this.village != null && this.village.setting.time.term_type === 'long'
+      this.village != null && this.village.setting.time.term_type === 'LONG'
     )
   }
   private get isShort(): boolean {
     return (
-      this.village != null && this.village.setting.time.term_type === 'short'
+      this.village != null && this.village.setting.time.term_type === 'SHORT'
     )
   }
 

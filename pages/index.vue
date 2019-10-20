@@ -209,13 +209,6 @@ export default class extends Vue {
     // ログイン後のリダイレクトの際、ユーザ情報をサーバに保存
     await this.registerUserIfNeeded()
 
-    // ログイン状態の変更を検知
-    firebase.auth().onAuthStateChanged(async user => {
-      await this.$store.dispatch(actionType.LOGINOUT, {
-        user: user
-      })
-    })
-
     // 村一覧
     this.$axios.$get('/village/list').then(res => {
       self.villages = res.village_list
@@ -254,6 +247,16 @@ export default class extends Vue {
       path: '/',
       maxAge: 60 * 60 * 24 * 30
     })
+    // 1時間で有効期限が切れるので50分後に再取得させる
+    const now = new Date()
+    this.$cookies.set(
+      'id-token-check-date',
+      now.setMinutes(now.getHours() + 50),
+      {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 30
+      }
+    )
     return this.$axios.$post('/player/nickname', {
       nickname: user.displayName,
       twitter_user_name: twitterUsername

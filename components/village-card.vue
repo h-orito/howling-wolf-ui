@@ -45,8 +45,8 @@ export default class VillageCard extends Vue {
     const spectatorCount: number = village.spectator.count
     return (
       `${participantCount}` +
-      `'/'${village.setting.capacity.max}` +
-      `+${spectatorCount}`
+      `/${village.setting.capacity.max}` +
+      `${spectatorCount === 0 ? '' : '+' + spectatorCount}`
     )
   }
 }

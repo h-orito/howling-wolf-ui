@@ -1,12 +1,14 @@
 import { Vue } from 'vue-property-decorator'
 import { SnackbarProgrammatic as Snackbar } from 'buefy'
 
-export default function({ $axios, app }) {
-  $axios.onRequest(config => {
-    const token = app.$cookies.get('id-token')
+export default function({ store, $axios, app }) {
+  $axios.onRequest(async config => {
+    let token = app.$cookies.get('id-token')
     if (token) {
+      token = await refreshTokenIfNeeded(token, store, app)
       config.headers.common['Authorization'] = 'Bearer ' + token
     }
+    return config
   })
 
   $axios.onError(error => {
@@ -25,5 +27,32 @@ export default function({ $axios, app }) {
       actionText: '',
       onAction: () => {}
     })
+  })
+}
+
+async function refreshTokenIfNeeded(token, store, app) {
+  const expired = new Date(app.$cookies.get('id-token-check-date'))
+  if (new Date().getTime() < expired.getTime()) {
+    // 有効期限内
+    return token
+  }
+  const user = store.state.auth.user
+  if (!user) {
+    return token
+  }
+  return await user.getIdToken(true).then(newIdToken => {
+    // save cookie
+    app.$cookies.set('id-token', newIdToken, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 30
+    })
+    const now = new Date()
+    const newExpired = now.setMinutes(now.getHours() + 50).toString()
+    app.$cookies.set('id-token-check-date', newExpired, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 30
+    })
+
+    return newIdToken
   })
 }
