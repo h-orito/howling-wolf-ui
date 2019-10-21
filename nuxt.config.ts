@@ -41,7 +41,11 @@ const nuxtConfig: Configuration = {
   ],
 
   /* Plugins to load before mounting the App */
-  plugins: ['~/plugins/axios', '~/plugins/vue-datetime'],
+  plugins: [
+    '~/plugins/axios',
+    '~/plugins/vue-datetime',
+    '~/plugins/message-utils'
+  ],
   axios: {
     baseURL:
       process.env.WOLF4BUSY_API_BASEURL || 'http://localhost:8086/wolf4busy'

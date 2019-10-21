@@ -12,7 +12,20 @@
       </header>
       <div class="card-content">
         <div class="content has-text-left">
-          <p class="has-text-left is-size-7">{{ message.content.text }}</p>
+          <p>
+            <span
+              v-for="escapedMessageLine in $escapeAndSplitMessage(
+                message.content.text
+              )"
+              v-bind:key="escapedMessageLine.id"
+            >
+              {{ escapedMessageLine }}<br />
+            </span>
+            <!-- <p
+            v-html="$escapeMessage(message.content.text)"
+            class="has-text-left is-size-7"
+          ></p> -->
+          </p>
         </div>
       </div>
       <footer class="card-footer">

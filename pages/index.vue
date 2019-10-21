@@ -160,11 +160,11 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import terms from '~/components/terms.vue'
-import policy from '~/components/policy.vue'
-import kampa from '~/components/kampa.vue'
-import VillageList from '~/components/village-list.vue'
-import NextVillage from '~/components/next-village.vue'
+import terms from '~/components/index/terms.vue'
+import policy from '~/components/index/terms.vue'
+import kampa from '~/components/index/kampa.vue'
+import VillageList from '~/components/index/village-list.vue'
+import NextVillage from '~/components/index/next-village.vue'
 import axios from '@nuxtjs/axios'
 import cookies from 'cookie-universal-nuxt'
 import Village from '~/components/type/village.ts'
@@ -268,23 +268,6 @@ export default class extends Vue {
   private logout(): void {
     firebase.auth().signOut()
   }
-
-  // private createVillage(): void {
-  //   this.$axios
-  //     .$post('/wolf4busy/village/confirm', {
-  //       village_name: 'ほげ'
-  //     })
-  //     .then(res => {
-  //       console.log(res)
-  //       return null
-  //     })
-  //     .catch(err => {
-  //       if (err && err.response && err.response.data) {
-  //         console.log(err!.response!.data!.errors)
-  //       }
-  //       return null
-  //     })
-  // }
 }
 </script>
 

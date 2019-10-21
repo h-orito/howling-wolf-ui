@@ -9,7 +9,27 @@
         <p class="w4b-message-datetime">{{ message.time.datetime }}</p>
       </div>
       <div class="w4b-message-text-area">
-        <p class="w4b-message-text">{{ message.content.text }}</p>
+        <p class="w4b-message-text">
+          <span
+            v-for="escapedMessageLine in $escapeAndSplitMessage(
+              message.content.text
+            )"
+            v-bind:key="escapedMessageLine.id"
+            ><span
+              v-for="mes in $splitAnchor(escapedMessageLine)"
+              v-bind:key="mes.id"
+            >
+              <span v-if="!mes.isAnchor">{{ mes.text }}</span>
+              <a
+                v-if="mes.isAnchor"
+                :href="'javascript:void(0)'"
+                @click="clickAnchor(mes)"
+                v-html="mes.text"
+              ></a>
+            </span>
+            <br />
+          </span>
+        </p>
       </div>
     </div>
   </div>
@@ -18,6 +38,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import Message from '~/components/type/message'
+
 @Component({})
 export default class MessageCard extends Vue {
   @Prop({ type: Object })
@@ -28,6 +49,10 @@ export default class MessageCard extends Vue {
     return this.message.from!.chara.face_list.find(
       face => face.type === typeCode
     )!.image_url
+  }
+
+  private clickAnchor(mes): void {
+    console.log(mes)
   }
 }
 </script>

@@ -17,7 +17,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import Village from '~/components/type/village'
-import VillageCard from '~/components/village-card.vue'
+import VillageCard from '~/components/index/village-card.vue'
 
 @Component({
   components: {
