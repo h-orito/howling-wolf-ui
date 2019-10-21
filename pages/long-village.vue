@@ -2,6 +2,14 @@
   <div class="container is-size-7">
     <loading v-if="loadingVillage" :message="'村情報を読み込み中...'"></loading>
     <div v-if="!loadingVillage">
+      <loading v-if="loadingMessage" :message="'発言を読み込み中...'"></loading>
+      <div v-if="!loadingMessage">
+        <message-card
+          v-for="message in messages"
+          :key="message['id']"
+          :message="message"
+        ></message-card>
+      </div>
       <div class="w4b-footer-info-area buttons are-small">
         <div>生存 7/13</div>
         <button class="button w4b-footer-button">CO</button>
@@ -57,14 +65,17 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import Village from '~/components/type/village/village'
-import loading from '~/components/loading.vue'
 import axios from '@nuxtjs/axios'
-import VillageDay from '../components/type/village/village-day'
+import Village from '~/components/type/village'
+import VillageDay from '~/components/type/village-day'
+import Message from '~/components/type/message'
+import loading from '~/components/loading.vue'
+import messageCard from '~/components/village/message/message-card.vue'
 
 @Component({
   components: {
-    loading
+    loading,
+    messageCard
   },
   async asyncData({ query }) {
     return { villageId: query.id }
@@ -82,10 +93,14 @@ export default class extends Vue {
   private leftTime: number = 60
 
   private village: Village | null = null
+  private messages: Message[] | null = null
 
   /** computed */
   private get loadingVillage(): boolean {
     return this.village == null
+  }
+  private get loadingMessage(): boolean {
+    return this.messages == null
   }
   private get latestDay(): VillageDay | null {
     if (this.village == null) return null
@@ -108,7 +123,7 @@ export default class extends Vue {
     const messagesRes = await this.$axios.$get(
       `/village/${this.village.id}/day/${this.latestDay.day}/time/${this.latestDay.noonnight}/message-list`
     )
-    console.log(messagesRes.message_list)
+    this.messages = messagesRes.message_list
 
     return Promise.resolve()
   }

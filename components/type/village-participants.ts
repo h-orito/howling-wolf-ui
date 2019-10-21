@@ -1,4 +1,4 @@
-import VillageParticipant from '~/components/type/village/participant/village-participant'
+import VillageParticipant from '~/components/type/village-participant'
 
 interface VillageParticipants {
   count: number

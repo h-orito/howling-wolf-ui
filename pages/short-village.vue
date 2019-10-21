@@ -57,7 +57,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import Village from '~/components/type/village/village'
+import Village from '~/components/type/village'
 import loading from '~/components/loading.vue'
 import axios from '@nuxtjs/axios'
 

@@ -25,13 +25,15 @@
         </div>
         <div v-if="isLogin">
           <h1 class="title is-5">ようこそ</h1>
-          <img v-if="photoURL != null" :src="photoURL" /><br />
+          <img v-if="photoURL != null" :src="photoURL" />
+          <br />
           <a
             :href="'https://twitter.com/' + user.twitter_user_name"
             target="_blank"
             >{{ user.nickname }}</a
           >
-          さん<br />
+          さん
+          <br />
           <button @click="logout" class="button">ログアウト</button>
         </div>
       </div>
@@ -165,8 +167,8 @@ import VillageList from '~/components/village-list.vue'
 import NextVillage from '~/components/next-village.vue'
 import axios from '@nuxtjs/axios'
 import cookies from 'cookie-universal-nuxt'
-import Village from '~/components/type/village/village.ts'
-import Player from '~/components/type/player/player.ts'
+import Village from '~/components/type/village.ts'
+import Player from '~/components/type/player.ts'
 import firebase from '~/plugins/firebase'
 import * as actionType from '~/store/action-types'
 

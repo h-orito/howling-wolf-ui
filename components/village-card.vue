@@ -34,7 +34,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
-import Village from '~/components/type/village/village'
+import Village from '~/components/type/village'
 @Component({})
 export default class VillageCard extends Vue {
   @Prop({ type: Object })

@@ -1,4 +1,4 @@
-import Chara from '~/components/type/chara/chara'
+import Chara from '~/components/type/chara'
 
 interface Charachip {
   id: number
