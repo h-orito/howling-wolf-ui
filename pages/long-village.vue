@@ -2,8 +2,55 @@
   <div class="container is-size-7">
     <loading v-if="loadingVillage" :message="'村情報を読み込み中...'"></loading>
     <div v-if="!loadingVillage">
-      <long-village v-if="isLong" :village="village"></long-village>
-      <short-village v-if="isShort" :village="village"></short-village>
+      <div class="w4b-footer-info-area buttons are-small">
+        <div>生存 7/13</div>
+        <button class="button w4b-footer-button">CO</button>
+        <button class="button w4b-footer-button">定型文</button>
+        <button class="button w4b-footer-button">発言する</button>
+      </div>
+      <div class="w4b-footer-member-skill-area">
+        <div class="w4b-footer-skill-area">
+          <p class="is-size-2">占</p>
+        </div>
+        <div class="w4b-footer-member-area">
+          <div class="w4b-icon-area">
+            <div class="w4b-icon">楽</div>
+            <p class="w4b-icon-status has-text-danger">2d▲</p>
+          </div>
+          <div class="w4b-icon-area">
+            <div class="w4b-icon">長</div>
+          </div>
+          <div class="w4b-icon-area">
+            <div class="w4b-icon">羊</div>
+          </div>
+          <div class="w4b-icon-area">
+            <div class="w4b-icon">修</div>
+          </div>
+          <div class="w4b-icon-area">
+            <div class="w4b-icon">書</div>
+          </div>
+          <div class="w4b-icon-area">
+            <div class="w4b-icon">樵</div>
+          </div>
+          <div class="w4b-icon-area">
+            <div class="w4b-icon">青</div>
+          </div>
+          <div class="w4b-icon-area">
+            <div class="w4b-icon">旅</div>
+          </div>
+          <div class="w4b-icon-area">
+            <div class="w4b-icon">商</div>
+          </div>
+          <div class="w4b-icon-area">
+            <div class="w4b-icon">農</div>
+          </div>
+        </div>
+      </div>
+      <div class="w4b-footer-menu buttons are-small">
+        <button class="button w4b-footer-button">メニュー</button>
+        <button class="button w4b-footer-button">ルール</button>
+        <button class="button w4b-footer-button">フィルタ</button>
+      </div>
     </div>
   </div>
 </template>
@@ -11,16 +58,13 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import Village from '~/components/type/village/village'
-import ShortVillage from '~/components/village/short-village.vue'
-import LongVillage from '~/components/village/long-village.vue'
 import loading from '~/components/loading.vue'
 import axios from '@nuxtjs/axios'
+import VillageDay from '../components/type/village/village-day'
 
 @Component({
   components: {
-    loading,
-    ShortVillage,
-    LongVillage
+    loading
   },
   async asyncData({ query }) {
     return { villageId: query.id }
@@ -43,31 +87,31 @@ export default class extends Vue {
   private get loadingVillage(): boolean {
     return this.village == null
   }
-  private get isLong(): boolean {
-    return (
-      this.village != null && this.village.setting.time.term_type === 'LONG'
-    )
+  private get latestDay(): VillageDay | null {
+    if (this.village == null) return null
+    return this.village.day.day_list[this.village.day.day_list.length - 1]
   }
-  private get isShort(): boolean {
-    return (
-      this.village != null && this.village.setting.time.term_type === 'SHORT'
-    )
-  }
-
-  // private get hasVillageNameError(): boolean {
-  //   return this.villageNameError != null && this.villageNameError !== ''
-  // }
 
   /** created */
   private async created(): Promise<any> {
     // 村情報読み込み
-    this.$axios.$get(`/village/${this.villageId}`).then(res => {
-      this.village = res.village
-      console.log(this.village)
-    })
+    this.loadVillage()
   }
 
   /** methods */
+  private async loadVillage(): Promise<any> {
+    const villageRes = await this.$axios.$get(`/village/${this.villageId}`)
+    this.village = villageRes.village as Village
+    console.log(this.village)
+
+    if (this.latestDay == null) return Promise.reject()
+    const messagesRes = await this.$axios.$get(
+      `/village/${this.village.id}/day/${this.latestDay.day}/time/${this.latestDay.noonnight}/message-list`
+    )
+    console.log(messagesRes.message_list)
+
+    return Promise.resolve()
+  }
 }
 </script>
 <style lang="scss" scoped>

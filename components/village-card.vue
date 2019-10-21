@@ -3,7 +3,7 @@
     <div v-if="village != null" class="card">
       <header class="card-header">
         <nuxt-link
-          :to="{ path: 'village', query: { id: village.id } }"
+          :to="{ path: 'long-village', query: { id: village.id } }"
           class="card-header-title has-text-grey"
           >{{ village.name }}</nuxt-link
         >

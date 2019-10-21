@@ -1,14 +1,8 @@
-import Dead from '~/components/type/dead/dead'
+import VillageParticipant from '~/components/type/village/participant/village-participant'
 
 interface VillageParticipants {
   count: number
   member_list: VillageParticipant[]
-}
-
-interface VillageParticipant {
-  id: number
-  chara_id: number
-  dead: Dead | null
 }
 
 export default VillageParticipants

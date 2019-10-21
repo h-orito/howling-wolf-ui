@@ -4,8 +4,8 @@ interface VillageDay {
   noonnight: string
   start_datetime: Date
   updating: boolean
-  prologue: Boolean
-  epilogue: Boolean
+  prologue: boolean
+  epilogue: boolean
 }
 
 export default VillageDay

@@ -235,7 +235,7 @@ export default class extends Vue {
         // エラー項目表示
         this.showErrorFields(errorFields)
       })
-    location.href = `/village?id=${res.village_id}`
+    location.href = `/long-village?id=${res.village_id}`
   }
   private showErrorFields(errorFields: Array<string>): void {
     if (errorFields.some(fieldName => fieldName === 'villageName')) {
