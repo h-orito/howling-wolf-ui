@@ -1,35 +1,17 @@
 <template>
-  <div class="w4b-message-normal-card">
-    <div class="w4b-message-face-area">
-      <img :src="imageUrl" />
+  <div class="w4b-message-card">
+    <div class="w4b-message-name-area">
+      <a href="javascript:void(0);">{{ $parent.anchorString }}</a
+      >.&nbsp;
+      <p class="w4b-message-name">{{ message.from.chara.chara_name.name }}</p>
+      <p class="w4b-message-datetime">{{ message.time.datetime }}</p>
     </div>
     <div class="w4b-message-content-area">
-      <div class="w4b-message-name-area">
-        <p class="w4b-message-name">{{ message.from.chara.chara_name.name }}</p>
-        <p class="w4b-message-datetime">{{ message.time.datetime }}</p>
+      <div class="w4b-message-face-area">
+        <img :src="imageUrl" class="w4b-message-chara-image" />
       </div>
       <div class="w4b-message-text-area">
-        <p class="w4b-message-text">
-          <span
-            v-for="escapedMessageLine in $escapeAndSplitMessage(
-              message.content.text
-            )"
-            v-bind:key="escapedMessageLine.id"
-            ><span
-              v-for="mes in $splitAnchor(escapedMessageLine)"
-              v-bind:key="mes.id"
-            >
-              <span v-if="!mes.isAnchor">{{ mes.text }}</span>
-              <a
-                v-if="mes.isAnchor"
-                :href="'javascript:void(0)'"
-                @click="clickAnchor(mes)"
-                v-html="mes.text"
-              ></a>
-            </span>
-            <br />
-          </span>
-        </p>
+        <message-text :messageText="message.content.text" />
       </div>
     </div>
   </div>
@@ -37,10 +19,15 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
+import messageText from '~/components/village/message/message-text.vue'
 import Message from '~/components/type/message'
 
-@Component({})
-export default class MessageCard extends Vue {
+@Component({
+  components: {
+    messageText
+  }
+})
+export default class MessageNormal extends Vue {
   @Prop({ type: Object })
   private message!: Message
 
@@ -50,46 +37,5 @@ export default class MessageCard extends Vue {
       face => face.type === typeCode
     )!.image_url
   }
-
-  private clickAnchor(mes): void {
-    console.log(mes)
-  }
 }
 </script>
-
-<style lang="scss" scoped>
-.w4b-message-normal-card {
-  display: flex;
-
-  .w4b-message-face-area {
-    margin: 5px;
-  }
-  .w4b-message-content-area {
-    margin-right: 5px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    flex: 1;
-
-    .w4b-message-name-area {
-      display: flex;
-
-      .w4b-message-name {
-        flex: 1;
-        text-align: left;
-        font-weight: bold;
-      }
-      .w4b-message-datetime {
-        flex: 1;
-        text-align: right;
-        color: #aaaaaa;
-      }
-    }
-
-    .w4b-message-text-area {
-      .w4b-message-text {
-        text-align: left;
-      }
-    }
-  }
-}
-</style>

@@ -236,3 +236,48 @@ export default class extends Vue {
   margin-bottom: 0px !important;
 }
 </style>
+
+<style lang="scss">
+.w4b-message-card {
+  padding: 5px;
+  margin-bottom: 5px;
+
+  .w4b-message-name-area {
+    padding-bottom: 5px;
+    display: flex;
+
+    .w4b-message-name {
+      flex: 1;
+      text-align: left;
+      font-weight: bold;
+    }
+    .w4b-message-datetime {
+      flex: 1;
+      text-align: right;
+      color: #aaaaaa;
+    }
+  }
+  .w4b-message-content-area {
+    display: flex;
+
+    .w4b-message-face-area {
+      padding-right: 5px;
+
+      .w4b-message-chara-image {
+        border-radius: 5px;
+      }
+    }
+
+    .w4b-message-text-area {
+      flex: 1;
+      border: 1px solid #dddddd;
+      border-radius: 5px;
+      padding: 5px;
+
+      .w4b-message-text {
+        text-align: left;
+      }
+    }
+  }
+}
+</style>
