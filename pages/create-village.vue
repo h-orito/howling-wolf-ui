@@ -213,19 +213,15 @@ export default class extends Vue {
         this.showErrorFields(errorFields)
       })
   }
-  private createVillage(): void {
-    this.$axios
-      .$post('/village/confirm', {
+  private async createVillage() {
+    const res = await this.$axios
+      .$post('/village', {
         village_name: this.villageName,
         person_min_num: this.personNumMin,
         person_max_num: this.personNumMax,
         noon_seconds: this.noonSeconds,
         night_seconds: this.nightSeconds,
         start_datetime: formatDateTime(new Date(this.startDatetime))
-      })
-      .then(res => {
-        const villageId = 1 // todo
-        location.href = `/village?id=${villageId}`
       })
       .catch(err => {
         const code = parseInt(err.response && err.response.status)
@@ -235,12 +231,11 @@ export default class extends Vue {
         if (!err || !err.response || !err.response.data) {
           return // エラー内容なし
         }
-        const errorFields = err!.response!.data!.errors.map(
-          error => error.field
-        )
+        const errorFields = err.response.data.errors.map(error => error.field)
         // エラー項目表示
         this.showErrorFields(errorFields)
       })
+    location.href = `/long-village?id=${res.village_id}`
   }
   private showErrorFields(errorFields: Array<string>): void {
     if (errorFields.some(fieldName => fieldName === 'villageName')) {

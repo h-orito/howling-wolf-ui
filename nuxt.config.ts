@@ -47,6 +47,10 @@ const nuxtConfig: Configuration = {
       process.env.WOLF4BUSY_API_BASEURL || 'http://localhost:8086/wolf4busy'
   },
 
+  router: {
+    middleware: ['authenticated']
+  },
+
   /* Nuxt.js modules */
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
