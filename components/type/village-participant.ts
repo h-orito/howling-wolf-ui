@@ -1,5 +1,5 @@
-import Chara from '~/components/type/chara'
 import Player from '~/components/type/player'
+import Chara from '~/components/type/chara'
 import Dead from '~/components/type/dead'
 import Skill from '~/components/type/skill'
 

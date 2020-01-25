@@ -1,9 +1,9 @@
+import VillageOrganizations from '~/components/type/village-organizations'
+import VillageCharachip from '~/components/type/village-charachip'
+import VillagePassword from '~/components/type/village-password'
 import PersonCapacity from '~/components/type/person-capacity'
 import VillageTime from '~/components/type/village-time'
-import VillageCharachip from '~/components/type/village-charachip'
-import VillageOrganizations from '~/components/type/village-organizations'
 import VillageRules from '~/components/type/village-rules'
-import VillagePassword from '~/components/type/village-password'
 
 interface VillageSettings {
   capacity: PersonCapacity

@@ -1,5 +1,4 @@
 import VillageParticipant from '~/components/type/village-participant'
-import VillageParticipant from '~/components/type/village-participant'
 
 interface VillageVoteSituation {
   is_available_vote: boolean

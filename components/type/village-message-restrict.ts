@@ -1,11 +1,10 @@
 import MessageType from '~/components/type/message-type'
-import Int from '~/components/type/int'
 
 interface VillageMessageRestrict {
   type: MessageType
   count: number
   length: number
-  line: Int
+  line: number
 }
 
 export default VillageMessageRestrict

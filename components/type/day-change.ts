@@ -1,7 +1,7 @@
-import Village from '~/components/type/village'
 import Messages from '~/components/type/messages'
-import VillageVotes from '~/components/type/village-votes'
 import VillageAbilities from '~/components/type/village-abilities'
+import VillageVotes from '~/components/type/village-votes'
+import Village from '~/components/type/village'
 import Players from '~/components/type/players'
 
 interface DayChange {

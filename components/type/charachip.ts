@@ -1,5 +1,5 @@
-import Designer from '~/components/type/designer'
 import Chara from '~/components/type/chara'
+import Designer from '~/components/type/designer'
 
 interface Charachip {
   id: number

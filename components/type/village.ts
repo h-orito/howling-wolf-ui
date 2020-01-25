@@ -1,8 +1,8 @@
 import Player from '~/components/type/player'
-import VillageStatus from '~/components/type/village-status'
+import VillageDays from '~/components/type/village-days'
 import VillageSettings from '~/components/type/village-settings'
 import VillageParticipants from '~/components/type/village-participants'
-import VillageDays from '~/components/type/village-days'
+import VillageStatus from '~/components/type/village-status'
 
 interface Village {
   id: number

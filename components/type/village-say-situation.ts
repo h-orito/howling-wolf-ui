@@ -1,6 +1,6 @@
+import MessageType from '~/components/type/message-type'
 import VillageSayMessageTypeSituation from '~/components/type/village-say-message-type-situation'
 import CharaFace from '~/components/type/chara-face'
-import MessageType from '~/components/type/message-type'
 
 interface VillageSaySituation {
   is_available_say: boolean

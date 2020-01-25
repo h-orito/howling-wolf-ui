@@ -1,7 +1,8 @@
-import Boolean from '~/components/type/boolean'
+import VillageMessageRestrict from '~/components/type/village-message-restrict'
 
 interface VillageMessageRestricts {
-  exist_restricts: Boolean
+  exist_restricts: boolean
+  restrict_list: VillageMessageRestrict[]
 }
 
 export default VillageMessageRestricts

@@ -1,7 +1,7 @@
-import CharaName from '~/components/type/chara-name'
-import CharaDefaultMessage from '~/components/type/chara-default-message'
 import CharaSize from '~/components/type/chara-size'
 import CharaFace from '~/components/type/chara-face'
+import CharaName from '~/components/type/chara-name'
+import CharaDefaultMessage from '~/components/type/chara-default-message'
 
 interface Chara {
   id: number
