@@ -1,7 +1,9 @@
+import VillageDay from '~/components/type/village-day'
+
 interface Dead {
   code: string
   reason: string
-  day: number
+  village_day: VillageDay
 }
 
 export default Dead

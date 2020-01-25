@@ -13,5 +13,8 @@
   ],
   "emmet.includeLanguages": {
     "vue-html": "html"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
   }
 }

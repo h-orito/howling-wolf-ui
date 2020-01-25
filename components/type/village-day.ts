@@ -2,10 +2,7 @@ interface VillageDay {
   id: number
   day: number
   noonnight: string
-  start_datetime: Date
-  is_updating: boolean
-  is_prologue: boolean
-  is_epilogue: boolean
+  day_change_datetime: Date
 }
 
 export default VillageDay

@@ -1,5 +1,7 @@
+import Ability from '~/components/type/ability'
+
 interface Abilities {
-  hoge: string
+  list: Ability[]
 }
 
 export default Abilities

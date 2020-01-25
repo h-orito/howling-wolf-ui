@@ -1,5 +1,7 @@
+import VillageAbility from '~/components/type/village-ability'
+
 interface VillageAbilities {
-  hoge: string
+  list: VillageAbility[]
 }
 
 export default VillageAbilities

@@ -1,5 +1,7 @@
+import VillageVote from '~/components/type/village-vote'
+
 interface VillageVotes {
-  hoge: string
+  list: VillageVote[]
 }
 
 export default VillageVotes
