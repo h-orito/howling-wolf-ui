@@ -8,7 +8,12 @@
     </div>
     <div class="w4b-message-content-area">
       <div class="w4b-message-face-area">
-        <img :src="imageUrl" class="w4b-message-chara-image" />
+        <img
+          :src="imageUrl"
+          :width="imageWidth"
+          :height="imageHeight"
+          class="w4b-message-chara-image"
+        />
       </div>
       <div class="w4b-message-text-area">
         <message-text :messageText="message.content.text" />
@@ -36,6 +41,14 @@ export default class MessageNormal extends Vue {
     return this.message.from!.chara.face_list.find(
       face => face.type === typeCode
     )!.image_url
+  }
+
+  private get imageWidth(): number {
+    return this.message.from!.chara.display.width
+  }
+
+  private get imageHeight(): number {
+    return this.message.from!.chara.display.height
   }
 }
 </script>

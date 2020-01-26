@@ -167,6 +167,7 @@ import VillageList from '~/components/index/village-list.vue'
 import NextVillage from '~/components/index/next-village.vue'
 import axios from '@nuxtjs/axios'
 import cookies from 'cookie-universal-nuxt'
+import Villages from '~/components/type/villages.ts'
 import Village from '~/components/type/village.ts'
 import Player from '~/components/type/player.ts'
 import firebase from '~/plugins/firebase'
@@ -212,8 +213,8 @@ export default class extends Vue {
     await this.registerUserIfNeeded()
 
     // 村一覧
-    this.$axios.$get('/village/list').then(res => {
-      self.villages = res.village_list
+    this.$axios.$get('/village/list').then((res: Villages) => {
+      self.villages = res.list
     })
   }
 

@@ -5,10 +5,13 @@
       <loading v-if="loadingMessage" :message="'発言を読み込み中...'"></loading>
       <div v-if="!loadingMessage">
         <message-card
-          v-for="message in messages"
+          v-for="message in messages.message_list"
           :key="message['id']"
           :message="message"
         ></message-card>
+      </div>
+      <div v-if="!loadingSituation">
+        <participate :situation="situation"></participate>
       </div>
       <div class="w4b-footer-info-area buttons are-small">
         <div>生存 7/13</div>
@@ -68,14 +71,18 @@ import { Component, Vue } from 'vue-property-decorator'
 import axios from '@nuxtjs/axios'
 import Village from '~/components/type/village'
 import VillageDay from '~/components/type/village-day'
+import Messages from '~/components/type/messages'
 import Message from '~/components/type/message'
+import SituationAsParticipant from '~/components/type/situation-as-participant'
 import loading from '~/components/loading.vue'
 import messageCard from '~/components/village/message/message-card.vue'
+import participate from '~/components/village/participate/participate.vue'
 
 @Component({
   components: {
     loading,
-    messageCard
+    messageCard,
+    participate
   },
   async asyncData({ query }) {
     return { villageId: query.id }
@@ -93,7 +100,8 @@ export default class extends Vue {
   private leftTime: number = 60
 
   private village: Village | null = null
-  private messages: Message[] | null = null
+  private messages: Messages | null = null
+  private situation: SituationAsParticipant | null = null
 
   /** computed */
   private get loadingVillage(): boolean {
@@ -101,6 +109,9 @@ export default class extends Vue {
   }
   private get loadingMessage(): boolean {
     return this.messages == null
+  }
+  private get loadingSituation(): boolean {
+    return this.situation == null
   }
   private get latestDay(): VillageDay | null {
     if (this.village == null) return null
@@ -110,22 +121,30 @@ export default class extends Vue {
   /** created */
   private async created(): Promise<any> {
     // 村情報読み込み
-    this.loadVillage()
+    this.village = await this.loadVillage()
+    // 発言読み込み
+    this.messages = await this.loadMessage()
+    // 状況読み込み
+    this.situation = await this.loadSituation()
   }
 
   /** methods */
-  private async loadVillage(): Promise<any> {
-    const villageRes = await this.$axios.$get(`/village/${this.villageId}`)
-    this.village = villageRes.village as Village
-    console.log(this.village)
+  private async loadVillage(): Promise<Village> {
+    return this.$axios.$get(`/village/${this.villageId}`)
+  }
 
+  private async loadMessage(): Promise<Messages> {
     if (this.latestDay == null) return Promise.reject()
-    const messagesRes = await this.$axios.$get(
-      `/village/${this.village.id}/day/${this.latestDay.day}/time/${this.latestDay.noonnight}/message-list`
+    return this.$axios.$get(
+      `/village/${this.village!.id}/day/${this.latestDay.day}/time/${
+        this.latestDay.noonnight
+      }/message-list`
     )
-    this.messages = messagesRes.message_list
+  }
 
-    return Promise.resolve()
+  private async loadSituation(): Promise<any> {
+    if (this.village == null) return Promise.reject()
+    return this.$axios.$get(`/village/${this.village.id}/situation`)
   }
 }
 </script>
