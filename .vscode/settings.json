@@ -1,16 +1,4 @@
 {
-  "eslint.autoFixOnSave": true,
-  "eslint.validate": [
-    "javascript",
-    {
-      "language": "typescript",
-      "autoFix": true
-    },
-    {
-      "language": "vue",
-      "autoFix": true
-    }
-  ],
   "emmet.includeLanguages": {
     "vue-html": "html"
   },

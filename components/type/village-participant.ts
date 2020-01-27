@@ -8,7 +8,7 @@ interface VillageParticipant {
   chara: Chara
   player: Player | null
   dead: Dead | null
-  is_spectator: boolean
+  spectator: boolean
   skill: Skill | null
 }
 

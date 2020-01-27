@@ -11,9 +11,9 @@
         ></message-card>
       </div>
       <div v-if="!loadingSituation">
-        <participate :situation="situation"></participate>
+        <action :situation="situation"></action>
       </div>
-      <div class="w4b-footer-info-area buttons are-small">
+      <!-- <div class="w4b-footer-info-area buttons are-small">
         <div>生存 7/13</div>
         <button class="button w4b-footer-button">CO</button>
         <button class="button w4b-footer-button">定型文</button>
@@ -61,7 +61,7 @@
         <button class="button w4b-footer-button">メニュー</button>
         <button class="button w4b-footer-button">ルール</button>
         <button class="button w4b-footer-button">フィルタ</button>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -76,13 +76,13 @@ import Message from '~/components/type/message'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 import loading from '~/components/loading.vue'
 import messageCard from '~/components/village/message/message-card.vue'
-import participate from '~/components/village/participate/participate.vue'
+import action from '~/components/village/action/action.vue'
 
 @Component({
   components: {
     loading,
     messageCard,
-    participate
+    action
   },
   async asyncData({ query }) {
     return { villageId: query.id }

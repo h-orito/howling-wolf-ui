@@ -1,53 +1,45 @@
 <template>
   <div class="card">
-    <!-- 参加 or 見学 -->
-    <div
-      v-if="
-        situation.participate.available_participate ||
-          situation.participate.available_spectate
-      "
-    >
-      <header class="card-header">
-        <p class="card-header-title has-text-grey">参加する</p>
-      </header>
-      <div class="card-content">
-        <div class="content has-text-left">
-          キャラ：
-          <v-select :options="selectableCharaList" model="charaId"></v-select>
-        </div>
-        <div
-          v-if="situation.skill_request.available_skill_request"
-          class="content has-text-left"
-        >
-          役職第1希望：
-          <v-select
-            :options="selectableSkillList"
-            model="firstRequestSkillCode"
-          ></v-select>
-        </div>
-        <div
-          v-if="situation.skill_request.available_skill_request"
-          class="content has-text-left"
-        >
-          役職第2希望：
-          <v-select
-            :options="selectableSkillList"
-            model="secondRequestSkillCode"
-          ></v-select>
-        </div>
+    <header class="card-header">
+      <p class="card-header-title has-text-grey">参加する</p>
+    </header>
+    <div class="card-content">
+      <div class="content has-text-left">
+        キャラ：
+        <v-select :options="selectableCharaList" model="charaId"></v-select>
       </div>
-      <footer class="card-footer">
-        <div class="card-footer-item has-text-left">
-          <button
-            :disabled="!canSubmitParticipate || submitting"
-            @click="participate"
-            class="button is-primary"
-          >
-            参加する
-          </button>
-        </div>
-      </footer>
+      <div
+        v-if="situation.skill_request.available_skill_request"
+        class="content has-text-left"
+      >
+        役職第1希望：
+        <v-select
+          :options="selectableSkillList"
+          model="firstRequestSkillCode"
+        ></v-select>
+      </div>
+      <div
+        v-if="situation.skill_request.available_skill_request"
+        class="content has-text-left"
+      >
+        役職第2希望：
+        <v-select
+          :options="selectableSkillList"
+          model="secondRequestSkillCode"
+        ></v-select>
+      </div>
     </div>
+    <footer class="card-footer">
+      <div class="card-footer-item has-text-left">
+        <button
+          :disabled="!canSubmitParticipate || submitting"
+          @click="participate"
+          class="button is-primary"
+        >
+          参加する
+        </button>
+      </div>
+    </footer>
   </div>
 </template>
 
@@ -60,7 +52,7 @@ import Skill from '~/components/type/skill'
 @Component({
   components: {}
 })
-export default class Participate extends Vue {
+export default class Spectate extends Vue {
   @Prop({ type: Object })
   private situation!: SituationAsParticipant
 
