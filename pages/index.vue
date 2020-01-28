@@ -41,7 +41,7 @@
     <section class="section">
       <div class="container">
         <h1 class="title is-5">次に作成される村</h1>
-        <next-village :nextVillage="nextVillage"></next-village>
+        <next-village :next-village="nextVillage"></next-village>
       </div>
     </section>
     <section class="section has-background-light">
@@ -160,18 +160,17 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import axios from '@nuxtjs/axios'
+import cookies from 'cookie-universal-nuxt'
 import terms from '~/components/index/terms.vue'
-import policy from '~/components/index/terms.vue'
+import policy from '~/components/index/policy.vue'
 import kampa from '~/components/index/kampa.vue'
 import VillageList from '~/components/index/village-list.vue'
 import NextVillage from '~/components/index/next-village.vue'
-import axios from '@nuxtjs/axios'
-import cookies from 'cookie-universal-nuxt'
 import Villages from '~/components/type/villages.ts'
 import Village from '~/components/type/village.ts'
 import Player from '~/components/type/player.ts'
 import firebase from '~/plugins/firebase'
-import * as actionType from '~/store/action-types'
 
 @Component({
   components: {
@@ -199,9 +198,11 @@ export default class extends Vue {
   public get user(): Player {
     return this.$store.getters.getPlayer
   }
+
   public get photoURL(): any {
     return this.$store.getters.getPhotoUrl
   }
+
   public get isLogin(): boolean {
     return this.$store.getters.isLogin
   }
@@ -275,5 +276,8 @@ export default class extends Vue {
 <style lang="scss" scoped>
 .hoge {
   /* */
+}
+body {
+  background-color: $primary;
 }
 </style>

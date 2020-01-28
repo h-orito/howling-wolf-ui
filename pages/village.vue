@@ -11,57 +11,18 @@
         ></message-card>
       </div>
       <div v-if="!loadingSituation">
-        <action :situation="situation"></action>
+        <action
+          :situation="situation"
+          @participate="participate($event)"
+          @spectate="spectate($event)"
+          @leave="leave($event)"
+          @change-skill-request="changeSkillRequest($event)"
+          @say="say($event)"
+          @vote="vote($event)"
+          @set-ability="setAbility($event)"
+          @commit="commit($event)"
+        ></action>
       </div>
-      <!-- <div class="w4b-footer-info-area buttons are-small">
-        <div>生存 7/13</div>
-        <button class="button w4b-footer-button">CO</button>
-        <button class="button w4b-footer-button">定型文</button>
-        <button class="button w4b-footer-button">発言する</button>
-      </div>
-      <div class="w4b-footer-member-skill-area">
-        <div class="w4b-footer-skill-area">
-          <p class="is-size-2">占</p>
-        </div>
-        <div class="w4b-footer-member-area">
-          <div class="w4b-icon-area">
-            <div class="w4b-icon">楽</div>
-            <p class="w4b-icon-status has-text-danger">2d▲</p>
-          </div>
-          <div class="w4b-icon-area">
-            <div class="w4b-icon">長</div>
-          </div>
-          <div class="w4b-icon-area">
-            <div class="w4b-icon">羊</div>
-          </div>
-          <div class="w4b-icon-area">
-            <div class="w4b-icon">修</div>
-          </div>
-          <div class="w4b-icon-area">
-            <div class="w4b-icon">書</div>
-          </div>
-          <div class="w4b-icon-area">
-            <div class="w4b-icon">樵</div>
-          </div>
-          <div class="w4b-icon-area">
-            <div class="w4b-icon">青</div>
-          </div>
-          <div class="w4b-icon-area">
-            <div class="w4b-icon">旅</div>
-          </div>
-          <div class="w4b-icon-area">
-            <div class="w4b-icon">商</div>
-          </div>
-          <div class="w4b-icon-area">
-            <div class="w4b-icon">農</div>
-          </div>
-        </div>
-      </div>
-      <div class="w4b-footer-menu buttons are-small">
-        <button class="button w4b-footer-button">メニュー</button>
-        <button class="button w4b-footer-button">ルール</button>
-        <button class="button w4b-footer-button">フィルタ</button>
-      </div> -->
     </div>
   </div>
 </template>
@@ -72,7 +33,6 @@ import axios from '@nuxtjs/axios'
 import Village from '~/components/type/village'
 import VillageDay from '~/components/type/village-day'
 import Messages from '~/components/type/messages'
-import Message from '~/components/type/message'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 import loading from '~/components/loading.vue'
 import messageCard from '~/components/village/message/message-card.vue'
@@ -84,7 +44,7 @@ import action from '~/components/village/action/action.vue'
     messageCard,
     action
   },
-  async asyncData({ query }) {
+  asyncData({ query }) {
     return { villageId: query.id }
   }
 })
@@ -107,12 +67,15 @@ export default class extends Vue {
   private get loadingVillage(): boolean {
     return this.village == null
   }
+
   private get loadingMessage(): boolean {
     return this.messages == null
   }
+
   private get loadingSituation(): boolean {
     return this.situation == null
   }
+
   private get latestDay(): VillageDay | null {
     if (this.village == null) return null
     return this.village.day.day_list[this.village.day.day_list.length - 1]
@@ -120,31 +83,112 @@ export default class extends Vue {
 
   /** created */
   private async created(): Promise<any> {
-    // 村情報読み込み
-    this.village = await this.loadVillage()
-    // 発言読み込み
-    this.messages = await this.loadMessage()
-    // 状況読み込み
-    this.situation = await this.loadSituation()
+    await this.reload()
   }
 
   /** methods */
   private async loadVillage(): Promise<Village> {
-    return this.$axios.$get(`/village/${this.villageId}`)
+    return await this.$axios.$get(`/village/${this.villageId}`)
   }
 
-  private async loadMessage(): Promise<Messages> {
-    if (this.latestDay == null) return Promise.reject()
-    return this.$axios.$get(
+  private async loadMessage(): Promise<Messages | null> {
+    if (this.latestDay == null) return null
+    return await this.$axios.$get(
       `/village/${this.village!.id}/day/${this.latestDay.day}/time/${
         this.latestDay.noonnight
       }/message-list`
     )
   }
 
-  private async loadSituation(): Promise<any> {
-    if (this.village == null) return Promise.reject()
-    return this.$axios.$get(`/village/${this.village.id}/situation`)
+  private async loadSituation(): Promise<SituationAsParticipant | null> {
+    if (this.village == null) return null
+    return await this.$axios.$get(`/village/${this.village.id}/situation`)
+  }
+
+  private async reload(): Promise<void> {
+    this.village = await this.loadVillage()
+    this.messages = await this.loadMessage()
+    this.situation = await this.loadSituation()
+  }
+
+  private async participate({
+    charaId,
+    firstRequestSkillCode,
+    secondRequestSkillCode
+  }): Promise<void> {
+    try {
+      await this.$axios.$post(`/village/${this.village!.id}/participate`, {
+        chara_id: parseInt(charaId),
+        first_request_skill: firstRequestSkillCode,
+        second_request_skill: secondRequestSkillCode,
+        join_message: 'dummy join message',
+        join_password: null,
+        spectator: false
+      })
+      this.reload()
+    } catch (error) {}
+  }
+
+  private async spectate({ charaId }): Promise<void> {
+    try {
+      await this.$axios.$post(`/village/${this.village!.id}/participate`, {
+        chara_id: parseInt(charaId),
+        join_message: 'dummy join message',
+        join_password: null,
+        spectator: true
+      })
+      this.reload()
+    } catch (error) {}
+  }
+
+  private async leave(): Promise<void> {
+    try {
+      await this.$axios.$post(`/village/${this.village!.id}/leave`, {})
+      this.reload()
+    } catch (error) {}
+  }
+
+  private async changeSkillRequest({
+    firstRequestSkillCode,
+    secondRequestSkillCode
+  }): Promise<void> {
+    try {
+      await this.$axios.$post(`/village/${this.village!.id}/change-skill`, {
+        first_request_skill: firstRequestSkillCode,
+        second_request_skill: secondRequestSkillCode
+      })
+      this.reload()
+    } catch (error) {}
+  }
+
+  private async say({ message, messageType, faceType }): Promise<void> {
+    try {
+      await this.$axios.$post(`/village/${this.village!.id}/say`, {
+        message,
+        message_type: messageType,
+        face_type: faceType
+      })
+      this.reload()
+    } catch (error) {}
+  }
+
+  private async vote({ targetId }): Promise<void> {
+    return await this.$axios.$post(`/village/${this.village!.id}/vote`, {
+      targetId
+    })
+  }
+
+  private async setAbility({ targetId, abilityType }): Promise<void> {
+    return await this.$axios.$post(`/village/${this.village!.id}/ability`, {
+      target_id: parseInt(targetId),
+      ability_type: abilityType
+    })
+  }
+
+  private async commit({ doCommit }): Promise<void> {
+    return await this.$axios.$post(`/village/${this.village!.id}/commit`, {
+      commit: doCommit
+    })
   }
 }
 </script>
@@ -154,7 +198,7 @@ export default class extends Vue {
   overflow-y: scroll;
 
   .w4b-chat-area {
-    background-color: $twitter-invert;
+    background-color: $twitter;
     padding: 5px;
     .w4b-chat-message {
       line-height: 1.5;

@@ -16,7 +16,7 @@
         />
       </div>
       <div class="w4b-message-text-area">
-        <message-text :messageText="message.content.text" />
+        <message-text :message-text="message.content.text" />
       </div>
     </div>
   </div>

@@ -21,7 +21,7 @@
       </header>
       <div class="card-content">
         <div class="content has-text-left">
-          <message-text :messageText="message.content.text" />
+          <message-text :message-text="message.content.text" />
         </div>
       </div>
       <footer class="card-footer">

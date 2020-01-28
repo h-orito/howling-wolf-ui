@@ -32,7 +32,7 @@
     <template v-slot:footer>
       <b-button
         :disabled="!canSubmit || submitting"
-        @click="changeSkillRequet"
+        @click="changeSkillRequest"
         type="is-primary"
         size="is-small"
         class="button is-primary"
@@ -60,28 +60,28 @@ export default class Participate extends Vue {
     this.situation.skill_request.skill_request == null
       ? null
       : this.situation.skill_request.skill_request.first.code
+
   private secondRequestSkillCode: string | null =
     this.situation.skill_request.skill_request == null
       ? null
       : this.situation.skill_request.skill_request.second.code
 
-  private get selectableSkillList(): Array<any> {
-    return this.situation.skill_request.selectable_skill_list.map(
-      (skill: Skill) => {
-        return {
-          label: skill.name,
-          code: skill.name
-        }
-      }
-    )
-  }
+  private submitting = false
+
   // 変更ボタンを押下できるか
-  private get canSubmit(): Boolean {
+  private get canSubmit(): boolean {
     return (
       this.firstRequestSkillCode != null && this.secondRequestSkillCode != null
     )
   }
 
-  private changeSkillRequest(): void {}
+  private async changeSkillRequest(): Promise<void> {
+    this.submitting = true
+    await this.$emit('change-skill-request', {
+      firstRequestSkillCode: this.firstRequestSkillCode,
+      secondRequestSkillCode: this.secondRequestSkillCode
+    })
+    this.submitting = false
+  }
 }
 </script>

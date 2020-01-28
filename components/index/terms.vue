@@ -132,7 +132,7 @@
 export default {
   data: () => ({}),
   computed: {},
-  created: function() {},
+  created() {},
   methods: {}
 }
 </script>

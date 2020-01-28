@@ -2,7 +2,7 @@
   <div v-if="message.content.type.code == 'PUBLIC_SYSTEM'">
     <div class="card-content p-t-10 p-b-10 m-b-5">
       <div class="content has-text-left">
-        <message-text :messageText="message.content.text" />
+        <message-text :message-text="message.content.text" />
       </div>
     </div>
   </div>

@@ -1,11 +1,11 @@
 <template>
-  <action-card :title="'発言する'">
+  <action-card :title="'時短希望'">
     <template v-slot:content>
       ほげ
     </template>
     <template v-slot:footer>
-      <b-button @click="say" type="is-primary" size="is-small">
-        発言する
+      <b-button @click="commit" type="is-primary" size="is-small">
+        時短希望する
       </b-button>
     </template>
   </action-card>
@@ -19,10 +19,8 @@ import SituationAsParticipant from '~/components/type/situation-as-participant'
 @Component({
   components: { actionCard }
 })
-export default class Say extends Vue {
+export default class Vote extends Vue {
   @Prop({ type: Object })
   private situation!: SituationAsParticipant
-
-  private say(): void {}
 }
 </script>

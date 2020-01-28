@@ -213,6 +213,7 @@ export default class extends Vue {
         this.showErrorFields(errorFields)
       })
   }
+
   private async createVillage() {
     const res = await this.$axios
       .$post('/village', {
@@ -237,6 +238,7 @@ export default class extends Vue {
       })
     location.href = `/village?id=${res.village_id}`
   }
+
   private showErrorFields(errorFields: Array<string>): void {
     if (errorFields.some(fieldName => fieldName === 'villageName')) {
       this.villageNameError = '村名は5文字以上40文字以内で入力してください'

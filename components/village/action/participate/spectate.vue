@@ -1,53 +1,38 @@
 <template>
-  <div class="card">
-    <header class="card-header">
-      <p class="card-header-title has-text-grey">参加する</p>
-    </header>
-    <div class="card-content">
+  <action-card :title="'参加する'">
+    <template v-slot:content>
       <div class="content has-text-left">
-        キャラ：
-        <v-select :options="selectableCharaList" model="charaId"></v-select>
+        <p style="font-weight: 700; margin-bottom: 6px;">キャラ</p>
+        <b-field>
+          <b-select v-model="charaId" expanded size="is-small">
+            <option
+              v-for="chara in situation.participate.selectable_chara_list"
+              :value="chara.id.toString()"
+              :key="chara.id.toString()"
+              >{{ chara.chara_name.name }}</option
+            >
+          </b-select>
+          <p class="control">
+            <button class="button is-primary is-small">画像で選択</button>
+          </p>
+        </b-field>
       </div>
-      <div
-        v-if="situation.skill_request.available_skill_request"
-        class="content has-text-left"
+    </template>
+    <template v-slot:footer>
+      <b-button
+        :disabled="!canSubmit || submitting"
+        @click="participate"
+        type="is-primary"
+        size="is-small"
+        >見学する</b-button
       >
-        役職第1希望：
-        <v-select
-          :options="selectableSkillList"
-          model="firstRequestSkillCode"
-        ></v-select>
-      </div>
-      <div
-        v-if="situation.skill_request.available_skill_request"
-        class="content has-text-left"
-      >
-        役職第2希望：
-        <v-select
-          :options="selectableSkillList"
-          model="secondRequestSkillCode"
-        ></v-select>
-      </div>
-    </div>
-    <footer class="card-footer">
-      <div class="card-footer-item has-text-left">
-        <button
-          :disabled="!canSubmitParticipate || submitting"
-          @click="participate"
-          class="button is-primary"
-        >
-          参加する
-        </button>
-      </div>
-    </footer>
-  </div>
+    </template>
+  </action-card>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
-import Chara from '~/components/type/chara'
-import Skill from '~/components/type/skill'
 
 @Component({
   components: {}
@@ -56,42 +41,19 @@ export default class Spectate extends Vue {
   @Prop({ type: Object })
   private situation!: SituationAsParticipant
 
-  // 参加/見学
+  private submitting: boolean = false
   private charaId: number | null = null
-  private firstRequestSkillCode: string | null =
-    this.situation.skill_request.skill_request == null
-      ? null
-      : this.situation.skill_request.skill_request.first.code
-  private secondRequestSkillCode: string | null =
-    this.situation.skill_request.skill_request == null
-      ? null
-      : this.situation.skill_request.skill_request.second.code
 
-  private get selectableCharaList(): Array<any> {
-    return this.situation.participate.selectable_chara_list.map(
-      (chara: Chara) => {
-        return {
-          label: chara.chara_name.name,
-          code: chara.id.toString
-        }
-      }
-    )
-  }
-  private get selectableSkillList(): Array<any> {
-    return this.situation.skill_request.selectable_skill_list.map(
-      (skill: Skill) => {
-        return {
-          label: skill.name,
-          code: skill.name
-        }
-      }
-    )
-  }
   // 参加ボタンを押下できるか
-  private get canSubmitParticipate(): Boolean {
+  private get canSubmit(): boolean {
     return this.charaId != null
   }
 
-  private participate(): void {}
+  private spectate(): void {
+    this.submitting = true
+    this.$emit('spectate', {
+      charaId: this.charaId
+    })
+  }
 }
 </script>

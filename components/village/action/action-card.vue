@@ -23,7 +23,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
   components: {}
 })
 export default class ActionCard extends Vue {
-  @Prop({ type: Object })
+  @Prop({ type: String })
   private title!: string
 
   @Prop({ type: Boolean, default: true })

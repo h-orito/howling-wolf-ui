@@ -1,17 +1,19 @@
 <template>
   <div>
-    <!-- 参加 or 見学 -->
     <participate
       v-if="situation.participate.available_participate"
       :situation="situation"
+      @participate="$emit('participate', $event)"
     />
     <spectate
       v-if="situation.participate.available_spectate"
       :situation="situation"
+      @spectate="$emit('spectate', $event)"
     />
     <leave
       v-if="situation.participate.available_leave"
       :situation="situation"
+      @leave="$emit('leave')"
     />
     <skill-request
       v-if="
@@ -19,13 +21,28 @@
           situation.skill_request.available_skill_request
       "
       :situation="situation"
+      @change-skill-request="$emit('change-skill-request', $event)"
     />
-    <say v-if="situation.say.available_say" :situation="situation" />
-    <vote v-if="situation.vote.available_vote" :situation="situation" />
+    <say
+      v-if="situation.say.available_say"
+      :situation="situation"
+      @say="$emit('say', $event)"
+    />
+    <vote
+      v-if="situation.vote.available_vote"
+      :situation="situation"
+      @vote="$emit('vote', $event)"
+    />
     <ability
       v-for="ability in situation.ability.list"
       :key="ability.type.code"
       :ability="ability"
+      @set-ability="$emit('set-ability', $event)"
+    />
+    <commit
+      v-if="situation.commit.available_commit"
+      :situation="situation"
+      @vote="$emit('commit', $event)"
     />
   </div>
 </template>
@@ -40,6 +57,7 @@ import skillRequest from '~/components/village/action/participate/skill-request.
 import say from '~/components/village/action/say/say.vue'
 import vote from '~/components/village/action/vote/vote.vue'
 import ability from '~/components/village/action/ability/ability.vue'
+import commit from '~/components/village/action/commit/commit.vue'
 // type
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 
@@ -51,13 +69,16 @@ import SituationAsParticipant from '~/components/type/situation-as-participant'
     leave,
     say,
     vote,
-    ability
+    ability,
+    commit
   }
 })
 export default class Action extends Vue {
   @Prop({ type: Object })
   private situation!: SituationAsParticipant
 
-  private participate(): void {}
+  private leave(): void {
+    console.log('leave')
+  }
 }
 </script>

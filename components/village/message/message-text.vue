@@ -2,8 +2,8 @@
   <p class="w4b-message-text">
     <span
       v-for="escapedMessageLine in escapeAndSplitMessage(messageText)"
-      v-bind:key="escapedMessageLine.id"
-      ><span v-for="mes in splitAnchor(escapedMessageLine)" v-bind:key="mes.id">
+      :key="escapedMessageLine.id"
+      ><span v-for="mes in splitAnchor(escapedMessageLine)" :key="mes.id">
         <span v-if="!mes.isAnchor" v-html="mes.text"></span>
         <a
           v-if="mes.isAnchor"
@@ -53,9 +53,9 @@ export default class MessageText extends Vue {
     splitedMessages = this.appendSplit(splitedMessages, /(&gt;&gt;\+\d{1,5})/)
     splitedMessages = this.appendSplit(splitedMessages, /(&gt;&gt;=\d{1,5})/)
     splitedMessages = this.appendSplit(splitedMessages, /(&gt;&gt;@\d{1,5})/)
-    splitedMessages = this.appendSplit(splitedMessages, /(&gt;&gt;\-\d{1,5})/)
+    splitedMessages = this.appendSplit(splitedMessages, /(&gt;&gt;-\d{1,5})/)
     splitedMessages = this.appendSplit(splitedMessages, /(&gt;&gt;\*\d{1,5})/)
-    splitedMessages = this.appendSplit(splitedMessages, /(&gt;&gt;\#\d{1,5})/)
+    splitedMessages = this.appendSplit(splitedMessages, /(&gt;&gt;#\d{1,5})/)
     splitedMessages = splitedMessages.filter(mes => mes !== '')
 
     return splitedMessages.map(splitedMessage => {
@@ -88,11 +88,11 @@ export default class MessageText extends Vue {
       return AnchorType.Mason
     } else if (mes.match(/(&gt;&gt;@\d{1,5})/)) {
       return AnchorType.Spectate
-    } else if (mes.match(/(&gt;&gt;\-\d{1,5})/)) {
+    } else if (mes.match(/(&gt;&gt;-\d{1,5})/)) {
       return AnchorType.Monologue
     } else if (mes.match(/(&gt;&gt;\*\d{1,5})/)) {
       return AnchorType.Wolf
-    } else if (mes.match(/(&gt;&gt;\#\d{1,5})/)) {
+    } else if (mes.match(/(&gt;&gt;#\d{1,5})/)) {
       return AnchorType.Creator
     }
     return null

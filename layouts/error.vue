@@ -9,14 +9,12 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
 
-@Component({
-  components: {}
-})
-export default class ErrorPage extends Vue {
+@Component
+export default class Error extends Vue {
   @Prop({ type: Object })
   private error!: Object
 
-  private async created(): Promise<any> {
+  private created(): void {
     console.log(this.error)
   }
 }

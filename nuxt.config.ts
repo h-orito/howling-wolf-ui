@@ -65,10 +65,18 @@ const nuxtConfig: Configuration = {
     'cookie-universal-nuxt'
   ],
   styleResources: {
-    scss: ['~/assets/sass/wolf4busy.scss']
+    scss: ['~assets/sass/_wolf4busy.scss']
   },
   /* Build configuration */
-  buildModules: ['@nuxt/typescript-build'],
+  buildModules: [
+    [
+      '@nuxt/typescript-build',
+      {
+        typeCheck: true,
+        ignoreNotFoundWarnings: true
+      }
+    ]
+  ],
 
   build: {
     /* You can extend webpack config here */
