@@ -114,14 +114,15 @@ export default class extends Vue {
   private async participate({
     charaId,
     firstRequestSkillCode,
-    secondRequestSkillCode
+    secondRequestSkillCode,
+    message
   }): Promise<void> {
     try {
       await this.$axios.$post(`/village/${this.village!.id}/participate`, {
         chara_id: parseInt(charaId),
         first_request_skill: firstRequestSkillCode,
         second_request_skill: secondRequestSkillCode,
-        join_message: 'dummy join message',
+        join_message: message,
         join_password: null,
         spectator: false
       })

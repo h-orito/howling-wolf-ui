@@ -51,7 +51,19 @@ export default class Leave extends Vue {
   private isLeaveModalActive: boolean = false
 
   private confirmLeave(): void {
-    this.isLeaveModalActive = true
+    this.$buefy.dialog.confirm({
+      title: '退村確認',
+      message: '本当に退村しますか？',
+      confirmText: '退村する',
+      type: 'is-danger',
+      hasIcon: true,
+      onConfirm: async () => {
+        await this.$emit('leave')
+        this.$buefy.toast.open('退村しました。')
+      },
+      size: 'is-small',
+      cancelText: 'キャンセル'
+    })
   }
 
   private leave(): void {

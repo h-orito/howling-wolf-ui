@@ -44,6 +44,10 @@
             >
           </b-select>
         </b-field>
+        <b-field custom-class="is-small" label="入村発言">
+          <message-input v-model="message" />
+        </b-field>
+        <p>{{ 'message is ' + message }}</p>
       </div>
     </template>
     <template v-slot:footer>
@@ -62,9 +66,10 @@
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import actionCard from '~/components/village/action/action-card.vue'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
+import messageInput from '~/components/village/action/message-input.vue'
 
 @Component({
-  components: { actionCard }
+  components: { actionCard, messageInput }
 })
 export default class Participate extends Vue {
   @Prop({ type: Object })
@@ -82,12 +87,16 @@ export default class Participate extends Vue {
       ? null
       : this.situation.skill_request.skill_request.second.code
 
+  private message: string = ''
+
   // 参加ボタンを押下できるか
   private get canSubmit(): boolean {
     return (
       this.charaId != null &&
       this.firstRequestSkillCode != null &&
-      this.secondRequestSkillCode != null
+      this.secondRequestSkillCode != null &&
+      this.message != null &&
+      this.message.length > 0
     )
   }
 
@@ -96,7 +105,8 @@ export default class Participate extends Vue {
     await this.$emit('participate', {
       charaId: this.charaId,
       firstRequestSkillCode: this.firstRequestSkillCode,
-      secondRequestSkillCode: this.secondRequestSkillCode
+      secondRequestSkillCode: this.secondRequestSkillCode,
+      message: this.message
     })
     this.submitting = false
   }
