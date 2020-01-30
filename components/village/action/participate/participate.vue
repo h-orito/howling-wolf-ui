@@ -13,7 +13,21 @@
             >
           </b-select>
           <p class="control">
-            <button class="button is-primary is-small">画像で選択</button>
+            <button class="button is-primary is-small" @click="openModal">
+              画像で選択
+            </button>
+            <b-modal
+              :active.sync="isCharaSelectModalOpen"
+              has-modal-card
+              trap-focus
+              aria-role="dialog"
+              aria-modal
+            >
+              <chara-select-modal
+                :chara-list="situation.participate.selectable_chara_list"
+                @chara-select="charaSelect($event)"
+              />
+            </b-modal>
           </p>
         </b-field>
         <b-field
@@ -47,7 +61,6 @@
         <b-field custom-class="is-small" label="入村発言">
           <message-input v-model="message" />
         </b-field>
-        <p>{{ 'message is ' + message }}</p>
       </div>
     </template>
     <template v-slot:footer>
@@ -67,9 +80,10 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 import actionCard from '~/components/village/action/action-card.vue'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 import messageInput from '~/components/village/action/message-input.vue'
+import charaSelectModal from '~/components/village/action/participate/chara-select-modal.vue'
 
 @Component({
-  components: { actionCard, messageInput }
+  components: { actionCard, messageInput, charaSelectModal }
 })
 export default class Participate extends Vue {
   @Prop({ type: Object })
@@ -88,6 +102,8 @@ export default class Participate extends Vue {
       : this.situation.skill_request.skill_request.second.code
 
   private message: string = ''
+
+  private isCharaSelectModalOpen = false
 
   // 参加ボタンを押下できるか
   private get canSubmit(): boolean {
@@ -109,6 +125,16 @@ export default class Participate extends Vue {
       message: this.message
     })
     this.submitting = false
+  }
+
+  private openModal(): void {
+    this.isCharaSelectModalOpen = true
+  }
+
+  private charaSelect({ charaId }): void {
+    this.charaId = charaId
+    console.log(charaId)
+    this.isCharaSelectModalOpen = false
   }
 }
 </script>

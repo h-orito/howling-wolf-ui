@@ -62,7 +62,7 @@ export default class MessageInput extends Vue {
   }
 
   private get lengthCount(): string {
-    const max = this.restrict == null ? 400 : this.restrict!.max_length
+    const max = this.restrict == null ? 200 : this.restrict!.max_length
     const current = this.value.length - this.value.split('\n').length + 1
     return `文字数: ${current.toString()}/${max.toString()}`
   }

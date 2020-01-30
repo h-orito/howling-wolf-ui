@@ -1,0 +1,65 @@
+<template>
+  <div class="modal-card" style="width: auto">
+    <header class="modal-card-head">
+      <p class="modal-card-title">画像から選択</p>
+    </header>
+    <section class="modal-card-body">
+      <div class="chara-select-content">
+        <div
+          v-for="chara in charaList"
+          :key="chara.id"
+          class="has-text-centered chara-select-box"
+          @click="selected(chara.id)"
+        >
+          <img
+            :src="normalImageUrl(chara)"
+            :alt="chara.chara_name.name"
+            :width="chara.display.width"
+            :height="chara.display.height"
+          />
+          <p class="is-size-7">{{ chara.chara_name.name }}</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</template>
+
+<script lang="ts">
+import { Component, Vue, Prop } from 'vue-property-decorator'
+import Chara from '~/components/type/chara'
+
+@Component({
+  components: {}
+})
+export default class CharaSelectModal extends Vue {
+  @Prop({ type: Array })
+  private charaList!: Chara[]
+
+  private normalImageUrl(chara: Chara): string {
+    return chara.face_list.find(face => face.type === 'NORMAL')!.image_url
+  }
+
+  private selected(charaId: number): void {
+    this.$emit('chara-select', { charaId })
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.chara-select-content {
+  display: flex;
+  flex-wrap: wrap;
+
+  .chara-select-box {
+    border: 1px solid #cccccc;
+    padding: 5px;
+    margin: 5px auto;
+    width: 160px;
+  }
+  .chara-select-box:hover {
+    cursor: pointer;
+    border: 1px solid $primary;
+    font-weight: 700;
+  }
+}
+</style>
