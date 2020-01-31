@@ -1,5 +1,10 @@
 <template>
   <div>
+    <say
+      v-if="situation.say.available_say"
+      :situation="situation"
+      @say="$emit('say', $event)"
+    />
     <participate
       v-if="situation.participate.available_participate"
       :situation="situation"
@@ -22,11 +27,6 @@
       "
       :situation="situation"
       @change-skill-request="$emit('change-skill-request', $event)"
-    />
-    <say
-      v-if="situation.say.available_say"
-      :situation="situation"
-      @say="$emit('say', $event)"
     />
     <vote
       v-if="situation.vote.available_vote"

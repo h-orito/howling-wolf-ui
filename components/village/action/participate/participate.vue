@@ -59,7 +59,12 @@
           </b-select>
         </b-field>
         <b-field custom-class="is-small" label="入村発言">
-          <message-input v-model="message" />
+          <message-input
+            v-model="message"
+            :situation="situation.say"
+            :message-type="'NORMAL'"
+            ref="messageInput"
+          />
         </b-field>
       </div>
     </template>
@@ -112,8 +117,14 @@ export default class Participate extends Vue {
       this.firstRequestSkillCode != null &&
       this.secondRequestSkillCode != null &&
       this.message != null &&
-      this.message.length > 0
+      this.message.length > 0 &&
+      !this.isOver
     )
+  }
+
+  private get isOver(): boolean {
+    // veturがrefsで定義した子コンポーネントのプロパティを認識できないので回避
+    return (this.$refs as any).messageInput.existsOver
   }
 
   private async participate(): Promise<void> {

@@ -43,7 +43,7 @@ export default class ActionCard extends Vue {
 
   .action-card-content {
     text-align: left;
-    padding: 10px 5px 10px 5px;
+    padding: 10px;
   }
   .action-card-footer-item {
     padding: 5px;

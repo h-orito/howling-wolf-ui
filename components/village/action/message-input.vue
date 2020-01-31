@@ -5,8 +5,9 @@
       type="textarea"
       :value="value"
       @input="$emit('input', $event)"
+      :custom-class="messageClass"
     ></b-input>
-    <p class="has-text-right">{{ counter }}</p>
+    <p class="has-text-right" v-html="counter"></p>
   </section>
 </template>
 
@@ -26,7 +27,7 @@ export default class MessageInput extends Vue {
   @Prop({ type: Object })
   private situation!: VillageSaySituation | null
 
-  @Prop({ type: Object })
+  @Prop({ type: String })
   private messageType!: string
 
   private get counter(): string {
@@ -49,22 +50,95 @@ export default class MessageInput extends Vue {
       : messageTypeSituation.restrict
   }
 
+  private get existsOver(): boolean {
+    if (this.restrict == null) {
+      return this.isLineOver || this.isLengthOver
+    } else {
+      return this.isRemainingZero || this.isLineOver || this.isLengthOver
+    }
+  }
+
   private get remainingCount(): string {
     const max = this.restrict!.max_count!
     const remaining = this.restrict!.remaining_count!
-    return `残り回数: ${remaining.toString()}/${max.toString()}`
+    if (remaining === 0) {
+      return `残り回数: <span class="has-text-danger">${remaining.toString()}/${max.toString()}</span>`
+    } else {
+      return `残り回数: ${remaining.toString()}/${max.toString()}`
+    }
+  }
+
+  private get isRemainingZero(): boolean {
+    const remaining = this.restrict!.remaining_count!
+    return remaining === 0
   }
 
   private get lineCount(): string {
+    // const max = this.restrict == null ? 20 : this.restrict!.max_line
+    const max = 20
+    const current = this.value.split('\n').length
+    if (current > max) {
+      return `行数: <span class="has-text-danger">${current.toString()}/${max.toString()}</span>`
+    } else {
+      return `行数: ${current.toString()}/${max.toString()}`
+    }
+  }
+
+  private get isLineOver(): boolean {
     const max = this.restrict == null ? 20 : this.restrict!.max_line
     const current = this.value.split('\n').length
-    return `行数: ${current.toString()}/${max.toString()}`
+    return current > max
   }
 
   private get lengthCount(): string {
     const max = this.restrict == null ? 200 : this.restrict!.max_length
     const current = this.value.length - this.value.split('\n').length + 1
-    return `文字数: ${current.toString()}/${max.toString()}`
+    if (current > max) {
+      return `文字数: <span class="has-text-danger">${current.toString()}/${max.toString()}</span>`
+    } else {
+      return `文字数: ${current.toString()}/${max.toString()}`
+    }
+  }
+
+  private get isLengthOver(): boolean {
+    const max = this.restrict == null ? 200 : this.restrict!.max_length
+    const current = this.value.length - this.value.split('\n').length + 1
+    return current > max
+  }
+
+  private get messageClass(): string {
+    switch (this.messageType) {
+      case 'NORMAL_SAY':
+        return 'normal-say'
+      case 'WEREWOLF_SAY':
+        return 'werewolf-say'
+      case 'MONOLOGUE_SAY':
+        return 'monologue-say'
+      case 'GRAVE_SAY':
+        return 'grave-say'
+      case 'SPECTATE_SAY':
+        return 'spectate-say'
+      default:
+        return ''
+    }
   }
 }
 </script>
+
+<style lang="scss">
+.normal-say {
+  background-color: $normal-say !important;
+}
+.werewolf-say {
+  background-color: $werewolf-say !important;
+}
+.monologue-say {
+  background-color: $monologue-say !important;
+}
+.grave-say {
+  background-color: $grave-say !important;
+}
+.spectate-say {
+  background-color: $spectate-say !important;
+}
+</style>

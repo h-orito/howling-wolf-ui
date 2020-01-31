@@ -6,6 +6,14 @@ $primary-invert: findColorInvert($primary);
 $twitter: #4099ff;
 $twitter-invert: findColorInvert($twitter);
 
+$normal-say: #ffffff;
+$werewolf-say: #f2aeae;
+$mason-say: #aef2ae;
+$monologue-say: #ddd;
+$grave-say: #a9edf7;
+$spectate-say: #f2f2ae;
+
+
 // Setup $colors to use as bulma classes (e.g. 'is-twitter')
 $colors: (
   'white': (
