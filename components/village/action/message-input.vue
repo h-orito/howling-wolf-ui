@@ -74,8 +74,7 @@ export default class MessageInput extends Vue {
   }
 
   private get lineCount(): string {
-    // const max = this.restrict == null ? 20 : this.restrict!.max_line
-    const max = 20
+    const max = this.restrict == null ? 20 : this.restrict!.max_line
     const current = this.value.split('\n').length
     if (current > max) {
       return `行数: <span class="has-text-danger">${current.toString()}/${max.toString()}</span>`

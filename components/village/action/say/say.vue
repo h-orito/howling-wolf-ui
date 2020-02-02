@@ -90,7 +90,13 @@ export default class Say extends Vue {
     return this.situation.participate.myself!.chara.display.height
   }
 
-  private say(): void {}
+  private say(): void {
+    this.$emit('say', {
+      message: this.message,
+      messageType: this.messageType,
+      faceType: 'NORMAL'
+    })
+  }
 }
 </script>
 

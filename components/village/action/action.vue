@@ -1,5 +1,6 @@
 <template>
   <div>
+    <hr />
     <say
       v-if="situation.say.available_say"
       :situation="situation"

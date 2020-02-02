@@ -8,6 +8,10 @@
           v-for="message in messages.message_list"
           :key="message['id']"
           :message="message"
+          :is-progress="
+            village.status.code === 'PROLOGUE' ||
+              village.status.code === 'PROGRESS'
+          "
         ></message-card>
       </div>
       <div v-if="!loadingSituation">
@@ -24,25 +28,36 @@
         ></action>
       </div>
     </div>
+    <div v-if="isDispDebugMenu">
+      <village-debug
+        :village="village"
+        @debug-participate="debugParticipate($event)"
+        @dummy-login="dummyLogin($event)"
+      />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import axios from '@nuxtjs/axios'
+// components
+import loading from '~/components/loading.vue'
+import messageCard from '~/components/village/message/message-card.vue'
+import action from '~/components/village/action/action.vue'
+import villageDebug from '~/components/village/debug/village-debug.vue'
+// type
 import Village from '~/components/type/village'
 import VillageDay from '~/components/type/village-day'
 import Messages from '~/components/type/messages'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
-import loading from '~/components/loading.vue'
-import messageCard from '~/components/village/message/message-card.vue'
-import action from '~/components/village/action/action.vue'
 
 @Component({
   components: {
     loading,
     messageCard,
-    action
+    action,
+    villageDebug
   },
   asyncData({ query }) {
     return { villageId: query.id }
@@ -79,6 +94,14 @@ export default class extends Vue {
   private get latestDay(): VillageDay | null {
     if (this.village == null) return null
     return this.village.day.day_list[this.village.day.day_list.length - 1]
+  }
+
+  private get isDebug(): boolean {
+    return (process.env as any).IS_LOCAL
+  }
+
+  private get isDispDebugMenu(): boolean {
+    return this.isDebug && !this.village != null && this.situation != null
   }
 
   /** created */
@@ -175,7 +198,7 @@ export default class extends Vue {
 
   private async vote({ targetId }): Promise<void> {
     return await this.$axios.$post(`/village/${this.village!.id}/vote`, {
-      targetId
+      target_id: targetId
     })
   }
 
@@ -190,6 +213,20 @@ export default class extends Vue {
     return await this.$axios.$post(`/village/${this.village!.id}/commit`, {
       commit: doCommit
     })
+  }
+
+  private async debugParticipate({ num }): Promise<void> {
+    await this.$axios.$post(`/admin/village/${this.village!.id}/participate`, {
+      participate_count: num
+    })
+    this.reload()
+  }
+
+  private async dummyLogin({ participantId }): Promise<void> {
+    await this.$axios.$post(`/admin/village/${this.village!.id}/dummy-login`, {
+      target_id: participantId
+    })
+    this.reload()
   }
 }
 </script>

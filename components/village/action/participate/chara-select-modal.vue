@@ -52,6 +52,7 @@ export default class CharaSelectModal extends Vue {
 
   .chara-select-box {
     border: 1px solid #cccccc;
+    border-radius: 16px;
     padding: 5px;
     margin: 5px auto;
     width: 160px;
