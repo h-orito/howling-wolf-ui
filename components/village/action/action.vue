@@ -1,6 +1,10 @@
 <template>
   <div>
     <hr />
+    <myself
+      v-if="situation.participate.myself && situation.participate.myself.skill"
+      :situation="situation"
+    />
     <say
       v-if="situation.say.available_say"
       :situation="situation"
@@ -59,6 +63,7 @@ import say from '~/components/village/action/say/say.vue'
 import vote from '~/components/village/action/vote/vote.vue'
 import ability from '~/components/village/action/ability/ability.vue'
 import commit from '~/components/village/action/commit/commit.vue'
+import myself from '~/components/village/action/myself/myself.vue'
 // type
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 
@@ -71,15 +76,12 @@ import SituationAsParticipant from '~/components/type/situation-as-participant'
     say,
     vote,
     ability,
-    commit
+    commit,
+    myself
   }
 })
 export default class Action extends Vue {
   @Prop({ type: Object })
   private situation!: SituationAsParticipant
-
-  private leave(): void {
-    console.log('leave')
-  }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <hr />
-    <action-card :title="'デバッグメニュー'">
+    <action-card :title="'デバッグメニュー'" :exists-footer="false">
       <template v-slot:content>
         <div class="content has-text-left">
           <p style="font-weight: 700; margin-bottom: 6px;">参加させる</p>

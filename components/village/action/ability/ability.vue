@@ -2,12 +2,14 @@
   <action-card :title="`能力行使（${ability.type.name}）`">
     <template v-slot:content>
       <div class="content has-text-left">
-        <b-message type="is-info" size="is-small">
-          あなたは〜〜です。ここに説明文が表示されます。
-        </b-message>
         <p style="font-weight: 700; margin-bottom: 6px;">対象</p>
         <b-field>
-          <b-select v-model="participantId" expanded size="is-small">
+          <b-select
+            v-model="participantId"
+            :disable="!ability.usable || ability.target_list.length === 0"
+            expanded
+            size="is-small"
+          >
             <option
               v-for="participant in ability.target_list"
               :value="participant.id.toString()"
@@ -49,7 +51,7 @@ export default class Ability extends Vue {
     this.ability.target == null ? null : this.ability.target.id
 
   private get canSubmit(): boolean {
-    return true // TODO 対象なしを許可するか
+    return this.ability.usable && this.ability.target_list.length !== 0
   }
 
   private async setAbility(): Promise<void> {

@@ -8,7 +8,7 @@
     <div v-if="existsContent" class="card-content action-card-content">
       <slot name="content" />
     </div>
-    <footer class="card-footer">
+    <footer v-if="existsFooter" class="card-footer">
       <div class="card-footer-item action-card-footer-item">
         <slot name="footer" />
       </div>
@@ -28,6 +28,9 @@ export default class ActionCard extends Vue {
 
   @Prop({ type: Boolean, default: true })
   private existsContent?: boolean
+
+  @Prop({ type: Boolean, default: true })
+  private existsFooter?: boolean
 }
 </script>
 
