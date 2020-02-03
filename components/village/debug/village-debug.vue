@@ -6,7 +6,12 @@
         <div class="content has-text-left">
           <p style="font-weight: 700; margin-bottom: 6px;">参加させる</p>
           <b-field>
-            <b-select v-model="participateCharaNum" expanded size="is-small">
+            <b-select
+              v-model="participateCharaNum"
+              :disabled="village.status.code !== 'PROLOGUE'"
+              expanded
+              size="is-small"
+            >
               <option
                 v-for="num in participateMemberNumList"
                 :value="num"
@@ -16,6 +21,7 @@
             </b-select>
             <p class="control">
               <button
+                :disabled="village.status.code !== 'PROLOGUE'"
                 class="button is-primary is-small"
                 @click="debugParticipate"
               >
@@ -34,14 +40,17 @@
               >
             </b-select>
             <p class="control">
-              <button
-                class="button is-primary is-small"
-                @click="debugParticipate"
-              >
+              <button class="button is-primary is-small" @click="dummyLogin">
                 でログインする
               </button>
             </p>
           </b-field>
+          <p style="font-weight: 700; margin-bottom: 6px;">日付を進める</p>
+          <p class="control has-text-right">
+            <button class="button is-primary is-small" @click="changeDay">
+              日付を進める
+            </button>
+          </p>
         </div>
       </template>
       <template v-slot:footer> </template>
@@ -103,6 +112,10 @@ export default class Action extends Vue {
     this.$emit('dummy-login', {
       participantId: this.participantId
     })
+  }
+
+  private changeDay(): void {
+    this.$emit('debug-change-day')
   }
 }
 </script>

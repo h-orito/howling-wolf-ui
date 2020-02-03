@@ -33,6 +33,7 @@
         :village="village"
         @debug-participate="debugParticipate($event)"
         @dummy-login="dummyLogin($event)"
+        @debug-change-day="debugChangeDay($event)"
       />
     </div>
   </div>
@@ -226,6 +227,11 @@ export default class extends Vue {
     await this.$axios.$post(`/admin/village/${this.village!.id}/dummy-login`, {
       target_id: participantId
     })
+    this.reload()
+  }
+
+  private async debugChangeDay(): Promise<void> {
+    await this.$axios.$post(`/admin/village/${this.village!.id}/change-day`)
     this.reload()
   }
 }
