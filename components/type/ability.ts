@@ -1,5 +1,6 @@
 interface Ability {
-  hoge: string
+  code: string
+  name: string
 }
 
 export default Ability

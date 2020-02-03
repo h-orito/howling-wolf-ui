@@ -1,24 +1,64 @@
 <template>
-  <div class="card">
-    <header class="card-header">
-      <p class="card-header-title has-text-grey">能力行使</p>
-    </header>
-    <div class="card-content"></div>
-    <footer class="card-footer">
-      <div class="card-footer-item has-text-left"></div>
-    </footer>
-  </div>
+  <action-card :title="`能力行使（${ability.type.name}）`">
+    <template v-slot:content>
+      <div class="content has-text-left">
+        <b-message type="is-info" size="is-small">
+          あなたは〜〜です。ここに説明文が表示されます。
+        </b-message>
+        <p style="font-weight: 700; margin-bottom: 6px;">対象</p>
+        <b-field>
+          <b-select v-model="participantId" expanded size="is-small">
+            <option
+              v-for="participant in ability.target_list"
+              :value="participant.id.toString()"
+              :key="participant.id.toString()"
+              >{{ participant.chara.chara_name.name }}</option
+            >
+          </b-select>
+        </b-field>
+      </div>
+    </template>
+    <template v-slot:footer>
+      <b-button
+        :disabled="!canSubmit || submitting"
+        @click="setAbility"
+        type="is-primary"
+        size="is-small"
+        >セットする</b-button
+      >
+    </template>
+  </action-card>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
+// components
+import actionCard from '~/components/village/action/action-card.vue'
+// type
 import VillageAbilitySituation from '~/components/type/village-ability-situation'
 
 @Component({
-  components: {}
+  components: { actionCard }
 })
 export default class Ability extends Vue {
   @Prop({ type: Object })
   private ability!: VillageAbilitySituation
+
+  private submitting: boolean = false
+  private participantId: number | null =
+    this.ability.target == null ? null : this.ability.target.id
+
+  private get canSubmit(): boolean {
+    return true // TODO 対象なしを許可するか
+  }
+
+  private async setAbility(): Promise<void> {
+    this.submitting = true
+    await this.$emit('set-ability', {
+      targetId: this.participantId,
+      abilityType: this.ability.type.code
+    })
+    this.submitting = false
+  }
 }
 </script>
