@@ -45,6 +45,15 @@
               </button>
             </p>
           </b-field>
+          <p style="font-weight: 700; margin-bottom: 6px;">突然死なしにする</p>
+          <p class="control has-text-right">
+            <button
+              class="button is-primary is-small"
+              @click="setNoSuddenlyDeath"
+            >
+              突然死なしにする
+            </button>
+          </p>
           <p style="font-weight: 700; margin-bottom: 6px;">日付を進める</p>
           <p class="control has-text-right">
             <button class="button is-primary is-small" @click="changeDay">
@@ -63,7 +72,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 // component
 import actionCard from '~/components/village/action/action-card.vue'
 // type
-import Village from '~/components/type/village'
+import DebugVillage from '~/components/type/debug-village'
 import VillageParticipant from '~/components/type/village-participant'
 
 @Component({
@@ -71,7 +80,7 @@ import VillageParticipant from '~/components/type/village-participant'
 })
 export default class Action extends Vue {
   @Prop({ type: Object })
-  private village!: Village
+  private village!: DebugVillage
 
   private participateCharaNum: number =
     this.participateMemberNumList.length !== 0
@@ -112,6 +121,10 @@ export default class Action extends Vue {
     this.$emit('dummy-login', {
       participantId: this.participantId
     })
+  }
+
+  private setNoSuddenlyDeath(): void {
+    this.$emit('set-no-suddenly-death')
   }
 
   private changeDay(): void {

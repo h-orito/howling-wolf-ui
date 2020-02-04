@@ -7,6 +7,7 @@
         <message-card
           v-for="message in messages.message_list"
           :key="message['id']"
+          :village="village"
           :message="message"
           :is-progress="
             village.status.code === 'PROLOGUE' ||
@@ -30,10 +31,11 @@
     </div>
     <div v-if="isDispDebugMenu">
       <village-debug
-        :village="village"
+        :village="debugVillage"
         @debug-participate="debugParticipate($event)"
         @dummy-login="dummyLogin($event)"
         @debug-change-day="debugChangeDay($event)"
+        @set-no-suddenly-death="setNoSuddenlyDeath($event)"
       />
     </div>
   </div>
@@ -52,6 +54,7 @@ import Village from '~/components/type/village'
 import VillageDay from '~/components/type/village-day'
 import Messages from '~/components/type/messages'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
+import DebugVillage from '~/components/type/debug-village'
 
 @Component({
   components: {
@@ -78,6 +81,7 @@ export default class extends Vue {
   private village: Village | null = null
   private messages: Messages | null = null
   private situation: SituationAsParticipant | null = null
+  private debugVillage: DebugVillage | null = null
 
   /** computed */
   private get loadingVillage(): boolean {
@@ -102,7 +106,7 @@ export default class extends Vue {
   }
 
   private get isDispDebugMenu(): boolean {
-    return this.isDebug && !this.village != null && this.situation != null
+    return this.isDebug && this.debugVillage != null && this.situation != null
   }
 
   /** created */
@@ -129,10 +133,15 @@ export default class extends Vue {
     return await this.$axios.$get(`/village/${this.village.id}/situation`)
   }
 
+  private async loadDebugVillage(): Promise<DebugVillage> {
+    return await this.$axios.$get(`/admin/village/${this.villageId}`)
+  }
+
   private async reload(): Promise<void> {
     this.village = await this.loadVillage()
     this.messages = await this.loadMessage()
     this.situation = await this.loadSituation()
+    if (this.isDebug) this.debugVillage = await this.loadDebugVillage()
   }
 
   private async participate({
@@ -232,6 +241,13 @@ export default class extends Vue {
 
   private async debugChangeDay(): Promise<void> {
     await this.$axios.$post(`/admin/village/${this.village!.id}/change-day`)
+    this.reload()
+  }
+
+  private async setNoSuddenlyDeath(): Promise<void> {
+    await this.$axios.$post(
+      `/admin/village/${this.village!.id}/no-suddenly-death`
+    )
     this.reload()
   }
 }

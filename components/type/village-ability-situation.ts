@@ -6,6 +6,7 @@ interface VillageAbilitySituation {
   target_list: VillageParticipant[]
   target: VillageParticipant | null
   usable: boolean
+  available_no_target: boolean
 }
 
 export default VillageAbilitySituation

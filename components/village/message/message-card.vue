@@ -5,30 +5,32 @@
       :message="message"
       :is-progress="isProgress"
     />
-    <message-public-system
-      v-if="message.content.type.code === 'PUBLIC_SYSTEM'"
-      :message="message"
-    />
+    <message-system v-if="isSystemType" :village="village" :message="message" />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
-import Message from '~/components/type/message'
 import messageSay from '~/components/village/message/message-say.vue'
-import messagePublicSystem from '~/components/village/message/message-public-system.vue'
+import messageSystem from '~/components/village/message/message-system.vue'
 import messageText from '~/components/village/message/message-text.vue'
+// type
+import Village from '~/components/type/village'
+import Message from '~/components/type/message'
 
 @Component({
   components: {
     messageText,
     messageSay,
-    messagePublicSystem
+    messageSystem
   }
 })
 export default class MessageCard extends Vue {
   @Prop({ type: Object })
   private message!: Message
+
+  @Prop({ type: Object })
+  private village!: Village
 
   @Prop({ type: Boolean })
   private isProgress!: boolean
@@ -41,6 +43,17 @@ export default class MessageCard extends Vue {
       'MONOLOGUE_SAY',
       'MASON_SAY',
       'SPECTATE_SAY'
+    ].some(type => this.message.content.type.code === type)
+  }
+
+  private get isSystemType(): boolean {
+    return [
+      'PUBLIC_SYSTEM',
+      'PRIVATE_SYSTEM',
+      'PRIVATE_SEER',
+      'PRIVATE_PSYCHIC',
+      'PRIVATE_WEREWOLF',
+      'PARTICIPANTS'
     ].some(type => this.message.content.type.code === type)
   }
 }

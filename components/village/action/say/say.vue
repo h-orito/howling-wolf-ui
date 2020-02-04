@@ -3,9 +3,6 @@
     <template v-slot:content>
       <div class="content has-text-left">
         <div class="say-area">
-          <div class="say-name-area">
-            <p class="myself-name">{{ myself }}</p>
-          </div>
           <b-field>
             <b-radio-button
               v-for="messageTypeSituation in situation.say
@@ -102,16 +99,6 @@ export default class Say extends Vue {
 
 <style lang="scss">
 .say-area {
-  .say-name-area {
-    padding-bottom: 5px;
-    display: flex;
-
-    .myself-name {
-      flex: 1;
-      text-align: left;
-      font-weight: bold;
-    }
-  }
   .say-content-area {
     display: flex;
 

@@ -10,9 +10,17 @@ $normal-say: #ffffff;
 $werewolf-say: #f2cece;
 $mason-say: #cef2ce;
 $monologue-say: #ddd;
-$grave-say: #b9edf7;
+$grave-say: #ceedf2;
 $spectate-say: #f2f2ce;
 
+$private-system-border: #ccc;
+$private-system-bg: #eee;
+$seer-system-border: #0f0;
+$seer-system-bg: #efe;
+$psychic-system-border: #00f;
+$psychic-system-bg: #eef;
+$werewolf-system-border: #f00;
+$werewolf-system-bg: #fee;
 
 // Setup $colors to use as bulma classes (e.g. 'is-twitter')
 $colors: (

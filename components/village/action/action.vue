@@ -35,7 +35,7 @@
     />
     <vote
       v-if="situation.vote.available_vote"
-      :situation="situation"
+      :vote="situation.vote"
       @vote="$emit('vote', $event)"
     />
     <ability

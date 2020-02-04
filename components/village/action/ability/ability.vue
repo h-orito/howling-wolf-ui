@@ -10,6 +10,9 @@
             expanded
             size="is-small"
           >
+            <option v-if="ability.available_no_target" value="">
+              なし
+            </option>
             <option
               v-for="participant in ability.target_list"
               :value="participant.id.toString()"
@@ -51,7 +54,16 @@ export default class Ability extends Vue {
     this.ability.target == null ? null : this.ability.target.id
 
   private get canSubmit(): boolean {
-    return this.ability.usable && this.ability.target_list.length !== 0
+    if (this.submitting) return false
+    if (this.ability.available_no_target) {
+      return this.ability.usable && this.ability.target_list.length !== 0
+    } else {
+      return (
+        this.ability.usable &&
+        this.ability.target_list.length !== 0 &&
+        this.participantId != null
+      )
+    }
   }
 
   private async setAbility(): Promise<void> {
@@ -61,6 +73,12 @@ export default class Ability extends Vue {
       abilityType: this.ability.type.code
     })
     this.submitting = false
+    this.$buefy.snackbar.open({
+      message: 'セットしました',
+      type: 'is-success',
+      position: 'is-top-right',
+      actionText: null
+    })
   }
 }
 </script>
