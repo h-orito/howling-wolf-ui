@@ -1,7 +1,15 @@
 <template>
   <div>
-    <div>
+    <div style="position: relative;">
       <img src="~/static/image/top.jpg" alt="top_image" />
+      <p
+        style="position: absolute; left: 2%; top: 50%;
+        line-height: 2em;
+        text-shadow: 2px 2px 5px rgba(69,97,133,1),-2px  2px 5px rgba(69,97,133,1),2px -2px 5px rgba(69,97,133,1), -2px -2px 5px rgba(69,97,133,1);"
+        class="is-size-4 has-text-white has-text-left"
+      >
+        WOLFORESTは、<br />人狼が無料で遊べるWebサービスです
+      </p>
     </div>
     <section class="section">
       <div class="container">
@@ -277,11 +285,4 @@ export default class extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
-.hoge {
-  /* */
-}
-body {
-  background-color: #0e0e1b;
-}
-</style>
+<style lang="scss" scoped></style>

@@ -58,7 +58,7 @@ const nuxtConfig: Configuration = {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     // Doc: https://buefy.github.io/#/documentation
-    ['nuxt-buefy', { materialDesignIcons: false }],
+    'nuxt-buefy',
     // 各pageでsassの変数を使えるようにしたい
     '@nuxtjs/style-resources',
     // dotenv

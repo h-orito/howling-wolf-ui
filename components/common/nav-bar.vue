@@ -1,16 +1,42 @@
 <template>
-  <nav class="navbar has-background-light m-b-20">
-    <div class="navbar-brand">
-      <nuxt-link class="navbar-item" to="/">
-        <img
-          src="~/static/image/titleicon.png"
-          class="m-r-5"
-          alt="汝は多忙なりや"
-        />
-        汝は多忙なりや
-      </nuxt-link>
-    </div>
-  </nav>
+  <b-navbar fixed-top type="is-dark">
+    <template slot="brand">
+      <b-navbar-item tag="nuxt-link" :to="{ path: '/' }">
+        WOLFOREST
+      </b-navbar-item>
+    </template>
+    <template slot="start">
+      <b-navbar-item href="#">
+        人狼ゲームとは
+      </b-navbar-item>
+      <b-navbar-item href="#">
+        ルール
+      </b-navbar-item>
+      <!-- <b-navbar-dropdown label="Info">
+        <b-navbar-item href="#">
+          About
+        </b-navbar-item>
+        <b-navbar-item href="#">
+          Contact
+        </b-navbar-item>
+      </b-navbar-dropdown> -->
+    </template>
+
+    <template slot="end">
+      <b-navbar-item tag="div">
+        <div class="buttons">
+          <b-button
+            type="is-primary"
+            icon-pack="mdi"
+            icon-left="twitter"
+            outlined
+          >
+            <strong>Sign in</strong>
+          </b-button>
+        </div>
+      </b-navbar-item>
+    </template>
+  </b-navbar>
 </template>
 
 <script lang="ts">
