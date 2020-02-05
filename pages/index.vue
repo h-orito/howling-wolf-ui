@@ -38,16 +38,14 @@
         </div>
       </div>
     </section>
-    <section class="section">
-      <div class="container">
-        <h1 class="title is-5">次に作成される村</h1>
-        <next-village :next-village="nextVillage"></next-village>
-      </div>
-    </section>
     <section class="section has-background-light">
       <div class="container">
         <h1 class="title is-5">村一覧</h1>
-        <village-list :villages="villages" />
+        <loading
+          v-if="loadingVillage"
+          :message="'村一覧を読み込み中...'"
+        ></loading>
+        <village-list v-if="!loadingVillage" :villages="villages" />
         <nuxt-link class="button is-primary" to="/create-village"
           >村を作成</nuxt-link
         >
@@ -162,23 +160,25 @@
 import { Component, Vue } from 'vue-property-decorator'
 import axios from '@nuxtjs/axios'
 import cookies from 'cookie-universal-nuxt'
+import firebase from '~/plugins/firebase'
+// component
+import loading from '~/components/loading.vue'
 import terms from '~/components/index/terms.vue'
 import policy from '~/components/index/policy.vue'
 import kampa from '~/components/index/kampa.vue'
 import VillageList from '~/components/index/village-list.vue'
-import NextVillage from '~/components/index/next-village.vue'
+// type
 import Villages from '~/components/type/villages.ts'
 import Village from '~/components/type/village.ts'
 import Player from '~/components/type/player.ts'
-import firebase from '~/plugins/firebase'
 
 @Component({
   components: {
+    loading,
     terms,
     policy,
     kampa,
-    VillageList,
-    NextVillage
+    VillageList
   }
 })
 export default class extends Vue {
@@ -188,13 +188,14 @@ export default class extends Vue {
   }
 
   /** data */
-  private info: number = 0
-  // 自動作成予定の村
-  private nextVillage: any = null
   // 村一覧
-  private villages: Village[] = []
+  private villages: Village[] | null = null
 
   /** computed */
+  private get loadingVillage(): boolean {
+    return this.villages == null
+  }
+
   public get user(): Player {
     return this.$store.getters.getPlayer
   }
