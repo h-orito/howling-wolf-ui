@@ -102,7 +102,7 @@ export default class extends Vue {
   }
 
   private get isDebug(): boolean {
-    return (process.env as any).IS_LOCAL
+    return (process.env as any).ENV === 'local'
   }
 
   private get isDispDebugMenu(): boolean {

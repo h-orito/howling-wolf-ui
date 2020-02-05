@@ -1,18 +1,19 @@
 import { Configuration } from '@nuxt/types'
+require('dotenv').config()
 
 const nuxtConfig: Configuration = {
   mode: 'spa',
 
-  env: require('dotenv').config({
-    FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
-    FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
-    FIREBASE_DATABASEURL: process.env.FIREBASE_DATABASEURL,
-    FIREBASE_PROJECTID: process.env.FIREBASE_PROJECTID,
-    FIREBASE_STORAGEBUCKET: process.env.FIREBASE_STORAGEBUCKET,
-    FIREBASE_MESSAGINGSENDERID: process.env.FIREBASE_MESSAGINGSENDERID,
-    FIREBASE_APPID: process.env.FIREBASE_APPID,
-    IS_LOCAL: process.env.IS_LOCAL === 'true' || false
-  }).parsed,
+  env: {
+    FIREBASE_API_KEY: process.env.FIREBASE_API_KEY || '',
+    FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN || '',
+    FIREBASE_DATABASEURL: process.env.FIREBASE_DATABASEURL || '',
+    FIREBASE_PROJECTID: process.env.FIREBASE_PROJECTID || '',
+    FIREBASE_STORAGEBUCKET: process.env.FIREBASE_STORAGEBUCKET || '',
+    FIREBASE_MESSAGINGSENDERID: process.env.FIREBASE_MESSAGINGSENDERID || '',
+    FIREBASE_APPID: process.env.FIREBASE_APPID || '',
+    ENV: process.env.ENV || ''
+  },
 
   /* Headers of the page */
   head: {
