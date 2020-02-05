@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div>
+      <img src="~/static/image/top.jpg" alt="top_image" />
+    </div>
     <section class="section">
       <div class="container">
         <h1 class="title is-5">人狼で寝不足になっていませんか？</h1>
@@ -279,6 +282,6 @@ export default class extends Vue {
   /* */
 }
 body {
-  background-color: $primary;
+  background-color: #0e0e1b;
 }
 </style>

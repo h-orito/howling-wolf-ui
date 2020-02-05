@@ -17,7 +17,6 @@
 import { Component, Vue } from 'vue-property-decorator'
 
 @Component({
-  // @ts-ignore
   components: {}
 })
 export default class extends Vue {}
