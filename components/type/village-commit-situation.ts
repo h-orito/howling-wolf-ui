@@ -1,6 +1,6 @@
 interface VillageCommitSituation {
-  is_available_commit: boolean
-  is_committing: boolean
+  available_commit: boolean
+  committing: boolean
 }
 
 export default VillageCommitSituation

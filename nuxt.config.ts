@@ -10,7 +10,8 @@ const nuxtConfig: Configuration = {
     FIREBASE_PROJECTID: process.env.FIREBASE_PROJECTID,
     FIREBASE_STORAGEBUCKET: process.env.FIREBASE_STORAGEBUCKET,
     FIREBASE_MESSAGINGSENDERID: process.env.FIREBASE_MESSAGINGSENDERID,
-    FIREBASE_APPID: process.env.FIREBASE_APPID
+    FIREBASE_APPID: process.env.FIREBASE_APPID,
+    IS_LOCAL: process.env.IS_LOCAL === 'true' || false
   }).parsed,
 
   /* Headers of the page */
@@ -65,10 +66,18 @@ const nuxtConfig: Configuration = {
     'cookie-universal-nuxt'
   ],
   styleResources: {
-    scss: ['~/assets/sass/wolf4busy.scss']
+    scss: ['~assets/sass/_wolf4busy.scss']
   },
   /* Build configuration */
-  buildModules: ['@nuxt/typescript-build'],
+  buildModules: [
+    [
+      '@nuxt/typescript-build',
+      {
+        typeCheck: true,
+        ignoreNotFoundWarnings: true
+      }
+    ]
+  ],
 
   build: {
     /* You can extend webpack config here */

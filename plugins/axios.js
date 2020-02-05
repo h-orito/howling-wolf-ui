@@ -6,7 +6,7 @@ export default function({ store, $axios, app }) {
     let token = app.$cookies.get('id-token')
     if (token) {
       token = await refreshTokenIfNeeded(token, store, app)
-      config.headers.common['Authorization'] = 'Bearer ' + token
+      config.headers.common.Authorization = 'Bearer ' + token
     }
     return config
   })

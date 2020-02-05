@@ -42,9 +42,9 @@ const actions = {
         }
       )
       // get user from server
-      const res = await self.$axios.$get('/myplayer')
+      const myPlayer = await self.$axios.$get('/my-player')
       commit('login', {
-        player: res.player,
+        player: myPlayer,
         photoUrl: user.photoURL,
         user: user
       })

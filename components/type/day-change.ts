@@ -5,7 +5,7 @@ import Village from '~/components/type/village'
 import Players from '~/components/type/players'
 
 interface DayChange {
-  is_change: boolean
+  change: boolean
   village: Village
   messages: Messages
   votes: VillageVotes
