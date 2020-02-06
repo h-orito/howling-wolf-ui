@@ -1,7 +1,7 @@
 interface MessageTime {
   village_day_id: number
   day: number
-  datetime: Date
+  datetime: string
   unix_time_milli: number
 }
 

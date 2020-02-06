@@ -56,7 +56,7 @@ import { Component, Vue } from 'vue-property-decorator'
 @Component({
   components: {}
 })
-export default class extends Vue {
+export default class Spotlight extends Vue {
   /** data */
   /** computed */
   public get isLogin(): boolean {
@@ -64,7 +64,7 @@ export default class extends Vue {
   }
 
   private get catchCopy(): string {
-    return 'WOLFORESTは<br />人狼が無料で遊べる<br />Webサービスです'
+    return 'HOWLING WOLFは<br />人狼ゲームが無料で遊べる<br />Webサービスです'
   }
 
   private get twitterUserName(): string {

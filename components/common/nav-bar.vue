@@ -2,14 +2,14 @@
   <b-navbar fixed-top type="is-dark-opacity">
     <template slot="brand">
       <b-navbar-item tag="nuxt-link" :to="{ path: '/' }">
-        WOLFOREST
+        HOWLING WOLF
       </b-navbar-item>
     </template>
     <template slot="start">
       <b-navbar-item tag="nuxt-link" :to="{ path: 'about' }">
         このサイトは
       </b-navbar-item>
-      <b-navbar-item href="#">
+      <b-navbar-item tag="nuxt-link" :to="{ path: 'rule' }">
         ルール
       </b-navbar-item>
       <!-- <b-navbar-dropdown label="Info">

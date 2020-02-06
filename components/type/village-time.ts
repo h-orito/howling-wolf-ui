@@ -1,6 +1,6 @@
 interface VillageTime {
   term_type: string
-  start_datetime: Date
+  start_datetime: string
   day_change_interval_seconds: number
 }
 
