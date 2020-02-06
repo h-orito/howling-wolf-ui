@@ -1,5 +1,5 @@
 <template>
-  <b-navbar fixed-top type="is-dark">
+  <b-navbar fixed-top type="is-dark-opacity">
     <template slot="brand">
       <b-navbar-item tag="nuxt-link" :to="{ path: '/' }">
         WOLFOREST

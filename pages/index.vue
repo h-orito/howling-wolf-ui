@@ -1,29 +1,59 @@
 <template>
   <div>
-    <div style="position: relative;">
+    <div class="" style="position: relative;">
       <img src="~/static/image/top.jpg" alt="top_image" />
-      <p
-        style="position: absolute; left: 2%; top: 50%;
-        line-height: 2em;
-        text-shadow: 2px 2px 5px rgba(69,97,133,1),-2px  2px 5px rgba(69,97,133,1),2px -2px 5px rgba(69,97,133,1), -2px -2px 5px rgba(69,97,133,1);"
-        class="is-size-4 has-text-white has-text-left"
+      <div
+        style="position: absolute; left: 2%; top: 50%;"
+        class="is-hidden-mobile has-text-left"
       >
-        WOLFORESTは、<br />人狼が無料で遊べるWebサービスです
-      </p>
+        <p
+          style="line-height: 2em;
+        text-shadow: 2px 2px 5px rgba(69,97,133,1),-2px  2px 5px rgba(69,97,133,1),2px -2px 5px rgba(69,97,133,1), -2px -2px 5px rgba(69,97,133,1);"
+          class="is-size-4 has-text-white"
+        >
+          WOLFORESTは<br />人狼が無料で遊べるWebサービスです
+        </p>
+        <b-button
+          type="is-white"
+          icon-pack="mdi"
+          icon-left="twitter"
+          outlined
+          class="m-t-10"
+          style="text-shadow: 2px 2px 5px rgba(69,97,133,1),-2px  2px 5px rgba(69,97,133,1),2px -2px 5px rgba(69,97,133,1), -2px -2px 5px rgba(69,97,133,1);"
+        >
+          <strong>Sign in</strong>
+        </b-button>
+      </div>
+      <div
+        style="position: absolute; left: 2%; bottom: 2%;"
+        class="has-text-left is-block-mobile is-hidden-tablet"
+      >
+        <p
+          style="line-height: 2em;
+        text-shadow: 2px 2px 5px rgba(69,97,133,1),-2px  2px 5px rgba(69,97,133,1),2px -2px 5px rgba(69,97,133,1), -2px -2px 5px rgba(69,97,133,1);"
+          class="is-size-6 has-text-white"
+        >
+          WOLFORESTは<br />人狼が無料で遊べるWebサービスです
+        </p>
+      </div>
+      <div
+        style="position: absolute; right: 2%; bottom: 4%;"
+        class="is-block-mobile is-hidden-tablet"
+      >
+        <b-button
+          size="is-small"
+          type="is-white"
+          icon-pack="mdi"
+          icon-left="twitter"
+          outlined
+          class=""
+          style="text-shadow: 2px 2px 5px rgba(69,97,133,1),-2px  2px 5px rgba(69,97,133,1),2px -2px 5px rgba(69,97,133,1), -2px -2px 5px rgba(69,97,133,1);"
+        >
+          <strong>Sign in</strong>
+        </b-button>
+      </div>
     </div>
     <section class="section">
-      <div class="container">
-        <h1 class="title is-5">人狼で寝不足になっていませんか？</h1>
-        <div class="columns">
-          <div class="column">
-            <p class="content">
-              汝は多忙なりやは多忙な方向けのオプションルールを盛り込んだオンライン人狼が遊べるサービスです。
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-    <section class="section has-background-light">
       <div class="container">
         <div v-if="!isLogin">
           <h1 class="title is-5">はじめる</h1>

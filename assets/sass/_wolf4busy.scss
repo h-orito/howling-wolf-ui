@@ -58,6 +58,10 @@ $colors: (
     $danger,
     $danger-invert
   ),
+  'dark-opacity': (
+    hsla(0, 0%, 21%, 0.8),
+    $dark-invert
+  )
 );
 
 // Links
