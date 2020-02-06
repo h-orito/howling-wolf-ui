@@ -1,84 +1,7 @@
 <template>
   <div>
-    <div class="" style="position: relative;">
-      <img src="~/static/image/top.jpg" alt="top_image" />
-      <div
-        style="position: absolute; left: 2%; top: 50%;"
-        class="is-hidden-mobile has-text-left"
-      >
-        <p
-          style="line-height: 2em;
-        text-shadow: 2px 2px 5px rgba(69,97,133,1),-2px  2px 5px rgba(69,97,133,1),2px -2px 5px rgba(69,97,133,1), -2px -2px 5px rgba(69,97,133,1);"
-          class="is-size-4 has-text-white"
-        >
-          WOLFORESTは<br />人狼が無料で遊べるWebサービスです
-        </p>
-        <b-button
-          type="is-white"
-          icon-pack="mdi"
-          icon-left="twitter"
-          outlined
-          class="m-t-10"
-          style="text-shadow: 2px 2px 5px rgba(69,97,133,1),-2px  2px 5px rgba(69,97,133,1),2px -2px 5px rgba(69,97,133,1), -2px -2px 5px rgba(69,97,133,1);"
-        >
-          <strong>Sign in</strong>
-        </b-button>
-      </div>
-      <div
-        style="position: absolute; left: 2%; bottom: 2%;"
-        class="has-text-left is-block-mobile is-hidden-tablet"
-      >
-        <p
-          style="line-height: 2em;
-        text-shadow: 2px 2px 5px rgba(69,97,133,1),-2px  2px 5px rgba(69,97,133,1),2px -2px 5px rgba(69,97,133,1), -2px -2px 5px rgba(69,97,133,1);"
-          class="is-size-6 has-text-white"
-        >
-          WOLFORESTは<br />人狼が無料で遊べるWebサービスです
-        </p>
-      </div>
-      <div
-        style="position: absolute; right: 2%; bottom: 4%;"
-        class="is-block-mobile is-hidden-tablet"
-      >
-        <b-button
-          size="is-small"
-          type="is-white"
-          icon-pack="mdi"
-          icon-left="twitter"
-          outlined
-          class=""
-          style="text-shadow: 2px 2px 5px rgba(69,97,133,1),-2px  2px 5px rgba(69,97,133,1),2px -2px 5px rgba(69,97,133,1), -2px -2px 5px rgba(69,97,133,1);"
-        >
-          <strong>Sign in</strong>
-        </b-button>
-      </div>
-    </div>
-    <section class="section">
-      <div class="container">
-        <div v-if="!isLogin">
-          <h1 class="title is-5">はじめる</h1>
-          <button @click="signin" class="button is-primary">
-            Twitterアカウントでログイン
-          </button>
-          <p class="m-t-10 is-size-7">
-            参加にはアプリ連携が必要です。名前とユーザ名がエピローグで表示されます。
-          </p>
-        </div>
-        <div v-if="isLogin">
-          <h1 class="title is-5">ようこそ</h1>
-          <img v-if="photoURL != null" :src="photoURL" />
-          <br />
-          <a
-            :href="'https://twitter.com/' + user.twitter_user_name"
-            target="_blank"
-            >{{ user.nickname }}</a
-          >
-          さん
-          <br />
-          <button @click="logout" class="button">ログアウト</button>
-        </div>
-      </div>
-    </section>
+    <spotlight @signin="signin" />
+    <player-stats :myself-player="user" @signin="signin" @logout="logout" />
     <section class="section has-background-light">
       <div class="container">
         <h1 class="title is-5">村一覧</h1>
@@ -203,6 +126,8 @@ import axios from '@nuxtjs/axios'
 import cookies from 'cookie-universal-nuxt'
 import firebase from '~/plugins/firebase'
 // component
+import spotlight from '~/components/index/spotlight.vue'
+import playerStats from '~/components/index/player-stats.vue'
 import loading from '~/components/loading.vue'
 import terms from '~/components/index/terms.vue'
 import policy from '~/components/index/policy.vue'
@@ -215,6 +140,8 @@ import Player from '~/components/type/player.ts'
 
 @Component({
   components: {
+    spotlight,
+    playerStats,
     loading,
     terms,
     policy,
