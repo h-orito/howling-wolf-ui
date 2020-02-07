@@ -62,7 +62,7 @@
           <message-input
             v-model="message"
             :situation="situation.say"
-            :message-type="'NORMAL'"
+            :message-type="normalSay"
             ref="messageInput"
           />
         </b-field>
@@ -83,9 +83,11 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import actionCard from '~/components/village/action/action-card.vue'
-import SituationAsParticipant from '~/components/type/situation-as-participant'
 import messageInput from '~/components/village/action/message-input.vue'
 import charaSelectModal from '~/components/village/action/participate/chara-select-modal.vue'
+// type
+import SituationAsParticipant from '~/components/type/situation-as-participant'
+import { MESSAGE_TYPE } from '~/components/const/consts'
 
 @Component({
   components: { actionCard, messageInput, charaSelectModal }
@@ -109,6 +111,10 @@ export default class Participate extends Vue {
   private message: string = ''
 
   private isCharaSelectModalOpen = false
+
+  private get normalSay(): string {
+    return MESSAGE_TYPE.NORMAL_SAY
+  }
 
   // 参加ボタンを押下できるか
   private get canSubmit(): boolean {

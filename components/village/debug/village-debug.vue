@@ -8,7 +8,7 @@
           <b-field>
             <b-select
               v-model="participateCharaNum"
-              :disabled="village.status.code !== 'PROLOGUE'"
+              :disabled="!isPrologue"
               expanded
               size="is-small"
             >
@@ -21,7 +21,7 @@
             </b-select>
             <p class="control">
               <button
-                :disabled="village.status.code !== 'PROLOGUE'"
+                :disabled="!isPrologue"
                 class="button is-primary is-small"
                 @click="debugParticipate"
               >
@@ -74,6 +74,7 @@ import actionCard from '~/components/village/action/action-card.vue'
 // type
 import DebugVillage from '~/components/type/debug-village'
 import VillageParticipant from '~/components/type/village-participant'
+import { VILLAGE_STATUS } from '~/components/const/consts'
 
 @Component({
   components: { actionCard }
@@ -88,6 +89,10 @@ export default class Action extends Vue {
       : 1
 
   private participantId: number = this.participantList[0].id
+
+  private get isPrologue(): boolean {
+    return this.village.status.code === VILLAGE_STATUS.PROLOGUE
+  }
 
   private get participateMemberNumList(): Array<number> {
     const min = this.village.setting.capacity.min - 1

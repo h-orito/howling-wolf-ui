@@ -4,17 +4,17 @@
     <player-stats :myself-player="user" @signin="signin" @logout="logout" />
     <section class="section has-background-light">
       <div class="container">
-        <h1 class="title is-5">村一覧</h1>
+        <h1 class="title is-5">自動生成村一覧</h1>
         <loading
-          v-if="loadingVillage"
+          v-if="loadingVillages"
           :message="'村一覧を読み込み中...'"
         ></loading>
-        <village-list v-if="!loadingVillage" :villages="villages" />
+        <village-list v-if="!loadingVillages" :villages="villages" />
         <nuxt-link class="button is-primary" to="/create-village"
           >村を作成</nuxt-link
         >
         <div style="margin-top: 15px;">
-          <nuxt-link to="/room-list">終了した部屋を見る</nuxt-link>
+          <nuxt-link :to="{ path: 'village-list' }">村一覧</nuxt-link>
         </div>
       </div>
     </section>
@@ -123,6 +123,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import axios from '@nuxtjs/axios'
+import qs from 'qs'
 import cookies from 'cookie-universal-nuxt'
 import firebase from '~/plugins/firebase'
 // component
@@ -137,6 +138,7 @@ import VillageList from '~/components/index/village-list.vue'
 import Villages from '~/components/type/villages.ts'
 import Village from '~/components/type/village.ts'
 import Player from '~/components/type/player.ts'
+import { VILLAGE_STATUS } from '~/components/const/consts'
 
 @Component({
   components: {
@@ -160,7 +162,7 @@ export default class extends Vue {
   private villages: Village[] | null = null
 
   /** computed */
-  private get loadingVillage(): boolean {
+  private get loadingVillages(): boolean {
     return this.villages == null
   }
 
@@ -182,10 +184,20 @@ export default class extends Vue {
     // ログイン後のリダイレクトの際、ユーザ情報をサーバに保存
     await this.registerUserIfNeeded()
 
-    // 村一覧
-    this.$axios.$get('/village/list').then((res: Villages) => {
-      self.villages = res.list
+    // 自動生成村一覧
+    const res = await this.$axios.$get('/village/list', {
+      params: {
+        village_status: [
+          VILLAGE_STATUS.PROLOGUE,
+          VILLAGE_STATUS.PROGRESS,
+          VILLAGE_STATUS.EPILOGUE
+        ],
+        is_auto_generate: true
+      },
+      paramsSerializer: params =>
+        qs.stringify(params, { arrayFormat: 'repeat' })
     })
+    this.villages = (res as Villages).list
   }
 
   /** methods */

@@ -33,6 +33,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 // type
 import Village from '~/components/type/village'
 import VillageDay from '~/components/type/village-day'
+import { VILLAGE_STATUS } from '~/components/const/consts'
 
 @Component({})
 export default class VillageCard extends Vue {
@@ -41,7 +42,8 @@ export default class VillageCard extends Vue {
 
   private get status(): string {
     const villageStatus = this.village.status.name
-    if (this.village.status.code !== 'PROGRESS') return villageStatus
+    if (this.village.status.code !== VILLAGE_STATUS.PROGRESS)
+      return villageStatus
     return `${villageStatus} ${this.nowDate}`
   }
 
@@ -50,19 +52,24 @@ export default class VillageCard extends Vue {
   }
 
   private get nowDate(): string | null {
-    if (this.village.status.code !== 'PROGRESS') return null
+    if (this.village.status.code !== VILLAGE_STATUS.PROGRESS) return null
     return `${this.latestday.day}日目`
   }
 
   private get daychangeDatetime(): string | null {
-    if (['COMPLETED', 'CANCEL'].includes(this.village.status.code)) return null
+    if (
+      [VILLAGE_STATUS.COMPLETE, VILLAGE_STATUS.CANCEL].includes(
+        this.village.status.code
+      )
+    )
+      return null
     return this.latestday.day_change_datetime.substring(0, 16)
   }
 
   private get participantStatus(): string {
     const participantCount: number = this.village.participant.count
     const spectatorCount: number = this.village.spectator.count
-    if (this.village.status.code === 'PROLOGUE') {
+    if (this.village.status.code === VILLAGE_STATUS.PROLOGUE) {
       return (
         `${participantCount}` +
         `/${this.village.setting.capacity.max}` +

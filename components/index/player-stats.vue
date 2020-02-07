@@ -24,7 +24,7 @@
                 <img :src="photoURL" />
               </div>
               <div class="media-content">
-                <p class="title is-4">{{ myselfPlayer.nickname }}</p>
+                <p class="title is-6">{{ myselfPlayer.nickname }}</p>
                 <p class="subtitle is-6">
                   <a v-if="twitterUrl" :href="twitterUrl" target="_blank"
                     >@{{ myselfPlayer.twitter_user_name }}</a
