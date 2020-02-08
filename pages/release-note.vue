@@ -1,14 +1,12 @@
 <template>
-  <div>
-    <section class="section">
-      <div class="container">
-        <h1 class="title is-5">ルール</h1>
-        <p class="">
-          まだ執筆していません。
-        </p>
-      </div>
-    </section>
-  </div>
+  <section class="section">
+    <div class="container">
+      <h1 class="title is-5">更新情報</h1>
+      <p class="">
+        2020/02/08 開発中
+      </p>
+    </div>
+  </section>
 </template>
 
 <script lang="ts">
@@ -22,7 +20,7 @@ import { Component, Vue } from 'nuxt-property-decorator'
 export default class extends Vue {
   /** head */
   private head() {
-    return { title: ' | ルール' }
+    return { title: ' | 更新情報' }
   }
 }
 </script>

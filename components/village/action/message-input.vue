@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import Village from '~/components/type/village'
 import VillageSaySituation from '~/components/type/village-say-situation'
 import VillageSayRestrictSituation from '~/components/type/village-say-restrict-situation'

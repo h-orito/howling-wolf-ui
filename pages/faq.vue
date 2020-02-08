@@ -1,9 +1,9 @@
 <template>
   <section class="section">
     <div class="container">
-      <h1 class="title is-5">このサイトは</h1>
+      <h1 class="title is-5">FAQ</h1>
       <p class="">
-        開発中です。バグや未実装があっても優しく見守ってあげてください。
+        まだ執筆していません
       </p>
     </div>
   </section>
@@ -12,18 +12,15 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
 // component
-import spotlight from '~/components/index/spotlight.vue'
 // type
 
 @Component({
-  components: {
-    spotlight
-  }
+  components: {}
 })
-export default class extends Vue {
+export default class Faq extends Vue {
   /** head */
   private head() {
-    return { title: ' | このサイトは' }
+    return { title: ' | FAQ' }
   }
 }
 </script>

@@ -10,11 +10,14 @@
           :message="'村一覧を読み込み中...'"
         ></loading>
         <village-list v-if="!loadingVillages" :villages="villages" />
-        <nuxt-link class="button is-primary" to="/create-village"
+        <nuxt-link
+          v-if="canCreateVillage"
+          class="button is-primary"
+          to="/create-village"
           >村を作成</nuxt-link
         >
         <div style="margin-top: 15px;">
-          <nuxt-link :to="{ path: 'village-list' }">村一覧</nuxt-link>
+          <nuxt-link :to="{ path: 'village-list' }">終了した村一覧</nuxt-link>
         </div>
       </div>
     </section>
@@ -39,7 +42,7 @@
               class="content has-text-left is-size-7"
               style="list-style: inside;"
             >
-              <li>2019/03/25 作成中</li>
+              <li>2020/02/08 開発中</li>
             </ul>
             <nuxt-link :to="{ path: 'release-note' }" class="button is-primary"
               >過去の更新情報を見る</nuxt-link
@@ -121,7 +124,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'nuxt-property-decorator'
 import axios from '@nuxtjs/axios'
 import qs from 'qs'
 import cookies from 'cookie-universal-nuxt'
@@ -137,7 +140,7 @@ import VillageList from '~/components/index/village-list.vue'
 // type
 import Villages from '~/components/type/villages.ts'
 import Village from '~/components/type/village.ts'
-import Player from '~/components/type/player.ts'
+import MyselfPlayer from '~/components/type/myself-player.ts'
 import { VILLAGE_STATUS } from '~/components/const/consts'
 
 @Component({
@@ -166,16 +169,26 @@ export default class extends Vue {
     return this.villages == null
   }
 
-  public get user(): Player {
+  private get user(): MyselfPlayer | null {
     return this.$store.getters.getPlayer
   }
 
-  public get photoURL(): any {
+  private get photoURL(): any {
     return this.$store.getters.getPhotoUrl
   }
 
-  public get isLogin(): boolean {
+  private get isLogin(): boolean {
     return this.$store.getters.isLogin
+  }
+
+  private get canCreateVillage(): boolean {
+    const player = this.user
+    if (player == null) return false
+    return player.available_create_village
+  }
+
+  private get isDebug(): boolean {
+    return (process.env as any).ENV === 'local'
   }
 
   /** created */

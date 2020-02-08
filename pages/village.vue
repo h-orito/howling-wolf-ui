@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'nuxt-property-decorator'
 import axios from '@nuxtjs/axios'
 // components
 import loading from '~/components/loading.vue'
@@ -75,7 +75,7 @@ import { VILLAGE_STATUS } from '~/components/const/consts'
 export default class extends Vue {
   /** head */
   private head() {
-    return { title: '| 村' }
+    return { title: this.village == null ? '' : ` | ${this.village.name}` }
   }
 
   /** data */

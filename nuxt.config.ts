@@ -17,7 +17,7 @@ const nuxtConfig: Configuration = {
 
   /* Headers of the page */
   head: {
-    titleTemplate: 'HOWLING WOLF',
+    titleTemplate: 'HOWLING WOLF%s',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -77,7 +77,7 @@ const nuxtConfig: Configuration = {
     'cookie-universal-nuxt'
   ],
   styleResources: {
-    scss: ['~assets/sass/_howlingwolf.scss']
+    scss: ['~/assets/sass/_howlingwolf.scss']
   },
   /* Build configuration */
   buildModules: [
@@ -91,6 +91,12 @@ const nuxtConfig: Configuration = {
   ],
 
   build: {
+    babel: {
+      plugins: [
+        ['@babel/plugin-proposal-decorators', { legacy: true }],
+        ['@babel/plugin-proposal-class-properties', { loose: true }]
+      ]
+    },
     /* You can extend webpack config here */
     extend(config, ctx) {
       // Run ESLint on save

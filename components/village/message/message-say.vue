@@ -1,5 +1,5 @@
 <template>
-  <div class="hw-message-card">
+  <div class="hw-message-card" :class="isAnchorMessage ? 'anchor-message' : ''">
     <div class="hw-message-name-area">
       <span v-if="isDispAnchorString">
         <a href="javascript:void(0);">{{ anchorString }}</a
@@ -18,14 +18,17 @@
         />
       </div>
       <div class="hw-message-text-area" :class="messageClass">
-        <message-text :message-text="message.content.text" />
+        <message-text
+          :message-text="message.content.text"
+          @click-anchor="$emit('click-anchor', $event)"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import messageText from '~/components/village/message/message-text.vue'
 import Message from '~/components/type/message'
 import { MESSAGE_TYPE } from '~/components/const/consts'
@@ -41,6 +44,9 @@ export default class MessageSay extends Vue {
 
   @Prop({ type: Boolean })
   private isProgress!: boolean
+
+  @Prop({ type: Boolean, default: false })
+  private isAnchorMessage?: boolean
 
   private get imageUrl(): string {
     const typeCode = this.message.content.face_code
@@ -127,5 +133,9 @@ export default class MessageSay extends Vue {
 }
 .spectate-say {
   background-color: $spectate-say !important;
+}
+.anchor-message {
+  margin-left: 50px;
+  margin-bottom: 5px;
 }
 </style>
