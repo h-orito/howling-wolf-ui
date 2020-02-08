@@ -28,6 +28,7 @@
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import messageText from '~/components/village/message/message-text.vue'
 import Message from '~/components/type/message'
+import { MESSAGE_TYPE } from '~/components/const/consts'
 
 @Component({
   components: {
@@ -58,15 +59,15 @@ export default class MessageSay extends Vue {
 
   private get messageClass(): string {
     switch (this.message.content.type.code) {
-      case 'NORMAL_SAY':
+      case MESSAGE_TYPE.NORMAL_SAY:
         return 'normal-say'
-      case 'WEREWOLF_SAY':
+      case MESSAGE_TYPE.WEREWOLF_SAY:
         return 'werewolf-say'
-      case 'MONOLOGUE_SAY':
+      case MESSAGE_TYPE.MONOLOGUE_SAY:
         return 'monologue-say'
-      case 'GRAVE_SAY':
+      case MESSAGE_TYPE.GRAVE_SAY:
         return 'grave-say'
-      case 'SPECTATE_SAY':
+      case MESSAGE_TYPE.SPECTATE_SAY:
         return 'spectate-say'
       default:
         return ''

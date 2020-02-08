@@ -10,16 +10,12 @@
       </header>
       <div class="card-content">
         <div class="content has-text-left">
-          <b-tag rounded>{{ village.status.name }}</b-tag>
-          <b-tag rounded>{{ '長期' }}</b-tag>
-        </div>
-        <div class="content has-text-left">
+          <p class="has-text-left is-size-7">状態: {{ status }}</p>
           <p class="has-text-left is-size-7">
-            作成者: {{ village.creator_player_name }}
+            参加人数: {{ participantStatus }}
           </p>
-          <p class="has-text-left is-size-7">
-            参加人数:
-            {{ participantStatus(village) }}
+          <p v-if="daychangeDatetime" class="has-text-left is-size-7">
+            更新: {{ daychangeDatetime }}
           </p>
         </div>
       </div>
@@ -34,20 +30,57 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
+// type
 import Village from '~/components/type/village'
+import VillageDay from '~/components/type/village-day'
+import { VILLAGE_STATUS } from '~/components/const/consts'
+
 @Component({})
 export default class VillageCard extends Vue {
   @Prop({ type: Object })
   private village!: Village
 
-  private participantStatus(village: Village): string {
-    const participantCount: number = village.participant.count
-    const spectatorCount: number = village.spectator.count
-    return (
-      `${participantCount}` +
-      `/${village.setting.capacity.max}` +
-      `${spectatorCount === 0 ? '' : '+' + spectatorCount}`
+  private get status(): string {
+    const villageStatus = this.village.status.name
+    if (this.village.status.code !== VILLAGE_STATUS.PROGRESS)
+      return villageStatus
+    return `${villageStatus} ${this.nowDate}`
+  }
+
+  private get latestday(): VillageDay {
+    return this.village.day.day_list.slice(-1)[0]
+  }
+
+  private get nowDate(): string | null {
+    if (this.village.status.code !== VILLAGE_STATUS.PROGRESS) return null
+    return `${this.latestday.day}日目`
+  }
+
+  private get daychangeDatetime(): string | null {
+    if (
+      [VILLAGE_STATUS.COMPLETE, VILLAGE_STATUS.CANCEL].includes(
+        this.village.status.code
+      )
     )
+      return null
+    return this.latestday.day_change_datetime.substring(0, 16)
+  }
+
+  private get participantStatus(): string {
+    const participantCount: number = this.village.participant.count
+    const spectatorCount: number = this.village.spectator.count
+    if (this.village.status.code === VILLAGE_STATUS.PROLOGUE) {
+      return (
+        `${participantCount}` +
+        `/${this.village.setting.capacity.max}` +
+        `${spectatorCount === 0 ? '' : '+' + spectatorCount}`
+      )
+    } else {
+      return (
+        `${participantCount}` +
+        `${spectatorCount === 0 ? '' : '+' + spectatorCount}`
+      )
+    }
   }
 }
 </script>

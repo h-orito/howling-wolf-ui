@@ -8,6 +8,7 @@ interface VillageRules {
   visible_grave_message: boolean
   available_suddenly_death: boolean
   available_commit: boolean
+  auto_generated: boolean
   message_restrict: VillageMessageRestricts
 }
 

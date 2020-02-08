@@ -5,7 +5,6 @@ const state = {
   photoUrl: null,
   user: null
 }
-let authUbsubscribe = null
 
 const mutations = {
   login(state, { player, photoUrl, user }) {
@@ -46,7 +45,7 @@ const actions = {
       commit('login', {
         player: myPlayer,
         photoUrl: user.photoURL,
-        user: user
+        user
       })
     } else {
       self.$cookies.remove('id-token', {

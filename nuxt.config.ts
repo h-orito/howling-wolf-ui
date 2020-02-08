@@ -28,8 +28,18 @@ const nuxtConfig: Configuration = {
           '忙しい方向けのオプションルールを盛り込んだオンライン人狼が遊べるサービスです。'
       }
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+    link: [
+      {
+        rel: 'apple-touch-icon',
+        type: 'image/png',
+        href: '/image/apple-touch-icon.png'
+      },
+      { rel: 'icon', type: 'image/png', href: '/image/icon.png' }
+    ]
   },
+
+  //   <link rel="apple-touch-icon" type="image/png" href="/apple-touch-icon-180x180.png">
+  // <link rel="icon" type="image/png" href="/icon-192x192.png">
 
   /* Customize the progress-bar color */
   loading: { color: '#3B8070' },
@@ -58,7 +68,7 @@ const nuxtConfig: Configuration = {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     // Doc: https://buefy.github.io/#/documentation
-    ['nuxt-buefy', { materialDesignIcons: false }],
+    'nuxt-buefy',
     // 各pageでsassの変数を使えるようにしたい
     '@nuxtjs/style-resources',
     // dotenv

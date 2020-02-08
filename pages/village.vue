@@ -2,6 +2,11 @@
   <div class="container is-size-7">
     <loading v-if="loadingVillage" :message="'村情報を読み込み中...'"></loading>
     <div v-if="!loadingVillage">
+      <village-day-list
+        :village="village"
+        :display-village-day-id="displayVillageDayId"
+        @current-day-change="changeDisplayDay($event)"
+      />
       <loading v-if="loadingMessage" :message="'発言を読み込み中...'"></loading>
       <div v-if="!loadingMessage">
         <message-card
@@ -9,10 +14,7 @@
           :key="message['id']"
           :village="village"
           :message="message"
-          :is-progress="
-            village.status.code === 'PROLOGUE' ||
-              village.status.code === 'PROGRESS'
-          "
+          :is-progress="isNotFinished"
         ></message-card>
       </div>
       <div v-if="!loadingSituation">
@@ -49,19 +51,22 @@ import loading from '~/components/loading.vue'
 import messageCard from '~/components/village/message/message-card.vue'
 import action from '~/components/village/action/action.vue'
 import villageDebug from '~/components/village/debug/village-debug.vue'
+import villageDayList from '~/components/village/village-day-list.vue'
 // type
 import Village from '~/components/type/village'
 import VillageDay from '~/components/type/village-day'
 import Messages from '~/components/type/messages'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 import DebugVillage from '~/components/type/debug-village'
+import { VILLAGE_STATUS } from '~/components/const/consts'
 
 @Component({
   components: {
     loading,
     messageCard,
     action,
-    villageDebug
+    villageDebug,
+    villageDayList
   },
   asyncData({ query }) {
     return { villageId: query.id }
@@ -75,8 +80,7 @@ export default class extends Vue {
 
   /** data */
   private villageId: number = 0
-  private villageName: string = ''
-  private leftTime: number = 60
+  private displayVillageDayId: number = 0
 
   private village: Village | null = null
   private messages: Messages | null = null
@@ -109,9 +113,18 @@ export default class extends Vue {
     return this.isDebug && this.debugVillage != null && this.situation != null
   }
 
+  private get isNotFinished(): boolean {
+    const statusCode = this.village == null ? '' : this.village.status.code
+    return (
+      statusCode !== VILLAGE_STATUS.PROLOGUE &&
+      statusCode !== VILLAGE_STATUS.PROGRESS
+    )
+  }
+
   /** created */
   private async created(): Promise<any> {
     await this.reload()
+    this.displayVillageDayId = this.latestDay!.id
   }
 
   /** methods */
@@ -119,10 +132,12 @@ export default class extends Vue {
     return await this.$axios.$get(`/village/${this.villageId}`)
   }
 
-  private async loadMessage(): Promise<Messages | null> {
+  private async loadMessage(
+    day: number = this.latestDay!.day
+  ): Promise<Messages | null> {
     if (this.latestDay == null) return null
     return await this.$axios.$get(
-      `/village/${this.village!.id}/day/${this.latestDay.day}/time/${
+      `/village/${this.village!.id}/day/${day}/time/${
         this.latestDay.noonnight
       }/message-list`
     )
@@ -142,6 +157,15 @@ export default class extends Vue {
     this.messages = await this.loadMessage()
     this.situation = await this.loadSituation()
     if (this.isDebug) this.debugVillage = await this.loadDebugVillage()
+  }
+
+  private async changeDisplayDay({ villageDayId }): Promise<void> {
+    const selectedDay = this.village!.day.day_list.find(
+      day => day.id === villageDayId
+    )
+    if (selectedDay == null) return
+    this.messages = await this.loadMessage(selectedDay.day)
+    this.displayVillageDayId = villageDayId
   }
 
   private async participate({

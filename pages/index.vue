@@ -1,58 +1,20 @@
 <template>
   <div>
-    <section class="section">
-      <div class="container">
-        <h1 class="title is-5">人狼で寝不足になっていませんか？</h1>
-        <div class="columns">
-          <div class="column">
-            <p class="content">
-              汝は多忙なりやは多忙な方向けのオプションルールを盛り込んだオンライン人狼が遊べるサービスです。
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
+    <spotlight @signin="signin" />
+    <player-stats :myself-player="user" @signin="signin" @logout="logout" />
     <section class="section has-background-light">
       <div class="container">
-        <div v-if="!isLogin">
-          <h1 class="title is-5">はじめる</h1>
-          <button @click="signin" class="button is-primary">
-            Twitterアカウントでログイン
-          </button>
-          <p class="m-t-10 is-size-7">
-            参加にはアプリ連携が必要です。名前とユーザ名がエピローグで表示されます。
-          </p>
-        </div>
-        <div v-if="isLogin">
-          <h1 class="title is-5">ようこそ</h1>
-          <img v-if="photoURL != null" :src="photoURL" />
-          <br />
-          <a
-            :href="'https://twitter.com/' + user.twitter_user_name"
-            target="_blank"
-            >{{ user.nickname }}</a
-          >
-          さん
-          <br />
-          <button @click="logout" class="button">ログアウト</button>
-        </div>
-      </div>
-    </section>
-    <section class="section">
-      <div class="container">
-        <h1 class="title is-5">次に作成される村</h1>
-        <next-village :next-village="nextVillage"></next-village>
-      </div>
-    </section>
-    <section class="section has-background-light">
-      <div class="container">
-        <h1 class="title is-5">村一覧</h1>
-        <village-list :villages="villages" />
+        <h1 class="title is-5">自動生成村一覧</h1>
+        <loading
+          v-if="loadingVillages"
+          :message="'村一覧を読み込み中...'"
+        ></loading>
+        <village-list v-if="!loadingVillages" :villages="villages" />
         <nuxt-link class="button is-primary" to="/create-village"
           >村を作成</nuxt-link
         >
         <div style="margin-top: 15px;">
-          <nuxt-link to="/room-list">終了した部屋を見る</nuxt-link>
+          <nuxt-link :to="{ path: 'village-list' }">村一覧</nuxt-link>
         </div>
       </div>
     </section>
@@ -161,24 +123,32 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import axios from '@nuxtjs/axios'
+import qs from 'qs'
 import cookies from 'cookie-universal-nuxt'
+import firebase from '~/plugins/firebase'
+// component
+import spotlight from '~/components/index/spotlight.vue'
+import playerStats from '~/components/index/player-stats.vue'
+import loading from '~/components/loading.vue'
 import terms from '~/components/index/terms.vue'
 import policy from '~/components/index/policy.vue'
 import kampa from '~/components/index/kampa.vue'
 import VillageList from '~/components/index/village-list.vue'
-import NextVillage from '~/components/index/next-village.vue'
+// type
 import Villages from '~/components/type/villages.ts'
 import Village from '~/components/type/village.ts'
 import Player from '~/components/type/player.ts'
-import firebase from '~/plugins/firebase'
+import { VILLAGE_STATUS } from '~/components/const/consts'
 
 @Component({
   components: {
+    spotlight,
+    playerStats,
+    loading,
     terms,
     policy,
     kampa,
-    VillageList,
-    NextVillage
+    VillageList
   }
 })
 export default class extends Vue {
@@ -188,13 +158,14 @@ export default class extends Vue {
   }
 
   /** data */
-  private info: number = 0
-  // 自動作成予定の村
-  private nextVillage: any = null
   // 村一覧
-  private villages: Village[] = []
+  private villages: Village[] | null = null
 
   /** computed */
+  private get loadingVillages(): boolean {
+    return this.villages == null
+  }
+
   public get user(): Player {
     return this.$store.getters.getPlayer
   }
@@ -213,10 +184,20 @@ export default class extends Vue {
     // ログイン後のリダイレクトの際、ユーザ情報をサーバに保存
     await this.registerUserIfNeeded()
 
-    // 村一覧
-    this.$axios.$get('/village/list').then((res: Villages) => {
-      self.villages = res.list
+    // 自動生成村一覧
+    const res = await this.$axios.$get('/village/list', {
+      params: {
+        village_status: [
+          VILLAGE_STATUS.PROLOGUE,
+          VILLAGE_STATUS.PROGRESS,
+          VILLAGE_STATUS.EPILOGUE
+        ],
+        is_auto_generate: true
+      },
+      paramsSerializer: params =>
+        qs.stringify(params, { arrayFormat: 'repeat' })
     })
+    this.villages = (res as Villages).list
   }
 
   /** methods */
@@ -273,11 +254,4 @@ export default class extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
-.hoge {
-  /* */
-}
-body {
-  background-color: $primary;
-}
-</style>
+<style lang="scss" scoped></style>

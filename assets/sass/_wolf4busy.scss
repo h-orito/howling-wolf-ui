@@ -1,10 +1,8 @@
 @import '~bulma/sass/utilities/_all';
 
 // Set your colors
-$primary: #8c67ef;
+$primary: #3991f4;
 $primary-invert: findColorInvert($primary);
-$twitter: #4099ff;
-$twitter-invert: findColorInvert($twitter);
 
 $normal-say: #ffffff;
 $werewolf-say: #f2cece;
@@ -60,9 +58,9 @@ $colors: (
     $danger,
     $danger-invert
   ),
-  'twitter': (
-    $twitter,
-    $twitter-invert
+  'dark-opacity': (
+    hsla(0, 0%, 21%, 0.8),
+    $dark-invert
   )
 );
 
@@ -70,6 +68,10 @@ $colors: (
 $link: $primary;
 $link-invert: $primary-invert;
 $link-focus-border: $primary;
+
+// $body-background-color: rgb(17, 19, 30);
+// $body-color: $white;
+// $strong-color: $white;
 
 // space
 // see https://www.virment.com/how-to-use-beufy-vuejs/
