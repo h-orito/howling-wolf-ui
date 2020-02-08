@@ -19,6 +19,7 @@ import messageText from '~/components/village/message/message-text.vue'
 import messageParticipantList from '~/components/village/message/message-participant-list.vue'
 import Village from '~/components/type/village'
 import Message from '~/components/type/message'
+import { MESSAGE_TYPE } from '~/components/const/consts'
 
 @Component({
   components: {
@@ -35,17 +36,17 @@ export default class SystemMessage extends Vue {
 
   private get messageClass(): string {
     switch (this.message.content.type.code) {
-      case 'PUBLIC_SYSTEM':
+      case MESSAGE_TYPE.PUBLIC_SYSTEM:
         return ''
-      case 'PRIVATE_SYSTEM':
+      case MESSAGE_TYPE.PRIVATE_SYSTEM:
         return 'message-system-private'
-      case 'PRIVATE_SEER':
+      case MESSAGE_TYPE.PRIVATE_SEER:
         return 'message-system-private-seer'
-      case 'PRIVATE_PSYCHIC':
+      case MESSAGE_TYPE.PRIVATE_PSYCHIC:
         return 'message-system-private-psychic'
-      case 'PRIVATE_WEREWOLF':
+      case MESSAGE_TYPE.PRIVATE_WEREWOLF:
         return 'message-system-private-werewolf'
-      case 'PARTICIPANTS':
+      case MESSAGE_TYPE.PARTICIPANTS:
         return ''
       default:
         return ''
