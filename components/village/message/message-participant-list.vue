@@ -1,5 +1,5 @@
 <template>
-  <div class="content has-text-left w4b-message-text">
+  <div class="content has-text-left hw-message-text">
     <b-table :data="participants" :columns="participantsColumns"></b-table>
     <b-table :data="spectators" :columns="spectatosColumns"></b-table>
   </div>
