@@ -17,15 +17,14 @@ const nuxtConfig: Configuration = {
 
   /* Headers of the page */
   head: {
-    titleTemplate: '汝は多忙なりや',
+    titleTemplate: 'HOWLING WOLF',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       {
         hid: 'description',
         name: 'description',
-        content:
-          '忙しい方向けのオプションルールを盛り込んだオンライン人狼が遊べるサービスです。'
+        content: '人狼ゲームが無料で遊べるサービスです。'
       }
     ],
     link: [
@@ -56,7 +55,8 @@ const nuxtConfig: Configuration = {
   plugins: ['~/plugins/axios', '~/plugins/vue-datetime'],
   axios: {
     baseURL:
-      process.env.WOLF4BUSY_API_BASEURL || 'http://localhost:8086/wolf4busy'
+      process.env.HOWLING_WOLF_API_BASEURL ||
+      'http://localhost:8086/howling-wolf'
   },
 
   router: {
@@ -77,7 +77,7 @@ const nuxtConfig: Configuration = {
     'cookie-universal-nuxt'
   ],
   styleResources: {
-    scss: ['~assets/sass/_wolf4busy.scss']
+    scss: ['~assets/sass/_howlingwolf.scss']
   },
   /* Build configuration */
   buildModules: [

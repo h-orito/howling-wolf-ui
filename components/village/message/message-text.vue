@@ -1,5 +1,5 @@
 <template>
-  <p class="w4b-message-text">
+  <p class="hw-message-text">
     <span
       v-for="escapedMessageLine in escapeAndSplitMessage(messageText)"
       :key="escapedMessageLine.id"

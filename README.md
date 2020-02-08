@@ -6,7 +6,7 @@
 
 - Vue.js で画面 UI を提供します
 
-- API は[wolf4busy-api](https://github.com/h-orito/wolf4busy-api)を参照
+- API は[howling-wolf-api](https://github.com/h-orito/howling-wolf-api)を参照
 
 ## Requirement for local development
 
@@ -14,7 +14,7 @@
 
   - 最新版をインストールしてください
 
-- [wolf4busy-api](https://github.com/h-orito/wolf4busy-api) のセットアップもしておいてください
+- [howling-wolf-api](https://github.com/h-orito/howling-wolf-api) のセットアップもしておいてください
 
 ## Setup for local development
 
@@ -31,7 +31,7 @@
 
   - http://localhost:3000/ が画面 URL になります
 
-- [wolf4busy-api](https://github.com/h-orito/wolf4busy-api) を起動しておいてください
+- [howling-wolf-api](https://github.com/h-orito/howling-wolf-api) を起動しておいてください
 
 ## Contribution
 
