@@ -1,23 +1,23 @@
 <template>
-  <div class="w4b-message-card">
-    <div class="w4b-message-name-area">
+  <div class="hw-message-card">
+    <div class="hw-message-name-area">
       <span v-if="isDispAnchorString">
         <a href="javascript:void(0);">{{ anchorString }}</a
         >.&nbsp;</span
       >
-      <p class="w4b-message-name">{{ message.from.chara.chara_name.name }}</p>
-      <p class="w4b-message-datetime">{{ message.time.datetime }}</p>
+      <p class="hw-message-name">{{ message.from.chara.chara_name.name }}</p>
+      <p class="hw-message-datetime">{{ message.time.datetime }}</p>
     </div>
-    <div class="w4b-message-content-area">
-      <div class="w4b-message-face-area">
+    <div class="hw-message-content-area">
+      <div class="hw-message-face-area">
         <img
           :src="imageUrl"
           :width="imageWidth"
           :height="imageHeight"
-          class="w4b-message-chara-image"
+          class="hw-message-chara-image"
         />
       </div>
-      <div class="w4b-message-text-area" :class="messageClass">
+      <div class="hw-message-text-area" :class="messageClass">
         <message-text :message-text="message.content.text" />
       </div>
     </div>
