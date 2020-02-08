@@ -53,7 +53,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'nuxt-property-decorator'
 // component
 import participate from '~/components/village/action/participate/participate.vue'
 import spectate from '~/components/village/action/participate/spectate.vue'

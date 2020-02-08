@@ -141,7 +141,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'nuxt-property-decorator'
 import axios from '@nuxtjs/axios'
 
 @Component({
@@ -150,7 +150,7 @@ import axios from '@nuxtjs/axios'
 export default class extends Vue {
   /** head */
   private head() {
-    return { title: '| 村を作成' }
+    return { title: ' | 村作成' }
   }
 
   /** data */

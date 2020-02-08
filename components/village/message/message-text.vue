@@ -18,14 +18,30 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import MesParts from '~/components/village/message/message-parts'
 import AnchorType from '~/components/village/message/anchor-type'
+// type
+import Message from '~/components/type/message'
+import VillageAnchorMessage from '~/components/type/village-anchor-message'
+import { MESSAGE_TYPE } from '~/components/const/consts'
 
 @Component({})
 export default class MessageText extends Vue {
   @Prop({ type: String })
   private messageText!: string
+
+  private get anchorTypeMessageTypeMap(): Map<AnchorType, string> {
+    const map = new Map<AnchorType, string>()
+    map.set(AnchorType.Normal, MESSAGE_TYPE.NORMAL_SAY)
+    map.set(AnchorType.Grave, MESSAGE_TYPE.GRAVE_SAY)
+    map.set(AnchorType.Wolf, MESSAGE_TYPE.WEREWOLF_SAY)
+    map.set(AnchorType.Mason, MESSAGE_TYPE.MASON_SAY)
+    map.set(AnchorType.Spectate, MESSAGE_TYPE.SPECTATE_SAY)
+    map.set(AnchorType.Monologue, MESSAGE_TYPE.MONOLOGUE_SAY)
+    map.set(AnchorType.Creator, MESSAGE_TYPE.CREATOR_SAY)
+    return map
+  }
 
   // html escape and line separate
   private escapeAndSplitMessage = (message: string): string[] => {
@@ -43,8 +59,11 @@ export default class MessageText extends Vue {
       })
   }
 
-  private clickAnchor(mes): void {
-    console.log(mes)
+  private clickAnchor(mes: MesParts) {
+    this.$emit('click-anchor', {
+      messageTypeCode: this.anchorTypeMessageTypeMap.get(mes.anchorType!),
+      messageNumber: mes.messageNum
+    })
   }
 
   // アンカーとそれ以外で分割

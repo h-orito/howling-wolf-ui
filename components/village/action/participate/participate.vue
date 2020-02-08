@@ -81,7 +81,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import actionCard from '~/components/village/action/action-card.vue'
 import messageInput from '~/components/village/action/message-input.vue'
 import charaSelectModal from '~/components/village/action/participate/chara-select-modal.vue'
@@ -100,12 +100,12 @@ export default class Participate extends Vue {
   private charaId: number | null = null
   private firstRequestSkillCode: string | null =
     this.situation.skill_request.skill_request == null
-      ? null
+      ? 'LEFTOVER'
       : this.situation.skill_request.skill_request.first.code
 
   private secondRequestSkillCode: string | null =
     this.situation.skill_request.skill_request == null
-      ? null
+      ? 'LEFTOVER'
       : this.situation.skill_request.skill_request.second.code
 
   private message: string = ''

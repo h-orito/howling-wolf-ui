@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import messageText from '~/components/village/message/message-text.vue'
 import messageParticipantList from '~/components/village/message/message-participant-list.vue'
 import Village from '~/components/type/village'

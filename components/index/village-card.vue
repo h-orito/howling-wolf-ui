@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'nuxt-property-decorator'
 // type
 import Village from '~/components/type/village'
 import VillageDay from '~/components/type/village-day'

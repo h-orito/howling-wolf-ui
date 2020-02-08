@@ -12,9 +12,11 @@
         >
           <strong>Twitterアカウントでログイン</strong>
         </b-button>
-        <p class="m-t-10 is-size-7">
-          参加にはアプリ連携が必要です。名前とユーザ名がエピローグで表示されます。
-        </p>
+        <div class="m-t-10">
+          <p class="is-size-7">
+            参加にはアプリ連携が必要です。名前とユーザ名がエピローグで表示されます。
+          </p>
+        </div>
       </div>
       <div v-if="isLogin">
         <div class="card">
@@ -59,7 +61,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import MyselfPlayer from '../type/myself-player'
 
 @Component({

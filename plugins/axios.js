@@ -1,4 +1,4 @@
-import { Vue } from 'vue-property-decorator'
+import { Vue } from 'nuxt-property-decorator'
 import { SnackbarProgrammatic as Snackbar } from 'buefy'
 
 export default function({ store, $axios, app }) {

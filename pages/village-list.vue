@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue } from 'nuxt-property-decorator'
 import axios from '@nuxtjs/axios'
 import qs from 'qs'
 // component
@@ -68,7 +68,7 @@ import { VILLAGE_STATUS } from '~/components/const/consts'
 export default class VillageList extends Vue {
   /** head */
   private head() {
-    return { title: '村一覧' }
+    return { title: ' | 終了した村一覧' }
   }
 
   /** data */
