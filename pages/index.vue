@@ -1,6 +1,13 @@
 <template>
   <div>
     <spotlight @signin="signin" />
+    <section class="section" v-if="isStg">
+      <div class="container">
+        <p class="has-text-danger is-size-6">
+          テストサーバのため、データは不定期に削除される可能性があります。
+        </p>
+      </div>
+    </section>
     <player-stats :myself-player="user" @signin="signin" @logout="logout" />
     <village-list :loading-villages="loadingVillages" :villages="villages" />
     <section class="section">
@@ -165,6 +172,10 @@ export default class extends Vue {
 
   private get isDebug(): boolean {
     return (process.env as any).ENV === 'local'
+  }
+
+  private get isStg(): boolean {
+    return (process.env as any).ENV !== 'production'
   }
 
   /** created */
