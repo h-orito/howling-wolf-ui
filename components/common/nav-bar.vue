@@ -14,13 +14,12 @@
       </a>
     </div>
     <div class="navbar-brand navbar-brand-center">
-      <nuxt-link
+      <a
         class="navbar-item has-text-center nuxt-link-exact-active nuxt-link-active"
-        :to="{ path: '/' }"
-        @click.native="hideMenu"
+        @click="toHead"
       >
         HOWLING WOLF
-      </nuxt-link>
+      </a>
     </div>
     <div class="navbar-side-menu" :class="isMenuExpanded ? 'is-active' : ''">
       <div class="navbar-side-user-area m-b-20">
@@ -50,6 +49,13 @@
       </div>
       <div class="navbar-start">
         <nuxt-link
+          :to="{ path: '/' }"
+          class="navbar-item"
+          @click.native="hideMenu"
+        >
+          トップページ
+        </nuxt-link>
+        <nuxt-link
           :to="{ path: 'about' }"
           class="navbar-item"
           @click.native="hideMenu"
@@ -62,6 +68,20 @@
           @click.native="hideMenu"
         >
           ルール
+        </nuxt-link>
+        <nuxt-link
+          :to="{ path: 'faq' }"
+          class="navbar-item"
+          @click.native="hideMenu"
+        >
+          よくある質問
+        </nuxt-link>
+        <nuxt-link
+          :to="{ path: 'release-note' }"
+          class="navbar-item"
+          @click.native="hideMenu"
+        >
+          更新情報
         </nuxt-link>
       </div>
       <div class="navbar-end">
@@ -119,6 +139,17 @@ export default class NavBar extends Vue {
     const provider = new firebase.auth.TwitterAuthProvider()
     await firebase.auth().signInWithRedirect(provider)
   }
+
+  private toHead(): void {
+    if (document.scrollingElement == null) return
+    if (document.scrollingElement.scrollTop < 10) {
+      document.scrollingElement.scrollTop = 0
+    } else {
+      document.scrollingElement.scrollTop =
+        document.scrollingElement.scrollTop / 1.1
+      setTimeout(this.toHead, 10)
+    }
+  }
 }
 </script>
 
@@ -145,7 +176,7 @@ export default class NavBar extends Vue {
     position: absolute;
     left: 0;
     top: 0;
-    background-color: $primary;
+    background-color: $dark;
     height: 100vh;
     width: 0%;
     overflow-x: hidden;
@@ -158,7 +189,7 @@ export default class NavBar extends Vue {
     .navbar-side-user-area {
       padding: 8px 12px;
 
-      .strong {
+      strong {
         color: $white;
       }
       .navbar-twitter-icon {
@@ -181,7 +212,7 @@ export default class NavBar extends Vue {
     position: absolute;
     right: 0;
     top: 0;
-    background-color: hsla(0, 0%, 21%, 0.8);
+    background-color: hsla(0, 0%, 21%, 0.4);
     height: 100vh;
     width: calc(100% - 300px);
   }

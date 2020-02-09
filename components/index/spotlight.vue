@@ -64,7 +64,7 @@ export default class Spotlight extends Vue {
   }
 
   private get catchCopy(): string {
-    return 'HOWLING WOLFは<br />人狼ゲームが無料で遊べる<br />Webサービスです'
+    return '今日もまた<br />村に遠吠えが響き渡る'
   }
 
   private get twitterUserName(): string {

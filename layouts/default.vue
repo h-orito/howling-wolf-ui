@@ -1,5 +1,6 @@
 <template>
   <div class="site">
+    <div class="navbar-background-area"></div>
     <nav-bar />
     <div class="siteContent">
       <nuxt class="has-text-centered" />
@@ -18,8 +19,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.siteContent {
-  // nav-bar分
-  margin-top: 3.25rem;
+.navbar-background-area {
+  width: 100%;
+  height: 3.25rem;
+  background-color: $black;
 }
 </style>

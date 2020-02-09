@@ -1,5 +1,5 @@
 <template>
-  <div class="container is-size-7">
+  <div class="container is-size-7 village-main-area">
     <loading v-if="loadingVillage" :message="'村情報を読み込み中...'"></loading>
     <div v-if="!loadingVillage">
       <village-day-list
@@ -40,6 +40,7 @@
         @set-no-suddenly-death="setNoSuddenlyDeath($event)"
       />
     </div>
+    <village-footer @refresh="reload" />
   </div>
 </template>
 
@@ -52,6 +53,7 @@ import messageCard from '~/components/village/message/message-card.vue'
 import action from '~/components/village/action/action.vue'
 import villageDebug from '~/components/village/debug/village-debug.vue'
 import villageDayList from '~/components/village/village-day-list.vue'
+import villageFooter from '~/components/village/village-footer.vue'
 // type
 import Village from '~/components/type/village'
 import VillageDay from '~/components/type/village-day'
@@ -66,7 +68,8 @@ import { VILLAGE_STATUS } from '~/components/const/consts'
     messageCard,
     action,
     villageDebug,
-    villageDayList
+    villageDayList,
+    villageFooter
   },
   asyncData({ query }) {
     return { villageId: query.id }
@@ -278,45 +281,49 @@ export default class extends Vue {
 </script>
 
 <style lang="scss">
-.hw-message-card {
-  padding: 5px;
-  margin-bottom: 5px;
+.village-main-area {
+  padding-bottom: 3.25rem;
 
-  .hw-message-name-area {
-    padding-bottom: 5px;
-    display: flex;
+  .hw-message-card {
+    padding: 5px;
+    margin-bottom: 5px;
 
-    .hw-message-name {
-      flex: 1;
-      text-align: left;
-      font-weight: bold;
-    }
-    .hw-message-datetime {
-      flex: 1;
-      text-align: right;
-      color: #aaaaaa;
-    }
-  }
-  .hw-message-content-area {
-    display: flex;
+    .hw-message-name-area {
+      padding-bottom: 5px;
+      display: flex;
 
-    .hw-message-face-area {
-      padding-right: 5px;
-
-      .hw-message-chara-image {
-        border-radius: 5px;
+      .hw-message-name {
+        flex: 1;
+        text-align: left;
+        font-weight: bold;
+      }
+      .hw-message-datetime {
+        flex: 1;
+        text-align: right;
+        color: #aaaaaa;
       }
     }
+    .hw-message-content-area {
+      display: flex;
 
-    .hw-message-text-area {
-      flex: 1;
-      border: 1px solid #dddddd;
-      border-radius: 5px;
-      padding: 5px;
+      .hw-message-face-area {
+        padding-right: 5px;
 
-      .hw-message-text {
-        text-align: left;
-        word-break: break-word;
+        .hw-message-chara-image {
+          border-radius: 5px;
+        }
+      }
+
+      .hw-message-text-area {
+        flex: 1;
+        border: 1px solid #dddddd;
+        border-radius: 5px;
+        padding: 5px;
+
+        .hw-message-text {
+          text-align: left;
+          word-break: break-word;
+        }
       }
     }
   }
