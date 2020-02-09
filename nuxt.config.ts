@@ -105,9 +105,6 @@ const nuxtConfig: Configuration = {
 
   pwa,
 
-  //   <link rel="apple-touch-icon" type="image/png" href="/apple-touch-icon-180x180.png">
-  // <link rel="icon" type="image/png" href="/icon-192x192.png">
-
   /* Customize the progress-bar color */
   loading: { color: '#3B8070' },
 
@@ -116,7 +113,8 @@ const nuxtConfig: Configuration = {
     '@fortawesome/fontawesome-free-webfonts',
     '@fortawesome/fontawesome-free-webfonts/css/fa-brands.css',
     '@fortawesome/fontawesome-free-webfonts/css/fa-regular.css',
-    '@fortawesome/fontawesome-free-webfonts/css/fa-solid.css'
+    '@fortawesome/fontawesome-free-webfonts/css/fa-solid.css',
+    '~/assets/sass/howlingwolf.scss'
   ],
 
   /* Plugins to load before mounting the App */
@@ -160,7 +158,7 @@ const nuxtConfig: Configuration = {
   },
 
   styleResources: {
-    scss: ['~assets/sass/_howlingwolf.scss']
+    scss: ['~/assets/sass/howlingwolf.scss']
   },
 
   /* Build configuration */
