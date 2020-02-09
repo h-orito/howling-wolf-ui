@@ -16,3 +16,10 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.siteContent {
+  // nav-bar分
+  margin-top: 3.25rem;
+}
+</style>

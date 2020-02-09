@@ -80,7 +80,6 @@ export default class Spotlight extends Vue {
 <style lang="scss" scoped>
 .spotlight-area {
   position: relative;
-  margin-top: -52px;
 
   .spotlight-shadow {
     text-shadow: 2px 2px 5px rgba(69, 97, 133, 1),
