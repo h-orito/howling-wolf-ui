@@ -2,25 +2,7 @@
   <div>
     <spotlight @signin="signin" />
     <player-stats :myself-player="user" @signin="signin" @logout="logout" />
-    <section class="section has-background-light">
-      <div class="container">
-        <h1 class="title is-5">自動生成村一覧</h1>
-        <loading
-          v-if="loadingVillages"
-          :message="'村一覧を読み込み中...'"
-        ></loading>
-        <village-list v-if="!loadingVillages" :villages="villages" />
-        <nuxt-link
-          v-if="canCreateVillage"
-          class="button is-primary"
-          to="/create-village"
-          >村を作成</nuxt-link
-        >
-        <div style="margin-top: 15px;">
-          <nuxt-link :to="{ path: 'village-list' }">終了した村一覧</nuxt-link>
-        </div>
-      </div>
-    </section>
+    <village-list :loading-villages="loadingVillages" :villages="villages" />
     <section class="section">
       <div class="container">
         <h1 class="title is-5">よくある質問</h1>
@@ -179,12 +161,6 @@ export default class extends Vue {
 
   private get isLogin(): boolean {
     return this.$store.getters.isLogin
-  }
-
-  private get canCreateVillage(): boolean {
-    const player = this.user
-    if (player == null) return false
-    return player.available_create_village
   }
 
   private get isDebug(): boolean {

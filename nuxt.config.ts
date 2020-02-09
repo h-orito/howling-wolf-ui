@@ -1,6 +1,55 @@
 import { Configuration } from '@nuxt/types'
 require('dotenv').config()
 
+const siteName = 'HOWLING WOLF'
+const siteDesc = '人狼ゲームが無料で遊べるサービスです。'
+const siteKeywords = '人狼,人狼ゲーム,長期人狼'
+const baseUrl = process.env.HOWLING_WOLF_UI_BASEURL || 'http://localhost:3000'
+const ogpImages = baseUrl + '/image/ogp/'
+const manifestIcon = '/image/icons/icon-512.png'
+
+const pwa = {
+  icon: {
+    iconFileName: manifestIcon
+  },
+  manifest: {
+    lang: 'ja',
+    name: siteName,
+    short_name: siteName,
+    description: siteDesc,
+    background_color: '#ffffff',
+    theme_color: '#ffffff',
+    display: 'standalone',
+    orientation: 'portrait'
+  },
+  workbox: {
+    runtimeCaching: [
+      {
+        urlPattern: 'https://polyfill.io/.*',
+        handler: 'cacheFirst'
+      },
+      {
+        urlPattern: '^https://fonts.(?:googleapis|gstatic).com/(.*)',
+        handler: 'cacheFirst'
+      },
+      {
+        urlPattern: 'https://cdn.jsdelivr.net/.*',
+        handler: 'cacheFirst'
+      },
+      {
+        urlPattern: '/.*',
+        handler: 'staleWhileRevalidate',
+        strategyOptions: {
+          cacheName: 'my-cache',
+          cacheExpiration: {
+            maxAgeSeconds: 24 * 60 * 60 * 30
+          }
+        }
+      }
+    ]
+  }
+}
+
 const nuxtConfig: Configuration = {
   mode: 'spa',
 
@@ -17,25 +66,44 @@ const nuxtConfig: Configuration = {
 
   /* Headers of the page */
   head: {
-    titleTemplate: 'HOWLING WOLF%s',
+    titleTemplate: `${siteName}%s`,
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       {
         hid: 'description',
         name: 'description',
-        content: '人狼ゲームが無料で遊べるサービスです。'
-      }
+        content: siteDesc
+      },
+      { hid: 'keywords', name: 'keywords', content: siteKeywords },
+      { hid: 'og:site_name', property: 'og:site_name', content: siteName },
+      // OGP
+      { hid: 'og:type', property: 'og:type', content: 'website' },
+      { hid: 'og:url', property: 'og:url', content: baseUrl },
+      { hid: 'og:title', property: 'og:title', content: siteName },
+      { hid: 'og:description', property: 'og:description', content: siteDesc },
+      {
+        hid: 'og:image',
+        property: 'og:image',
+        content: `${ogpImages}top.jpg`
+      },
+      { name: 'twitter:card', content: 'summary_large_image' }
+      // { name: 'twitter:site', content: '@Twitter' }
     ],
     link: [
       {
         rel: 'apple-touch-icon',
         type: 'image/png',
-        href: '/image/apple-touch-icon.png'
+        href: '/image/icons/apple-touch-icon.png'
       },
-      { rel: 'icon', type: 'image/png', href: '/image/icon.png' }
-    ]
+      { rel: 'icon', type: 'image/png', href: '/image/icons/icon.png' }
+    ],
+    htmlAttrs: {
+      prefix: 'og: http://ogp.me/ns#'
+    }
   },
+
+  pwa,
 
   //   <link rel="apple-touch-icon" type="image/png" href="/apple-touch-icon-180x180.png">
   // <link rel="icon" type="image/png" href="/icon-192x192.png">
@@ -53,6 +121,7 @@ const nuxtConfig: Configuration = {
 
   /* Plugins to load before mounting the App */
   plugins: ['~/plugins/axios', '~/plugins/vue-datetime'],
+
   axios: {
     baseURL:
       process.env.HOWLING_WOLF_API_BASEURL ||
@@ -74,11 +143,24 @@ const nuxtConfig: Configuration = {
     // dotenv
     '@nuxtjs/dotenv',
     // cookie-universal-nuxt
-    'cookie-universal-nuxt'
+    'cookie-universal-nuxt',
+    // Doc: https://github.com/nuxt-community/sitemap-module
+    // ↓配列の最後でsitemapモジュールを宣言
+    '@nuxtjs/sitemap'
   ],
-  styleResources: {
-    scss: ['~/assets/sass/_howlingwolf.scss']
+
+  sitemap: {
+    hostname: 'https://howling-wolf.com',
+    // 除外ディレクトリ、ページ
+    exclude: [],
+    // 動的なルーティングで生成したページ
+    routes: []
   },
+
+  styleResources: {
+    scss: ['~assets/sass/_howlingwolf.scss']
+  },
+
   /* Build configuration */
   buildModules: [
     [
@@ -89,6 +171,7 @@ const nuxtConfig: Configuration = {
       }
     ]
   ],
+  // TODO google analytics https://github.com/nuxt-community/analytics-module
 
   build: {
     babel: {
