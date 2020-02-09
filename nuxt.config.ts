@@ -144,6 +144,8 @@ const nuxtConfig: Configuration = {
     '@nuxtjs/dotenv',
     // cookie-universal-nuxt
     'cookie-universal-nuxt',
+    // pwa
+    '@nuxtjs/pwa',
     // Doc: https://github.com/nuxt-community/sitemap-module
     // ↓配列の最後でsitemapモジュールを宣言
     '@nuxtjs/sitemap'
