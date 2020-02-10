@@ -1,14 +1,27 @@
 <template>
   <div class="container is-size-7 village-main-area">
-    <loading v-if="loadingVillage" :message="'村情報を読み込み中...'"></loading>
-    <div v-if="!loadingVillage">
+    <loading
+      v-if="loadingVillage"
+      :message="'村情報を読み込み中...'"
+      :fixed="true"
+    ></loading>
+    <loading
+      v-if="loadingMessage"
+      :message="'発言を読み込み中...'"
+      :fixed="true"
+    ></loading>
+    <loading
+      v-if="loadingSituation"
+      :message="'参加状況を読み込み中...'"
+      :fixed="true"
+    ></loading>
+    <div v-if="village">
       <village-day-list
         :village="village"
         :display-village-day-id="displayVillageDayId"
         @current-day-change="changeDisplayDay($event)"
       />
-      <loading v-if="loadingMessage" :message="'発言を読み込み中...'"></loading>
-      <div v-if="!loadingMessage">
+      <div v-if="messages">
         <message-card
           v-for="message in messages.message_list"
           :key="message['id']"
@@ -18,7 +31,7 @@
         ></message-card>
       </div>
       <div id="message-bottom" />
-      <div v-if="!loadingSituation">
+      <div v-if="situation">
         <action
           :situation="situation"
           :village="village"
@@ -42,7 +55,7 @@
         @set-no-suddenly-death="setNoSuddenlyDeath($event)"
       />
     </div>
-    <village-footer @refresh="reload" />
+    <village-footer @refresh="loadMessage" />
   </div>
 </template>
 
@@ -86,6 +99,9 @@ export default class extends Vue {
   /** data */
   private villageId: number = 0
   private displayVillageDayId: number = 0
+  private loadingVillage: boolean = true
+  private loadingMessage: boolean = false
+  private loadingSituation: boolean = false
 
   private village: Village | null = null
   private messages: Messages | null = null
@@ -93,18 +109,6 @@ export default class extends Vue {
   private debugVillage: DebugVillage | null = null
 
   /** computed */
-  private get loadingVillage(): boolean {
-    return this.village == null
-  }
-
-  private get loadingMessage(): boolean {
-    return this.messages == null
-  }
-
-  private get loadingSituation(): boolean {
-    return this.situation == null
-  }
-
   private get latestDay(): VillageDay | null {
     if (this.village == null) return null
     return this.village.day.day_list[this.village.day.day_list.length - 1]
@@ -133,24 +137,36 @@ export default class extends Vue {
   }
 
   /** methods */
-  private async loadVillage(): Promise<Village> {
-    return await this.$axios.$get(`/village/${this.villageId}`)
+  private async loadVillage(): Promise<void> {
+    this.loadingVillage = true
+    this.village = await this.$axios.$get(`/village/${this.villageId}`)
+    this.loadingVillage = false
   }
 
-  private async loadMessage(
-    day: number = this.latestDay!.day
-  ): Promise<Messages | null> {
-    if (this.latestDay == null) return null
-    return await this.$axios.$get(
+  private async loadMessage(day: number = this.latestDay!.day): Promise<void> {
+    this.loadingMessage = true
+    if (this.latestDay == null) {
+      this.loadingMessage = false
+      return
+    }
+    this.messages = await this.$axios.$get(
       `/village/${this.village!.id}/day/${day}/time/${
         this.latestDay.noonnight
       }/message-list`
     )
+    this.loadingMessage = false
   }
 
-  private async loadSituation(): Promise<SituationAsParticipant | null> {
-    if (this.village == null) return null
-    return await this.$axios.$get(`/village/${this.village.id}/situation`)
+  private async loadSituation(): Promise<void> {
+    this.loadingSituation = true
+    if (this.village == null) {
+      this.loadingSituation = false
+      return
+    }
+    this.situation = await this.$axios.$get(
+      `/village/${this.village.id}/situation`
+    )
+    this.loadingSituation = false
   }
 
   private async loadDebugVillage(): Promise<DebugVillage> {
@@ -158,9 +174,9 @@ export default class extends Vue {
   }
 
   private async reload(): Promise<void> {
-    this.village = await this.loadVillage()
-    this.messages = await this.loadMessage()
-    this.situation = await this.loadSituation()
+    await this.loadVillage()
+    await this.loadMessage()
+    await this.loadSituation()
     if (this.isDebug) this.debugVillage = await this.loadDebugVillage()
   }
 
@@ -169,7 +185,7 @@ export default class extends Vue {
       day => day.id === villageDayId
     )
     if (selectedDay == null) return
-    this.messages = await this.loadMessage(selectedDay.day)
+    await this.loadMessage(selectedDay.day)
     this.displayVillageDayId = villageDayId
   }
 

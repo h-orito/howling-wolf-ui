@@ -180,9 +180,8 @@ export default class extends Vue {
 
   /** created */
   async created() {
-    const self = this
     // ログイン後のリダイレクトの際、ユーザ情報をサーバに保存
-    await this.registerUserIfNeeded()
+    this.registerUserIfNeeded()
 
     // 自動生成村一覧
     const res = await this.$axios.$get('/village/list', {
