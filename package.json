@@ -1,7 +1,7 @@
 {
   "name": "howling-wolf-ui",
   "version": "1.0.0",
-  "description": "My perfect Nuxt.js project",
+  "description": "人狼ゲームが無料で遊べるサービスです。",
   "author": "h-orito",
   "private": true,
   "scripts": {

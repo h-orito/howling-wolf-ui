@@ -50,6 +50,37 @@ const pwa = {
   }
 }
 
+const meta = [
+  { charset: 'utf-8' },
+  { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+  {
+    hid: 'description',
+    name: 'description',
+    content: siteDesc
+  },
+  { hid: 'keywords', name: 'keywords', content: siteKeywords },
+  { hid: 'og:site_name', property: 'og:site_name', content: siteName },
+  // OGP
+  { hid: 'og:type', property: 'og:type', content: 'website' },
+  { hid: 'og:url', property: 'og:url', content: baseUrl },
+  { hid: 'og:title', property: 'og:title', content: siteName },
+  { hid: 'og:description', property: 'og:description', content: siteDesc },
+  {
+    hid: 'og:image',
+    property: 'og:image',
+    content: `${ogpImages}top.jpg`
+  },
+  { name: 'twitter:card', content: 'summary_large_image' },
+  { name: 'twitter:site', content: '@ort_dev' }
+]
+if (process.env.ENV !== 'production') {
+  meta.push({
+    hid: 'robots',
+    name: 'robots',
+    content: 'noindex,noarchive,nofollow'
+  })
+}
+
 const nuxtConfig: Configuration = {
   mode: 'spa',
 
@@ -67,29 +98,7 @@ const nuxtConfig: Configuration = {
   /* Headers of the page */
   head: {
     titleTemplate: `${siteName}%s`,
-    meta: [
-      { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      {
-        hid: 'description',
-        name: 'description',
-        content: siteDesc
-      },
-      { hid: 'keywords', name: 'keywords', content: siteKeywords },
-      { hid: 'og:site_name', property: 'og:site_name', content: siteName },
-      // OGP
-      { hid: 'og:type', property: 'og:type', content: 'website' },
-      { hid: 'og:url', property: 'og:url', content: baseUrl },
-      { hid: 'og:title', property: 'og:title', content: siteName },
-      { hid: 'og:description', property: 'og:description', content: siteDesc },
-      {
-        hid: 'og:image',
-        property: 'og:image',
-        content: `${ogpImages}top.jpg`
-      },
-      { name: 'twitter:card', content: 'summary_large_image' }
-      // { name: 'twitter:site', content: '@Twitter' }
-    ],
+    meta,
     link: [
       {
         rel: 'apple-touch-icon',
