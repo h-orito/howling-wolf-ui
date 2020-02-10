@@ -1,19 +1,24 @@
 <template>
   <div class="village-footer">
     <button class="village-footer-item" @click="refresh">
-      <i class="fas fa-2x fa-sync-alt has-text-white"></i>
+      <b-icon pack="fas" icon="sync-alt" size="is-medium" type="is-white" />
     </button>
     <button class="village-footer-item" @click="openSearchModal">
-      <i class="fas fa-2x fa-search has-text-white"></i>
+      <b-icon pack="fas" icon="search" size="is-medium" type="is-white" />
     </button>
     <button class="village-footer-item" @click="toBottom">
-      <i class="fas fa-2x fa-long-arrow-alt-down has-text-white"></i>
+      <b-icon
+        pack="fas"
+        icon="long-arrow-alt-down"
+        size="is-medium"
+        type="is-white"
+      />
     </button>
     <button class="village-footer-item" @click="openVillageInfoModal">
-      <i class="fas fa-2x fa-info-circle has-text-white"></i>
+      <b-icon pack="fas" icon="info-circle" size="is-medium" type="is-white" />
     </button>
     <button class="village-footer-item" @click="openUserSettingModal">
-      <i class="fas fa-2x fa-users-cog has-text-white"></i>
+      <b-icon pack="fas" icon="users-cog" size="is-medium" type="is-white" />
     </button>
   </div>
 </template>
@@ -57,9 +62,9 @@ export default class VillageDayList extends Vue {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 3.25rem;
-  background-color: $dark;
+  height: 3em;
   display: flex;
+  z-index: 10;
 
   .village-footer-item {
     flex: 1;
@@ -67,6 +72,7 @@ export default class VillageDayList extends Vue {
     justify-content: center;
     align-content: center;
     cursor: pointer;
+    background-color: $dark;
   }
 
   .village-footer-item:hover i {
