@@ -82,7 +82,8 @@ export default class MessageSay extends Vue {
 
   private get isDispAnchorString(): boolean {
     return (
-      !this.isProgress || this.message.content.type.code !== 'MONOLOGUE_SAY'
+      !this.isProgress ||
+      this.message.content.type.code !== MESSAGE_TYPE.MONOLOGUE_SAY
     )
   }
 

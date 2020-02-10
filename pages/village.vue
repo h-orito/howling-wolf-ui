@@ -120,8 +120,8 @@ export default class extends Vue {
   private get isNotFinished(): boolean {
     const statusCode = this.village == null ? '' : this.village.status.code
     return (
-      statusCode !== VILLAGE_STATUS.PROLOGUE &&
-      statusCode !== VILLAGE_STATUS.PROGRESS
+      statusCode === VILLAGE_STATUS.PROLOGUE ||
+      statusCode === VILLAGE_STATUS.PROGRESS
     )
   }
 
