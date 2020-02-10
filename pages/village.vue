@@ -55,7 +55,7 @@
         @set-no-suddenly-death="setNoSuddenlyDeath($event)"
       />
     </div>
-    <village-footer @refresh="reload" />
+    <village-footer :village="village" @refresh="reload" />
   </div>
 </template>
 
@@ -68,7 +68,7 @@ import messageCard from '~/components/village/message/message-card.vue'
 import action from '~/components/village/action/action.vue'
 import villageDebug from '~/components/village/debug/village-debug.vue'
 import villageDayList from '~/components/village/village-day-list.vue'
-import villageFooter from '~/components/village/village-footer.vue'
+import villageFooter from '~/components/village/footer/village-footer.vue'
 // type
 import Village from '~/components/type/village'
 import VillageDay from '~/components/type/village-day'

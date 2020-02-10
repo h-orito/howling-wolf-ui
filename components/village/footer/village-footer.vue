@@ -17,9 +17,25 @@
     <button class="village-footer-item" @click="openVillageInfoModal">
       <b-icon pack="fas" icon="info-circle" size="is-medium" type="is-white" />
     </button>
-    <button class="village-footer-item" @click="openUserSettingModal">
+    <button class="village-footer-item" @click="openUserSettingsModal">
       <b-icon pack="fas" icon="users-cog" size="is-medium" type="is-white" />
     </button>
+    <modal-search
+      :is-open-search-modal="isOpenSearchModal"
+      :village="village"
+      @search="search($event)"
+      @close-search-modal="closeSearchModal"
+    />
+    <modal-village-info
+      :is-open-village-info-modal="isOpenVillageInfoModal"
+      :village="village"
+      @close-village-info-modal="closeVillageInfoModal"
+    />
+    <modal-user-settings
+      :is-open-user-settings-modal="isOpenUserSettingsModal"
+      :village="village"
+      @close-user-settings-modal="closeUserSettingsModal"
+    />
   </div>
 </template>
 
@@ -27,12 +43,23 @@
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import scrollTo from 'vue-scrollto'
 // component
+import modalSearch from '~/components/village/footer/modal-search.vue'
+import modalVillageInfo from '~/components/village/footer/modal-village-info.vue'
+import modalUserSettings from '~/components/village/footer/modal-user-settings.vue'
 // type
+import Village from '~/components/type/village'
 
 @Component({
-  components: {}
+  components: { modalSearch, modalVillageInfo, modalUserSettings }
 })
-export default class VillageDayList extends Vue {
+export default class VillageFooter extends Vue {
+  @Prop({ type: Object })
+  private village?: Village | null
+
+  private isOpenSearchModal: boolean = false
+  private isOpenVillageInfoModal: boolean = false
+  private isOpenUserSettingsModal: boolean = false
+
   // 発言更新
   private refresh(): void {
     // TODO その日の発言を更新すべきだが最新日になってる
@@ -40,7 +67,15 @@ export default class VillageDayList extends Vue {
   }
 
   private openSearchModal(): void {
-    alert('未実装です')
+    this.isOpenSearchModal = true
+  }
+
+  private closeSearchModal(): void {
+    this.isOpenSearchModal = false
+  }
+
+  private search({ hoge }): void {
+    this.closeSearchModal()
   }
 
   private toBottom(): void {
@@ -57,11 +92,19 @@ export default class VillageDayList extends Vue {
   }
 
   private openVillageInfoModal(): void {
-    alert('未実装です')
+    this.isOpenVillageInfoModal = true
   }
 
-  private openUserSettingModal(): void {
-    alert('未実装です')
+  private closeVillageInfoModal(): void {
+    this.isOpenVillageInfoModal = false
+  }
+
+  private openUserSettingsModal(): void {
+    this.isOpenUserSettingsModal = true
+  }
+
+  private closeUserSettingsModal(): void {
+    this.isOpenUserSettingsModal = false
   }
 }
 </script>
