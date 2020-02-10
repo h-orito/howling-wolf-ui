@@ -8,6 +8,7 @@
     <say
       v-if="situation.say.available_say"
       :situation="situation"
+      :village="village"
       @say="$emit('say', $event)"
     />
     <participate
@@ -66,6 +67,7 @@ import commit from '~/components/village/action/commit/commit.vue'
 import myself from '~/components/village/action/myself/myself.vue'
 // type
 import SituationAsParticipant from '~/components/type/situation-as-participant'
+import Village from '~/components/type/village'
 
 @Component({
   components: {
@@ -83,5 +85,8 @@ import SituationAsParticipant from '~/components/type/situation-as-participant'
 export default class Action extends Vue {
   @Prop({ type: Object })
   private situation!: SituationAsParticipant
+
+  @Prop({ type: Object })
+  private village!: Village
 }
 </script>

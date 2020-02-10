@@ -20,6 +20,7 @@
       <div v-if="!loadingSituation">
         <action
           :situation="situation"
+          :village="village"
           @participate="participate($event)"
           @spectate="spectate($event)"
           @leave="leave($event)"
@@ -282,7 +283,7 @@ export default class extends Vue {
 
 <style lang="scss">
 .village-main-area {
-  padding-bottom: 3.25rem;
+  padding-bottom: 3rem;
 
   .hw-message-card {
     padding: 5px;

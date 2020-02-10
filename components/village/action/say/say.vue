@@ -39,28 +39,81 @@
       </div>
     </template>
     <template v-slot:footer>
-      <b-button @click="say" type="is-primary" size="is-small">
+      <b-button
+        :disabled="!canSay"
+        @click="sayConfirm"
+        type="is-primary"
+        size="is-small"
+      >
         発言する
       </b-button>
+      <b-modal
+        :active.sync="isSayModalOpen"
+        has-modal-card
+        trap-focus
+        aria-role="dialog"
+        aria-modal
+      >
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title has-text-left">発言確認</p>
+          </header>
+          <section class="modal-card-body has-text-left">
+            <p>この内容で発言しますか？</p>
+            <message-card
+              :message="confirmMessage"
+              :village="village"
+              :is-progress="isProgress"
+            />
+          </section>
+          <footer
+            class="modal-card-foot"
+            style="justify-content: flex-end !important;"
+          >
+            <b-button type="is-secondary" size="is-small" @click="close">
+              キャンセル
+            </b-button>
+            <b-button type="is-primary" size="is-small" @click="say"
+              >発言する</b-button
+            >
+          </footer>
+        </div>
+      </b-modal>
     </template>
   </action-card>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
+import axios from '@nuxtjs/axios'
 import actionCard from '~/components/village/action/action-card.vue'
+import messageCard from '~/components/village/message/message-card.vue'
 import messageInput from '~/components/village/action/message-input.vue'
+// type
 import SituationAsParticipant from '~/components/type/situation-as-participant'
+import Village from '~/components/type/village'
+import Message from '~/components/type/message'
 
 @Component({
-  components: { actionCard, messageInput }
+  components: { actionCard, messageInput, messageCard }
 })
 export default class Say extends Vue {
   @Prop({ type: Object })
   private situation!: SituationAsParticipant
 
+  @Prop({ type: Object })
+  private village!: Village
+
   private messageType: string = this.situation.say.default_message_type!.code
   private message: string = ''
+  private isSayModalOpen: boolean = false
+  // 発言確認で返ってきた発言内容
+  private confirmMessage: Message | null = null
+
+  // 発言確認用なので常にtrue
+  private get isProgress(): boolean {
+    return true
+  }
 
   private get myself(): string {
     const self = this.situation.participate.myself!
@@ -87,12 +140,44 @@ export default class Say extends Vue {
     return this.situation.participate.myself!.chara.display.height
   }
 
-  private say(): void {
-    this.$emit('say', {
+  private get canSay(): boolean {
+    if (this.message == null || this.message.trim() === '') return false
+    if (this.messageType == null) return false
+    if (this.isOver) return false
+    return true
+  }
+
+  private get isOver(): boolean {
+    // veturがrefsで定義した子コンポーネントのプロパティを認識できないので回避
+    return (this.$refs as any).messageInput.existsOver
+  }
+
+  private async sayConfirm(): Promise<void> {
+    try {
+      this.confirmMessage = await this.$axios.$post(
+        `/village/${this.village!.id}/say-confirm`,
+        {
+          message: this.message,
+          message_type: this.messageType,
+          face_type: 'NORMAL'
+        }
+      )
+      this.isSayModalOpen = true
+    } catch (error) {}
+  }
+
+  private close(): void {
+    this.isSayModalOpen = false
+  }
+
+  private async say(): Promise<void> {
+    await this.$emit('say', {
       message: this.message,
       messageType: this.messageType,
       faceType: 'NORMAL'
     })
+    this.message = ''
+    this.close()
   }
 }
 </script>
