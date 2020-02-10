@@ -47,7 +47,7 @@
           </b-button>
         </div>
       </div>
-      <div class="navbar-start">
+      <div class="">
         <nuxt-link
           :to="{ path: '/' }"
           class="navbar-item"
