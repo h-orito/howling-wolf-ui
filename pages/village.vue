@@ -55,7 +55,7 @@
         @set-no-suddenly-death="setNoSuddenlyDeath($event)"
       />
     </div>
-    <village-footer @refresh="loadMessage" />
+    <village-footer @refresh="reload" />
   </div>
 </template>
 
