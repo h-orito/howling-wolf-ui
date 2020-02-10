@@ -61,6 +61,14 @@
           更新情報
         </nuxt-link>
       </div>
+      <div class="close-icon">
+        <b-button
+          type="is-dark"
+          icon-pack="fas"
+          icon-left="times"
+          @click="$emit('hide-menu')"
+        />
+      </div>
     </div>
     <div
       class="navbar-side-menu-outside"
@@ -146,6 +154,12 @@ export default class NavBar extends Vue {
 
   .navbar-item {
     color: $white;
+  }
+
+  .close-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
   }
 }
 .navbar-side-menu.is-active {
