@@ -5,7 +5,7 @@
         <a href="javascript:void(0);">{{ anchorString }}</a
         >.&nbsp;</span
       >
-      <p class="hw-message-name">{{ message.from.chara.chara_name.name }}</p>
+      <p class="hw-message-name">{{ charaName }}</p>
       <p class="hw-message-datetime">{{ message.time.datetime }}</p>
     </div>
     <div class="hw-message-content-area">
@@ -47,6 +47,12 @@ export default class MessageSay extends Vue {
 
   @Prop({ type: Boolean, default: false })
   private isAnchorMessage?: boolean
+
+  private get charaName(): string {
+    return `[${this.message.from!.chara.chara_name.short_name}] ${
+      this.message.from!.chara.chara_name.name
+    }`
+  }
 
   private get imageUrl(): string {
     const typeCode = this.message.content.face_code

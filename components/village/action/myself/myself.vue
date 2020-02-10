@@ -19,7 +19,12 @@
               />
             </div>
             <div class="myself-health-area">
-              <b-message size="is-small">
+              <b-message v-if="myself.skill == null" size="is-small">
+                <span style="white-space: pre-line;"
+                  >1日目になると役職情報がここに表示されます。
+                </span>
+              </b-message>
+              <b-message v-if="myself.skill" size="is-small">
                 <span style="white-space: pre-line;">{{
                   skillDescription
                 }}</span>
@@ -55,7 +60,7 @@ export default class Participate extends Vue {
   }
 
   private get myName(): string {
-    return this.myself.chara.chara_name.name
+    return `[${this.myself.chara.chara_name.short_name}] ${this.myself.chara.chara_name.name}`
   }
 
   private get imageUrl(): string {

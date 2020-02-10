@@ -1,10 +1,7 @@
 <template>
   <div>
     <hr />
-    <myself
-      v-if="situation.participate.myself && situation.participate.myself.skill"
-      :situation="situation"
-    />
+    <myself v-if="situation.participate.myself" :situation="situation" />
     <say
       v-if="situation.say.available_say"
       :situation="situation"
