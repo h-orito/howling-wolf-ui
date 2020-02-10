@@ -25,6 +25,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
+import scrollTo from 'vue-scrollto'
 // component
 // type
 
@@ -43,7 +44,16 @@ export default class VillageDayList extends Vue {
   }
 
   private toBottom(): void {
-    alert('未実装です')
+    const element = document.getElementById('message-bottom')
+    if (element == null) return
+    this.$scrollTo(element, {
+      offset: -window.innerHeight + this.convertRemToPx(3.25)
+    })
+  }
+
+  private convertRemToPx(rem): number {
+    const fontSize = getComputedStyle(document.documentElement).fontSize
+    return rem * parseFloat(fontSize)
   }
 
   private openVillageInfoModal(): void {

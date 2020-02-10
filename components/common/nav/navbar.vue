@@ -39,14 +39,9 @@ export default class NavBar extends Vue {
   }
 
   private toHead(): void {
-    if (document.scrollingElement == null) return
-    if (document.scrollingElement.scrollTop < 10) {
-      document.scrollingElement.scrollTop = 0
-    } else {
-      document.scrollingElement.scrollTop =
-        document.scrollingElement.scrollTop / 1.1
-      setTimeout(this.toHead, 10)
-    }
+    const element = document.getElementsByClassName('site')
+    if (element == null) return
+    this.$scrollTo(element[0])
   }
 }
 </script>

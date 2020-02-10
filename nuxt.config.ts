@@ -143,6 +143,8 @@ const nuxtConfig: Configuration = {
     '@nuxtjs/dotenv',
     // cookie-universal-nuxt
     'cookie-universal-nuxt',
+    // scroll
+    ['vue-scrollto/nuxt', { duration: 500 }],
     // pwa
     '@nuxtjs/pwa',
     // Doc: https://github.com/nuxt-community/sitemap-module

@@ -17,6 +17,7 @@
           :is-progress="isNotFinished"
         ></message-card>
       </div>
+      <div id="message-bottom" />
       <div v-if="!loadingSituation">
         <action
           :situation="situation"
