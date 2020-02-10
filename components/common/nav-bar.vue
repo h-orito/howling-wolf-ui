@@ -155,6 +155,8 @@ export default class NavBar extends Vue {
 
 <style lang="scss" scoped>
 .navbar {
+  display: block !important;
+
   .navbar-menu-icon-area {
     position: absolute;
     left: 5px;
@@ -163,6 +165,7 @@ export default class NavBar extends Vue {
 
     .navbar-menu-icon {
       position: absolute;
+      display: block !important;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
