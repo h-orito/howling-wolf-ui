@@ -143,7 +143,7 @@ import { VILLAGE_STATUS } from '~/components/const/consts'
     VillageList
   }
 })
-export default class extends Vue {
+export default class TopPage extends Vue {
   /** head */
   private head() {
     return { title: '' }
@@ -241,8 +241,16 @@ export default class extends Vue {
         maxAge: 60 * 60 * 24 * 30
       }
     )
+    // 変更しても古いままなので取得できたら無理やりとる
+    let displayName = user.displayName
+    if (
+      redirectResult.additionalUserInfo.profile != null &&
+      (redirectResult.additionalUserInfo.profile as any).name != null
+    ) {
+      displayName = (redirectResult.additionalUserInfo.profile as any).name
+    }
     return this.$axios.$post('/player/nickname', {
-      nickname: user.displayName,
+      nickname: displayName,
       twitter_user_name: twitterUsername
     })
   }

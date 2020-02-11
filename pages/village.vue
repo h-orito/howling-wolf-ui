@@ -131,7 +131,7 @@ export default class extends Vue {
   }
 
   /** created */
-  private async created(): Promise<any> {
+  private async created(): Promise<void> {
     await this.reload()
     this.displayVillageDayId = this.latestDay!.id
   }
