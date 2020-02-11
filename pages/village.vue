@@ -23,7 +23,7 @@
       />
       <div v-if="messages">
         <message-card
-          v-for="message in messages.message_list"
+          v-for="message in messages.list"
           :key="message['id']"
           :village="village"
           :message="message"
