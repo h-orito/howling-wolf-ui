@@ -142,7 +142,6 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
-import axios from '@nuxtjs/axios'
 
 @Component({
   components: {}

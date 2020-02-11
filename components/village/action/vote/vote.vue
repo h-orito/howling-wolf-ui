@@ -31,12 +31,16 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import actionCard from '~/components/village/action/action-card.vue'
+import Village from '~/components/type/village'
 import VillageVoteSituation from '~/components/type/village-vote-situation'
 
 @Component({
   components: { actionCard }
 })
 export default class Vote extends Vue {
+  @Prop({ type: Object })
+  private village!: Village
+
   @Prop({ type: Object })
   private vote!: VillageVoteSituation
 
@@ -51,8 +55,8 @@ export default class Vote extends Vue {
 
   private async setVote(): Promise<void> {
     this.submitting = true
-    await this.$emit('vote', {
-      targetId: this.participantId
+    await this.$axios.$post(`/village/${this.village!.id}/vote`, {
+      target_id: this.participantId
     })
     this.submitting = false
     this.$buefy.snackbar.open({

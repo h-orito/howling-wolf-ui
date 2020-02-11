@@ -11,12 +11,16 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import actionCard from '~/components/village/action/action-card.vue'
+import Village from '~/components/type/village'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 
 @Component({
   components: { actionCard }
 })
 export default class Leave extends Vue {
+  @Prop({ type: Object })
+  private village!: Village
+
   @Prop({ type: Object })
   private situation!: SituationAsParticipant
 
@@ -28,7 +32,7 @@ export default class Leave extends Vue {
       type: 'is-danger',
       hasIcon: true,
       onConfirm: async () => {
-        await this.$emit('leave')
+        await this.leave
         this.$buefy.toast.open('退村しました。')
       },
       size: 'is-small',
@@ -36,8 +40,11 @@ export default class Leave extends Vue {
     })
   }
 
-  private leave(): void {
-    this.$emit('leave')
+  private async leave(): Promise<void> {
+    try {
+      await this.$axios.$post(`/village/${this.village!.id}/leave`, {})
+      this.$emit('reload')
+    } catch (error) {}
   }
 }
 </script>

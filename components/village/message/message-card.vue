@@ -23,7 +23,6 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
-import axios from '@nuxtjs/axios'
 import messageSay from '~/components/village/message/message-say.vue'
 import messageSystem from '~/components/village/message/message-system.vue'
 import messageText from '~/components/village/message/message-text.vue'

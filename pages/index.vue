@@ -114,7 +114,6 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
-import axios from '@nuxtjs/axios'
 import qs from 'qs'
 import cookies from 'cookie-universal-nuxt'
 import firebase from '~/plugins/firebase'

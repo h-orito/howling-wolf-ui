@@ -35,13 +35,10 @@
         <action
           :situation="situation"
           :village="village"
-          @participate="participate($event)"
-          @spectate="spectate($event)"
-          @leave="leave($event)"
+          @reload="reload"
           @change-skill-request="changeSkillRequest($event)"
           @say="say($event)"
           @vote="vote($event)"
-          @set-ability="setAbility($event)"
           @commit="commit($event)"
         ></action>
       </div>
@@ -61,7 +58,6 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
-import axios from '@nuxtjs/axios'
 // components
 import loading from '~/components/loading.vue'
 import messageCard from '~/components/village/message/message-card.vue'
@@ -187,87 +183,6 @@ export default class extends Vue {
     if (selectedDay == null) return
     await this.loadMessage(selectedDay.day)
     this.displayVillageDayId = villageDayId
-  }
-
-  private async participate({
-    charaId,
-    firstRequestSkillCode,
-    secondRequestSkillCode,
-    message
-  }): Promise<void> {
-    try {
-      await this.$axios.$post(`/village/${this.village!.id}/participate`, {
-        chara_id: parseInt(charaId),
-        first_request_skill: firstRequestSkillCode,
-        second_request_skill: secondRequestSkillCode,
-        join_message: message,
-        join_password: null,
-        spectator: false
-      })
-      this.reload()
-    } catch (error) {}
-  }
-
-  private async spectate({ charaId }): Promise<void> {
-    try {
-      await this.$axios.$post(`/village/${this.village!.id}/participate`, {
-        chara_id: parseInt(charaId),
-        join_message: 'dummy join message',
-        join_password: null,
-        spectator: true
-      })
-      this.reload()
-    } catch (error) {}
-  }
-
-  private async leave(): Promise<void> {
-    try {
-      await this.$axios.$post(`/village/${this.village!.id}/leave`, {})
-      this.reload()
-    } catch (error) {}
-  }
-
-  private async changeSkillRequest({
-    firstRequestSkillCode,
-    secondRequestSkillCode
-  }): Promise<void> {
-    try {
-      await this.$axios.$post(`/village/${this.village!.id}/change-skill`, {
-        first_request_skill: firstRequestSkillCode,
-        second_request_skill: secondRequestSkillCode
-      })
-      this.reload()
-    } catch (error) {}
-  }
-
-  private async say({ message, messageType, faceType }): Promise<void> {
-    try {
-      await this.$axios.$post(`/village/${this.village!.id}/say`, {
-        message,
-        message_type: messageType,
-        face_type: faceType
-      })
-      this.reload()
-    } catch (error) {}
-  }
-
-  private async vote({ targetId }): Promise<void> {
-    return await this.$axios.$post(`/village/${this.village!.id}/vote`, {
-      target_id: targetId
-    })
-  }
-
-  private async setAbility({ targetId, abilityType }): Promise<void> {
-    return await this.$axios.$post(`/village/${this.village!.id}/ability`, {
-      target_id: parseInt(targetId),
-      ability_type: abilityType
-    })
-  }
-
-  private async commit({ doCommit }): Promise<void> {
-    return await this.$axios.$post(`/village/${this.village!.id}/commit`, {
-      commit: doCommit
-    })
   }
 
   private async debugParticipate({ num }): Promise<void> {

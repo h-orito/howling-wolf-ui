@@ -14,6 +14,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import actionCard from '~/components/village/action/action-card.vue'
+import Village from '~/components/type/village'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 
 @Component({
@@ -21,6 +22,15 @@ import SituationAsParticipant from '~/components/type/situation-as-participant'
 })
 export default class Vote extends Vue {
   @Prop({ type: Object })
+  private village!: Village
+
+  @Prop({ type: Object })
   private situation!: SituationAsParticipant
+
+  private async commit(): Promise<void> {
+    await this.$axios.$post(`/village/${this.village!.id}/commit`, {
+      commit: !this.situation.commit.committing
+    })
+  }
 }
 </script>

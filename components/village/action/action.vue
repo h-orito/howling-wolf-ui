@@ -4,48 +4,52 @@
     <myself v-if="situation.participate.myself" :situation="situation" />
     <say
       v-if="situation.say.available_say"
-      :situation="situation"
       :village="village"
-      @say="$emit('say', $event)"
+      :situation="situation"
+      @reload="$emit('reload', $event)"
     />
     <participate
       v-if="situation.participate.available_participate"
+      :village="village"
       :situation="situation"
-      @participate="$emit('participate', $event)"
+      @reload="$emit('reload', $event)"
     />
     <spectate
       v-if="situation.participate.available_spectate"
+      :village="village"
       :situation="situation"
-      @spectate="$emit('spectate', $event)"
+      @reload="$emit('reload', $event)"
     />
     <leave
       v-if="situation.participate.available_leave"
+      :village="village"
       :situation="situation"
-      @leave="$emit('leave')"
+      @reload="$emit('reload', $event)"
     />
     <skill-request
       v-if="
         situation.participate.participating &&
           situation.skill_request.available_skill_request
       "
+      :village="village"
       :situation="situation"
-      @change-skill-request="$emit('change-skill-request', $event)"
+      @reload="$emit('reload', $event)"
     />
     <vote
       v-if="situation.vote.available_vote"
+      :village="village"
       :vote="situation.vote"
-      @vote="$emit('vote', $event)"
     />
     <ability
       v-for="ability in situation.ability.list"
       :key="ability.type.code"
+      :village="village"
       :ability="ability"
-      @set-ability="$emit('set-ability', $event)"
     />
     <commit
       v-if="situation.commit.available_commit"
+      :village="village"
       :situation="situation"
-      @vote="$emit('commit', $event)"
     />
   </div>
 </template>

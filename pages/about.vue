@@ -11,16 +11,12 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
-// component
-import spotlight from '~/components/index/spotlight.vue'
 // type
 
 @Component({
-  components: {
-    spotlight
-  }
+  components: {}
 })
-export default class extends Vue {
+export default class About extends Vue {
   /** head */
   private head() {
     return { title: ' | このサイトは' }

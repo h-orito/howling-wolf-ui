@@ -85,7 +85,6 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
-import axios from '@nuxtjs/axios'
 import actionCard from '~/components/village/action/action-card.vue'
 import messageCard from '~/components/village/message/message-card.vue'
 import messageInput from '~/components/village/action/message-input.vue'
@@ -107,6 +106,7 @@ export default class Say extends Vue {
   private messageType: string = this.situation.say.default_message_type!.code
   private message: string = ''
   private isSayModalOpen: boolean = false
+  private submitting: boolean = false
   // 発言確認で返ってきた発言内容
   private confirmMessage: Message | null = null
 
@@ -171,13 +171,18 @@ export default class Say extends Vue {
   }
 
   private async say(): Promise<void> {
-    await this.$emit('say', {
-      message: this.message,
-      messageType: this.messageType,
-      faceType: 'NORMAL'
-    })
+    this.submitting = true
+    try {
+      await this.$axios.$post(`/village/${this.village!.id}/say`, {
+        message: this.message,
+        message_type: this.messageType,
+        face_type: 'NORMAL'
+      })
+    } catch (error) {}
+    this.submitting = false
     this.message = ''
     this.close()
+    await this.$emit('reload')
   }
 }
 </script>

@@ -32,12 +32,16 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
+import Village from '~/components/type/village'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 
 @Component({
   components: {}
 })
 export default class Spectate extends Vue {
+  @Prop({ type: Object })
+  private village!: Village
+
   @Prop({ type: Object })
   private situation!: SituationAsParticipant
 
@@ -49,11 +53,17 @@ export default class Spectate extends Vue {
     return this.charaId != null
   }
 
-  private spectate(): void {
+  private async spectate(): Promise<void> {
     this.submitting = true
-    this.$emit('spectate', {
-      charaId: this.charaId
-    })
+    try {
+      await this.$axios.$post(`/village/${this.village!.id}/participate`, {
+        chara_id: this.charaId,
+        join_message: 'dummy join message',
+        join_password: null,
+        spectator: true
+      })
+      this.$emit('reload')
+    } catch (error) {}
   }
 }
 </script>

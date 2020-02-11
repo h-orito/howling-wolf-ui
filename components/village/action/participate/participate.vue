@@ -86,6 +86,7 @@ import actionCard from '~/components/village/action/action-card.vue'
 import messageInput from '~/components/village/action/message-input.vue'
 import charaSelectModal from '~/components/village/action/participate/chara-select-modal.vue'
 // type
+import Village from '~/components/type/village'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 import { MESSAGE_TYPE } from '~/components/const/consts'
 
@@ -93,6 +94,9 @@ import { MESSAGE_TYPE } from '~/components/const/consts'
   components: { actionCard, messageInput, charaSelectModal }
 })
 export default class Participate extends Vue {
+  @Prop({ type: Object })
+  private village!: Village
+
   @Prop({ type: Object })
   private situation!: SituationAsParticipant
 
@@ -129,18 +133,22 @@ export default class Participate extends Vue {
   }
 
   private get isOver(): boolean {
-    // veturがrefsで定義した子コンポーネントのプロパティを認識できないので回避
     return (this.$refs as any).messageInput.existsOver
   }
 
   private async participate(): Promise<void> {
     this.submitting = true
-    await this.$emit('participate', {
-      charaId: this.charaId,
-      firstRequestSkillCode: this.firstRequestSkillCode,
-      secondRequestSkillCode: this.secondRequestSkillCode,
-      message: this.message
-    })
+    try {
+      await this.$axios.$post(`/village/${this.village!.id}/participate`, {
+        chara_id: this.charaId,
+        first_request_skill: this.firstRequestSkillCode,
+        second_request_skill: this.secondRequestSkillCode,
+        join_message: this.message,
+        join_password: null,
+        spectator: false
+      })
+      this.$emit('reload')
+    } catch (error) {}
     this.submitting = false
   }
 
@@ -150,7 +158,6 @@ export default class Participate extends Vue {
 
   private charaSelect({ charaId }): void {
     this.charaId = charaId
-    console.log(charaId)
     this.isCharaSelectModalOpen = false
   }
 }

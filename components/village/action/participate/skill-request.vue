@@ -47,12 +47,16 @@
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import actionCard from '~/components/village/action/action-card.vue'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
+import Village from '~/components/type/village'
 import Skill from '~/components/type/skill'
 
 @Component({
   components: { actionCard }
 })
-export default class Participate extends Vue {
+export default class SkillRequest extends Vue {
+  @Prop({ type: Object })
+  private village!: Village
+
   @Prop({ type: Object })
   private situation!: SituationAsParticipant
 
@@ -77,10 +81,13 @@ export default class Participate extends Vue {
 
   private async changeSkillRequest(): Promise<void> {
     this.submitting = true
-    await this.$emit('change-skill-request', {
-      firstRequestSkillCode: this.firstRequestSkillCode,
-      secondRequestSkillCode: this.secondRequestSkillCode
-    })
+    try {
+      await this.$axios.$post(`/village/${this.village!.id}/change-skill`, {
+        first_request_skill: this.firstRequestSkillCode,
+        second_request_skill: this.secondRequestSkillCode
+      })
+      this.$emit('reload')
+    } catch (error) {}
     this.submitting = false
   }
 }

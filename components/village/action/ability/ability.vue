@@ -40,12 +40,16 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 // components
 import actionCard from '~/components/village/action/action-card.vue'
 // type
+import Village from '~/components/type/village'
 import VillageAbilitySituation from '~/components/type/village-ability-situation'
 
 @Component({
   components: { actionCard }
 })
 export default class Ability extends Vue {
+  @Prop({ type: Object })
+  private village!: Village
+
   @Prop({ type: Object })
   private ability!: VillageAbilitySituation
 
@@ -68,9 +72,9 @@ export default class Ability extends Vue {
 
   private async setAbility(): Promise<void> {
     this.submitting = true
-    await this.$emit('set-ability', {
-      targetId: this.participantId,
-      abilityType: this.ability.type.code
+    await this.$axios.$post(`/village/${this.village!.id}/ability`, {
+      target_id: this.participantId,
+      ability_type: this.ability.type.code
     })
     this.submitting = false
     this.$buefy.snackbar.open({
