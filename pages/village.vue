@@ -153,7 +153,7 @@ export default class extends Vue {
     }
     const displayDay =
       this.displayVillageDay == null ? this.latestDay : this.displayVillageDay
-    let pageNum = 1
+    let pageNum = this.currentPageNum
     if (this.displayVillageDay == null) {
       // 初期表示は一番新しいページを表示したい
       pageNum = 10000
