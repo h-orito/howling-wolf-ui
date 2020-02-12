@@ -17,20 +17,26 @@
     ></loading>
     <div v-if="village">
       <village-day-list
+        v-if="displayVillageDay"
         :village="village"
-        :display-village-day-id="displayVillageDayId"
+        :display-village-day-id="displayVillageDay.id"
         @current-day-change="changeDisplayDay($event)"
       />
-      <div v-if="messages">
-        <message-card
-          v-for="message in messages.list"
-          :key="message['id']"
-          :village="village"
-          :message="message"
-          :is-progress="isNotFinished"
-        ></message-card>
-      </div>
+      <message-cards
+        v-if="messages"
+        :village="village"
+        :messages="messages"
+        :is-progress="isNotFinished"
+        :per-page="perPageCount"
+        @change-message-page="changeMessagePage($event)"
+      />
       <div id="message-bottom" />
+      <village-day-list
+        v-if="displayVillageDay"
+        :village="village"
+        :display-village-day-id="displayVillageDay.id"
+        @current-day-change="changeDisplayDay($event)"
+      />
       <div v-if="situation">
         <action
           :situation="situation"
@@ -56,7 +62,7 @@
 import { Component, Vue } from 'nuxt-property-decorator'
 // components
 import loading from '~/components/loading.vue'
-import messageCard from '~/components/village/message/message-card.vue'
+import messageCards from '~/components/village/message/message-cards.vue'
 import action from '~/components/village/action/action.vue'
 import villageDebug from '~/components/village/debug/village-debug.vue'
 import villageDayList from '~/components/village/village-day-list.vue'
@@ -72,7 +78,7 @@ import { VILLAGE_STATUS } from '~/components/const/consts'
 @Component({
   components: {
     loading,
-    messageCard,
+    messageCards,
     action,
     villageDebug,
     villageDayList,
@@ -90,7 +96,7 @@ export default class extends Vue {
 
   /** data */
   private villageId: number = 0
-  private displayVillageDayId: number = 0
+  private displayVillageDay: VillageDay | null = null
   private loadingVillage: boolean = true
   private loadingMessage: boolean = false
   private loadingSituation: boolean = false
@@ -99,6 +105,10 @@ export default class extends Vue {
   private messages: Messages | null = null
   private situation: SituationAsParticipant | null = null
   private debugVillage: DebugVillage | null = null
+
+  // message
+  private perPageCount: number = 50
+  private currentPageNum: number | null = 1
 
   /** computed */
   private get latestDay(): VillageDay | null {
@@ -125,7 +135,7 @@ export default class extends Vue {
   /** created */
   private async created(): Promise<void> {
     await this.reload()
-    this.displayVillageDayId = this.latestDay!.id
+    this.displayVillageDay = this.latestDay!
   }
 
   /** methods */
@@ -135,16 +145,30 @@ export default class extends Vue {
     this.loadingVillage = false
   }
 
-  private async loadMessage(day: number = this.latestDay!.day): Promise<void> {
+  private async loadMessage(): Promise<void> {
     this.loadingMessage = true
     if (this.latestDay == null) {
       this.loadingMessage = false
       return
     }
+    const displayDay =
+      this.displayVillageDay == null ? this.latestDay : this.displayVillageDay
+    let pageNum = 1
+    if (this.displayVillageDay == null) {
+      // 初期表示は一番新しいページを表示したい
+      pageNum = 10000
+    }
+
     this.messages = await this.$axios.$get(
-      `/village/${this.village!.id}/day/${day}/time/${
-        this.latestDay.noonnight
-      }/message-list`
+      `/village/${this.village!.id}/day/${displayDay.day}/time/${
+        displayDay.noonnight
+      }/message-list`,
+      {
+        params: {
+          page_size: this.perPageCount,
+          page_num: pageNum
+        }
+      }
     )
     this.loadingMessage = false
   }
@@ -177,8 +201,13 @@ export default class extends Vue {
       day => day.id === villageDayId
     )
     if (selectedDay == null) return
-    await this.loadMessage(selectedDay.day)
-    this.displayVillageDayId = villageDayId
+    this.displayVillageDay = selectedDay
+    await this.loadMessage()
+  }
+
+  private async changeMessagePage({ pageNum }): Promise<void> {
+    this.currentPageNum = pageNum
+    await this.loadMessage()
   }
 
   private async debugParticipate({ num }): Promise<void> {
