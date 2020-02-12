@@ -114,7 +114,7 @@ export default class extends Vue {
   private debugVillage: DebugVillage | null = null
 
   // message
-  private perPageCount: number = 50
+  private perPageCount: number = 5
   private currentPageNum: number | null = 1
   // latest message timer
   private latestMessageUnixTimeMilli: number = 0
@@ -226,11 +226,13 @@ export default class extends Vue {
     this.displayVillageDay = selectedDay
     this.currentPageNum = 1
     await this.loadMessage()
+    this.toHead()
   }
 
   private async changeMessagePage({ pageNum }): Promise<void> {
     this.currentPageNum = pageNum
     await this.loadMessage()
+    this.toHead()
   }
 
   private setLatestTimer(): any {
@@ -314,6 +316,12 @@ export default class extends Vue {
       `/admin/village/${this.village!.id}/no-suddenly-death`
     )
     this.reload()
+  }
+
+  private toHead(): void {
+    const element = document.getElementsByClassName('site')
+    if (element == null) return
+    this.$scrollTo(element[0])
   }
 }
 </script>
