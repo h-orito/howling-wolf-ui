@@ -148,6 +148,9 @@ export default class extends Vue {
     await this.reload()
     this.displayVillageDay = this.latestDay!
     this.latestTimer = this.setLatestTimer()
+    this.latestMessageUnixTimeMilli = this.messages!.list[
+      this.messages!.list.length - 1
+    ].time.unix_time_milli
   }
 
   /** destroyed */
