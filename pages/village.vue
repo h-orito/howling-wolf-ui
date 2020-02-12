@@ -36,10 +36,6 @@
           :situation="situation"
           :village="village"
           @reload="reload"
-          @change-skill-request="changeSkillRequest($event)"
-          @say="say($event)"
-          @vote="vote($event)"
-          @commit="commit($event)"
         ></action>
       </div>
     </div>
