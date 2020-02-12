@@ -114,7 +114,7 @@ export default class extends Vue {
   private debugVillage: DebugVillage | null = null
 
   // message
-  private perPageCount: number = 5
+  private perPageCount: number = 50
   private currentPageNum: number | null = 1
   // latest message timer
   private latestMessageUnixTimeMilli: number = 0
