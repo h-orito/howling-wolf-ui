@@ -1,7 +1,13 @@
 <template>
   <div class="village-footer">
     <button class="village-footer-item" @click="refresh">
-      <b-icon pack="fas" icon="sync-alt" size="is-medium" type="is-white" />
+      <b-icon
+        pack="fas"
+        icon="sync-alt"
+        size="is-medium"
+        :type="existsNewMessages ? 'is-info' : 'is-white'"
+        :custom-class="existsNewMessages ? 'rotate' : ''"
+      />
     </button>
     <button class="village-footer-item" @click="openSearchModal">
       <b-icon pack="fas" icon="search" size="is-medium" type="is-white" />
@@ -56,13 +62,15 @@ export default class VillageFooter extends Vue {
   @Prop({ type: Object })
   private village?: Village | null
 
+  @Prop({ type: Boolean })
+  private existsNewMessages!: boolean
+
   private isOpenSearchModal: boolean = false
   private isOpenVillageInfoModal: boolean = false
   private isOpenUserSettingsModal: boolean = false
 
   // 発言更新
   private refresh(): void {
-    // TODO その日の発言を更新すべきだが最新日になってる
     this.$emit('refresh')
   }
 
@@ -126,6 +134,19 @@ export default class VillageFooter extends Vue {
     align-content: center;
     cursor: pointer;
     background-color: $dark;
+
+    i.rotate {
+      animation: rotate1 2s linear infinite;
+    }
+
+    @keyframes rotate1 {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
   }
 
   .village-footer-item:hover i {

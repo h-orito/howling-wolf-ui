@@ -74,7 +74,6 @@ export default class MessageCard extends Vue {
   private range: number = 2
 
   private change(pageNum: number) {
-    console.log(pageNum)
     this.$emit('change-message-page', {
       pageNum
     })

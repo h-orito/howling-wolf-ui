@@ -58,6 +58,10 @@ export default class MessageInput extends Vue {
     }
   }
 
+  private get isInputting(): boolean {
+    return this.value.length > 0
+  }
+
   private get remainingCount(): string {
     const max = this.restrict!.max_count!
     const remaining = this.restrict!.remaining_count!

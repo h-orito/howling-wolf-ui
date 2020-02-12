@@ -152,6 +152,10 @@ export default class Say extends Vue {
     return (this.$refs as any).messageInput.existsOver
   }
 
+  private get isInputting(): boolean {
+    return (this.$refs as any).messageInput.isInputting
+  }
+
   private async sayConfirm(): Promise<void> {
     try {
       this.confirmMessage = await this.$axios.$post(

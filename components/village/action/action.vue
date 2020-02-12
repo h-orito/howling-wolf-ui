@@ -6,7 +6,8 @@
       v-if="situation.say.available_say"
       :village="village"
       :situation="situation"
-      @reload="$emit('reload', $event)"
+      @reload="$emit('load-latest', $event)"
+      ref="say"
     />
     <participate
       v-if="situation.participate.available_participate"
@@ -89,5 +90,10 @@ export default class Action extends Vue {
 
   @Prop({ type: Object })
   private village!: Village
+
+  private get isInputting(): boolean {
+    if (!this.situation.say.available_say) return false
+    return (this.$refs as any).say.isInputting
+  }
 }
 </script>
