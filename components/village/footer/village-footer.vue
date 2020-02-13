@@ -87,16 +87,7 @@ export default class VillageFooter extends Vue {
   }
 
   private toBottom(): void {
-    const element = document.getElementById('message-bottom')
-    if (element == null) return
-    this.$scrollTo(element, {
-      offset: -window.innerHeight + this.convertRemToPx(3.25)
-    })
-  }
-
-  private convertRemToPx(rem): number {
-    const fontSize = getComputedStyle(document.documentElement).fontSize
-    return rem * parseFloat(fontSize)
+    this.$emit('to-bottom')
   }
 
   private openVillageInfoModal(): void {

@@ -20,7 +20,7 @@
         v-if="displayVillageDay"
         :village="village"
         :display-village-day-id="displayVillageDay.id"
-        @current-day-change="changeDisplayDay($event)"
+        @current-day-change="changeDisplayDay($event, true)"
       />
       <message-cards
         v-if="messages"
@@ -35,7 +35,7 @@
         v-if="displayVillageDay"
         :village="village"
         :display-village-day-id="displayVillageDay.id"
-        @current-day-change="changeDisplayDay($event)"
+        @current-day-change="changeDisplayDay($event, false)"
       />
       <div v-if="situation">
         <action
@@ -60,6 +60,7 @@
       :village="village"
       :exists-new-messages="existsNewMessages"
       @refresh="reload"
+      @to-bottom="toBottom"
     />
   </div>
 </template>
@@ -114,7 +115,7 @@ export default class extends Vue {
   private debugVillage: DebugVillage | null = null
 
   // message
-  private perPageCount: number = 50
+  private perPageCount: number = 10
   private currentPageNum: number | null = 1
   // latest message timer
   private latestMessageUnixTimeMilli: number = 0
@@ -218,7 +219,7 @@ export default class extends Vue {
     if (this.isDebug) this.debugVillage = await this.loadDebugVillage()
   }
 
-  private async changeDisplayDay({ villageDayId }): Promise<void> {
+  private async changeDisplayDay({ villageDayId }, isTop): Promise<void> {
     const selectedDay = this.village!.day.day_list.find(
       day => day.id === villageDayId
     )
@@ -226,13 +227,34 @@ export default class extends Vue {
     this.displayVillageDay = selectedDay
     this.currentPageNum = 1
     await this.loadMessage()
-    this.toHead()
+    if (isTop) {
+      this.toHead()
+    } else {
+      this.toBottom()
+    }
   }
 
-  private async changeMessagePage({ pageNum }): Promise<void> {
+  private async changeMessagePage({ pageNum, isTop }): Promise<void> {
     this.currentPageNum = pageNum
     await this.loadMessage()
-    this.toHead()
+    if (isTop) {
+      this.toHead()
+    } else {
+      this.toBottom()
+    }
+  }
+
+  private toBottom(): void {
+    const element = document.getElementById('message-bottom')
+    if (element == null) return
+    this.$scrollTo(element, {
+      offset: -window.innerHeight + this.convertRemToPx(3.25)
+    })
+  }
+
+  private convertRemToPx(rem): number {
+    const fontSize = getComputedStyle(document.documentElement).fontSize
+    return rem * parseFloat(fontSize)
   }
 
   private setLatestTimer(): any {
