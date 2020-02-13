@@ -73,7 +73,11 @@
             <b-button type="is-secondary" size="is-small" @click="close">
               キャンセル
             </b-button>
-            <b-button type="is-primary" size="is-small" @click="say"
+            <b-button
+              :disabled="submitting"
+              type="is-primary"
+              size="is-small"
+              @click="say"
               >発言する</b-button
             >
           </footer>
