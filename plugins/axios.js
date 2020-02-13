@@ -47,7 +47,7 @@ async function refreshTokenIfNeeded(token, store, app) {
       maxAge: 60 * 60 * 24 * 30
     })
     const now = new Date()
-    const newExpired = now.setMinutes(now.getHours() + 50).toString()
+    const newExpired = now.setMinutes(now.getMinutes() + 50).toString()
     app.$cookies.set('id-token-check-date', newExpired, {
       path: '/',
       maxAge: 60 * 60 * 24 * 30
