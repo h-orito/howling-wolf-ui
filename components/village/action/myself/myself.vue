@@ -4,7 +4,7 @@
       <div class="content has-text-left">
         <div class="myself-area">
           <div class="myself-name-area">
-            <p class="myself-name">{{ myName }}</p>
+            <p class="myself-name">{{ myself.chara.chara_name.full_name }}</p>
           </div>
           <b-message v-if="!isAlive" size="is-small" type="is-info">
             あなたは死亡しました。
@@ -57,10 +57,6 @@ export default class Participate extends Vue {
 
   private get isAlive(): boolean {
     return this.myself.dead == null
-  }
-
-  private get myName(): string {
-    return `[${this.myself.chara.chara_name.short_name}] ${this.myself.chara.chara_name.name}`
   }
 
   private get imageUrl(): string {

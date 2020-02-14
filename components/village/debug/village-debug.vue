@@ -80,9 +80,15 @@ import { VILLAGE_STATUS } from '~/components/const/consts'
   components: { actionCard }
 })
 export default class Action extends Vue {
+  // ----------------------------------------------------------------
+  // props
+  // ----------------------------------------------------------------
   @Prop({ type: Object })
   private village!: DebugVillage
 
+  // ----------------------------------------------------------------
+  // data
+  // ----------------------------------------------------------------
   private participateCharaNum: number =
     this.participateMemberNumList.length !== 0
       ? this.participateMemberNumList[0]
@@ -90,6 +96,9 @@ export default class Action extends Vue {
 
   private participantId: number = this.participantList[0].id
 
+  // ----------------------------------------------------------------
+  // computed
+  // ----------------------------------------------------------------
   private get isPrologue(): boolean {
     return this.village.status.code === VILLAGE_STATUS.PROLOGUE
   }
@@ -108,32 +117,46 @@ export default class Action extends Vue {
     return this.village.participant.member_list
   }
 
+  // ----------------------------------------------------------------
+  // methods
+  // ----------------------------------------------------------------
+  /** キャラ名と、開始後は役職名 */
   private dummyLoginCharaName(participant: VillageParticipant): string {
     if (participant.skill == null) {
-      return participant.chara.chara_name.name
+      return participant.chara.chara_name.full_name
     } else {
-      return `${participant.chara.chara_name.name}: ${participant.skill.name}`
+      return `${participant.chara.chara_name.full_name}: ${participant.skill.name}`
     }
   }
 
-  private debugParticipate(): void {
-    this.$emit('debug-participate', {
-      num: this.participateCharaNum
+  /** N名参加させる */
+  private async debugParticipate(): Promise<void> {
+    await this.$axios.$post(`/admin/village/${this.village!.id}/participate`, {
+      participate_count: this.participateCharaNum
     })
+    this.$emit('reload')
   }
 
-  private dummyLogin(): void {
-    this.$emit('dummy-login', {
-      participantId: this.participantId
+  /** 選択したキャラでログインして表示 */
+  private async dummyLogin(): Promise<void> {
+    await this.$axios.$post(`/admin/village/${this.village!.id}/dummy-login`, {
+      target_id: this.participantId
     })
+    this.$emit('reload')
   }
 
-  private setNoSuddenlyDeath(): void {
-    this.$emit('set-no-suddenly-death')
+  /** 村日付を進める */
+  private async changeDay(): Promise<void> {
+    await this.$axios.$post(`/admin/village/${this.village!.id}/change-day`)
+    this.$emit('reload')
   }
 
-  private changeDay(): void {
-    this.$emit('debug-change-day')
+  /** 突然死なしに変更 */
+  private async setNoSuddenlyDeath(): Promise<void> {
+    await this.$axios.$post(
+      `/admin/village/${this.village!.id}/no-suddenly-death`
+    )
+    this.$emit('reload')
   }
 }
 </script>

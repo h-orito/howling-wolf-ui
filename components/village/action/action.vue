@@ -40,17 +40,20 @@
       v-if="situation.vote.available_vote"
       :village="village"
       :vote="situation.vote"
+      @reload="$emit('reload', $event)"
     />
     <ability
       v-for="ability in situation.ability.list"
       :key="ability.type.code"
       :village="village"
       :ability="ability"
+      @reload="$emit('reload', $event)"
     />
     <commit
       v-if="situation.commit.available_commit"
       :village="village"
       :situation="situation"
+      @reload="$emit('reload', $event)"
     />
   </div>
 </template>

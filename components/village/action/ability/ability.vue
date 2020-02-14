@@ -2,6 +2,7 @@
   <action-card :title="`能力行使（${ability.type.name}）`">
     <template v-slot:content>
       <div class="content has-text-left">
+        <p>現在のセット先: {{ currentTargetName }}</p>
         <p style="font-weight: 700; margin-bottom: 6px;">対象</p>
         <b-field>
           <b-select
@@ -17,7 +18,7 @@
               v-for="participant in ability.target_list"
               :value="participant.id.toString()"
               :key="participant.id.toString()"
-              >{{ participant.chara.chara_name.name }}</option
+              >{{ participant.chara.chara_name.full_name }}</option
             >
           </b-select>
         </b-field>
@@ -41,6 +42,7 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import actionCard from '~/components/village/action/action-card.vue'
 // type
 import Village from '~/components/type/village'
+import Chara from '~/components/type/chara'
 import VillageAbilitySituation from '~/components/type/village-ability-situation'
 
 @Component({
@@ -56,6 +58,11 @@ export default class Ability extends Vue {
   private submitting: boolean = false
   private participantId: number | null =
     this.ability.target == null ? null : this.ability.target.id
+
+  private get currentTargetName(): string {
+    if (!this.ability.target) return 'なし'
+    return this.ability.target.chara.chara_name.full_name
+  }
 
   private get canSubmit(): boolean {
     if (this.submitting) return false
@@ -83,6 +90,7 @@ export default class Ability extends Vue {
       position: 'is-top-right',
       actionText: null
     })
+    this.$emit('reload')
   }
 }
 </script>

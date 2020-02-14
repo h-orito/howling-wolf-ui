@@ -15,7 +15,7 @@
       aria-previous-label="Previous page"
       aria-page-label="Page"
       aria-current-label="Current page"
-      @change="change($event, true)"
+      @change="change($event)"
       class="m-l-5 m-r-5 m-t-10 m-b-10"
     />
     <message-card
@@ -40,7 +40,7 @@
       aria-previous-label="Previous page"
       aria-page-label="Page"
       aria-current-label="Current page"
-      @change="change($event, false)"
+      @change="change($event)"
       class="m-l-5 m-r-5 m-t-10 m-b-10"
     />
   </div>
@@ -73,10 +73,9 @@ export default class MessageCard extends Vue {
 
   private range: number = 2
 
-  private change(pageNum: number, isTop: boolean) {
+  private change(pageNum: number) {
     this.$emit('change-message-page', {
-      pageNum,
-      isTop
+      pageNum
     })
   }
 }
