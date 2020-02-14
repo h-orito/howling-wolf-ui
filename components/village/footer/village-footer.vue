@@ -140,8 +140,8 @@ export default class VillageFooter extends Vue {
     }
   }
 
-  .village-footer-item:hover i {
-    color: $primary !important;
-  }
+  // .village-footer-item:hover i {
+  //   color: $primary !important;
+  // }
 }
 </style>

@@ -277,6 +277,7 @@ export default class extends Vue {
     // 初期表示時は最新日を表示する
     this.displayVillageDay = this.latestDay!
     this.existsNewMessages = false
+    this.toBottom()
   }
 
   /** 表示する村日付を変更 */
