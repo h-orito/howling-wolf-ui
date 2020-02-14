@@ -373,6 +373,7 @@ export default class extends Vue {
           position: 'is-top-right',
           actionText: null
         })
+        this.existsNewMessages = false
       }
     }
   }
