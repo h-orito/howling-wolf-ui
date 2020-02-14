@@ -42,7 +42,7 @@ const actions = {
       )
       // get user from server
       const myPlayer = await self.$axios.$get('/my-player')
-      commit('login', {
+      await commit('login', {
         player: myPlayer,
         photoUrl: user.photoURL,
         user
@@ -51,7 +51,7 @@ const actions = {
       self.$cookies.remove('id-token', {
         path: '/'
       })
-      commit('logout')
+      await commit('logout')
     }
   }
 }

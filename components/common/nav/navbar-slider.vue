@@ -33,28 +33,28 @@
           トップページ
         </nuxt-link>
         <nuxt-link
-          :to="{ path: 'about' }"
+          :to="{ path: '/about' }"
           class="navbar-item"
           @click.native="$emit('hide-menu')"
         >
           このサイトは
         </nuxt-link>
         <nuxt-link
-          :to="{ path: 'rule' }"
+          :to="{ path: '/rule' }"
           class="navbar-item"
           @click.native="$emit('hide-menu')"
         >
           ルール
         </nuxt-link>
         <nuxt-link
-          :to="{ path: 'faq' }"
+          :to="{ path: '/faq' }"
           class="navbar-item"
           @click.native="$emit('hide-menu')"
         >
           よくある質問
         </nuxt-link>
         <nuxt-link
-          :to="{ path: 'release-note' }"
+          :to="{ path: '/release-note' }"
           class="navbar-item"
           @click.native="$emit('hide-menu')"
         >
