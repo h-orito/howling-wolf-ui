@@ -141,7 +141,7 @@ const nuxtConfig: Configuration = {
   },
 
   router: {
-    middleware: ['authenticated']
+    middleware: ['authenticated', 'version']
   },
 
   /* Nuxt.js modules */

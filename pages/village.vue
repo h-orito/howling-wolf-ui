@@ -30,13 +30,13 @@
         :per-page="perPageCount"
         @change-message-page="changeMessagePage($event)"
       />
-      <div id="message-bottom" />
       <village-day-list
         v-if="displayVillageDay"
         :village="village"
         :display-village-day-id="displayVillageDay.id"
         @current-day-change="changeDisplayDay($event)"
       />
+      <div id="message-bottom" />
       <div v-if="situation">
         <action
           :situation="situation"
