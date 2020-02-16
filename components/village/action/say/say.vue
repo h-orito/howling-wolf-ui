@@ -96,6 +96,7 @@ import messageInput from '~/components/village/action/message-input.vue'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 import Village from '~/components/type/village'
 import Message from '~/components/type/message'
+import { FACE_TYPE, MESSAGE_TYPE } from '~/components/const/consts'
 
 @Component({
   components: { actionCard, messageInput, messageCard }
@@ -106,6 +107,15 @@ export default class Say extends Vue {
 
   @Prop({ type: Object })
   private village!: Village
+
+  private messageTypeFaceTypeMap: Map<string, string> = new Map([
+    [MESSAGE_TYPE.NORMAL_SAY, FACE_TYPE.NORMAL],
+    [MESSAGE_TYPE.WEREWOLF_SAY, FACE_TYPE.WEREWOLF],
+    [MESSAGE_TYPE.SPECTATE_SAY, FACE_TYPE.NORMAL],
+    [MESSAGE_TYPE.SECRET_SAY, FACE_TYPE.SECRET],
+    [MESSAGE_TYPE.MONOLOGUE_SAY, FACE_TYPE.MONOLOGUE],
+    [MESSAGE_TYPE.GRAVE_SAY, FACE_TYPE.GRAVE]
+  ])
 
   private messageType: string = this.situation.say.default_message_type!.code
   private message: string = ''
@@ -130,9 +140,22 @@ export default class Say extends Vue {
     }
   }
 
+  private get faceTypeCode(): string {
+    const expectedFaceType = this.messageTypeFaceTypeMap.get(this.messageType)
+    if (expectedFaceType == null) return FACE_TYPE.NORMAL
+    if (
+      this.situation.participate.myself!.chara.face_list.some(
+        face => face.type === expectedFaceType
+      )
+    ) {
+      return expectedFaceType
+    }
+    return FACE_TYPE.NORMAL
+  }
+
   private get imageUrl(): string {
     return this.situation.participate.myself!.chara.face_list.find(
-      face => face.type === 'NORMAL'
+      face => face.type === this.faceTypeCode
     )!.image_url
   }
 
@@ -167,7 +190,7 @@ export default class Say extends Vue {
         {
           message: this.message,
           message_type: this.messageType,
-          face_type: 'NORMAL'
+          face_type: this.faceTypeCode
         }
       )
       this.isSayModalOpen = true
@@ -184,7 +207,7 @@ export default class Say extends Vue {
       await this.$axios.$post(`/village/${this.village!.id}/say`, {
         message: this.message,
         message_type: this.messageType,
-        face_type: 'NORMAL'
+        face_type: this.faceTypeCode
       })
     } catch (error) {}
     this.submitting = false
