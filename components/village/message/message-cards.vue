@@ -20,7 +20,7 @@
     />
     <message-card
       v-for="message in messages.list"
-      :key="message['id']"
+      :key="message.time.unix_time_milli"
       :village="village"
       :message="message"
       :is-progress="isProgress"
