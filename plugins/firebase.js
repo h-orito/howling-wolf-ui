@@ -1,5 +1,4 @@
 import firebase from 'firebase'
-import 'firebase/firestore'
 
 const config = {
   databaseURL: process.env.FIREBASE_DATABASEURL,

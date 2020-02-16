@@ -37,7 +37,6 @@ export default class ActionCard extends Vue {
 <style lang="scss">
 .action-card {
   margin-bottom: 5px;
-  // padding: 5px;
 
   .action-card-header-title {
     padding: 5px;

@@ -16,6 +16,7 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import Village from '~/components/type/village'
 import VillageSaySituation from '~/components/type/village-say-situation'
 import VillageSayRestrictSituation from '~/components/type/village-say-restrict-situation'
+import { MESSAGE_TYPE } from '~/components/const/consts'
 
 @Component({
   components: {}
@@ -111,15 +112,15 @@ export default class MessageInput extends Vue {
 
   private get messageClass(): string {
     switch (this.messageType) {
-      case 'NORMAL_SAY':
+      case MESSAGE_TYPE.NORMAL_SAY:
         return 'normal-say'
-      case 'WEREWOLF_SAY':
+      case MESSAGE_TYPE.WEREWOLF_SAY:
         return 'werewolf-say'
-      case 'MONOLOGUE_SAY':
+      case MESSAGE_TYPE.MONOLOGUE_SAY:
         return 'monologue-say'
-      case 'GRAVE_SAY':
+      case MESSAGE_TYPE.GRAVE_SAY:
         return 'grave-say'
-      case 'SPECTATE_SAY':
+      case MESSAGE_TYPE.SPECTATE_SAY:
         return 'spectate-say'
       default:
         return ''
