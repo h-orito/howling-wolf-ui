@@ -25,6 +25,7 @@ export default class Leave extends Vue {
   private situation!: SituationAsParticipant
 
   private confirmLeave(): void {
+    const self = this
     this.$buefy.dialog.confirm({
       title: '退村確認',
       message: '本当に退村しますか？',
@@ -32,7 +33,7 @@ export default class Leave extends Vue {
       type: 'is-danger',
       hasIcon: true,
       onConfirm: async () => {
-        await this.leave
+        await self.leave()
         this.$buefy.toast.open('退村しました。')
       },
       size: 'is-small',
