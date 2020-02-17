@@ -158,6 +158,8 @@ const nuxtConfig: Configuration = {
     'cookie-universal-nuxt',
     // scroll
     ['vue-scrollto/nuxt', { duration: 500 }],
+    // copy to clipboard
+    'nuxt-clipboard2',
     // pwa
     '@nuxtjs/pwa',
     // Doc: https://github.com/nuxt-community/sitemap-module

@@ -2,7 +2,9 @@
   <div class="hw-message-card" :class="isAnchorMessage ? 'anchor-message' : ''">
     <div class="hw-message-name-area">
       <span v-if="isDispAnchorString">
-        <a href="javascript:void(0);">{{ anchorString }}</a
+        <a href="javascript:void(0);" @click="copyAnchorString">{{
+          anchorString
+        }}</a
         >.&nbsp;</span
       >
       <p class="hw-message-name">
@@ -50,6 +52,24 @@ export default class MessageSay extends Vue {
   @Prop({ type: Boolean, default: false })
   private isAnchorMessage?: boolean
 
+  private messageClassMap: Map<string, string> = new Map([
+    [MESSAGE_TYPE.NORMAL_SAY, 'normal-say'],
+    [MESSAGE_TYPE.WEREWOLF_SAY, 'werewolf-say'],
+    [MESSAGE_TYPE.MONOLOGUE_SAY, 'monologue-say'],
+    [MESSAGE_TYPE.GRAVE_SAY, 'grave-say'],
+    [MESSAGE_TYPE.SPECTATE_SAY, 'spectate-say']
+  ])
+
+  private anchorPrefixMap: Map<string, string> = new Map([
+    [MESSAGE_TYPE.NORMAL_SAY, ''],
+    [MESSAGE_TYPE.MONOLOGUE_SAY, '-'],
+    [MESSAGE_TYPE.GRAVE_SAY, '+'],
+    [MESSAGE_TYPE.WEREWOLF_SAY, '*'],
+    [MESSAGE_TYPE.MASON_SAY, '='],
+    [MESSAGE_TYPE.SPECTATE_SAY, '@'],
+    [MESSAGE_TYPE.CREATOR_SAY, '#']
+  ])
+
   private get imageUrl(): string {
     const typeCode = this.message.content.face_code
     return this.message.from!.chara.face_list.find(
@@ -66,20 +86,9 @@ export default class MessageSay extends Vue {
   }
 
   private get messageClass(): string {
-    switch (this.message.content.type.code) {
-      case MESSAGE_TYPE.NORMAL_SAY:
-        return 'normal-say'
-      case MESSAGE_TYPE.WEREWOLF_SAY:
-        return 'werewolf-say'
-      case MESSAGE_TYPE.MONOLOGUE_SAY:
-        return 'monologue-say'
-      case MESSAGE_TYPE.GRAVE_SAY:
-        return 'grave-say'
-      case MESSAGE_TYPE.SPECTATE_SAY:
-        return 'spectate-say'
-      default:
-        return ''
-    }
+    const className = this.messageClassMap.get(this.message.content.type.code)
+    if (className == null) return ''
+    return className
   }
 
   private get isDispAnchorString(): boolean {
@@ -90,33 +99,16 @@ export default class MessageSay extends Vue {
   }
 
   private get anchorString(): string {
-    let prefix: string = ''
-    switch (this.message.content.type.code) {
-      case 'NORMAL_SAY':
-        prefix = ''
-        break
-      case 'MONOLOGUE_SAY':
-        prefix = '-'
-        break
-      case 'GRAVE_SAY':
-        prefix = '+'
-        break
-      case 'WEREWOLF_SAY':
-        prefix = '*'
-        break
-      case 'MASON_SAY':
-        prefix = '='
-        break
-      case 'SPECTATE_SAY':
-        prefix = '@'
-        break
-      case 'CREATOR_SAY':
-        prefix = '#'
-        break
-      default:
-        prefix = ''
-    }
+    const prefix = this.anchorPrefixMap.get(this.message.content.type.code)
+    if (prefix == null) return ''
     return `>>${prefix}${this.message.content.num}`
+  }
+
+  private async copyAnchorString(): Promise<void> {
+    await (this as any).$copyText(this.anchorString)
+    this.$buefy.toast.open(
+      `クリップボードにコピーしました: ${this.anchorString}`
+    )
   }
 }
 </script>
