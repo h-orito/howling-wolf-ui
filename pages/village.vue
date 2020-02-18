@@ -42,7 +42,6 @@
           :situation="situation"
           :village="village"
           @reload="reload"
-          @load-latest="loadVillageLatest"
           ref="action"
         ></action>
       </div>
@@ -61,6 +60,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
+import firebase from '~/plugins/firebase'
 // components
 import loading from '~/components/loading.vue'
 import messageCards from '~/components/village/message/message-cards.vue'
@@ -185,6 +185,8 @@ export default class extends Vue {
   // created
   // ----------------------------------------------------------------
   private async created(): Promise<void> {
+    // 認証を待つ
+    await this.auth()
     // もろもろ読込
     await this.reload()
     // 定期的に最新発言がないかチェックする
@@ -205,6 +207,16 @@ export default class extends Vue {
   // ----------------------------------------------------------------
   // methods
   // ----------------------------------------------------------------
+  /** 認証 */
+  private async auth(): Promise<void> {
+    const user = await new Promise((resolve, reject) => {
+      firebase.auth().onAuthStateChanged(user => resolve(user))
+    })
+    await this.$store.dispatch('LOGINOUT', {
+      user
+    })
+  }
+
   /** 村を読み込み */
   private async loadVillage(): Promise<void> {
     this.loadingVillage = true

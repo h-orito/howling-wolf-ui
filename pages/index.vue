@@ -182,6 +182,14 @@ export default class TopPage extends Vue {
     // ログイン後のリダイレクトの際、ユーザ情報をサーバに保存
     this.registerUserIfNeeded()
 
+    // 認証を待つ
+    const user = await new Promise((resolve, reject) => {
+      firebase.auth().onAuthStateChanged(user => resolve(user))
+    })
+    await this.$store.dispatch('LOGINOUT', {
+      user
+    })
+
     // 自動生成村一覧
     const res = await this.$axios.$get('/village/list', {
       params: {
