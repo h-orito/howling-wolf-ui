@@ -6,7 +6,7 @@
         <b-button
           v-if="!isLogin"
           type="is-primary"
-          icon-pack="mdi"
+          icon-pack="fab"
           icon-left="twitter"
           @click="$emit('signin')"
         >

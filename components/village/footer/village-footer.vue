@@ -12,14 +12,15 @@
     <button class="village-footer-item" @click="openSearchModal">
       <b-icon pack="fas" icon="search" size="is-medium" type="is-white" />
     </button>
-    <button class="village-footer-item" @click="toBottom">
-      <b-icon
-        pack="fas"
-        icon="long-arrow-alt-down"
-        size="is-medium"
-        type="is-white"
-      />
-    </button>
+    <b-button
+      class="village-footer-item flex"
+      icon-pack="fas"
+      icon-left="long-arrow-alt-down"
+      type="is-dark"
+      @click="toBottom"
+    >
+      最下部
+    </b-button>
     <button class="village-footer-item" @click="openVillageInfoModal">
       <b-icon pack="fas" icon="info-circle" size="is-medium" type="is-white" />
     </button>
@@ -119,12 +120,14 @@ export default class VillageFooter extends Vue {
   z-index: 10;
 
   .village-footer-item {
-    flex: 1;
     height: 100%;
     justify-content: center;
     align-content: center;
     cursor: pointer;
     background-color: $dark;
+    border: 0;
+    border-radius: 0;
+    min-width: 60px;
 
     i.rotate {
       animation: rotate1 2s linear infinite;
@@ -140,8 +143,8 @@ export default class VillageFooter extends Vue {
     }
   }
 
-  // .village-footer-item:hover i {
-  //   color: $primary !important;
-  // }
+  .flex {
+    flex: 1;
+  }
 }
 </style>

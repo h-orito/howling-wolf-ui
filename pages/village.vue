@@ -1,5 +1,11 @@
 <template>
   <div class="container is-size-7 village-main-area">
+    <village-header
+      :current-village-day="displayVillageDay"
+      :village="village"
+      @to-head="toHead"
+      @current-day-change="changeDisplayDay($event)"
+    />
     <loading
       v-if="loadingVillage"
       :message="'村情報を読み込み中...'"
@@ -68,6 +74,7 @@ import action from '~/components/village/action/action.vue'
 import villageDebug from '~/components/village/debug/village-debug.vue'
 import villageDayList from '~/components/village/village-day-list.vue'
 import villageFooter from '~/components/village/footer/village-footer.vue'
+import villageHeader from '~/components/village/header/village-header.vue'
 // type
 import Village from '~/components/type/village'
 import VillageDay from '~/components/type/village-day'
@@ -84,7 +91,8 @@ import { VILLAGE_STATUS } from '~/components/const/consts'
     action,
     villageDebug,
     villageDayList,
-    villageFooter
+    villageFooter,
+    villageHeader
   },
   asyncData({ query }) {
     return { villageId: query.id }
@@ -394,6 +402,7 @@ export default class extends Vue {
 
 <style lang="scss">
 .village-main-area {
+  padding-top: 3rem;
   padding-bottom: 3rem;
 
   .hw-message-card {

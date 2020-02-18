@@ -9,7 +9,7 @@
       <b-button
         v-if="!isLogin"
         type="is-white"
-        icon-pack="mdi"
+        icon-pack="fab"
         icon-left="twitter"
         outlined
         class="spotlight-signin-button spotlight-shadow"
@@ -33,7 +33,7 @@
       <b-button
         size="is-small"
         type="is-white"
-        icon-pack="mdi"
+        icon-pack="fab"
         icon-left="twitter"
         outlined
         class="spotlight-signin-button spotlight-shadow"

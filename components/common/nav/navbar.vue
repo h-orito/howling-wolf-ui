@@ -5,12 +5,12 @@
       @toggle-menu="toggleMenu"
     />
     <div class="navbar-brand navbar-brand-center">
-      <a
+      <nuxt-link
         class="navbar-item has-text-center nuxt-link-exact-active nuxt-link-active"
-        @click="toHead"
+        :to="{ path: '/' }"
       >
         HOWLING WOLF
-      </a>
+      </nuxt-link>
     </div>
     <navbar-slider :is-menu-expanded="isMenuExpanded" @hide-menu="hideMenu" />
   </nav>
