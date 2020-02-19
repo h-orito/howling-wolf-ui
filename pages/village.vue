@@ -1,5 +1,11 @@
 <template>
   <div class="container is-size-7 village-main-area">
+    <village-header
+      :current-village-day="displayVillageDay"
+      :village="village"
+      @to-head="toHead"
+      @current-day-change="changeDisplayDay($event)"
+    />
     <loading
       v-if="loadingVillage"
       :message="'村情報を読み込み中...'"
@@ -42,7 +48,6 @@
           :situation="situation"
           :village="village"
           @reload="reload"
-          @load-latest="loadVillageLatest"
           ref="action"
         ></action>
       </div>
@@ -61,6 +66,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
+import firebase from '~/plugins/firebase'
 // components
 import loading from '~/components/loading.vue'
 import messageCards from '~/components/village/message/message-cards.vue'
@@ -68,6 +74,7 @@ import action from '~/components/village/action/action.vue'
 import villageDebug from '~/components/village/debug/village-debug.vue'
 import villageDayList from '~/components/village/village-day-list.vue'
 import villageFooter from '~/components/village/footer/village-footer.vue'
+import villageHeader from '~/components/village/header/village-header.vue'
 // type
 import Village from '~/components/type/village'
 import VillageDay from '~/components/type/village-day'
@@ -84,7 +91,8 @@ import { VILLAGE_STATUS } from '~/components/const/consts'
     action,
     villageDebug,
     villageDayList,
-    villageFooter
+    villageFooter,
+    villageHeader
   },
   asyncData({ query }) {
     return { villageId: query.id }
@@ -185,6 +193,8 @@ export default class extends Vue {
   // created
   // ----------------------------------------------------------------
   private async created(): Promise<void> {
+    // 認証を待つ
+    await this.auth()
     // もろもろ読込
     await this.reload()
     // 定期的に最新発言がないかチェックする
@@ -205,6 +215,16 @@ export default class extends Vue {
   // ----------------------------------------------------------------
   // methods
   // ----------------------------------------------------------------
+  /** 認証 */
+  private async auth(): Promise<void> {
+    const user = await new Promise((resolve, reject) => {
+      firebase.auth().onAuthStateChanged(user => resolve(user))
+    })
+    await this.$store.dispatch('LOGINOUT', {
+      user
+    })
+  }
+
   /** 村を読み込み */
   private async loadVillage(): Promise<void> {
     this.loadingVillage = true
@@ -382,6 +402,7 @@ export default class extends Vue {
 
 <style lang="scss">
 .village-main-area {
+  padding-top: 3rem;
   padding-bottom: 3rem;
 
   .hw-message-card {

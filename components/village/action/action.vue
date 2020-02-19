@@ -6,7 +6,7 @@
       v-if="situation.say.available_say"
       :village="village"
       :situation="situation"
-      @reload="$emit('load-latest', $event)"
+      @reload="$emit('reload', $event)"
       ref="say"
     />
     <participate
