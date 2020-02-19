@@ -50,65 +50,44 @@
               style="list-style: inside;"
             >
               <li>
-                要望、改善提案、不具合報告はTwitter
-                <a href="https://twitter.com/ort_dev" target="_blank"
+                要望、改善提案、不具合報告はTwitter<a
+                  href="https://twitter.com/ort_dev"
+                  target="_blank"
                   >@ort_dev</a
                 >へお願いします
               </li>
               <li>
                 投げ銭いただける方は
-                <a @click="openModal('#kampa-modal')" href="javascript:void(0);"
-                  >こちら</a
+                <a @click="openKampaModal" href="javascript:void(0);">こちら</a
                 >からお願いします
               </li>
               <li>
-                <a @click="openModal('#terms-modal')" href="javascript:void(0);"
+                <a @click="openTermModal" href="javascript:void(0);"
                   >利用規約</a
                 >
               </li>
               <li>
-                <a
-                  @click="openModal('#policy-modal')"
-                  href="javascript:void(0);"
+                <a @click="openPolicyModal" href="javascript:void(0);"
                   >プライバシーポリシー</a
                 >
               </li>
             </ul>
-          </div>
-        </div>
-        <div id="kampa-modal" class="modal">
-          <div class="modal-background" />
-          <div class="modal-content">
-            <div class="box">
-              <h4 class="is-size-5">投げ銭について</h4>
-              <kampa />
-            </div>
+            <kampa-modal
+              :is-open="isKampaModalOpen"
+              @close-modal="closeKampaModal"
+            />
+            <term-modal
+              :is-open="isTermModalOpen"
+              @close-modal="closeTermModal"
+            />
+            <policy-modal
+              :is-open="isPolicyModalOpen"
+              @close-modal="closePolicyModal"
+            />
           </div>
         </div>
       </div>
     </section>
-    <div id="terms-modal" class="modal">
-      <div class="modal-background" />
-      <div class="modal-content">
-        <div class="box">
-          <h4 class="is-size-5">利用規約</h4>
-          <div class="content">
-            <terms />
-          </div>
-        </div>
-      </div>
-    </div>
-    <div id="policy-modal" class="modal">
-      <div class="modal-background" />
-      <div class="modal-content">
-        <div class="box">
-          <h4 class="is-size-5">プライバシーポリシー</h4>
-          <div class="content">
-            <policy />
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -121,10 +100,10 @@ import firebase from '~/plugins/firebase'
 import spotlight from '~/components/index/spotlight.vue'
 import playerStats from '~/components/index/player-stats.vue'
 import loading from '~/components/loading.vue'
-import terms from '~/components/index/terms.vue'
-import policy from '~/components/index/policy.vue'
-import kampa from '~/components/index/kampa.vue'
-import VillageList from '~/components/index/village-list.vue'
+import kampaModal from '~/components/index/modal-kampa.vue'
+import termModal from '~/components/index/modal-term.vue'
+import policyModal from '~/components/index/modal-policy.vue'
+import villageList from '~/components/index/village-list.vue'
 // type
 import Villages from '~/components/type/villages.ts'
 import Village from '~/components/type/village.ts'
@@ -136,10 +115,10 @@ import { VILLAGE_STATUS } from '~/components/const/consts'
     spotlight,
     playerStats,
     loading,
-    terms,
-    policy,
-    kampa,
-    VillageList
+    kampaModal,
+    termModal,
+    policyModal,
+    villageList
   }
 })
 export default class TopPage extends Vue {
@@ -151,6 +130,10 @@ export default class TopPage extends Vue {
   /** data */
   // 村一覧
   private villages: Village[] | null = null
+  // Kampa
+  private isKampaModalOpen: boolean = false
+  private isTermModalOpen: boolean = false
+  private isPolicyModalOpen: boolean = false
 
   /** computed */
   private get loadingVillages(): boolean {
@@ -264,6 +247,30 @@ export default class TopPage extends Vue {
 
   private logout(): void {
     firebase.auth().signOut()
+  }
+
+  private openKampaModal(): void {
+    this.isKampaModalOpen = true
+  }
+
+  private closeKampaModal(): void {
+    this.isKampaModalOpen = false
+  }
+
+  private openTermModal(): void {
+    this.isTermModalOpen = true
+  }
+
+  private closeTermModal(): void {
+    this.isTermModalOpen = false
+  }
+
+  private openPolicyModal(): void {
+    this.isPolicyModalOpen = true
+  }
+
+  private closePolicyModal(): void {
+    this.isPolicyModalOpen = false
   }
 }
 </script>

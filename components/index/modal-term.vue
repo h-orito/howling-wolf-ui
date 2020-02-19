@@ -1,7 +1,20 @@
 <template>
-  <div class="is-size-7 has-text-left">
-    <p>作成中</p>
-    <!-- <p>
+  <b-modal
+    :active="isOpen"
+    has-modal-card
+    trap-focus
+    aria-role="dialog"
+    aria-modal
+    :on-cancel="close"
+  >
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title has-text-left">利用規約</p>
+      </header>
+      <section class="modal-card-body">
+        <div class="is-size-7 has-text-left content">
+          <p>作成中</p>
+          <!-- <p>
       この利用規約（以下，「本規約」といいます。）は，ワードウルフオンライン（以下，「当サイト」といいます。）がこのウェブサイト上で提供するサービス（以下，「本サービス」といいます。）の利用条件を定めるものです。登録ユーザーの皆さま（以下，「ユーザー」といいます。）には，本規約に従って，本サービスをご利用いただきます。
     </p>
     <h3 class="is-size-6">第1条（適用）</h3>
@@ -126,15 +139,25 @@
       <br />本サービスに関して紛争が生じた場合には，当サイトの本店所在地を管轄する裁判所を専属的合意管轄とします。
     </p>
     <p class="is-pulled-right">以上</p> -->
-  </div>
+        </div>
+      </section>
+    </div>
+  </b-modal>
 </template>
 
-<script>
-export default {
-  data: () => ({}),
-  computed: {},
-  created() {},
-  methods: {}
+<script lang="ts">
+import { Component, Vue, Prop } from 'nuxt-property-decorator'
+
+@Component({
+  components: {}
+})
+export default class TermModal extends Vue {
+  @Prop({ type: Boolean })
+  private isOpen!: boolean
+
+  private close(): void {
+    this.$emit('close-modal')
+  }
 }
 </script>
 
