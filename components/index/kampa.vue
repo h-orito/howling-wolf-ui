@@ -27,7 +27,9 @@
     <h4 class="is-size-5">補足</h4>
     <ul class="is-size-7 content">
       <li>
-        頂いた投げ銭はサーバ維持費用など当サイト運営目的にのみ使用します。
+        頂いた投げ銭は<strong class="has-text-danger"
+          >開発者の私利私欲のため</strong
+        >に使用します。
       </li>
       <li>
         頂いた改善提案、ご要望については投げ銭の有無に関係なく積極的に取り入れていくので、Twitter
