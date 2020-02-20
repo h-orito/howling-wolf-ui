@@ -7,7 +7,7 @@
         <b-field>
           <b-select
             v-model="participantId"
-            :disable="!ability.usable || ability.target_list.length === 0"
+            :disabled="!ability.usable || ability.target_list.length === 0"
             expanded
             size="is-small"
           >
