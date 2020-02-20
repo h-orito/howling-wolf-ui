@@ -199,10 +199,6 @@ export default class extends Vue {
     await this.reload()
     // 定期的に最新発言がないかチェックする
     this.latestTimer = this.setLatestTimer()
-    // 発言読込時点での最新日時をセットしておく
-    this.latestMessageUnixTimeMilli = this.messages!.list[
-      this.messages!.list.length - 1
-    ].time.unix_time_milli
   }
 
   // ----------------------------------------------------------------
@@ -297,6 +293,10 @@ export default class extends Vue {
     // 初期表示時は最新日を表示する
     this.displayVillageDay = this.latestDay!
     this.existsNewMessages = false
+    // 発言読込時点での最新日時をセットしておく
+    this.latestMessageUnixTimeMilli = this.messages!.list[
+      this.messages!.list.length - 1
+    ].time.unix_time_milli
     this.toBottom()
   }
 
@@ -414,12 +414,15 @@ export default class extends Vue {
       display: flex;
 
       .hw-message-name {
-        flex: 1;
         text-align: left;
         font-weight: bold;
       }
+      .hw-message-player {
+        margin-left: 5px;
+        text-align: left;
+      }
       .hw-message-datetime {
-        flex: 1;
+        margin-left: auto;
         text-align: right;
         color: #aaaaaa;
       }
