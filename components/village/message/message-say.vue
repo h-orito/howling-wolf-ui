@@ -10,7 +10,17 @@
       <p class="hw-message-name">
         {{ message.from.chara.chara_name.full_name }}
       </p>
-      <p class="hw-message-datetime">{{ message.time.datetime }}</p>
+      <p class="hw-message-player" v-if="message.from.player">
+        [<a
+          :href="'https://twitter.com/' + message.from.player.twitter_user_name"
+          target="_blank"
+          >{{ message.from.player.twitter_user_name }}</a
+        >]
+      </p>
+      <p class="hw-message-datetime">
+        {{ isAnchorMessage ? message.time.day + 'd' : '' }}
+        {{ message.time.datetime.substring(2) }}
+      </p>
     </div>
     <div class="hw-message-content-area">
       <div class="hw-message-face-area">
