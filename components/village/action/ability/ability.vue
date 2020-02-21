@@ -77,6 +77,11 @@ export default class Ability extends Vue {
     }
   }
 
+  private resetTarget(): void {
+    this.participantId =
+      this.ability.target == null ? null : this.ability.target.id
+  }
+
   private async setAbility(): Promise<void> {
     this.submitting = true
     await this.$axios.$post(`/village/${this.village!.id}/ability`, {

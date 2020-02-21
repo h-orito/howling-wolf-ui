@@ -297,6 +297,9 @@ export default class extends Vue {
     this.latestMessageUnixTimeMilli = this.messages!.list[
       this.messages!.list.length - 1
     ].time.unix_time_milli
+    // 能力行使等をリセット
+    const refs = this.$refs as any
+    refs.action.reset()
     this.toBottom()
   }
 

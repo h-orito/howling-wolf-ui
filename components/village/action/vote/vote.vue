@@ -74,5 +74,9 @@ export default class Vote extends Vue {
     })
     this.$emit('reload')
   }
+
+  private resetTarget(): void {
+    this.participantId = this.vote.target == null ? null : this.vote.target.id
+  }
 }
 </script>

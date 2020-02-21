@@ -91,7 +91,6 @@ export default class MessageCard extends Vue {
       messageTypeCode,
       messageNumber
     )
-    console.log(villageAnchorMessage)
     if (villageAnchorMessage == null || villageAnchorMessage.message == null) {
       return
     }
