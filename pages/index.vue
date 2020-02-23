@@ -245,8 +245,9 @@ export default class TopPage extends Vue {
     })
   }
 
-  private logout(): void {
-    firebase.auth().signOut()
+  private async logout(): Promise<void> {
+    await firebase.auth().signOut()
+    location.reload()
   }
 
   private openKampaModal(): void {
