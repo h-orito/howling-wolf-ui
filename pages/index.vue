@@ -162,9 +162,6 @@ export default class TopPage extends Vue {
 
   /** created */
   async created() {
-    // ログイン後のリダイレクトの際、ユーザ情報をサーバに保存
-    this.registerUserIfNeeded()
-
     // 認証を待つ
     const user = await new Promise((resolve, reject) => {
       firebase.auth().onAuthStateChanged(user => resolve(user))
@@ -172,6 +169,9 @@ export default class TopPage extends Vue {
     await this.$store.dispatch('LOGINOUT', {
       user
     })
+
+    // ログイン後のリダイレクトの際、ユーザ情報をサーバに保存
+    this.registerUserIfNeeded()
 
     // 自動生成村一覧
     const res = await this.$axios.$get('/village/list', {
@@ -225,7 +225,7 @@ export default class TopPage extends Vue {
     const now = new Date()
     this.$cookies.set(
       'id-token-check-date',
-      now.setMinutes(now.getHours() + 50),
+      now.setMinutes(now.getMinutes() + 50),
       {
         path: '/',
         maxAge: 60 * 60 * 24 * 30

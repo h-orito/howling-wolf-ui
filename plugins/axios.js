@@ -4,8 +4,10 @@ import { SnackbarProgrammatic as Snackbar } from 'buefy'
 export default function({ store, $axios, app }) {
   $axios.onRequest(async config => {
     let token = app.$cookies.get('id-token')
-    if (token) {
-      token = await refreshTokenIfNeeded(token, store, app)
+    const user = store.state.auth.user
+    console.log(user)
+    if (token && user) {
+      token = await refreshTokenIfNeeded(token, app, user)
       config.headers.common.Authorization = 'Bearer ' + token
     }
     return config
@@ -30,14 +32,10 @@ export default function({ store, $axios, app }) {
   })
 }
 
-async function refreshTokenIfNeeded(token, store, app) {
+async function refreshTokenIfNeeded(token, app, user) {
   const expired = new Date(app.$cookies.get('id-token-check-date'))
   if (new Date().getTime() < expired.getTime()) {
     // 有効期限内
-    return token
-  }
-  const user = store.state.auth.user
-  if (!user) {
     return token
   }
   return await user.getIdToken(true).then(newIdToken => {
