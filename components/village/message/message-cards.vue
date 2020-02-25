@@ -9,6 +9,7 @@
       order="is-right"
       size="is-small"
       :per-page="perPage"
+      icon-pack="fas"
       icon-prev="chevron-left"
       icon-next="chevron-right"
       aria-next-label="Next page"
