@@ -207,7 +207,12 @@ export default class extends Vue {
     // キャラチップ名
     this.charachipName = await this.loadCharachipName()
     // 定期的に最新発言がないかチェックする
-    this.latestTimer = this.setLatestTimer()
+    if (
+      this.village!.status.code !== VILLAGE_STATUS.COMPLETE &&
+      this.village!.status.code !== VILLAGE_STATUS.CANCEL
+    ) {
+      this.latestTimer = this.setLatestTimer()
+    }
   }
 
   // ----------------------------------------------------------------
