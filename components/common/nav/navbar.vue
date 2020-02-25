@@ -20,9 +20,10 @@
 import { Component, Vue } from 'nuxt-property-decorator'
 // component
 import navbarBurger from '~/components/common/nav/navbar-burger.vue'
-import navbarSlider from '~/components/common/nav/navbar-slider.vue'
 // type
 import MyselfPlayer from '~/components/type/myself-player'
+// dynamic imports
+const navbarSlider = () => import('~/components/common/nav/navbar-slider.vue')
 
 @Component({
   components: { navbarBurger, navbarSlider }

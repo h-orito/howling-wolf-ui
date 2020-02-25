@@ -17,7 +17,7 @@
       :fixed="true"
     ></loading>
     <loading
-      v-if="loadingSituation"
+      v-if="!loadingMessage && loadingSituation"
       :message="'参加状況を読み込み中...'"
       :fixed="true"
     ></loading>
@@ -306,10 +306,12 @@ export default class extends Vue {
   private async reload(): Promise<void> {
     // 村
     await this.loadVillage()
-    // 発言(最新の日の最新のページを表示)
-    await this.loadMessage(true, true)
-    // 参加状況
-    await this.loadSituation()
+    await Promise.all([
+      // 発言(最新の日の最新のページを表示)
+      this.loadMessage(true, true),
+      // 参加状況
+      this.loadSituation()
+    ])
     // デバッグ用村情報
     if (this.isDebug) this.debugVillage = await this.loadDebugVillage()
 
