@@ -178,6 +178,10 @@ const nuxtConfig: Configuration = {
     scss: ['~/assets/sass/howlingwolf.scss']
   },
 
+  loadingIndicator: {
+    name: '~/static/html/loading-indicator.html'
+  },
+
   /* Build configuration */
   buildModules: [
     [
