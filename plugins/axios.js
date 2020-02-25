@@ -5,7 +5,6 @@ export default function({ store, $axios, app }) {
   $axios.onRequest(async config => {
     let token = app.$cookies.get('id-token')
     const user = store.state.auth.user
-    console.log(user)
     if (token && user) {
       token = await refreshTokenIfNeeded(token, app, user)
       config.headers.common.Authorization = 'Bearer ' + token

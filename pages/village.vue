@@ -57,6 +57,7 @@
     </div>
     <village-footer
       :village="village"
+      :charachip-name="charachipName"
       :exists-new-messages="existsNewMessages"
       @refresh="reload"
       @to-bottom="toBottom"
@@ -82,6 +83,7 @@ import VillageLatest from '~/components/type/village-latest'
 import Messages from '~/components/type/messages'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 import DebugVillage from '~/components/type/debug-village'
+import Charachip from '~/components/type/charachip'
 import { VILLAGE_STATUS } from '~/components/const/consts'
 
 @Component({
@@ -137,6 +139,8 @@ export default class extends Vue {
   private existsNewMessages: boolean = false
   /** 新しい発言があるか定期的にチェックするtimer */
   private latestTimer: any | null = null
+  /** この村のキャラチップ名 */
+  private charachipName: string | null = null
 
   // ----------------------------------------------------------------
   // computed
@@ -197,6 +201,8 @@ export default class extends Vue {
     await this.auth()
     // もろもろ読込
     await this.reload()
+    // キャラチップ名
+    this.charachipName = await this.loadCharachipName()
     // 定期的に最新発言がないかチェックする
     this.latestTimer = this.setLatestTimer()
   }
@@ -272,6 +278,15 @@ export default class extends Vue {
       `/village/${this.village.id}/situation`
     )
     this.loadingSituation = false
+  }
+
+  /** キャラチップ名を読み込み */
+  private async loadCharachipName(): Promise<string> {
+    const charachipId = this.village!.setting.charachip.charachip_id
+    const charachip: Charachip = await this.$axios.$get(
+      `/charachip/${charachipId}`
+    )
+    return charachip.name
   }
 
   /** デバッグ用村情報を読み込み */

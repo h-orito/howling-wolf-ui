@@ -36,6 +36,7 @@
     <modal-village-info
       :is-open-village-info-modal="isOpenVillageInfoModal"
       :village="village"
+      :charachip-name="charachipName"
       @close-village-info-modal="closeVillageInfoModal"
     />
     <modal-user-settings
@@ -62,6 +63,9 @@ import Village from '~/components/type/village'
 export default class VillageFooter extends Vue {
   @Prop({ type: Object })
   private village?: Village | null
+
+  @Prop({ type: String })
+  private charachipName?: string | null
 
   @Prop({ type: Boolean })
   private existsNewMessages!: boolean
