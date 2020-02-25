@@ -70,10 +70,7 @@ import { Component, Vue } from 'nuxt-property-decorator'
 import firebase from '~/plugins/firebase'
 // components
 import loading from '~/components/loading.vue'
-import messageCards from '~/components/village/message/message-cards.vue'
 import action from '~/components/village/action/action.vue'
-import villageDebug from '~/components/village/debug/village-debug.vue'
-import villageDayList from '~/components/village/village-day-list.vue'
 import villageFooter from '~/components/village/footer/village-footer.vue'
 import villageHeader from '~/components/village/header/village-header.vue'
 // type
@@ -85,6 +82,12 @@ import SituationAsParticipant from '~/components/type/situation-as-participant'
 import DebugVillage from '~/components/type/debug-village'
 import Charachip from '~/components/type/charachip'
 import { VILLAGE_STATUS } from '~/components/const/consts'
+// dynamic imports
+const messageCards = () =>
+  import('~/components/village/message/message-cards.vue')
+const villageDebug = () =>
+  import('~/components/village/debug/village-debug.vue')
+const villageDayList = () => import('~/components/village/village-day-list.vue')
 
 @Component({
   components: {

@@ -98,17 +98,19 @@ import cookies from 'cookie-universal-nuxt'
 import firebase from '~/plugins/firebase'
 // component
 import spotlight from '~/components/index/spotlight.vue'
-import playerStats from '~/components/index/player-stats.vue'
 import loading from '~/components/loading.vue'
-import kampaModal from '~/components/index/modal-kampa.vue'
-import termModal from '~/components/index/modal-term.vue'
-import policyModal from '~/components/index/modal-policy.vue'
-import villageList from '~/components/index/village-list.vue'
 // type
 import Villages from '~/components/type/villages.ts'
 import Village from '~/components/type/village.ts'
 import MyselfPlayer from '~/components/type/myself-player.ts'
 import { VILLAGE_STATUS } from '~/components/const/consts'
+
+// dynamic imports
+const playerStats = () => import('~/components/index/player-stats.vue')
+const kampaModal = () => import('~/components/index/modal-kampa.vue')
+const termModal = () => import('~/components/index/modal-term.vue')
+const policyModal = () => import('~/components/index/modal-policy.vue')
+const villageList = () => import('~/components/index/village-list.vue')
 
 @Component({
   components: {

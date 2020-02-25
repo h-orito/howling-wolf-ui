@@ -50,12 +50,14 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import scrollTo from 'vue-scrollto'
-// component
-import modalSearch from '~/components/village/footer/modal-search.vue'
-import modalVillageInfo from '~/components/village/footer/modal-village-info.vue'
-import modalUserSettings from '~/components/village/footer/modal-user-settings.vue'
 // type
 import Village from '~/components/type/village'
+// dynamic imports
+const modalSearch = () => import('~/components/village/footer/modal-search.vue')
+const modalVillageInfo = () =>
+  import('~/components/village/footer/modal-village-info.vue')
+const modalUserSettings = () =>
+  import('~/components/village/footer/modal-user-settings.vue')
 
 @Component({
   components: { modalSearch, modalVillageInfo, modalUserSettings }

@@ -66,19 +66,23 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
-// component
-import participate from '~/components/village/action/participate/participate.vue'
-import spectate from '~/components/village/action/participate/spectate.vue'
-import leave from '~/components/village/action/participate/leave.vue'
-import skillRequest from '~/components/village/action/participate/skill-request.vue'
-import say from '~/components/village/action/say/say.vue'
-import vote from '~/components/village/action/vote/vote.vue'
+// components
 import ability from '~/components/village/action/ability/ability.vue'
-import commit from '~/components/village/action/commit/commit.vue'
-import myself from '~/components/village/action/myself/myself.vue'
+import vote from '~/components/village/action/vote/vote.vue'
 // type
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 import Village from '~/components/type/village'
+// dynamic imports
+const participate = () =>
+  import('~/components/village/action/participate/participate.vue')
+const spectate = () =>
+  import('~/components/village/action/participate/spectate.vue')
+const leave = () => import('~/components/village/action/participate/leave.vue')
+const skillRequest = () =>
+  import('~/components/village/action/participate/skill-request.vue')
+const say = () => import('~/components/village/action/say/say.vue')
+const commit = () => import('~/components/village/action/commit/commit.vue')
+const myself = () => import('~/components/village/action/myself/myself.vue')
 
 @Component({
   components: {
