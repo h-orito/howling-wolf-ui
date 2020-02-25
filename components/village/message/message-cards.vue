@@ -26,6 +26,10 @@
       :message="message"
       :is-progress="isProgress"
     ></message-card>
+    <village-situation-message
+      :village="village"
+      :is-latest-day="isLatestDay"
+    />
     <b-pagination
       v-if="messages.all_page_count != null"
       :total="messages.all_record_count"
@@ -35,6 +39,7 @@
       order="is-right"
       size="is-small"
       :per-page="perPage"
+      icon-pack="fas"
       icon-prev="chevron-left"
       icon-next="chevron-right"
       aria-next-label="Next page"
@@ -53,10 +58,14 @@ import messageCard from '~/components/village/message/message-card.vue'
 // type
 import Village from '~/components/type/village'
 import Messages from '~/components/type/messages'
+// dynamic imports
+const villageSituationMessage = () =>
+  import('~/components/village/message/village-situation-message.vue')
 
 @Component({
   components: {
-    messageCard
+    messageCard,
+    villageSituationMessage
   }
 })
 export default class MessageCard extends Vue {
@@ -71,6 +80,9 @@ export default class MessageCard extends Vue {
 
   @Prop({ type: Number })
   private perPage!: number
+
+  @Prop({ type: Boolean })
+  private isLatestDay!: boolean
 
   private range: number = 2
 

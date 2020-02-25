@@ -34,6 +34,11 @@
         :messages="messages"
         :is-progress="isNotFinished"
         :per-page="perPageCount"
+        :is-latest-day="
+          displayVillageDay &&
+            latestDay &&
+            displayVillageDay.id === latestDay.id
+        "
         @change-message-page="changeMessagePage($event)"
       />
       <village-day-list
@@ -318,13 +323,18 @@ export default class extends Vue {
     // 初期表示時は最新日を表示する
     this.displayVillageDay = this.latestDay!
     this.existsNewMessages = false
-    // 発言読込時点での最新日時をセットしておく
-    this.latestMessageUnixTimeMilli = this.messages!.list[
-      this.messages!.list.length - 1
-    ].time.unix_time_milli
-    // 能力行使等をリセット
-    const refs = this.$refs as any
-    refs.action.reset()
+    if (
+      this.village!.status.code !== VILLAGE_STATUS.COMPLETE &&
+      this.village!.status.code !== VILLAGE_STATUS.CANCEL
+    ) {
+      // 発言読込時点での最新日時をセットしておく
+      this.latestMessageUnixTimeMilli = this.messages!.list[
+        this.messages!.list.length - 1
+      ].time.unix_time_milli
+      // 能力行使等をリセット
+      const refs = this.$refs as any
+      refs.action.reset()
+    }
     this.toBottom()
   }
 
