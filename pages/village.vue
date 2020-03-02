@@ -60,18 +60,26 @@
     <div v-if="isDispDebugMenu">
       <village-debug :village="debugVillage" @reload="reload" />
     </div>
+    <div class="has-text-left">
+      <nuxt-link :to="{ path: '/' }" class="button is-default is-small"
+        >トップページへ戻る</nuxt-link
+      >
+    </div>
     <village-footer
       :village="village"
       :charachip-name="charachipName"
       :exists-new-messages="existsNewMessages"
       @refresh="reload"
+      @filter="filter($event)"
       @to-bottom="toBottom"
+      ref="footer"
     />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
+import qs from 'qs'
 import firebase from '~/plugins/firebase'
 // components
 import loading from '~/components/loading.vue'
@@ -117,6 +125,13 @@ export default class extends Vue {
   }
 
   // ----------------------------------------------------------------
+  // layout
+  // ----------------------------------------------------------------
+  private layout() {
+    return 'village-layout'
+  }
+
+  // ----------------------------------------------------------------
   // data
   // ----------------------------------------------------------------
   /** village_id */
@@ -149,6 +164,10 @@ export default class extends Vue {
   private latestTimer: any | null = null
   /** この村のキャラチップ名 */
   private charachipName: string | null = null
+  /** 発言抽出：発言種別 */
+  private messageTypeFilter: string[] | null = null
+  /** 発言抽出：参加者 */
+  private participantIdFilter: number[] | null = null
 
   // ----------------------------------------------------------------
   // computed
@@ -184,6 +203,8 @@ export default class extends Vue {
     if (!this.isViewingLatest) return false
     // 発言入力中も勝手に更新したくない
     if ((this.$refs as any).action.isInputting) return false
+    // 発言抽出中も勝手に更新したくない
+    if ((this.$refs as any).footer.isFiltering) return false
     return true
   }
 
@@ -269,9 +290,13 @@ export default class extends Vue {
       }/message-list`,
       {
         params: {
+          message_type_list: this.messageTypeFilter,
+          participant_id_list: this.participantIdFilter,
           page_size: this.perPageCount,
           page_num: pageNum
-        }
+        },
+        paramsSerializer: params =>
+          qs.stringify(params, { arrayFormat: 'repeat' })
       }
     )
     this.currentPageNum = this.messages!.current_page_num
@@ -323,6 +348,7 @@ export default class extends Vue {
     // 初期表示時は最新日を表示する
     this.displayVillageDay = this.latestDay!
     this.existsNewMessages = false
+    const refs = this.$refs as any
     if (
       this.village!.status.code !== VILLAGE_STATUS.COMPLETE &&
       this.village!.status.code !== VILLAGE_STATUS.CANCEL
@@ -332,10 +358,12 @@ export default class extends Vue {
         this.messages!.list.length - 1
       ].time.unix_time_milli
       // 能力行使等をリセット
-      const refs = this.$refs as any
       refs.action.reset()
     }
     this.toBottom()
+
+    // 発言抽出欄を初期状態に戻す
+    refs.footer.filterRefresh()
   }
 
   /** 表示する村日付を変更 */
@@ -355,6 +383,13 @@ export default class extends Vue {
     this.currentPageNum = pageNum
     await this.loadMessage()
     this.toHead()
+  }
+
+  /** 発言抽出 */
+  private async filter({ messageTypeList, participantIdList }): Promise<void> {
+    this.messageTypeFilter = messageTypeList
+    this.participantIdFilter = participantIdList
+    await this.loadMessage()
   }
 
   /** 発言内容の最上部にスクロール */
@@ -440,8 +475,8 @@ export default class extends Vue {
 
 <style lang="scss">
 .village-main-area {
-  padding-top: 3rem;
-  padding-bottom: 3rem;
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
 
   .hw-message-card {
     padding: 5px;

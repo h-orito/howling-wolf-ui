@@ -4,34 +4,36 @@
       <b-icon
         pack="fas"
         icon="sync-alt"
-        size="is-medium"
+        size="is-small"
         :type="existsNewMessages ? 'is-info' : 'is-white'"
         :custom-class="existsNewMessages ? 'rotate' : ''"
       />
     </button>
-    <button class="village-footer-item" @click="openSearchModal">
-      <b-icon pack="fas" icon="search" size="is-medium" type="is-white" />
+    <button class="village-footer-item" @click="openFilterModal">
+      <b-icon pack="fas" icon="search" size="is-small" type="is-white" />
     </button>
     <b-button
       class="village-footer-item flex"
       icon-pack="fas"
       icon-left="long-arrow-alt-down"
       type="is-dark"
+      size="is-small"
       @click="toBottom"
     >
       最下部
     </b-button>
     <button class="village-footer-item" @click="openVillageInfoModal">
-      <b-icon pack="fas" icon="info-circle" size="is-medium" type="is-white" />
+      <b-icon pack="fas" icon="info-circle" size="is-small" type="is-white" />
     </button>
     <button class="village-footer-item" @click="openUserSettingsModal">
-      <b-icon pack="fas" icon="users-cog" size="is-medium" type="is-white" />
+      <b-icon pack="fas" icon="users-cog" size="is-small" type="is-white" />
     </button>
-    <modal-search
-      :is-open-search-modal="isOpenSearchModal"
+    <modal-filter
+      :is-open="isOpenFilterModal"
       :village="village"
-      @search="search($event)"
-      @close-search-modal="closeSearchModal"
+      @filter="filter($event)"
+      @close-modal="closeFilterModal"
+      ref="filter"
     />
     <modal-village-info
       :is-open-village-info-modal="isOpenVillageInfoModal"
@@ -53,14 +55,14 @@ import scrollTo from 'vue-scrollto'
 // type
 import Village from '~/components/type/village'
 // dynamic imports
-const modalSearch = () => import('~/components/village/footer/modal-search.vue')
+const modalFilter = () => import('~/components/village/footer/modal-search.vue')
 const modalVillageInfo = () =>
   import('~/components/village/footer/modal-village-info.vue')
 const modalUserSettings = () =>
   import('~/components/village/footer/modal-user-settings.vue')
 
 @Component({
-  components: { modalSearch, modalVillageInfo, modalUserSettings }
+  components: { modalFilter, modalVillageInfo, modalUserSettings }
 })
 export default class VillageFooter extends Vue {
   @Prop({ type: Object })
@@ -72,7 +74,7 @@ export default class VillageFooter extends Vue {
   @Prop({ type: Boolean })
   private existsNewMessages!: boolean
 
-  private isOpenSearchModal: boolean = false
+  private isOpenFilterModal: boolean = false
   private isOpenVillageInfoModal: boolean = false
   private isOpenUserSettingsModal: boolean = false
 
@@ -81,16 +83,27 @@ export default class VillageFooter extends Vue {
     this.$emit('refresh')
   }
 
-  private openSearchModal(): void {
-    this.isOpenSearchModal = true
+  private openFilterModal(): void {
+    this.isOpenFilterModal = true
   }
 
-  private closeSearchModal(): void {
-    this.isOpenSearchModal = false
+  private closeFilterModal(): void {
+    this.isOpenFilterModal = false
   }
 
-  private search({ hoge }): void {
-    this.closeSearchModal()
+  private async filter({ messageTypeList, participantIdList }): Promise<void> {
+    await this.$emit('filter', { messageTypeList, participantIdList })
+    this.closeFilterModal()
+  }
+
+  private get isFiltering(): boolean {
+    const refs = this.$refs as any
+    return refs.filter.isFiltering
+  }
+
+  private filterRefresh(): void {
+    const refs = this.$refs as any
+    refs.filter.refresh()
   }
 
   private toBottom(): void {
@@ -121,7 +134,7 @@ export default class VillageFooter extends Vue {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 3em;
+  height: 2.5em;
   display: flex;
   z-index: 10;
 

@@ -1,7 +1,7 @@
 <template>
   <div class="village-header">
     <b-button
-      class="village-header-item is-size-6"
+      class="village-header-item is-size-7"
       type="is-dark"
       icon-left="chevron-left"
       icon-pack="fas"
@@ -11,7 +11,7 @@
       前日
     </b-button>
     <b-button
-      class="village-header-item flex is-size-6"
+      class="village-header-item flex is-size-7"
       type="is-dark"
       icon-pack="fas"
       icon-left="long-arrow-alt-up"
@@ -19,7 +19,7 @@
       >最上部</b-button
     >
     <b-button
-      class="village-header-item is-size-6"
+      class="village-header-item is-size-7"
       type="is-dark"
       icon-right="chevron-right"
       icon-pack="fas"
@@ -91,10 +91,10 @@ export default class VillageFooter extends Vue {
 <style lang="scss">
 .village-header {
   position: fixed;
-  top: 3.25rem;
+  top: 0;
   left: 0;
   width: 100%;
-  height: 3em;
+  height: 2.5em;
   display: flex;
   z-index: 10;
 
