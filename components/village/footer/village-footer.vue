@@ -55,7 +55,7 @@ import scrollTo from 'vue-scrollto'
 // type
 import Village from '~/components/type/village'
 // dynamic imports
-const modalFilter = () => import('~/components/village/footer/modal-search.vue')
+const modalFilter = () => import('~/components/village/footer/modal-filter.vue')
 const modalVillageInfo = () =>
   import('~/components/village/footer/modal-village-info.vue')
 const modalUserSettings = () =>

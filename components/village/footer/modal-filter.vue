@@ -12,83 +12,81 @@
         <p class="modal-card-title has-text-left">発言抽出</p>
       </header>
       <section class="modal-card-body has-text-left" v-if="village">
-        <div class="filter-chara-content">
-          <section>
-            <p style="font-weight: 700; margin-bottom: 6px;">発言種別</p>
-            <b-field>
-              <a @click="allMessageTypeOn">全てON</a>
-              &nbsp;/&nbsp;
-              <a @click="allMessageTypeOff">全てOFF</a>
-              &nbsp;/&nbsp;
-              <a @click="reverseMessageType">反転</a>
-            </b-field>
-            <b-field>
-              <b-checkbox-button
-                v-model="messageTypeCodeGroup"
-                native-value="NORMAL_SAY"
-                type="is-primary"
-                size="is-small"
-              >
-                通常
-              </b-checkbox-button>
-              <b-checkbox-button
-                v-model="messageTypeCodeGroup"
-                native-value="WEREWOLF_SAY"
-                type="is-primary"
-                size="is-small"
-              >
-                囁き
-              </b-checkbox-button>
-              <b-checkbox-button
-                v-model="messageTypeCodeGroup"
-                native-value="GRAVE_SAY"
-                type="is-primary"
-                size="is-small"
-              >
-                墓下見学
-              </b-checkbox-button>
-              <b-checkbox-button
-                v-model="messageTypeCodeGroup"
-                native-value="MONOLOGUE_SAY"
-                type="is-primary"
-                size="is-small"
-              >
-                独り言
-              </b-checkbox-button>
-              <b-checkbox-button
-                v-model="messageTypeCodeGroup"
-                native-value="SYSTEM"
-                type="is-primary"
-                size="is-small"
-              >
-                システム
-              </b-checkbox-button>
-            </b-field>
-          </section>
-          <section class="m-t-10">
-            <p style="font-weight: 700; margin-bottom: 6px;">キャラ</p>
-            <b-field>
-              <a @click="allParticipantOn">全てON</a>
-              &nbsp;/&nbsp;
-              <a @click="allParticipantOff">全てOFF</a>
-              &nbsp;/&nbsp;
-              <a @click="reverseParticipant">反転</a>
-            </b-field>
-            <div
-              class="field"
-              v-for="participant in participantList"
-              :key="participant.id"
+        <section>
+          <p style="font-weight: 700; margin-bottom: 6px;">発言種別</p>
+          <b-field>
+            <a @click="allMessageTypeOn">全てON</a>
+            &nbsp;/&nbsp;
+            <a @click="allMessageTypeOff">全てOFF</a>
+            &nbsp;/&nbsp;
+            <a @click="reverseMessageType">反転</a>
+          </b-field>
+          <b-field>
+            <b-checkbox-button
+              v-model="messageTypeCodeGroup"
+              native-value="NORMAL_SAY"
+              type="is-primary"
+              size="is-small"
             >
-              <b-checkbox
-                v-model="participantIdGroup"
-                :native-value="participant.id"
-                size="is-small"
-              >
-                {{ participant.chara.chara_name.full_name }}
-              </b-checkbox>
-            </div>
-          </section>
-        </div>
+              通常
+            </b-checkbox-button>
+            <b-checkbox-button
+              v-model="messageTypeCodeGroup"
+              native-value="WEREWOLF_SAY"
+              type="is-primary"
+              size="is-small"
+            >
+              囁き
+            </b-checkbox-button>
+            <b-checkbox-button
+              v-model="messageTypeCodeGroup"
+              native-value="GRAVE_SAY"
+              type="is-primary"
+              size="is-small"
+            >
+              墓下見学
+            </b-checkbox-button>
+            <b-checkbox-button
+              v-model="messageTypeCodeGroup"
+              native-value="MONOLOGUE_SAY"
+              type="is-primary"
+              size="is-small"
+            >
+              独り言
+            </b-checkbox-button>
+            <b-checkbox-button
+              v-model="messageTypeCodeGroup"
+              native-value="SYSTEM"
+              type="is-primary"
+              size="is-small"
+            >
+              システム
+            </b-checkbox-button>
+          </b-field>
+        </section>
+        <section class="m-t-10">
+          <p style="font-weight: 700; margin-bottom: 6px;">キャラ</p>
+          <b-field>
+            <a @click="allParticipantOn">全てON</a>
+            &nbsp;/&nbsp;
+            <a @click="allParticipantOff">全てOFF</a>
+            &nbsp;/&nbsp;
+            <a @click="reverseParticipant">反転</a>
+          </b-field>
+          <div
+            class="field"
+            v-for="participant in participantList"
+            :key="participant.id"
+          >
+            <b-checkbox
+              v-model="participantIdGroup"
+              :native-value="participant.id"
+              size="is-small"
+            >
+              {{ participant.chara.chara_name.full_name }}
+            </b-checkbox>
+          </div>
+        </section>
       </section>
       <footer
         class="modal-card-foot"
@@ -123,7 +121,7 @@ import { MESSAGE_TYPE } from '~/components/const/consts'
 @Component({
   components: {}
 })
-export default class ModalSearch extends Vue {
+export default class ModalFilter extends Vue {
   // ----------------------------------------------------------------
   // prop
   // ----------------------------------------------------------------
@@ -256,22 +254,4 @@ export default class ModalSearch extends Vue {
 }
 </script>
 
-<style lang="scss">
-.filter-chara-content {
-  display: flex;
-  flex-wrap: wrap;
-
-  .filter-chara-select-box {
-    border: 1px solid #cccccc;
-    border-radius: 16px;
-    padding: 5px;
-    margin: 5px auto;
-    width: 160px;
-  }
-  .filter-chara-select-box:hover {
-    cursor: pointer;
-    border: 1px solid $primary;
-    font-weight: 700;
-  }
-}
-</style>
+<style lang="scss"></style>
