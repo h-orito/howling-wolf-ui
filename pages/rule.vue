@@ -92,34 +92,7 @@
         </ul>
       </div>
       <h3 class="title is-6">発言</h3>
-      <div class="content">
-        <ul>
-          <li>
-            発言種別ごとに1日に発言できる回数と最大文字数が制限されます。
-            <ul>
-              <li>
-                通常発言は1日に20回、1回に200文字まで
-              </li>
-              <li>人狼の囁きは1日に40回、1回に200文字まで</li>
-              <li>死者の呻きは1日に40回、1回に200文字まで</li>
-              <li>独り言は1日に100回、1回に200文字まで</li>
-              <li>なお、プロローグ、エピローグは発言回数が制限されません。</li>
-            </ul>
-          </li>
-          <li>
-            発言中にアンカー文字列を含めると、クリックすることでその発言を表示することができるようになります。
-            <ul>
-              <li>&gt;&gt;1 通常発言へのアンカー</li>
-              <li>&gt;&gt;*1 人狼の囁きへのアンカー</li>
-              <li>&gt;&gt;+1 死者の呻きへのアンカー</li>
-              <li>&gt;&gt;-1 独り言へのアンカー（エピローグ後のみ）</li>
-              <li>
-                いずれのアンカーも、自分が見られない発言はクリックしても発言が表示されません。
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </div>
+      <message />
       <h3 class="title is-6">役職希望、割り当て</h3>
       <div class="content">
         <ul>
@@ -176,142 +149,38 @@
         </ul>
       </div>
       <h3 class="title is-6">役職</h3>
+      <skill />
+      <h3 class="title is-6">能力</h3>
+      <ability />
+      <h3 class="title is-6">陣営、勝利条件</h3>
       <div class="content">
         <b-table
-          :data="skills"
+          :data="camps"
           ref="table"
           striped
           narrowed
-          searchable
           :show-detail-icon="false"
           :mobile-cards="false"
-          id="skill-table"
+          id="camp-table"
         >
           <template slot-scope="props">
-            <b-table-column field="name" label="役職">
+            <b-table-column field="name" label="陣営">
               <template>
                 {{ props.row.name }}
               </template>
             </b-table-column>
-            <b-table-column field="short_name" label="略称" width="40" centered>
+            <b-table-column field="win_condition" label="勝利条件">
               <template>
-                {{ props.row.short_name }}
-              </template>
-            </b-table-column>
-            <b-table-column field="camp" label="所属陣営" centered>
-              <template>
-                {{ props.row.camp }}
-              </template>
-            </b-table-column>
-            <b-table-column field="ability" label="能力">
-              <template>
-                <span
-                  v-for="(ability, index) in props.row.abilities"
-                  :key="ability.name"
-                >
-                  {{ index !== 0 ? ',' : '' }}
-                  <a :href="'#' + ability.link">{{ ability.name }}</a>
-                </span>
-              </template>
-            </b-table-column>
-            <b-table-column field="seer_result" label="占い結果">
-              <template>
-                {{ props.row.seer_result }}
-              </template>
-            </b-table-column>
-            <b-table-column field="psychic_result" label="霊視結果">
-              <template>
-                {{ props.row.psychic_result }}
-              </template>
-            </b-table-column>
-            <b-table-column field="visible_whisper" label="囁き可視" centered>
-              <template>
-                {{ props.row.visible_whisper }}
-              </template>
-            </b-table-column>
-            <b-table-column
-              field="count_camp"
-              label="勝敗判定カウント"
-              centered
-            >
-              <template>
-                {{ props.row.count_camp }}
+                {{ props.row.win_condition }}
               </template>
             </b-table-column>
           </template>
         </b-table>
-      </div>
-      <h3 class="title is-6">能力</h3>
-      <h4 class="is-7"><strong>全般</strong></h4>
-      <div class="content">
         <ul>
           <li>
-            日付更新時に、「日付更新時の処理順」の順に能力が行使されます。
+            「人間」「人狼」どちらにカウントされるかは能力欄の「勝敗判定カウント」を参照
           </li>
-          <li>
-            行使する前に死亡していた場合、能力は行使されません。
-            <ul>
-              <li>例：占い師が処刑された場合、占いは実行されません。</li>
-              <li>
-                ただし、襲撃については他の襲撃能力者が生存していれば行使されます。
-              </li>
-            </ul>
-          </li>
-          <li>
-            対象を選択する能力の場合、日付更新時点でのセット先はランダムです。
-          </li>
-        </ul>
-      </div>
-      <h4 class="is-7"><strong>占い</strong></h4>
-      <div class="content">
-        <ul>
-          <li>毎晩生存者1名を占い、人狼かそうでないかを知ることができます。</li>
-          <li>対象が突然死、処刑された場合も知ることができます。</li>
-          <li>
-            妖狐など、占われると死亡する役職を占うと、対象を無惨な死体として死亡させることができます。
-          </li>
-        </ul>
-      </div>
-      <h4 class="is-7"><strong>霊視</strong></h4>
-      <div class="content">
-        <ul>
-          <li>
-            突然死、処刑された人が人狼かそうでないかを知ることができます。
-          </li>
-        </ul>
-      </div>
-      <h4 class="is-7"><strong>護衛</strong></h4>
-      <div class="content">
-        <ul>
-          <li>
-            初日以外の毎晩、自分以外の1名を人狼の襲撃から護衛することができます。
-            （つまり、ダミーキャラの襲撃は防ぐことができません。）
-          </li>
-          <li>護衛が成功したか知ることはできません。</li>
-        </ul>
-      </div>
-      <h4 class="is-7"><strong>襲撃</strong></h4>
-      <div class="content">
-        <ul>
-          <li>毎晩1名を襲撃し、無惨な死体として死亡させられます。</li>
-          <li>
-            襲撃対象は襲撃能力者全員で連動しているので、誰かが変更すると自分の画面でも変わります。
-          </li>
-          <li>
-            1日目はダミーキャラ（きぐるみ
-            ピギー）しか襲撃対象として選択できません。
-          </li>
-          <li>2日目以降は襲撃しないこともできます。</li>
-        </ul>
-      </div>
-
-      <h3 class="title is-6">陣営</h3>
-      <div class="content">
-        <ul>
-          <li>陣営詳細を記載する予定です</li>
-          <li>村人陣営</li>
-          <li>人狼陣営</li>
-          <li>...</li>
+          <li>同時に条件を満たした場合、上にあるものが優先される</li>
         </ul>
       </div>
     </div>
@@ -321,26 +190,18 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
 // component
+const message = () => import('~/components/rule/message.vue')
+const skill = () => import('~/components/rule/skill.vue')
+const ability = () => import('~/components/rule/ability.vue')
 // type
 
-interface Skill {
+interface Camp {
   name: string
-  short_name: string
-  camp: string
-  abilities: Ability[]
-  seer_result: string
-  psychic_result: string
-  visible_whisper: string
-  count_camp: string
-}
-
-interface Ability {
-  name: string
-  link: string
+  win_condition: string
 }
 
 @Component({
-  components: {}
+  components: { skill, ability, message }
 })
 export default class extends Vue {
   /** head */
@@ -348,87 +209,16 @@ export default class extends Vue {
     return { title: ' | ルール' }
   }
 
-  private get skills(): Skill[] {
+  private get camps(): Camp[] {
     return [
       {
-        name: '村人',
-        short_name: '村',
-        camp: '村人',
-        abilities: [],
-        seer_result: '人狼ではない',
-        psychic_result: '人狼ではない',
-        visible_whisper: '×',
-        count_camp: '人間'
+        name: '人狼陣営',
+        win_condition:
+          '夜明け時点で生存している「人狼」の数 ≧ 生存している「人間」の数'
       },
       {
-        name: '占い師',
-        short_name: '占',
-        camp: '村人',
-        abilities: [
-          {
-            name: '占い',
-            link: 'divine'
-          }
-        ],
-        seer_result: '人狼ではない',
-        psychic_result: '人狼ではない',
-        visible_whisper: '×',
-        count_camp: '人間'
-      },
-      {
-        name: '霊能者',
-        short_name: '霊',
-        camp: '村人',
-        abilities: [
-          {
-            name: '霊視',
-            link: 'psychic'
-          }
-        ],
-        seer_result: '人狼ではない',
-        psychic_result: '人狼ではない',
-        visible_whisper: '×',
-        count_camp: '人間'
-      },
-      {
-        name: '狩人',
-        short_name: '狩',
-        camp: '村人',
-        abilities: [
-          {
-            name: '護衛',
-            link: 'guard'
-          }
-        ],
-        seer_result: '人狼ではない',
-        psychic_result: '人狼ではない',
-        visible_whisper: '×',
-        count_camp: '人間'
-      },
-      {
-        name: '人狼',
-        short_name: '狼',
-        camp: '人狼',
-        abilities: [
-          {
-            name: '襲撃',
-            link: 'attack'
-          }
-        ],
-        seer_result: '人狼',
-        psychic_result: '人狼',
-        visible_whisper: '○',
-        count_camp: '人狼'
-      },
-      {
-        name: '狂人',
-        short_name: '狂',
-        camp: '人狼',
-        abilities: [],
-        seer_result: '人狼ではない',
-        psychic_result: '人狼ではない',
-        visible_whisper: '×',
-        count_camp: '人間'
+        name: '村人陣営',
+        win_condition: '夜明け時点で「人狼」が全員死亡'
       }
     ]
   }
