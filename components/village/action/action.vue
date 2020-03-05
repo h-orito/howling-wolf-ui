@@ -47,7 +47,7 @@
       @reload="$emit('reload', $event)"
     />
     <ability
-      v-for="ability in situation.ability.list"
+      v-for="ability in abilities"
       :key="ability.type.code"
       :village="village"
       :ability="ability"
@@ -72,6 +72,7 @@ import vote from '~/components/village/action/vote/vote.vue'
 // type
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 import Village from '~/components/type/village'
+import VillageAbilitySituation from '~/components/type/village-ability-situation'
 // dynamic imports
 const participate = () =>
   import('~/components/village/action/participate/participate.vue')
@@ -107,6 +108,10 @@ export default class Action extends Vue {
   private get isInputting(): boolean {
     if (!this.situation.say.available_say) return false
     return (this.$refs as any).say.isInputting
+  }
+
+  private get abilities(): VillageAbilitySituation[] {
+    return this.situation.ability.list.filter(ab => ab.usable)
   }
 
   private reset(): void {
