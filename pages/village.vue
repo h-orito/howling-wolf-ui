@@ -516,6 +516,7 @@ export default class extends Vue {
         border: 1px solid #dddddd;
         border-radius: 5px;
         padding: 5px;
+        font-family: sans-serif;
 
         .hw-message-text {
           text-align: left;
