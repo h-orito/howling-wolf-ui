@@ -14,11 +14,9 @@ export default function({ store, $axios, app }) {
 
   $axios.onError(error => {
     const code = parseInt(error.response && error.response.status)
-    if (code === 400) {
-      // validation errorは個別にハンドリングするので何もしない
-      return
+    if (code === 499) {
+      return // business errorは個別にハンドリングするので何もしない
     }
-    // todo 業務エラーも何もしないようにする
     Snackbar.open({
       type: 'is-danger',
       message: 'サーバとの接続でエラーが発生しました。',

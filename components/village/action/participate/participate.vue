@@ -70,12 +70,52 @@
     </template>
     <template v-slot:footer>
       <b-button
-        :disabled="!canSubmit || submitting"
-        @click="participate"
+        :disabled="!canSubmit || confirming"
+        @click="confirmParticipate"
         type="is-primary"
         size="is-small"
-        >参加する</b-button
+        >入村確認</b-button
       >
+      <b-modal
+        :active.sync="isParticipateModalOpen"
+        has-modal-card
+        trap-focus
+        aria-role="dialog"
+        aria-modal
+      >
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title has-text-left">入村確認</p>
+          </header>
+          <section class="modal-card-body has-text-left">
+            <p>この内容で発言しますか？</p>
+            <message-card
+              :message="confirmMessage"
+              :village="village"
+              :is-progress="true"
+            />
+          </section>
+          <footer
+            class="modal-card-foot"
+            style="justify-content: flex-end !important;"
+          >
+            <b-button
+              type="is-secondary"
+              size="is-small"
+              @click="closeParticipateModal"
+            >
+              キャンセル
+            </b-button>
+            <b-button
+              :disabled="submitting"
+              type="is-primary"
+              size="is-small"
+              @click="participate"
+              >入村する</b-button
+            >
+          </footer>
+        </div>
+      </b-modal>
     </template>
   </action-card>
 </template>
@@ -85,13 +125,15 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import actionCard from '~/components/village/action/action-card.vue'
 import messageInput from '~/components/village/action/message-input.vue'
 import charaSelectModal from '~/components/village/action/participate/chara-select-modal.vue'
+import messageCard from '~/components/village/message/message-card.vue'
 // type
 import Village from '~/components/type/village'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
+import Message from '~/components/type/message'
 import { MESSAGE_TYPE } from '~/components/const/consts'
 
 @Component({
-  components: { actionCard, messageInput, charaSelectModal }
+  components: { actionCard, messageInput, charaSelectModal, messageCard }
 })
 export default class Participate extends Vue {
   @Prop({ type: Object })
@@ -100,6 +142,7 @@ export default class Participate extends Vue {
   @Prop({ type: Object })
   private situation!: SituationAsParticipant
 
+  private confirming: boolean = false
   private submitting: boolean = false
   private charaId: number | null = null
   private firstRequestSkillCode: string | null =
@@ -115,6 +158,10 @@ export default class Participate extends Vue {
   private message: string = ''
 
   private isCharaSelectModalOpen = false
+  private isParticipateModalOpen = false
+
+  /** 入村確認 */
+  private confirmMessage: Message | null = null
 
   private get normalSay(): string {
     return MESSAGE_TYPE.NORMAL_SAY
@@ -136,6 +183,25 @@ export default class Participate extends Vue {
     return (this.$refs as any).messageInput.existsOver
   }
 
+  private async confirmParticipate(): Promise<void> {
+    this.confirming = true
+    try {
+      this.confirmMessage = await this.$axios.$post(
+        `/village/${this.village!.id}/participate-confirm`,
+        {
+          chara_id: this.charaId,
+          first_request_skill: this.firstRequestSkillCode,
+          second_request_skill: this.secondRequestSkillCode,
+          join_message: this.message,
+          join_password: null,
+          spectator: false
+        }
+      )
+    } catch (error) {}
+    this.confirming = false
+    this.isParticipateModalOpen = true
+  }
+
   private async participate(): Promise<void> {
     this.submitting = true
     try {
@@ -147,9 +213,14 @@ export default class Participate extends Vue {
         join_password: null,
         spectator: false
       })
-      this.$emit('reload')
     } catch (error) {}
+    this.closeParticipateModal()
     this.submitting = false
+    this.$emit('reload')
+  }
+
+  private closeParticipateModal(): void {
+    this.isParticipateModalOpen = false
   }
 
   private openModal(): void {
