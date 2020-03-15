@@ -126,6 +126,7 @@ export default class RuleMessage extends Vue {
           name: ''
         },
         num: 1,
+        count: 1,
         text,
         face_code: 'NORMAL'
       }

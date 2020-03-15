@@ -1,5 +1,7 @@
+import Skill from '~/components/type/skill'
+
 interface Skills {
-  hoge: string
+  list: Skill[]
 }
 
 export default Skills

@@ -19,7 +19,8 @@
       </p>
       <p class="hw-message-datetime">
         {{ isAnchorMessage ? message.time.day + 'd' : '' }}
-        {{ message.time.datetime.substring(2) }}
+        {{ messageCount }}
+        {{ message.time.datetime.substring(11) }}
       </p>
     </div>
     <div class="hw-message-content-area">
@@ -44,6 +45,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import messageText from '~/components/village/message/message-text.vue'
+import Village from '~/components/type/village'
 import Message from '~/components/type/message'
 import { MESSAGE_TYPE } from '~/components/const/consts'
 
@@ -53,6 +55,9 @@ import { MESSAGE_TYPE } from '~/components/const/consts'
   }
 })
 export default class MessageSay extends Vue {
+  @Prop({ type: Object })
+  private village?: Village
+
   @Prop({ type: Object })
   private message!: Message
 
@@ -99,6 +104,17 @@ export default class MessageSay extends Vue {
     const className = this.messageClassMap.get(this.message.content.type.code)
     if (className == null) return ''
     return className
+  }
+
+  private get messageCount(): string {
+    if (this.message.content.count == null || this.village == null) return ''
+    const restrict = this.village.setting.rules.message_restrict.restrict_list.find(
+      restrict => {
+        return restrict.type.code === this.message.content.type.code
+      }
+    )
+    if (!restrict) return ''
+    return `(${this.message.content.count}/${restrict.count})`
   }
 
   private get isDispAnchorString(): boolean {
