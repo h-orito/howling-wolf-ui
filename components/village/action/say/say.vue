@@ -47,42 +47,13 @@
       >
         発言する
       </b-button>
-      <b-modal
-        :active.sync="isSayModalOpen"
-        has-modal-card
-        trap-focus
-        aria-role="dialog"
-        aria-modal
-      >
-        <div class="modal-card">
-          <header class="modal-card-head">
-            <p class="modal-card-title has-text-left">発言確認</p>
-          </header>
-          <section class="modal-card-body has-text-left">
-            <p>この内容で発言しますか？</p>
-            <message-card
-              :message="confirmMessage"
-              :village="village"
-              :is-progress="isProgress"
-            />
-          </section>
-          <footer
-            class="modal-card-foot"
-            style="justify-content: flex-end !important;"
-          >
-            <b-button type="is-secondary" size="is-small" @click="close">
-              キャンセル
-            </b-button>
-            <b-button
-              :disabled="submitting"
-              type="is-primary"
-              size="is-small"
-              @click="say"
-              >発言する</b-button
-            >
-          </footer>
-        </div>
-      </b-modal>
+      <modal-say
+        :is-open="isSayModalOpen"
+        :confirm-message="confirmMessage"
+        :village="village"
+        @close="closeSayModal"
+        @say="say"
+      />
     </template>
   </action-card>
 </template>
@@ -90,24 +61,30 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import actionCard from '~/components/village/action/action-card.vue'
-import messageCard from '~/components/village/message/message-card.vue'
 import messageInput from '~/components/village/action/message-input.vue'
 // type
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 import Village from '~/components/type/village'
 import Message from '~/components/type/message'
 import { FACE_TYPE, MESSAGE_TYPE } from '~/components/const/consts'
+const modalSay = () => import('~/components/village/action/say/modal-say.vue')
 
 @Component({
-  components: { actionCard, messageInput, messageCard }
+  components: { actionCard, messageInput, modalSay }
 })
 export default class Say extends Vue {
+  // ----------------------------------------------------------------
+  // props
+  // ----------------------------------------------------------------
   @Prop({ type: Object })
   private situation!: SituationAsParticipant
 
   @Prop({ type: Object })
   private village!: Village
 
+  // ----------------------------------------------------------------
+  // data
+  // ----------------------------------------------------------------
   private messageTypeFaceTypeMap: Map<string, string> = new Map([
     [MESSAGE_TYPE.NORMAL_SAY, FACE_TYPE.NORMAL],
     [MESSAGE_TYPE.WEREWOLF_SAY, FACE_TYPE.WEREWOLF],
@@ -120,15 +97,13 @@ export default class Say extends Vue {
   private messageType: string = this.situation.say.default_message_type!.code
   private message: string = ''
   private isSayModalOpen: boolean = false
-  private submitting: boolean = false
+
   // 発言確認で返ってきた発言内容
   private confirmMessage: Message | null = null
 
-  // 発言確認用なので常にtrue
-  private get isProgress(): boolean {
-    return true
-  }
-
+  // ----------------------------------------------------------------
+  // computed
+  // ----------------------------------------------------------------
   private get myself(): string {
     const self = this.situation.participate.myself!
     const charaName = self.chara.chara_name.name
@@ -183,6 +158,9 @@ export default class Say extends Vue {
     return (this.$refs as any).messageInput.isInputting
   }
 
+  // ----------------------------------------------------------------
+  // method
+  // ----------------------------------------------------------------
   private async sayConfirm(): Promise<void> {
     try {
       this.confirmMessage = await this.$axios.$post(
@@ -197,12 +175,7 @@ export default class Say extends Vue {
     } catch (error) {}
   }
 
-  private close(): void {
-    this.isSayModalOpen = false
-  }
-
   private async say(): Promise<void> {
-    this.submitting = true
     try {
       await this.$axios.$post(`/village/${this.village!.id}/say`, {
         message: this.message,
@@ -210,10 +183,12 @@ export default class Say extends Vue {
         face_type: this.faceTypeCode
       })
     } catch (error) {}
-    this.submitting = false
     this.message = ''
-    this.close()
     await this.$emit('reload')
+  }
+
+  private closeSayModal(): void {
+    this.isSayModalOpen = false
   }
 }
 </script>

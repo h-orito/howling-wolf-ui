@@ -76,46 +76,13 @@
         size="is-small"
         >入村確認</b-button
       >
-      <b-modal
-        :active.sync="isParticipateModalOpen"
-        has-modal-card
-        trap-focus
-        aria-role="dialog"
-        aria-modal
-      >
-        <div class="modal-card">
-          <header class="modal-card-head">
-            <p class="modal-card-title has-text-left">入村確認</p>
-          </header>
-          <section class="modal-card-body has-text-left">
-            <p>この内容で発言しますか？</p>
-            <message-card
-              :message="confirmMessage"
-              :village="village"
-              :is-progress="true"
-            />
-          </section>
-          <footer
-            class="modal-card-foot"
-            style="justify-content: flex-end !important;"
-          >
-            <b-button
-              type="is-secondary"
-              size="is-small"
-              @click="closeParticipateModal"
-            >
-              キャンセル
-            </b-button>
-            <b-button
-              :disabled="submitting"
-              type="is-primary"
-              size="is-small"
-              @click="participate"
-              >入村する</b-button
-            >
-          </footer>
-        </div>
-      </b-modal>
+      <modal-participate
+        :is-open="isParticipateModalOpen"
+        :confirm-message="confirmMessage"
+        :village="village"
+        @close="closeParticipateModal"
+        @participate="participate"
+      />
     </template>
   </action-card>
 </template>
@@ -125,15 +92,16 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import actionCard from '~/components/village/action/action-card.vue'
 import messageInput from '~/components/village/action/message-input.vue'
 import charaSelectModal from '~/components/village/action/participate/chara-select-modal.vue'
-import messageCard from '~/components/village/message/message-card.vue'
 // type
 import Village from '~/components/type/village'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 import Message from '~/components/type/message'
 import { MESSAGE_TYPE } from '~/components/const/consts'
+const modalParticipate = () =>
+  import('~/components/village/action/participate/modal-participate.vue')
 
 @Component({
-  components: { actionCard, messageInput, charaSelectModal, messageCard }
+  components: { actionCard, messageInput, charaSelectModal, modalParticipate }
 })
 export default class Participate extends Vue {
   @Prop({ type: Object })
@@ -143,7 +111,7 @@ export default class Participate extends Vue {
   private situation!: SituationAsParticipant
 
   private confirming: boolean = false
-  private submitting: boolean = false
+
   private charaId: number | null = null
   private firstRequestSkillCode: string | null =
     this.situation.skill_request.skill_request == null
@@ -203,7 +171,6 @@ export default class Participate extends Vue {
   }
 
   private async participate(): Promise<void> {
-    this.submitting = true
     try {
       await this.$axios.$post(`/village/${this.village!.id}/participate`, {
         chara_id: this.charaId,
@@ -214,8 +181,6 @@ export default class Participate extends Vue {
         spectator: false
       })
     } catch (error) {}
-    this.closeParticipateModal()
-    this.submitting = false
     this.$emit('reload')
   }
 
