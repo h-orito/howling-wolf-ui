@@ -20,7 +20,7 @@
         </li>
       </ul>
     </div>
-    <h4 class="is-7"><strong>占い</strong></h4>
+    <h4 class="is-7" id="divine"><strong>占い</strong></h4>
     <div class="content">
       <ul>
         <li>
@@ -61,7 +61,7 @@
         </li>
       </ul>
     </div>
-    <h4 class="is-7"><strong>霊視</strong></h4>
+    <h4 class="is-7" id="psychic"><strong>霊視</strong></h4>
     <div class="content">
       <ul>
         <li>
@@ -95,7 +95,7 @@
         </li>
       </ul>
     </div>
-    <h4 class="is-7"><strong>護衛</strong></h4>
+    <h4 class="is-7" id="guard"><strong>護衛</strong></h4>
     <div class="content">
       <ul>
         <li>
@@ -123,7 +123,7 @@
         </li>
       </ul>
     </div>
-    <h4 class="is-7"><strong>襲撃</strong></h4>
+    <h4 class="is-7" id="attack"><strong>襲撃</strong></h4>
     <div class="content">
       <ul>
         <li>毎晩1名を襲撃し、無惨な死体として死亡させられます。</li>

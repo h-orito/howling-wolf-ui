@@ -151,7 +151,7 @@
         </ul>
       </div>
       <h3 class="title is-6">役職</h3>
-      <skill />
+      <skill :skill-list="skillList" @scroll="scrollAbility($event)" />
       <h3 class="title is-6">能力</h3>
       <ability />
       <h3 class="title is-6">陣営、勝利条件</h3>
@@ -192,10 +192,12 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
 // component
+// type
+import Skill from '~/components/type/skill'
+import Skills from '~/components/type/skills'
 const message = () => import('~/components/rule/message.vue')
 const skill = () => import('~/components/rule/skill.vue')
 const ability = () => import('~/components/rule/ability.vue')
-// type
 
 interface Camp {
   name: string
@@ -211,6 +213,10 @@ export default class extends Vue {
     return { title: ' | ルール' }
   }
 
+  /** data */
+  private skillList: Skill[] = []
+
+  /** computed */
   private get camps(): Camp[] {
     return [
       {
@@ -224,6 +230,14 @@ export default class extends Vue {
       }
     ]
   }
+
+  /** created */
+  private async created(): Promise<void> {
+    const skills: Skills = await this.$axios.$get('/skill/list')
+    this.skillList = skills.list
+  }
+
+  /** method */
 }
 </script>
 

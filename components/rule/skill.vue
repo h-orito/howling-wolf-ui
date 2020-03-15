@@ -4,6 +4,7 @@
       :data="skills"
       ref="table"
       striped
+      detailed
       narrowed
       searchable
       :show-detail-icon="false"
@@ -13,7 +14,9 @@
       <template slot-scope="props">
         <b-table-column field="name" label="役職">
           <template>
-            {{ props.row.name }}
+            <a v-if="props.row.description" @click="toggle(props.row)">
+              {{ props.row.name }}
+            </a>
           </template>
         </b-table-column>
         <b-table-column field="short_name" label="略称" width="40" centered>
@@ -37,9 +40,9 @@
             </span>
           </template>
         </b-table-column>
-        <b-table-column field="seer_result" label="占い結果">
+        <b-table-column field="divine_result" label="占い結果">
           <template>
-            {{ props.row.seer_result }}
+            {{ props.row.divine_result }}
           </template>
         </b-table-column>
         <b-table-column field="psychic_result" label="霊視結果">
@@ -47,14 +50,26 @@
             {{ props.row.psychic_result }}
           </template>
         </b-table-column>
-        <b-table-column field="say_whisper" label="囁き発言" centered>
+        <b-table-column field="sayable_message_types" label="発言可能" centered>
           <template>
-            {{ props.row.say_whisper }}
+            <span
+              v-for="(messageType, index) in props.row.sayable_message_types"
+              :key="messageType.name"
+            >
+              {{ index !== 0 ? ',' : '' }}
+              {{ messageType.name }}
+            </span>
           </template>
         </b-table-column>
-        <b-table-column field="visible_whisper" label="囁き可視" centered>
+        <b-table-column field="visible_message_types" label="可視" centered>
           <template>
-            {{ props.row.visible_whisper }}
+            <span
+              v-for="(messageType, index) in props.row.visible_message_types"
+              :key="messageType.name"
+            >
+              {{ index !== 0 ? ',' : '' }}
+              {{ messageType.name }}
+            </span>
           </template>
         </b-table-column>
         <b-table-column field="count_camp" label="勝敗判定カウント" centered>
@@ -63,26 +78,38 @@
           </template>
         </b-table-column>
       </template>
+      <template slot="detail" slot-scope="props">
+        <p v-html="props.row.description.replace(/\n/g, '<br />')"></p>
+      </template>
     </b-table>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
+import Skill from '~/components/type/skill'
+import Ability from '~/components/type/ability'
+import MessageType from '~/components/type/message-type'
 
-interface Skill {
+interface TableSkill {
   name: string
   short_name: string
   camp: string
-  abilities: Ability[]
-  seer_result: string
+  abilities: TableAbility[]
+  divine_result: string
   psychic_result: string
-  say_whisper: string
-  visible_whisper: string
+  sayable_message_types: TableMessageType[]
+  visible_message_types: TableMessageType[]
   count_camp: string
+  description: string
 }
 
-interface Ability {
+interface TableAbility {
+  name: string
+  link: string
+}
+
+interface TableMessageType {
   name: string
   link: string
 }
@@ -91,95 +118,48 @@ interface Ability {
   components: {}
 })
 export default class RuleSkill extends Vue {
-  private get skills(): Skill[] {
-    return [
-      {
-        name: '村人',
-        short_name: '村',
-        camp: '村人',
-        abilities: [],
-        seer_result: '人狼でない',
-        psychic_result: '人狼でない',
-        say_whisper: '×',
-        visible_whisper: '×',
-        count_camp: '人間'
-      },
-      {
-        name: '占い師',
-        short_name: '占',
-        camp: '村人',
-        abilities: [
-          {
-            name: '占い',
-            link: 'divine'
+  @Prop({ type: Array })
+  private skillList!: Skill[]
+
+  private get skills(): TableSkill[] {
+    if (this.skillList.length === 0) return []
+    return this.skillList.map((skill: Skill) => {
+      return {
+        name: skill.name,
+        short_name: skill.short_name,
+        camp: skill.win_judge_camp == null ? '-' : skill.win_judge_camp.name,
+        abilities: skill.manual_ability_list.map((ability: Ability) => {
+          return {
+            name: ability.name,
+            link: ability.code.toLowerCase()
           }
-        ],
-        seer_result: '人狼でない',
-        psychic_result: '人狼でない',
-        say_whisper: '×',
-        visible_whisper: '×',
-        count_camp: '人間'
-      },
-      {
-        name: '霊能者',
-        short_name: '霊',
-        camp: '村人',
-        abilities: [
-          {
-            name: '霊視',
-            link: 'psychic'
+        }),
+        divine_result: skill.divine_result_wolf ? '人狼' : '人狼でない',
+        psychic_result: skill.psychic_result_wolf ? '人狼' : '人狼でない',
+        sayable_message_types: skill.sayable_skill_message_type_list.map(
+          (messageType: MessageType) => {
+            return {
+              name: messageType.name,
+              link: messageType.code.toLowerCase()
+            }
           }
-        ],
-        seer_result: '人狼でない',
-        psychic_result: '人狼でない',
-        say_whisper: '×',
-        visible_whisper: '×',
-        count_camp: '人間'
-      },
-      {
-        name: '狩人',
-        short_name: '狩',
-        camp: '村人',
-        abilities: [
-          {
-            name: '護衛',
-            link: 'guard'
+        ),
+        visible_message_types: skill.viewable_skill_message_type_list.map(
+          (messageType: MessageType) => {
+            return {
+              name: messageType.name,
+              link: messageType.code.toLowerCase()
+            }
           }
-        ],
-        seer_result: '人狼でない',
-        psychic_result: '人狼でない',
-        say_whisper: '×',
-        visible_whisper: '×',
-        count_camp: '人間'
-      },
-      {
-        name: '人狼',
-        short_name: '狼',
-        camp: '人狼',
-        abilities: [
-          {
-            name: '襲撃',
-            link: 'attack'
-          }
-        ],
-        seer_result: '人狼',
-        psychic_result: '人狼',
-        say_whisper: '○',
-        visible_whisper: '○',
-        count_camp: '人狼'
-      },
-      {
-        name: '狂人',
-        short_name: '狂',
-        camp: '人狼',
-        abilities: [],
-        seer_result: '人狼でない',
-        psychic_result: '人狼でない',
-        say_whisper: '×',
-        visible_whisper: '×',
-        count_camp: '人間'
+        ),
+        count_camp: skill.count_camp == null ? '-' : skill.count_camp.name,
+        description: skill.description
       }
-    ]
+    })
+  }
+
+  private toggle(row: any): void {
+    ;(this.$refs as any).table.toggleDetails(row)
   }
 }
 </script>
