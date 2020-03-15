@@ -175,6 +175,14 @@
           <p class="is-pulled-right">以上</p>
         </div>
       </section>
+      <footer
+        class="modal-card-foot"
+        style="justify-content: flex-end !important;"
+      >
+        <b-button type="is-secondary" size="is-small" @click="close">
+          閉じる
+        </b-button>
+      </footer>
     </div>
   </b-modal>
 </template>
