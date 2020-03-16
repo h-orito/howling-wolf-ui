@@ -74,6 +74,7 @@
       @refresh="reload"
       @to-bottom="toBottom"
       @toggle-slider="toggleSlider"
+      ref="footer"
     />
     <village-slider
       :village="village"
@@ -175,6 +176,8 @@ export default class extends Vue {
   private existsNewMessages: boolean = false
   /** 新しい発言があるか定期的にチェックするtimer */
   private latestTimer: any | null = null
+  /** 残り時間表示 */
+  private daychangeTimer: any | null = null
   /** この村のキャラチップ名 */
   private charachipName: string | null = null
   /** 発言抽出：発言種別 */
@@ -253,6 +256,7 @@ export default class extends Vue {
       this.village!.status.code !== VILLAGE_STATUS.CANCEL
     ) {
       this.latestTimer = this.setLatestTimer()
+      this.daychangeTimer = this.setDaychangeTimer()
     }
   }
 
@@ -260,7 +264,7 @@ export default class extends Vue {
   // destroyed
   // ----------------------------------------------------------------
   private destroyed(): void {
-    this.clearLatestTimer()
+    this.clearTimer()
   }
 
   // ----------------------------------------------------------------
@@ -434,9 +438,15 @@ export default class extends Vue {
     return setInterval(this.loadVillageLatest, 30 * 1000)
   }
 
+  /** 更新までの残り時間を表示 */
+  private setDaychangeTimer(): any {
+    return setInterval(this.updateDaychangeTimer, 1000)
+  }
+
   /** 最新発言チェックを解除 */
-  private clearLatestTimer(): void {
+  private clearTimer(): void {
     clearInterval(this.latestTimer)
+    clearInterval(this.daychangeTimer)
   }
 
   /** 最新発言チェック */
@@ -484,6 +494,10 @@ export default class extends Vue {
         this.existsNewMessages = false
       }
     }
+  }
+
+  private updateDaychangeTimer(): void {
+    ;(this.$refs as any).footer.refreshTimer()
   }
 
   private toggleSlider(): void {
