@@ -74,7 +74,7 @@
             <a @click="reverseParticipant">反転</a>
           </b-field>
           <div
-            class="field"
+            class="participant-checkbox-area"
             v-for="participant in participantList"
             :key="participant.id"
           >
@@ -83,7 +83,21 @@
               :native-value="participant.id"
               size="is-small"
             >
-              {{ participant.chara.chara_name.full_name }}
+              <div class="participant-area">
+                <div class="face-area m-r-5">
+                  <img
+                    :src="imageUrl(participant)"
+                    :width="imageWidth(participant)"
+                    :height="imageHeight(participant)"
+                    class="chara-image"
+                  />
+                </div>
+                <div class="name-area is-size-7">
+                  <p class="chara-name">
+                    {{ participant.chara.chara_name.full_name }}
+                  </p>
+                </div>
+              </div>
             </b-checkbox>
           </div>
         </section>
@@ -116,7 +130,7 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import Village from '~/components/type/village'
 import VillageParticipant from '~/components/type/village-participant'
 import Chara from '~/components/type/chara'
-import { MESSAGE_TYPE } from '~/components/const/consts'
+import { MESSAGE_TYPE, FACE_TYPE } from '~/components/const/consts'
 
 @Component({
   components: {}
@@ -251,7 +265,60 @@ export default class ModalFilter extends Vue {
       return !this.participantIdGroup.includes(id)
     })
   }
+
+  private imageUrl(participant: VillageParticipant): string {
+    return participant.chara.face_list.find(
+      face => face.type === FACE_TYPE.NORMAL
+    )!.image_url
+  }
+
+  private imageWidth(participant: VillageParticipant): number {
+    return participant.chara.display.width / 2
+  }
+
+  private imageHeight(participant: VillageParticipant): number {
+    return participant.chara.display.height / 2
+  }
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss" scoped>
+.participant-checkbox-area {
+  border-top: 0.5px solid #999;
+
+  .participant-area {
+    display: flex;
+
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    .face-area {
+      .chara-image {
+        vertical-align: bottom;
+        border-radius: 5px;
+      }
+    }
+
+    .name-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+
+      .chara-name {
+        margin-bottom: 5px;
+      }
+
+      .chara-situation {
+        margin-bottom: 0;
+        color: #ccc;
+        display: flex;
+
+        p.left-count {
+          flex: 1;
+          text-align: right;
+        }
+      }
+    }
+  }
+}
+</style>

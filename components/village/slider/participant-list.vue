@@ -97,7 +97,7 @@ export default class VillageSlider extends Vue {
   }
 
   private charaStatus(participant: VillageParticipant): string {
-    if (!participant.dead) return '生存'
+    if (!participant.dead) return ''
     const day = participant.dead.village_day.day
     const reason = participant.dead.reason
     return `${day}d${reason}`

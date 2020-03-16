@@ -12,9 +12,6 @@
         :custom-class="existsNewMessages ? 'rotate' : ''"
       />
     </button>
-    <button class="village-footer-item" @click="openFilterModal">
-      <b-icon pack="fas" icon="search" size="is-small" type="is-white" />
-    </button>
     <b-button
       class="village-footer-item flex"
       icon-pack="fas"
@@ -25,13 +22,9 @@
     >
       最下部
     </b-button>
-    <modal-filter
-      :is-open="isOpenFilterModal"
-      :village="village"
-      @filter="filter($event)"
-      @close-modal="closeFilterModal"
-      ref="filter"
-    />
+    <div class="village-footer-item footer-timer">
+      <p>更新まで 23:59:59</p>
+    </div>
   </div>
 </template>
 
@@ -40,13 +33,9 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import scrollTo from 'vue-scrollto'
 // type
 import Village from '~/components/type/village'
-// dynamic imports
-const modalFilter = () => import('~/components/village/footer/modal-filter.vue')
 
 @Component({
-  components: {
-    modalFilter
-  }
+  components: {}
 })
 export default class VillageFooter extends Vue {
   @Prop({ type: Object })
@@ -55,34 +44,9 @@ export default class VillageFooter extends Vue {
   @Prop({ type: Boolean })
   private existsNewMessages!: boolean
 
-  private isOpenFilterModal: boolean = false
-
   // 発言更新
   private refresh(): void {
     this.$emit('refresh')
-  }
-
-  private openFilterModal(): void {
-    this.isOpenFilterModal = true
-  }
-
-  private closeFilterModal(): void {
-    this.isOpenFilterModal = false
-  }
-
-  private async filter({ messageTypeList, participantIdList }): Promise<void> {
-    await this.$emit('filter', { messageTypeList, participantIdList })
-    this.closeFilterModal()
-  }
-
-  private get isFiltering(): boolean {
-    const refs = this.$refs as any
-    return refs.filter.isFiltering
-  }
-
-  private filterRefresh(): void {
-    const refs = this.$refs as any
-    refs.filter.refresh()
   }
 
   private toBottom(): void {
@@ -122,6 +86,16 @@ export default class VillageFooter extends Vue {
       100% {
         transform: rotate(360deg);
       }
+    }
+  }
+
+  .footer-timer {
+    color: $white;
+    width: 120px;
+    cursor: default;
+
+    p {
+      line-height: 1.8rem;
     }
   }
 

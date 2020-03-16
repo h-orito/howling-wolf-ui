@@ -72,17 +72,17 @@
       :village="village"
       :exists-new-messages="existsNewMessages"
       @refresh="reload"
-      @filter="filter($event)"
       @to-bottom="toBottom"
       @toggle-slider="toggleSlider"
-      ref="footer"
     />
     <village-slider
       :village="village"
       :charachip-name="charachipName"
       :is-expanded="isSliderExpanded"
       :messages="messages"
+      @filter="filter($event)"
       @hide-slider="hideSlider"
+      ref="slider"
     />
   </div>
 </template>
@@ -219,7 +219,7 @@ export default class extends Vue {
     // 発言入力中も勝手に更新したくない
     if ((this.$refs as any).action.isInputting) return false
     // 発言抽出中も勝手に更新したくない
-    if ((this.$refs as any).footer.isFiltering) return false
+    if ((this.$refs as any).slider.isFiltering) return false
     return true
   }
 
@@ -378,7 +378,7 @@ export default class extends Vue {
     this.toBottom()
 
     // 発言抽出欄を初期状態に戻す
-    refs.footer.filterRefresh()
+    refs.slider.filterRefresh()
   }
 
   /** 表示する村日付を変更 */

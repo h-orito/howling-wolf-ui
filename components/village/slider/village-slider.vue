@@ -34,6 +34,10 @@
             :messages="messages"
           />
         </b-collapse>
+        <a class="side-item" @click="openFilterModal">
+          <b-icon pack="fas" icon="search" size="is-small" type="is-white" />
+          発言抽出
+        </a>
         <a class="side-item" @click="openUserSettingsModal">
           <b-icon pack="fas" icon="users-cog" size="is-small" type="is-white" />
           ユーザ設定
@@ -64,6 +68,13 @@
       :village="village"
       @close-modal="closeUserSettingsModal"
     />
+    <modal-filter
+      :is-open="isOpenFilterModal"
+      :village="village"
+      @filter="filter($event)"
+      @close-modal="closeFilterModal"
+      ref="filter"
+    />
   </div>
 </template>
 
@@ -77,9 +88,15 @@ const modalUserSettings = () =>
   import('~/components/village/footer/modal-user-settings.vue')
 const participantList = () =>
   import('~/components/village/slider/participant-list.vue')
+const modalFilter = () => import('~/components/village/footer/modal-filter.vue')
 
 @Component({
-  components: { modalVillageInfo, modalUserSettings, participantList }
+  components: {
+    modalVillageInfo,
+    modalUserSettings,
+    participantList,
+    modalFilter
+  }
 })
 export default class VillageSlider extends Vue {
   @Prop({ type: Boolean })
@@ -96,6 +113,12 @@ export default class VillageSlider extends Vue {
 
   private isOpenVillageInfoModal: boolean = false
   private isOpenUserSettingsModal: boolean = false
+  private isOpenFilterModal: boolean = false
+
+  private get isFiltering(): boolean {
+    const refs = this.$refs as any
+    return refs.filter.isFiltering
+  }
 
   private openVillageInfoModal(): void {
     this.isOpenVillageInfoModal = true
@@ -111,6 +134,25 @@ export default class VillageSlider extends Vue {
 
   private closeUserSettingsModal(): void {
     this.isOpenUserSettingsModal = false
+  }
+
+  private openFilterModal(): void {
+    this.isOpenFilterModal = true
+  }
+
+  private closeFilterModal(): void {
+    this.isOpenFilterModal = false
+  }
+
+  private async filter({ messageTypeList, participantIdList }): Promise<void> {
+    this.$emit('hide-slider')
+    await this.$emit('filter', { messageTypeList, participantIdList })
+    this.closeFilterModal()
+  }
+
+  private filterRefresh(): void {
+    const refs = this.$refs as any
+    refs.filter.refresh()
   }
 }
 </script>
