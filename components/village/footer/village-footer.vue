@@ -1,5 +1,8 @@
 <template>
   <div class="village-footer">
+    <button class="village-footer-item" @click="$emit('toggle-slider')">
+      <b-icon pack="fas" icon="bars" size="is-small" type="is-white" />
+    </button>
     <button class="village-footer-item" @click="refresh">
       <b-icon
         pack="fas"
@@ -22,29 +25,12 @@
     >
       最下部
     </b-button>
-    <button class="village-footer-item" @click="openVillageInfoModal">
-      <b-icon pack="fas" icon="info-circle" size="is-small" type="is-white" />
-    </button>
-    <button class="village-footer-item" @click="openUserSettingsModal">
-      <b-icon pack="fas" icon="users-cog" size="is-small" type="is-white" />
-    </button>
     <modal-filter
       :is-open="isOpenFilterModal"
       :village="village"
       @filter="filter($event)"
       @close-modal="closeFilterModal"
       ref="filter"
-    />
-    <modal-village-info
-      :is-open-village-info-modal="isOpenVillageInfoModal"
-      :village="village"
-      :charachip-name="charachipName"
-      @close-village-info-modal="closeVillageInfoModal"
-    />
-    <modal-user-settings
-      :is-open-user-settings-modal="isOpenUserSettingsModal"
-      :village="village"
-      @close-user-settings-modal="closeUserSettingsModal"
     />
   </div>
 </template>
@@ -56,27 +42,20 @@ import scrollTo from 'vue-scrollto'
 import Village from '~/components/type/village'
 // dynamic imports
 const modalFilter = () => import('~/components/village/footer/modal-filter.vue')
-const modalVillageInfo = () =>
-  import('~/components/village/footer/modal-village-info.vue')
-const modalUserSettings = () =>
-  import('~/components/village/footer/modal-user-settings.vue')
 
 @Component({
-  components: { modalFilter, modalVillageInfo, modalUserSettings }
+  components: {
+    modalFilter
+  }
 })
 export default class VillageFooter extends Vue {
   @Prop({ type: Object })
   private village?: Village | null
 
-  @Prop({ type: String })
-  private charachipName?: string | null
-
   @Prop({ type: Boolean })
   private existsNewMessages!: boolean
 
   private isOpenFilterModal: boolean = false
-  private isOpenVillageInfoModal: boolean = false
-  private isOpenUserSettingsModal: boolean = false
 
   // 発言更新
   private refresh(): void {
@@ -109,22 +88,6 @@ export default class VillageFooter extends Vue {
   private toBottom(): void {
     this.$emit('to-bottom')
   }
-
-  private openVillageInfoModal(): void {
-    this.isOpenVillageInfoModal = true
-  }
-
-  private closeVillageInfoModal(): void {
-    this.isOpenVillageInfoModal = false
-  }
-
-  private openUserSettingsModal(): void {
-    this.isOpenUserSettingsModal = true
-  }
-
-  private closeUserSettingsModal(): void {
-    this.isOpenUserSettingsModal = false
-  }
 }
 </script>
 
@@ -134,7 +97,7 @@ export default class VillageFooter extends Vue {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 2.5em;
+  height: 1.8rem;
   display: flex;
   z-index: 10;
 

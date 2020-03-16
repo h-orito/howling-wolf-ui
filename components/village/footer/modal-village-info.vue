@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    :active="isOpenVillageInfoModal"
+    :active="isOpen"
     has-modal-card
     trap-focus
     aria-role="dialog"
@@ -84,7 +84,7 @@ export default class ModalVillageInfo extends Vue {
   private charachipName?: string | null
 
   @Prop({ type: Boolean })
-  private isOpenVillageInfoModal!: boolean
+  private isOpen!: boolean
 
   private get settings(): Settings[] {
     if (!this.village) return []
@@ -105,7 +105,7 @@ export default class ModalVillageInfo extends Vue {
   }
 
   private close(): void {
-    this.$emit('close-village-info-modal')
+    this.$emit('close')
   }
 
   // 設定用

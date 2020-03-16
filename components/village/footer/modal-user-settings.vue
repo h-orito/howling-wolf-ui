@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    :active="isOpenUserSettingsModal"
+    :active="isOpen"
     has-modal-card
     trap-focus
     aria-role="dialog"
@@ -45,10 +45,10 @@ export default class ModalUserSettings extends Vue {
   private village?: Village | null
 
   @Prop({ type: Boolean })
-  private isOpenUserSettingsModal!: boolean
+  private isOpen!: boolean
 
   private close(): void {
-    this.$emit('close-user-settings-modal')
+    this.$emit('close-modal')
   }
 }
 </script>

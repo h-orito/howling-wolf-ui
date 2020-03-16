@@ -202,6 +202,7 @@ export default class Say extends Vue {
       padding-right: 5px;
 
       .say-chara-image {
+        vertical-align: bottom;
         border-radius: 5px;
       }
     }

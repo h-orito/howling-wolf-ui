@@ -1,0 +1,163 @@
+<template>
+  <div>
+    <div class="village-side-menu" :class="isExpanded ? 'is-active' : ''">
+      <h1 class="m-b-10 has-text-left is-size-6">
+        {{ village ? village.name : '' }}
+      </h1>
+      <div class="has-text-left">
+        <a class="side-item" @click="openVillageInfoModal">
+          <b-icon
+            pack="fas"
+            icon="info-circle"
+            size="is-small"
+            type="is-white"
+          />
+          村の設定
+        </a>
+        <b-collapse :open="false" aria-id="participant-list-aria">
+          <a class="side-item" slot="trigger" slot-scope="props">
+            <b-icon pack="fas" icon="users" size="is-small" type="is-white" />
+            参加者
+            <span style="float: right; padding-right: 5px;">
+              <b-icon
+                class=""
+                pack="fas"
+                :icon="props.open ? 'angle-down' : 'angle-right'"
+                size="is-small"
+                type="is-white"
+              />
+            </span>
+          </a>
+          <participant-list
+            v-if="village"
+            :village="village"
+            :messages="messages"
+          />
+        </b-collapse>
+        <a class="side-item" @click="openUserSettingsModal">
+          <b-icon pack="fas" icon="users-cog" size="is-small" type="is-white" />
+          ユーザ設定
+        </a>
+      </div>
+      <div class="close-icon">
+        <b-button
+          type="is-dark"
+          icon-pack="fas"
+          icon-left="times"
+          @click="$emit('hide-slider')"
+        />
+      </div>
+    </div>
+    <div
+      class="village-side-menu-outside"
+      :class="isExpanded ? 'is-active' : ''"
+      @click="$emit('hide-slider')"
+    ></div>
+    <modal-village-info
+      :is-open="isOpenVillageInfoModal"
+      :village="village"
+      :charachip-name="charachipName"
+      @close="closeVillageInfoModal"
+    />
+    <modal-user-settings
+      :is-open="isOpenUserSettingsModal"
+      :village="village"
+      @close-modal="closeUserSettingsModal"
+    />
+  </div>
+</template>
+
+<script lang="ts">
+import { Component, Vue, Prop } from 'nuxt-property-decorator'
+import Village from '~/components/type/village'
+import Messages from '~/components/type/messages'
+const modalVillageInfo = () =>
+  import('~/components/village/footer/modal-village-info.vue')
+const modalUserSettings = () =>
+  import('~/components/village/footer/modal-user-settings.vue')
+const participantList = () =>
+  import('~/components/village/slider/participant-list.vue')
+
+@Component({
+  components: { modalVillageInfo, modalUserSettings, participantList }
+})
+export default class VillageSlider extends Vue {
+  @Prop({ type: Boolean })
+  private isExpanded!: boolean
+
+  @Prop({ type: Object })
+  private village?: Village | null
+
+  @Prop({ type: String })
+  private charachipName?: string | null
+
+  @Prop({ type: Object })
+  private messages?: Messages | null
+
+  private isOpenVillageInfoModal: boolean = false
+  private isOpenUserSettingsModal: boolean = false
+
+  private openVillageInfoModal(): void {
+    this.isOpenVillageInfoModal = true
+  }
+
+  private closeVillageInfoModal(): void {
+    this.isOpenVillageInfoModal = false
+  }
+
+  private openUserSettingsModal(): void {
+    this.isOpenUserSettingsModal = true
+  }
+
+  private closeUserSettingsModal(): void {
+    this.isOpenUserSettingsModal = false
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.village-side-menu {
+  position: fixed;
+  left: 0;
+  top: 1.8rem;
+  background-color: $dark;
+  height: calc(100vh - 3.6rem);
+  width: 0%;
+  color: $white;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  transition-property: all;
+  transition-duration: 200ms;
+  transition-delay: 0s;
+  transition-timing-function: ease;
+
+  .side-item {
+    color: $white;
+    display: block;
+    line-height: 2.5rem;
+    font-size: 14px;
+  }
+
+  .close-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+  }
+}
+.village-side-menu.is-active {
+  width: 250px;
+  padding: 10px;
+}
+.village-side-menu-outside {
+  display: none;
+  position: fixed;
+  right: 0;
+  top: 0;
+  background-color: hsla(0, 0%, 21%, 0.4);
+  height: 100vh;
+  width: calc(100% - 250px);
+}
+.village-side-menu-outside.is-active {
+  display: block;
+}
+</style>

@@ -94,7 +94,7 @@ export default class VillageFooter extends Vue {
   top: 0;
   left: 0;
   width: 100%;
-  height: 2.5em;
+  height: 1.8rem;
   display: flex;
   z-index: 10;
 

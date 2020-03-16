@@ -22,6 +22,9 @@
       :fixed="true"
     ></loading>
     <div v-if="village">
+      <h1 class="m-t-10 m-b-10 m-l-5 m-r-5 has-text-left">
+        {{ village.name + ' - ' + village.status.name }}
+      </h1>
       <village-day-list
         v-if="displayVillageDay"
         :village="village"
@@ -67,12 +70,19 @@
     </div>
     <village-footer
       :village="village"
-      :charachip-name="charachipName"
       :exists-new-messages="existsNewMessages"
       @refresh="reload"
       @filter="filter($event)"
       @to-bottom="toBottom"
+      @toggle-slider="toggleSlider"
       ref="footer"
+    />
+    <village-slider
+      :village="village"
+      :charachip-name="charachipName"
+      :is-expanded="isSliderExpanded"
+      :messages="messages"
+      @hide-slider="hideSlider"
     />
   </div>
 </template>
@@ -101,6 +111,8 @@ const messageCards = () =>
 const villageDebug = () =>
   import('~/components/village/debug/village-debug.vue')
 const villageDayList = () => import('~/components/village/village-day-list.vue')
+const villageSlider = () =>
+  import('~/components/village/slider/village-slider.vue')
 
 @Component({
   components: {
@@ -110,7 +122,8 @@ const villageDayList = () => import('~/components/village/village-day-list.vue')
     villageDebug,
     villageDayList,
     villageFooter,
-    villageHeader
+    villageHeader,
+    villageSlider
   },
   asyncData({ query }) {
     return { villageId: query.id }
@@ -168,6 +181,8 @@ export default class extends Vue {
   private messageTypeFilter: string[] | null = null
   /** 発言抽出：参加者 */
   private participantIdFilter: number[] | null = null
+  /** サイドバー */
+  private isSliderExpanded: boolean = false
 
   // ----------------------------------------------------------------
   // computed
@@ -404,7 +419,7 @@ export default class extends Vue {
     const element = document.getElementById('message-bottom')
     if (element == null) return
     this.$scrollTo(element, {
-      offset: -window.innerHeight + this.convertRemToPx(3.25)
+      offset: -window.innerHeight + this.convertRemToPx(1.8)
     })
   }
 
@@ -470,13 +485,21 @@ export default class extends Vue {
       }
     }
   }
+
+  private toggleSlider(): void {
+    this.isSliderExpanded = !this.isSliderExpanded
+  }
+
+  private hideSlider(): void {
+    this.isSliderExpanded = false
+  }
 }
 </script>
 
 <style lang="scss">
 .village-main-area {
-  padding-top: 2.5rem;
-  padding-bottom: 2.5rem;
+  padding-top: 1.8rem;
+  padding-bottom: 1.8rem;
 
   .hw-message-card {
     padding: 5px;
@@ -507,6 +530,7 @@ export default class extends Vue {
         padding-right: 5px;
 
         .hw-message-chara-image {
+          vertical-align: bottom;
           border-radius: 5px;
         }
       }
