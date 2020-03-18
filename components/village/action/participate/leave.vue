@@ -34,7 +34,11 @@ export default class Leave extends Vue {
       hasIcon: true,
       onConfirm: async () => {
         await self.leave()
-        this.$buefy.toast.open('退村しました。')
+        this.$buefy.toast.open({
+          message: '退村しました。',
+          type: 'is-info',
+          position: 'is-top'
+        })
       },
       size: 'is-small',
       cancelText: 'キャンセル'

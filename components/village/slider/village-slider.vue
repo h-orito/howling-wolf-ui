@@ -191,7 +191,7 @@ export default class VillageSlider extends Vue {
   }
 }
 .village-side-menu.is-active {
-  width: 250px;
+  width: 280px;
   padding: 10px;
 }
 .village-side-menu-outside {
@@ -201,7 +201,7 @@ export default class VillageSlider extends Vue {
   top: 0;
   background-color: hsla(0, 0%, 21%, 0.4);
   height: 100vh;
-  width: calc(100% - 250px);
+  width: calc(100% - 280px);
 }
 .village-side-menu-outside.is-active {
   display: block;

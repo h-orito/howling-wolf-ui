@@ -89,11 +89,10 @@ export default class Ability extends Vue {
       ability_type: this.ability.type.code
     })
     this.submitting = false
-    this.$buefy.snackbar.open({
+    this.$buefy.toast.open({
       message: 'セットしました',
       type: 'is-success',
-      position: 'is-top-right',
-      actionText: null
+      position: 'is-top'
     })
     this.$emit('reload')
   }

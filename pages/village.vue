@@ -463,18 +463,16 @@ export default class extends Vue {
       this.existsNewMessages = true
       if (this.shouldLoadMessage) {
         this.reload()
-        this.$buefy.snackbar.open({
+        this.$buefy.toast.open({
           message: '日付が変わりました',
-          type: 'is-success',
-          position: 'is-top-right',
-          actionText: null
+          type: 'is-info',
+          position: 'is-top'
         })
       } else {
-        this.$buefy.snackbar.open({
+        this.$buefy.toast.open({
           message: '日付が変わりました。リロードしてください。',
-          type: 'is-success',
-          position: 'is-top-right',
-          actionText: null
+          type: 'is-info',
+          position: 'is-top'
         })
       }
     } else if (this.latestMessageUnixTimeMilli < latest.unix_time_milli) {
@@ -483,11 +481,10 @@ export default class extends Vue {
       this.latestMessageUnixTimeMilli = latest.unix_time_milli
       if (this.shouldLoadMessage) {
         this.loadMessage()
-        this.$buefy.snackbar.open({
+        this.$buefy.toast.open({
           message: '最新発言を読み込みました',
-          type: 'is-success',
-          position: 'is-top-right',
-          actionText: null
+          type: 'is-info',
+          position: 'is-top'
         })
         this.existsNewMessages = false
       }

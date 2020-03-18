@@ -66,11 +66,10 @@ export default class Vote extends Vue {
       target_id: this.participantId
     })
     this.submitting = false
-    this.$buefy.snackbar.open({
+    this.$buefy.toast.open({
       message: 'セットしました',
       type: 'is-success',
-      position: 'is-top-right',
-      actionText: null
+      position: 'is-top'
     })
     this.$emit('reload')
   }

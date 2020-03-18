@@ -1,5 +1,5 @@
 import { Vue } from 'nuxt-property-decorator'
-import { SnackbarProgrammatic as Snackbar } from 'buefy'
+import { ToastProgrammatic as Toast } from 'buefy'
 
 export default function({ store, $axios, app }) {
   $axios.onRequest(async config => {
@@ -17,14 +17,12 @@ export default function({ store, $axios, app }) {
     if (code === 499) {
       return // business errorは個別にハンドリングするので何もしない
     }
-    Snackbar.open({
+    Toast.open({
       type: 'is-danger',
       message: 'サーバとの接続でエラーが発生しました。',
-      position: 'is-top-right',
+      position: 'is-top',
       duration: 5000,
-      queue: false,
-      actionText: '',
-      onAction: () => {}
+      queue: false
     })
   })
 }

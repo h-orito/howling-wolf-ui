@@ -132,9 +132,11 @@ export default class MessageSay extends Vue {
 
   private async copyAnchorString(): Promise<void> {
     await (this as any).$copyText(this.anchorString)
-    this.$buefy.toast.open(
-      `クリップボードにコピーしました: ${this.anchorString}`
-    )
+    this.$buefy.toast.open({
+      message: `クリップボードにコピーしました: ${this.anchorString}`,
+      type: 'is-info',
+      position: 'is-top'
+    })
   }
 }
 </script>
