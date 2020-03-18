@@ -42,6 +42,10 @@
           <b-icon pack="fas" icon="users-cog" size="is-small" type="is-white" />
           ユーザ設定
         </a>
+        <nuxt-link :to="{ path: '/' }" class="side-item">
+          <b-icon pack="fas" icon="home" size="is-small" type="is-white" />
+          トップページ
+        </nuxt-link>
       </div>
       <div class="close-icon">
         <b-button

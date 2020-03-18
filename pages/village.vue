@@ -63,11 +63,6 @@
     <div v-if="isDispDebugMenu">
       <village-debug :village="debugVillage" @reload="reload" />
     </div>
-    <div class="has-text-left">
-      <nuxt-link :to="{ path: '/' }" class="button is-default is-small"
-        >トップページへ戻る</nuxt-link
-      >
-    </div>
     <village-footer
       :village="village"
       :exists-new-messages="existsNewMessages"
@@ -257,6 +252,9 @@ export default class extends Vue {
     ) {
       this.latestTimer = this.setLatestTimer()
       this.daychangeTimer = this.setDaychangeTimer()
+    } else {
+      // 1回だけ実行
+      this.updateDaychangeTimer()
     }
   }
 

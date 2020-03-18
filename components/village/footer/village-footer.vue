@@ -48,14 +48,19 @@ export default class VillageFooter extends Vue {
   private timer: string = ''
 
   private refreshTimer(): void {
-    if (!this.village) this.timer = ''
-    const statusCode = this.village!.status.code
-    if (
-      statusCode === VILLAGE_STATUS.COMPLETE ||
-      statusCode === VILLAGE_STATUS.CANCEL
-    ) {
+    if (!this.village) {
       this.timer = ''
+      return
     }
+    const statusCode = this.village!.status.code
+    if (statusCode === VILLAGE_STATUS.COMPLETE) {
+      this.timer = '終了'
+      return
+    } else if (statusCode === VILLAGE_STATUS.CANCEL) {
+      this.timer = '廃村'
+      return
+    }
+
     const prefix = this.timerPrefix
     const daychange = this.nextDaychangeDatetime
     const left = daychange.getTime() - new Date().getTime()
@@ -119,6 +124,7 @@ export default class VillageFooter extends Vue {
   height: 1.8rem;
   display: flex;
   z-index: 10;
+  background-color: $dark;
 
   .village-footer-item {
     height: 100%;
