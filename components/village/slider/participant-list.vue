@@ -48,26 +48,33 @@ export default class VillageSlider extends Vue {
   private messages?: Messages | null
 
   private get participantList(): VillageParticipant[] {
-    return this.village!.participant.member_list.slice().sort((vp1, vp2) => {
-      // 死亡している人より死亡していない人が先
-      const vp1isDead = !!vp1.dead
-      const vp2isDead = !!vp2.dead
-      if (vp1isDead && !vp2isDead) return 1
-      if (!vp1isDead && vp2isDead) return -1
-      // どちらも死亡していなければ等価
-      if (!vp1isDead && !vp2isDead) return 0
-      // どちらも死亡している場合は日付が早い順
-      const vp1DeadDay = vp1.dead!.village_day.day
-      const vp2DeadDay = vp2.dead!.village_day.day
-      if (vp1DeadDay !== vp2DeadDay) return vp1DeadDay - vp2DeadDay
-      // 日付も同じ場合は凸->処刑->他
-      const vp1DeadReason = vp1.dead!.reason
-      const vp2DeadReason = vp2.dead!.reason
-      return (
-        this.deadReasonPriority(vp2DeadReason) -
-        this.deadReasonPriority(vp1DeadReason)
-      )
-    })
+    return this.village!.participant.member_list.slice().sort((vp1, vp2) =>
+      this.compareParticipant(vp1, vp2)
+    )
+  }
+
+  private compareParticipant(
+    vp1: VillageParticipant,
+    vp2: VillageParticipant
+  ): number {
+    // 死亡している人より死亡していない人が先
+    const vp1isDead = !!vp1.dead
+    const vp2isDead = !!vp2.dead
+    if (vp1isDead && !vp2isDead) return 1
+    if (!vp1isDead && vp2isDead) return -1
+    // どちらも死亡していなければ等価
+    if (!vp1isDead && !vp2isDead) return 0
+    // どちらも死亡している場合は日付が早い順
+    const vp1DeadDay = vp1.dead!.village_day.day
+    const vp2DeadDay = vp2.dead!.village_day.day
+    if (vp1DeadDay !== vp2DeadDay) return vp1DeadDay - vp2DeadDay
+    // 日付も同じ場合は凸->処刑->他
+    const vp1DeadReason = vp1.dead!.reason
+    const vp2DeadReason = vp2.dead!.reason
+    return (
+      this.deadReasonPriority(vp2DeadReason) -
+      this.deadReasonPriority(vp1DeadReason)
+    )
   }
 
   private deadReasonPriority(reason: string) {
