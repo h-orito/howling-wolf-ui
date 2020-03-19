@@ -1,30 +1,24 @@
 <template>
   <div class="column is-half-tablet">
-    <div v-if="village != null" class="card">
-      <header class="card-header">
-        <nuxt-link
-          :to="{ path: 'village', query: { id: village.id } }"
-          class="card-header-title has-text-grey"
-          >{{ village.name }}</nuxt-link
-        >
-      </header>
-      <div class="card-content">
-        <div class="content has-text-left">
-          <p class="has-text-left is-size-7">状態: {{ status }}</p>
-          <p class="has-text-left is-size-7">
-            参加人数: {{ participantStatus }}
+    <nuxt-link
+      :to="{ path: 'village', query: { id: village.id } }"
+      class="spotlight-shadow"
+    >
+      <div class="card village-card">
+        <header class="card-header village-card-header">
+          <p class="card-header-title village-card-header-title">
+            {{ village.name }}
           </p>
-          <p v-if="daychangeDatetime" class="has-text-left is-size-7">
-            更新: {{ daychangeDatetime }}
-          </p>
+        </header>
+        <div class="card-content">
+          <div class="content has-text-left is-size-7">
+            <p>状態: {{ status }}</p>
+            <p>参加人数: {{ participantStatus }}</p>
+            <p v-if="daychangeDatetime">更新: {{ daychangeDatetime }}</p>
+          </div>
         </div>
       </div>
-      <footer class="card-footer">
-        <div class="card-footer-item has-text-left">
-          <p class="content has-text-left is-size-7">{{ village.comment }}</p>
-        </div>
-      </footer>
-    </div>
+    </nuxt-link>
   </div>
 </template>
 
@@ -84,3 +78,20 @@ export default class VillageCard extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.village-card {
+  background-color: rgba(0, 0, 0, 0);
+  color: $white;
+  border: 1px solid $white;
+  border-radius: 4px;
+
+  .village-card-header {
+    border-bottom: 1px solid $white;
+
+    .village-card-header-title {
+      color: $white !important;
+    }
+  }
+}
+</style>

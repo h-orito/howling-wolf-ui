@@ -9,7 +9,7 @@
         class="navbar-item has-text-center nuxt-link-exact-active nuxt-link-active"
         :to="{ path: '/' }"
       >
-        HOWLING WOLF
+        HOWLING WOLF{{ isStg ? ' テストサーバ' : '' }}
       </nuxt-link>
     </div>
     <navbar-slider :is-menu-expanded="isMenuExpanded" @hide-menu="hideMenu" />
@@ -30,6 +30,10 @@ const navbarSlider = () => import('~/components/common/nav/navbar-slider.vue')
 })
 export default class NavBar extends Vue {
   private isMenuExpanded: boolean = false
+
+  private get isStg(): boolean {
+    return (process.env as any).ENV !== 'production'
+  }
 
   private toggleMenu(): void {
     this.isMenuExpanded = !this.isMenuExpanded

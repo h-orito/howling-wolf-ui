@@ -1,6 +1,6 @@
 <template>
   <div class="spotlight-area">
-    <img src="~/static/image/top.jpg" alt="top_image" />
+    <img src="~/static/image/top.jpg" alt="top_image" width="100%" />
     <div class="spotlight-tablet is-hidden-mobile has-text-left">
       <p
         class="spotlight-intro spotlight-shadow is-size-4 has-text-white"
@@ -69,12 +69,7 @@ export default class Spotlight extends Vue {
 <style lang="scss" scoped>
 .spotlight-area {
   position: relative;
-
-  .spotlight-shadow {
-    text-shadow: 2px 2px 5px rgba(69, 97, 133, 1),
-      -2px 2px 5px rgba(69, 97, 133, 1), 2px -2px 5px rgba(69, 97, 133, 1),
-      -2px -2px 5px rgba(69, 97, 133, 1);
-  }
+  background-color: #0a0a1a;
 
   .spotlight-tablet {
     position: absolute;
@@ -109,6 +104,9 @@ export default class Spotlight extends Vue {
       text-shadow: 2px 2px 5px rgba(69, 97, 133, 1),
         -2px 2px 5px rgba(69, 97, 133, 1), 2px -2px 5px rgba(69, 97, 133, 1),
         -2px -2px 5px rgba(69, 97, 133, 1);
+    }
+    .spotlight-signin-button:hover {
+      text-shadow: none;
     }
   }
 }

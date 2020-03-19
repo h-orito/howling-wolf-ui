@@ -53,13 +53,21 @@
             >までお願いします。
           </li>
         </ul>
+      </section>
+      <footer
+        class="modal-card-foot"
+        style="justify-content: flex-end !important;"
+      >
         <a
           href="http://kampa.me/t/lxc"
           target="_blank"
-          class="button is-primary"
+          class="button is-small is-primary"
           >Amazonギフトカードで投げ銭する</a
         >
-      </section>
+        <b-button type="is-secondary" size="is-small" @click="close">
+          閉じる
+        </b-button>
+      </footer>
     </div>
   </b-modal>
 </template>
