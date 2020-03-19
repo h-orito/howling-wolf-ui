@@ -21,6 +21,7 @@
       @logout="logout"
     />
     <village-list :loading-villages="loadingVillages" :villages="villages" />
+    <charachip />
     <index-footer />
   </div>
 </template>
@@ -43,6 +44,7 @@ import { VILLAGE_STATUS } from '~/components/const/consts'
 // dynamic imports
 const playerStats = () => import('~/components/index/player-stats.vue')
 const villageList = () => import('~/components/index/village-list.vue')
+const charachip = () => import('~/components/index/charachip.vue')
 const indexFooter = () => import('~/components/index/index-footer.vue')
 
 @Component({
@@ -51,6 +53,7 @@ const indexFooter = () => import('~/components/index/index-footer.vue')
     intro,
     playerStats,
     villageList,
+    charachip,
     indexFooter,
     loading
   }
