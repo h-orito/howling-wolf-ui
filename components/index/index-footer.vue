@@ -1,69 +1,67 @@
 <template>
   <div>
-    <div class="footer-area">
-      <div class="p-t-20 p-b-40">
-        <div class="p-t-20 p-b-20">
-          <p class="is-size-5-tablet is-size-6-mobile spotlight-shadow">
-            その他情報
-          </p>
+    <div class="menu-area">
+      <div class="m-b-50">
+        <p class="is-size-5 spotlight-shadow">
+          その他情報
+        </p>
+      </div>
+      <div class="columns">
+        <div class="column is-6">
+          <b-button
+            tag="a"
+            :target="'_blank'"
+            :href="'https://twitter.com/ort_dev'"
+            type="is-white"
+            icon-pack="fab"
+            icon-left="twitter"
+            outlined
+            expanded
+            class="spotlight-shadow"
+          >
+            <strong>要望、改善提案、不具合報告</strong>
+          </b-button>
         </div>
-        <div class="m-l-20 m-r-20 columns">
-          <div class="column is-6">
-            <b-button
-              tag="a"
-              :target="'_blank'"
-              :href="'https://twitter.com/ort_dev'"
-              type="is-white"
-              icon-pack="fab"
-              icon-left="twitter"
-              outlined
-              expanded
-              class="spotlight-shadow"
-            >
-              <strong>要望、改善提案、不具合報告</strong>
-            </b-button>
-          </div>
-          <div class="column is-6">
-            <b-button
-              type="is-white"
-              outlined
-              expanded
-              icon-pack="fas"
-              icon-left="donate"
-              class="spotlight-shadow"
-              @click="openKampaModal"
-            >
-              <strong>投げ銭</strong>
-            </b-button>
-          </div>
+        <div class="column is-6">
+          <b-button
+            type="is-white"
+            outlined
+            expanded
+            icon-pack="fas"
+            icon-left="donate"
+            class="spotlight-shadow"
+            @click="openKampaModal"
+          >
+            <strong>投げ銭</strong>
+          </b-button>
         </div>
-        <div class="m-l-20 m-r-20 columns">
-          <div class="column is-6">
-            <b-button
-              type="is-white"
-              outlined
-              expanded
-              icon-pack="fas"
-              icon-left="book"
-              class="spotlight-shadow"
-              @click="openTermModal"
-            >
-              <strong>利用規約</strong>
-            </b-button>
-          </div>
-          <div class="column is-6">
-            <b-button
-              type="is-white"
-              outlined
-              expanded
-              icon-pack="fas"
-              icon-left="book"
-              class="spotlight-shadow"
-              @click="openPolicyModal"
-            >
-              <strong>プライバシーポリシー</strong>
-            </b-button>
-          </div>
+      </div>
+      <div class="columns">
+        <div class="column is-6">
+          <b-button
+            type="is-white"
+            outlined
+            expanded
+            icon-pack="fas"
+            icon-left="book"
+            class="spotlight-shadow"
+            @click="openTermModal"
+          >
+            <strong>利用規約</strong>
+          </b-button>
+        </div>
+        <div class="column is-6">
+          <b-button
+            type="is-white"
+            outlined
+            expanded
+            icon-pack="fas"
+            icon-left="book"
+            class="spotlight-shadow"
+            @click="openPolicyModal"
+          >
+            <strong>プライバシーポリシー</strong>
+          </b-button>
         </div>
       </div>
     </div>
@@ -120,9 +118,4 @@ export default class IndexFooter extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
-.footer-area {
-  background: linear-gradient(#0a0a1a 0%, #112 50%, #0a0a1a 100%);
-  color: $white;
-}
-</style>
+<style lang="scss" scoped></style>

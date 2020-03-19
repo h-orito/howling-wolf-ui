@@ -1,33 +1,31 @@
 <template>
-  <div class="village-list-area">
-    <div class="p-t-20 p-b-40">
-      <div class="p-t-20 p-b-20">
+  <div class="menu-area">
+    <div class="m-b-50">
+      <p class="is-size-5 spotlight-shadow">
+        自動生成村
+      </p>
+    </div>
+    <div class="m-b-30">
+      <div
+        v-if="loadingVillages"
+        style="display:block; width: 100%; height: 300px;"
+      >
+        <loading :message="'村情報を読み込み中'" />
+      </div>
+      <div v-if="!loadingVillages && villages.length > 0" class="columns">
+        <village-card
+          v-for="village in villages"
+          :key="village.key"
+          :village="village"
+        />
+      </div>
+      <div v-if="!loadingVillages && villages.length === 0">
         <p class="is-size-5-tablet is-size-6-mobile spotlight-shadow">
-          自動生成村
+          開催中の村はありません
         </p>
       </div>
-      <div class="m-l-30 m-r-30">
-        <div
-          v-if="loadingVillages"
-          style="display:block; width: 100%; height: 300px;"
-        >
-          <loading :message="'村情報を読み込み中'" />
-        </div>
-        <div v-if="!loadingVillages && villages.length > 0" class="columns">
-          <village-card
-            v-for="village in villages"
-            :key="village.key"
-            :village="village"
-          />
-        </div>
-        <div v-if="!loadingVillages && villages.length === 0">
-          <p class="is-size-5-tablet is-size-6-mobile spotlight-shadow">
-            開催中の村はありません
-          </p>
-        </div>
-      </div>
     </div>
-    <div class="m-l-20 m-r-20 columns">
+    <div class="columns">
       <div v-if="canCreateVillage" class="column is-6">
         <shadow-button
           :link="'/create-village'"
@@ -139,9 +137,4 @@ export default class VillageList extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
-.village-list-area {
-  background: linear-gradient(#0a0a1a 0%, #112 50%, #0a0a1a 100%);
-  color: $white;
-}
-</style>
+<style lang="scss" scoped></style>

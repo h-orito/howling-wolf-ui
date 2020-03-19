@@ -1,11 +1,11 @@
 <template>
-  <div class="player-area">
-    <div v-if="isLoading" class="p-t-20 p-b-40">
+  <div class="menu-area">
+    <div v-if="isLoading">
       <p class="spotlight-shadow">認証情報を読み込み中...</p>
     </div>
-    <div v-if="!isLoading" class="p-t-20 p-b-40 m-r-30 m-l-30">
+    <div v-if="!isLoading">
       <div v-if="!isLogin">
-        <div class="p-t-20 p-b-20">
+        <div class="m-b-50">
           <p class="is-size-5-tablet is-size-6-mobile spotlight-shadow">
             アプリ連携すると参加できます
           </p>
@@ -24,8 +24,8 @@
         </b-button>
       </div>
       <div v-if="isLogin">
-        <div class="spotlight-shadow p-t-20 p-b-20">
-          <p class="is-size-5-tablet is-size-6-mobile">
+        <div class="spotlight-shadow m-b-50">
+          <p class="is-size-5">
             ようこそ
           </p>
           <p class="spotlight-shadow">
@@ -95,9 +95,4 @@ export default class extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
-.player-area {
-  background: linear-gradient(#0a0a1a 0%, #112 50%, #0a0a1a 100%);
-  color: $white;
-}
-</style>
+<style lang="scss" scoped></style>

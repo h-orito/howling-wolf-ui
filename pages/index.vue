@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="menu-wrap">
     <spotlight @signin="signin" />
     <div
       v-if="isStg"
@@ -181,7 +181,20 @@ export default class TopPage extends Vue {
     -2px 2px 5px rgba(69, 97, 133, 1), 2px -2px 5px rgba(69, 97, 133, 1),
     -2px -2px 5px rgba(69, 97, 133, 1);
 }
-.spotlight-shadow:hover {
+.button.spotlight-shadow:hover {
   text-shadow: none;
+}
+.menu-wrap {
+  background-color: #0a0a1a;
+
+  .menu-area {
+    background: linear-gradient(#0a0a1a 0%, #112 50%, #0a0a1a 100%);
+    color: $white;
+    padding: 30px 30px;
+    margin-bottom: 50px;
+  }
+  .menu-area:last-child {
+    margin-bottom: 0;
+  }
 }
 </style>

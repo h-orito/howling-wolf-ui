@@ -81,10 +81,12 @@ export default class VillageCard extends Vue {
 
 <style lang="scss" scoped>
 .village-card {
-  background-color: rgba(0, 0, 0, 0);
+  background-image: url('~static/image/top-bg.jpg');
+  background-size: cover;
   color: $white;
   border: 1px solid $white;
   border-radius: 4px;
+  cursor: pointer;
 
   .village-card-header {
     border-bottom: 1px solid $white;
