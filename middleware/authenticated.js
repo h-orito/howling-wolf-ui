@@ -1,9 +1,13 @@
 import firebase from '~/plugins/firebase'
-// import { LOGINOUT } from '~/store/action-types'
 
-export default async function({ store }) {
-  return await firebase.auth().onAuthStateChanged(async user => {
-    await store.dispatch('LOGINOUT', {
+export default function({ store, route }) {
+  const currentPath = route.path
+  // 認証を待つ必要があるページは個別で行なっているのでここでは何もしない
+  if (currentPath === '/' || currentPath === '/village') {
+    return
+  }
+  firebase.auth().onAuthStateChanged(user => {
+    store.dispatch('LOGINOUT', {
       user
     })
   })

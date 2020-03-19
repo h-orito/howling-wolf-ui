@@ -67,7 +67,11 @@ export default class VillageDayList extends Vue {
 </script>
 
 <style lang="scss">
-.daylist li {
-  display: inline;
+.daylist {
+  padding: 5px;
+
+  li {
+    display: inline;
+  }
 }
 </style>

@@ -16,6 +16,10 @@
       "~/*": ["./*"],
       "@/*": ["./*"]
     },
-    "types": ["@nuxt/types"]
+    "types": [
+      "@nuxt/types",
+      "@nuxt/vue-app",
+      "@nuxtjs/axios"
+    ]
   }
 }

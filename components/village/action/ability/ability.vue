@@ -2,11 +2,12 @@
   <action-card :title="`能力行使（${ability.type.name}）`">
     <template v-slot:content>
       <div class="content has-text-left">
+        <p>現在のセット先: {{ currentTargetName }}</p>
         <p style="font-weight: 700; margin-bottom: 6px;">対象</p>
         <b-field>
           <b-select
             v-model="participantId"
-            :disable="!ability.usable || ability.target_list.length === 0"
+            :disabled="!ability.usable || ability.target_list.length === 0"
             expanded
             size="is-small"
           >
@@ -17,7 +18,7 @@
               v-for="participant in ability.target_list"
               :value="participant.id.toString()"
               :key="participant.id.toString()"
-              >{{ participant.chara.chara_name.name }}</option
+              >{{ participant.chara.chara_name.full_name }}</option
             >
           </b-select>
         </b-field>
@@ -40,6 +41,8 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 // components
 import actionCard from '~/components/village/action/action-card.vue'
 // type
+import Village from '~/components/type/village'
+import Chara from '~/components/type/chara'
 import VillageAbilitySituation from '~/components/type/village-ability-situation'
 
 @Component({
@@ -47,11 +50,19 @@ import VillageAbilitySituation from '~/components/type/village-ability-situation
 })
 export default class Ability extends Vue {
   @Prop({ type: Object })
+  private village!: Village
+
+  @Prop({ type: Object })
   private ability!: VillageAbilitySituation
 
   private submitting: boolean = false
   private participantId: number | null =
     this.ability.target == null ? null : this.ability.target.id
+
+  private get currentTargetName(): string {
+    if (!this.ability.target) return 'なし'
+    return this.ability.target.chara.chara_name.full_name
+  }
 
   private get canSubmit(): boolean {
     if (this.submitting) return false
@@ -66,19 +77,24 @@ export default class Ability extends Vue {
     }
   }
 
+  private resetTarget(): void {
+    this.participantId =
+      this.ability.target == null ? null : this.ability.target.id
+  }
+
   private async setAbility(): Promise<void> {
     this.submitting = true
-    await this.$emit('set-ability', {
-      targetId: this.participantId,
-      abilityType: this.ability.type.code
+    await this.$axios.$post(`/village/${this.village!.id}/ability`, {
+      target_id: this.participantId,
+      ability_type: this.ability.type.code
     })
     this.submitting = false
-    this.$buefy.snackbar.open({
+    this.$buefy.toast.open({
       message: 'セットしました',
       type: 'is-success',
-      position: 'is-top-right',
-      actionText: null
+      position: 'is-top'
     })
+    this.$emit('reload')
   }
 }
 </script>

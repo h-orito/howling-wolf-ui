@@ -1,7 +1,7 @@
 {
   "name": "howling-wolf-ui",
   "version": "1.0.0",
-  "description": "My perfect Nuxt.js project",
+  "description": "人狼ゲームが無料で遊べるサービスです。",
   "author": "h-orito",
   "private": true,
   "scripts": {
@@ -17,15 +17,19 @@
     "@nuxt/typescript-runtime": "^0.3.8",
     "@nuxtjs/axios": "5.6.0",
     "@nuxtjs/dotenv": "^1.4.1",
+    "@nuxtjs/pwa": "^3.0.0-beta.20",
+    "@nuxtjs/sitemap": "^2.0.1",
     "cookie-universal-nuxt": "2.0.18",
     "cross-env": "5.2.1",
     "firebase": "^7.0.0",
     "luxon": "1.17.2",
     "nuxt": "2.11.0",
     "nuxt-buefy": "^0.3.14",
+    "nuxt-clipboard2": "^0.2.1",
     "nuxt-property-decorator": "^2.5.0",
     "vue-datetime": "1.0.0-beta.10",
     "vue-property-decorator": "8.2.2",
+    "vue-scrollto": "^2.17.1",
     "vuexfire": "^3.1.2",
     "weekstart": "^1.0.1"
   },
@@ -41,6 +45,6 @@
     "eslint-plugin-prettier": "^3.1.0",
     "node-sass": "^4.13.1",
     "prettier": "^1.18.2",
-    "sass-loader": "^8.0.0"
+    "sass-loader": "^8.0.2"
   }
 }

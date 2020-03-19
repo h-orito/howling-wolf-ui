@@ -43,3 +43,19 @@ export const MESSAGE_TYPE: {
   SECRET_SAY: 'SECRET_SAY',
   PARTICIPANTS: 'PARTICIPANTS'
 }
+
+export const FACE_TYPE: {
+  NORMAL: string
+  WEREWOLF: string
+  GRAVE: string
+  MONOLOGUE: string
+  MASON: string
+  SECRET: string
+} = {
+  NORMAL: 'NORMAL',
+  WEREWOLF: 'WEREWOLF',
+  GRAVE: 'GRAVE',
+  MONOLOGUE: 'MONOLOGUE',
+  MASON: 'MASON',
+  SECRET: 'SECRET'
+}

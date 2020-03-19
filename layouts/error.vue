@@ -14,8 +14,6 @@ export default class Error extends Vue {
   @Prop({ type: Object })
   private error!: Object
 
-  private created(): void {
-    console.log(this.error)
-  }
+  private created(): void {}
 }
 </script>

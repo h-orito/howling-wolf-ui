@@ -2,6 +2,7 @@ import Player from '~/components/type/player'
 import Chara from '~/components/type/chara'
 import Dead from '~/components/type/dead'
 import Skill from '~/components/type/skill'
+import SkillRequest from '~/components/type/skill-request'
 
 interface VillageParticipant {
   id: number
@@ -10,6 +11,7 @@ interface VillageParticipant {
   dead: Dead | null
   spectator: boolean
   skill: Skill | null
+  skill_request: SkillRequest | null
 }
 
 export default VillageParticipant

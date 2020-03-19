@@ -1,13 +1,13 @@
 <template>
   <div class="content has-text-left hw-message-text">
     <b-table :data="participants" :columns="participantsColumns"></b-table>
-    <b-table :data="spectators" :columns="spectatosColumns"></b-table>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import Village from '~/components/type/village'
+import SkillRequest from '~/components/type/skill-request'
 
 @Component({
   components: {}
@@ -23,6 +23,7 @@ export default class ParticipantListMessage extends Vue {
         member.player!.twitter_user_name
       }" target="_blank">@${member.player!.twitter_user_name}</a>`,
       skill: member.skill!.name,
+      skill_request: this.skillRequest(member.skill_request!),
       health:
         member.dead == null
           ? '生存'
@@ -47,10 +48,18 @@ export default class ParticipantListMessage extends Vue {
         label: '役職'
       },
       {
+        field: 'skill_request',
+        label: '役職希望'
+      },
+      {
         field: 'health',
         label: '生死'
       }
     ]
+  }
+
+  private skillRequest(request: SkillRequest): string {
+    return `${request.first.name}/${request.second.name}`
   }
 }
 </script>

@@ -34,15 +34,20 @@ const actions = {
       const now = new Date()
       self.$cookies.set(
         'id-token-check-date',
-        now.setMinutes(now.getHours() + 50),
+        now.setMinutes(now.getMinutes() + 50),
         {
           path: '/',
           maxAge: 60 * 60 * 24 * 30
         }
       )
-      // get user from server
+      // API call時に使うので一旦stateに詰める
+      await commit('login', {
+        player: null,
+        photoUrl: user.photoURL,
+        user
+      })
       const myPlayer = await self.$axios.$get('/my-player')
-      commit('login', {
+      await commit('login', {
         player: myPlayer,
         photoUrl: user.photoURL,
         user
@@ -51,7 +56,7 @@ const actions = {
       self.$cookies.remove('id-token', {
         path: '/'
       })
-      commit('logout')
+      await commit('logout')
     }
   }
 }

@@ -39,9 +39,21 @@
       </div>
     </template>
     <template v-slot:footer>
-      <b-button @click="say" type="is-primary" size="is-small">
+      <b-button
+        :disabled="!canSay"
+        @click="sayConfirm"
+        type="is-primary"
+        size="is-small"
+      >
         発言する
       </b-button>
+      <modal-say
+        :is-open="isSayModalOpen"
+        :confirm-message="confirmMessage"
+        :village="village"
+        @close="closeSayModal"
+        @say="say"
+      />
     </template>
   </action-card>
 </template>
@@ -50,18 +62,48 @@
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import actionCard from '~/components/village/action/action-card.vue'
 import messageInput from '~/components/village/action/message-input.vue'
+// type
 import SituationAsParticipant from '~/components/type/situation-as-participant'
+import Village from '~/components/type/village'
+import Message from '~/components/type/message'
+import { FACE_TYPE, MESSAGE_TYPE } from '~/components/const/consts'
+const modalSay = () => import('~/components/village/action/say/modal-say.vue')
 
 @Component({
-  components: { actionCard, messageInput }
+  components: { actionCard, messageInput, modalSay }
 })
 export default class Say extends Vue {
+  // ----------------------------------------------------------------
+  // props
+  // ----------------------------------------------------------------
   @Prop({ type: Object })
   private situation!: SituationAsParticipant
 
+  @Prop({ type: Object })
+  private village!: Village
+
+  // ----------------------------------------------------------------
+  // data
+  // ----------------------------------------------------------------
+  private messageTypeFaceTypeMap: Map<string, string> = new Map([
+    [MESSAGE_TYPE.NORMAL_SAY, FACE_TYPE.NORMAL],
+    [MESSAGE_TYPE.WEREWOLF_SAY, FACE_TYPE.WEREWOLF],
+    [MESSAGE_TYPE.SPECTATE_SAY, FACE_TYPE.NORMAL],
+    [MESSAGE_TYPE.SECRET_SAY, FACE_TYPE.SECRET],
+    [MESSAGE_TYPE.MONOLOGUE_SAY, FACE_TYPE.MONOLOGUE],
+    [MESSAGE_TYPE.GRAVE_SAY, FACE_TYPE.GRAVE]
+  ])
+
   private messageType: string = this.situation.say.default_message_type!.code
   private message: string = ''
+  private isSayModalOpen: boolean = false
 
+  // 発言確認で返ってきた発言内容
+  private confirmMessage: Message | null = null
+
+  // ----------------------------------------------------------------
+  // computed
+  // ----------------------------------------------------------------
   private get myself(): string {
     const self = this.situation.participate.myself!
     const charaName = self.chara.chara_name.name
@@ -73,9 +115,22 @@ export default class Say extends Vue {
     }
   }
 
+  private get faceTypeCode(): string {
+    const expectedFaceType = this.messageTypeFaceTypeMap.get(this.messageType)
+    if (expectedFaceType == null) return FACE_TYPE.NORMAL
+    if (
+      this.situation.participate.myself!.chara.face_list.some(
+        face => face.type === expectedFaceType
+      )
+    ) {
+      return expectedFaceType
+    }
+    return FACE_TYPE.NORMAL
+  }
+
   private get imageUrl(): string {
     return this.situation.participate.myself!.chara.face_list.find(
-      face => face.type === 'NORMAL'
+      face => face.type === this.faceTypeCode
     )!.image_url
   }
 
@@ -87,12 +142,53 @@ export default class Say extends Vue {
     return this.situation.participate.myself!.chara.display.height
   }
 
-  private say(): void {
-    this.$emit('say', {
-      message: this.message,
-      messageType: this.messageType,
-      faceType: 'NORMAL'
-    })
+  private get canSay(): boolean {
+    if (this.message == null || this.message.trim() === '') return false
+    if (this.messageType == null) return false
+    if (this.isOver) return false
+    return true
+  }
+
+  private get isOver(): boolean {
+    // veturがrefsで定義した子コンポーネントのプロパティを認識できないので回避
+    return (this.$refs as any).messageInput.existsOver
+  }
+
+  private get isInputting(): boolean {
+    return (this.$refs as any).messageInput.isInputting
+  }
+
+  // ----------------------------------------------------------------
+  // method
+  // ----------------------------------------------------------------
+  private async sayConfirm(): Promise<void> {
+    try {
+      this.confirmMessage = await this.$axios.$post(
+        `/village/${this.village!.id}/say-confirm`,
+        {
+          message: this.message,
+          message_type: this.messageType,
+          face_type: this.faceTypeCode
+        }
+      )
+      this.isSayModalOpen = true
+    } catch (error) {}
+  }
+
+  private async say(): Promise<void> {
+    try {
+      await this.$axios.$post(`/village/${this.village!.id}/say`, {
+        message: this.message,
+        message_type: this.messageType,
+        face_type: this.faceTypeCode
+      })
+    } catch (error) {}
+    this.message = ''
+    await this.$emit('reload')
+  }
+
+  private closeSayModal(): void {
+    this.isSayModalOpen = false
   }
 }
 </script>
@@ -106,6 +202,7 @@ export default class Say extends Vue {
       padding-right: 5px;
 
       .say-chara-image {
+        vertical-align: bottom;
         border-radius: 5px;
       }
     }

@@ -3,7 +3,7 @@
     <div class="container">
       <h1 class="title is-5">更新情報</h1>
       <p class="">
-        2020/02/08 開発中
+        2020/02/10 開発中
       </p>
     </div>
   </section>

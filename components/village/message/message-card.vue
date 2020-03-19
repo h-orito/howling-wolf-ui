@@ -2,6 +2,7 @@
   <div v-if="message != null" class="card">
     <message-say
       v-if="isSayType"
+      :village="village"
       :message="message"
       :is-progress="isProgress"
       :is-anchor-message="isAnchorMessage"
@@ -91,7 +92,6 @@ export default class MessageCard extends Vue {
       messageTypeCode,
       messageNumber
     )
-    console.log(villageAnchorMessage)
     if (villageAnchorMessage == null || villageAnchorMessage.message == null) {
       return
     }

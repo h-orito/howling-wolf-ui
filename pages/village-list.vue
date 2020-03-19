@@ -3,11 +3,11 @@
     <section class="section has-background-light">
       <div class="container">
         <h1 class="title is-5">終了した村一覧</h1>
-        <loading
-          v-if="loadingVillages"
-          :message="'村一覧を読み込み中...'"
-        ></loading>
         <div class="content is-size-7">
+          <loading
+            v-if="loadingVillages"
+            :message="'村一覧を読み込み中...'"
+          ></loading>
           <b-table
             :data="tableVillages"
             :loading="loadingVillages"
@@ -50,7 +50,6 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
-import axios from '@nuxtjs/axios'
 import qs from 'qs'
 // component
 import loading from '~/components/loading.vue'

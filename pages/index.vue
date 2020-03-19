@@ -1,26 +1,15 @@
 <template>
   <div>
     <spotlight @signin="signin" />
-    <player-stats :myself-player="user" @signin="signin" @logout="logout" />
-    <section class="section has-background-light">
+    <section class="section" v-if="isStg">
       <div class="container">
-        <h1 class="title is-5">自動生成村一覧</h1>
-        <loading
-          v-if="loadingVillages"
-          :message="'村一覧を読み込み中...'"
-        ></loading>
-        <village-list v-if="!loadingVillages" :villages="villages" />
-        <nuxt-link
-          v-if="canCreateVillage"
-          class="button is-primary"
-          to="/create-village"
-          >村を作成</nuxt-link
-        >
-        <div style="margin-top: 15px;">
-          <nuxt-link :to="{ path: 'village-list' }">終了した村一覧</nuxt-link>
-        </div>
+        <p class="has-text-danger is-size-6">
+          テストサーバのため、データは不定期に削除される可能性があります。
+        </p>
       </div>
     </section>
+    <player-stats :myself-player="user" @signin="signin" @logout="logout" />
+    <village-list :loading-villages="loadingVillages" :villages="villages" />
     <section class="section">
       <div class="container">
         <h1 class="title is-5">よくある質問</h1>
@@ -61,100 +50,80 @@
               style="list-style: inside;"
             >
               <li>
-                要望、改善提案、不具合報告はTwitter
-                <a href="https://twitter.com/ort_dev" target="_blank"
+                要望、改善提案、不具合報告はTwitter<a
+                  href="https://twitter.com/ort_dev"
+                  target="_blank"
                   >@ort_dev</a
                 >へお願いします
               </li>
               <li>
                 投げ銭いただける方は
-                <a @click="openModal('#kampa-modal')" href="javascript:void(0);"
-                  >こちら</a
+                <a @click="openKampaModal" href="javascript:void(0);">こちら</a
                 >からお願いします
               </li>
               <li>
-                <a @click="openModal('#terms-modal')" href="javascript:void(0);"
+                <a @click="openTermModal" href="javascript:void(0);"
                   >利用規約</a
                 >
               </li>
               <li>
-                <a
-                  @click="openModal('#policy-modal')"
-                  href="javascript:void(0);"
+                <a @click="openPolicyModal" href="javascript:void(0);"
                   >プライバシーポリシー</a
                 >
               </li>
             </ul>
-          </div>
-        </div>
-        <div id="kampa-modal" class="modal">
-          <div class="modal-background" />
-          <div class="modal-content">
-            <div class="box">
-              <h4 class="is-size-5">投げ銭について</h4>
-              <kampa />
-            </div>
+            <kampa-modal
+              :is-open="isKampaModalOpen"
+              @close-modal="closeKampaModal"
+            />
+            <term-modal
+              :is-open="isTermModalOpen"
+              @close-modal="closeTermModal"
+            />
+            <policy-modal
+              :is-open="isPolicyModalOpen"
+              @close-modal="closePolicyModal"
+            />
           </div>
         </div>
       </div>
     </section>
-    <div id="terms-modal" class="modal">
-      <div class="modal-background" />
-      <div class="modal-content">
-        <div class="box">
-          <h4 class="is-size-5">利用規約</h4>
-          <div class="content">
-            <terms />
-          </div>
-        </div>
-      </div>
-    </div>
-    <div id="policy-modal" class="modal">
-      <div class="modal-background" />
-      <div class="modal-content">
-        <div class="box">
-          <h4 class="is-size-5">プライバシーポリシー</h4>
-          <div class="content">
-            <policy />
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
-import axios from '@nuxtjs/axios'
 import qs from 'qs'
 import cookies from 'cookie-universal-nuxt'
 import firebase from '~/plugins/firebase'
 // component
 import spotlight from '~/components/index/spotlight.vue'
-import playerStats from '~/components/index/player-stats.vue'
 import loading from '~/components/loading.vue'
-import terms from '~/components/index/terms.vue'
-import policy from '~/components/index/policy.vue'
-import kampa from '~/components/index/kampa.vue'
-import VillageList from '~/components/index/village-list.vue'
 // type
 import Villages from '~/components/type/villages.ts'
 import Village from '~/components/type/village.ts'
 import MyselfPlayer from '~/components/type/myself-player.ts'
 import { VILLAGE_STATUS } from '~/components/const/consts'
 
+// dynamic imports
+const playerStats = () => import('~/components/index/player-stats.vue')
+const kampaModal = () => import('~/components/index/modal-kampa.vue')
+const termModal = () => import('~/components/index/modal-term.vue')
+const policyModal = () => import('~/components/index/modal-policy.vue')
+const villageList = () => import('~/components/index/village-list.vue')
+
 @Component({
   components: {
     spotlight,
     playerStats,
     loading,
-    terms,
-    policy,
-    kampa,
-    VillageList
+    kampaModal,
+    termModal,
+    policyModal,
+    villageList
   }
 })
-export default class extends Vue {
+export default class TopPage extends Vue {
   /** head */
   private head() {
     return { title: '' }
@@ -163,6 +132,10 @@ export default class extends Vue {
   /** data */
   // 村一覧
   private villages: Village[] | null = null
+  // Kampa
+  private isKampaModalOpen: boolean = false
+  private isTermModalOpen: boolean = false
+  private isPolicyModalOpen: boolean = false
 
   /** computed */
   private get loadingVillages(): boolean {
@@ -181,21 +154,26 @@ export default class extends Vue {
     return this.$store.getters.isLogin
   }
 
-  private get canCreateVillage(): boolean {
-    const player = this.user
-    if (player == null) return false
-    return player.available_create_village
-  }
-
   private get isDebug(): boolean {
     return (process.env as any).ENV === 'local'
   }
 
+  private get isStg(): boolean {
+    return (process.env as any).ENV !== 'production'
+  }
+
   /** created */
   async created() {
-    const self = this
+    // 認証を待つ
+    const user = await new Promise((resolve, reject) => {
+      firebase.auth().onAuthStateChanged(user => resolve(user))
+    })
+    await this.$store.dispatch('LOGINOUT', {
+      user
+    })
+
     // ログイン後のリダイレクトの際、ユーザ情報をサーバに保存
-    await this.registerUserIfNeeded()
+    this.registerUserIfNeeded()
 
     // 自動生成村一覧
     const res = await this.$axios.$get('/village/list', {
@@ -249,20 +227,53 @@ export default class extends Vue {
     const now = new Date()
     this.$cookies.set(
       'id-token-check-date',
-      now.setMinutes(now.getHours() + 50),
+      now.setMinutes(now.getMinutes() + 50),
       {
         path: '/',
         maxAge: 60 * 60 * 24 * 30
       }
     )
+    // 変更しても古いままなので取得できたら無理やりとる
+    let displayName = user.displayName
+    if (
+      redirectResult.additionalUserInfo.profile != null &&
+      (redirectResult.additionalUserInfo.profile as any).name != null
+    ) {
+      displayName = (redirectResult.additionalUserInfo.profile as any).name
+    }
     return this.$axios.$post('/player/nickname', {
-      nickname: user.displayName,
+      nickname: displayName,
       twitter_user_name: twitterUsername
     })
   }
 
-  private logout(): void {
-    firebase.auth().signOut()
+  private async logout(): Promise<void> {
+    await firebase.auth().signOut()
+    location.reload()
+  }
+
+  private openKampaModal(): void {
+    this.isKampaModalOpen = true
+  }
+
+  private closeKampaModal(): void {
+    this.isKampaModalOpen = false
+  }
+
+  private openTermModal(): void {
+    this.isTermModalOpen = true
+  }
+
+  private closeTermModal(): void {
+    this.isTermModalOpen = false
+  }
+
+  private openPolicyModal(): void {
+    this.isPolicyModalOpen = true
+  }
+
+  private closePolicyModal(): void {
+    this.isPolicyModalOpen = false
   }
 }
 </script>

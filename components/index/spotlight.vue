@@ -9,7 +9,7 @@
       <b-button
         v-if="!isLogin"
         type="is-white"
-        icon-pack="mdi"
+        icon-pack="fab"
         icon-left="twitter"
         outlined
         class="spotlight-signin-button spotlight-shadow"
@@ -33,7 +33,7 @@
       <b-button
         size="is-small"
         type="is-white"
-        icon-pack="mdi"
+        icon-pack="fab"
         icon-left="twitter"
         outlined
         class="spotlight-signin-button spotlight-shadow"
@@ -42,11 +42,6 @@
         <strong>Sign in</strong>
       </b-button>
     </div>
-    <p
-      class="spotlight-mobile-twitter-area spotlight-shadow is-size-6-tablet is-size-7-mobile has-text-white has-text-right"
-    >
-      {{ twitterUserName }}
-    </p>
   </div>
 </template>
 
@@ -64,13 +59,7 @@ export default class Spotlight extends Vue {
   }
 
   private get catchCopy(): string {
-    return 'HOWLING WOLFは<br />人狼ゲームが無料で遊べる<br />Webサービスです'
-  }
-
-  private get twitterUserName(): string {
-    if (!this.isLogin) return ''
-    const player = this.$store.getters.getPlayer
-    return `user: ${player.nickname} @${player.twitter_user_name}`
+    return '今日もまた<br />村に遠吠えが響き渡る'
   }
 
   /** methods */
@@ -80,7 +69,6 @@ export default class Spotlight extends Vue {
 <style lang="scss" scoped>
 .spotlight-area {
   position: relative;
-  margin-top: -52px;
 
   .spotlight-shadow {
     text-shadow: 2px 2px 5px rgba(69, 97, 133, 1),

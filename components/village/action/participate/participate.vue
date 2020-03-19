@@ -70,12 +70,19 @@
     </template>
     <template v-slot:footer>
       <b-button
-        :disabled="!canSubmit || submitting"
-        @click="participate"
+        :disabled="!canSubmit || confirming"
+        @click="confirmParticipate"
         type="is-primary"
         size="is-small"
-        >参加する</b-button
+        >入村確認</b-button
       >
+      <modal-participate
+        :is-open="isParticipateModalOpen"
+        :confirm-message="confirmMessage"
+        :village="village"
+        @close="closeParticipateModal"
+        @participate="participate"
+      />
     </template>
   </action-card>
 </template>
@@ -86,17 +93,25 @@ import actionCard from '~/components/village/action/action-card.vue'
 import messageInput from '~/components/village/action/message-input.vue'
 import charaSelectModal from '~/components/village/action/participate/chara-select-modal.vue'
 // type
+import Village from '~/components/type/village'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
+import Message from '~/components/type/message'
 import { MESSAGE_TYPE } from '~/components/const/consts'
+const modalParticipate = () =>
+  import('~/components/village/action/participate/modal-participate.vue')
 
 @Component({
-  components: { actionCard, messageInput, charaSelectModal }
+  components: { actionCard, messageInput, charaSelectModal, modalParticipate }
 })
 export default class Participate extends Vue {
   @Prop({ type: Object })
+  private village!: Village
+
+  @Prop({ type: Object })
   private situation!: SituationAsParticipant
 
-  private submitting: boolean = false
+  private confirming: boolean = false
+
   private charaId: number | null = null
   private firstRequestSkillCode: string | null =
     this.situation.skill_request.skill_request == null
@@ -111,6 +126,10 @@ export default class Participate extends Vue {
   private message: string = ''
 
   private isCharaSelectModalOpen = false
+  private isParticipateModalOpen = false
+
+  /** 入村確認 */
+  private confirmMessage: Message | null = null
 
   private get normalSay(): string {
     return MESSAGE_TYPE.NORMAL_SAY
@@ -129,19 +148,44 @@ export default class Participate extends Vue {
   }
 
   private get isOver(): boolean {
-    // veturがrefsで定義した子コンポーネントのプロパティを認識できないので回避
     return (this.$refs as any).messageInput.existsOver
   }
 
+  private async confirmParticipate(): Promise<void> {
+    this.confirming = true
+    try {
+      this.confirmMessage = await this.$axios.$post(
+        `/village/${this.village!.id}/participate-confirm`,
+        {
+          chara_id: this.charaId,
+          first_request_skill: this.firstRequestSkillCode,
+          second_request_skill: this.secondRequestSkillCode,
+          join_message: this.message,
+          join_password: null,
+          spectator: false
+        }
+      )
+    } catch (error) {}
+    this.confirming = false
+    this.isParticipateModalOpen = true
+  }
+
   private async participate(): Promise<void> {
-    this.submitting = true
-    await this.$emit('participate', {
-      charaId: this.charaId,
-      firstRequestSkillCode: this.firstRequestSkillCode,
-      secondRequestSkillCode: this.secondRequestSkillCode,
-      message: this.message
-    })
-    this.submitting = false
+    try {
+      await this.$axios.$post(`/village/${this.village!.id}/participate`, {
+        chara_id: this.charaId,
+        first_request_skill: this.firstRequestSkillCode,
+        second_request_skill: this.secondRequestSkillCode,
+        join_message: this.message,
+        join_password: null,
+        spectator: false
+      })
+    } catch (error) {}
+    this.$emit('reload')
+  }
+
+  private closeParticipateModal(): void {
+    this.isParticipateModalOpen = false
   }
 
   private openModal(): void {
@@ -150,7 +194,6 @@ export default class Participate extends Vue {
 
   private charaSelect({ charaId }): void {
     this.charaId = charaId
-    console.log(charaId)
     this.isCharaSelectModalOpen = false
   }
 }

@@ -2,11 +2,26 @@
   <div class="hw-message-card" :class="isAnchorMessage ? 'anchor-message' : ''">
     <div class="hw-message-name-area">
       <span v-if="isDispAnchorString">
-        <a href="javascript:void(0);">{{ anchorString }}</a
+        <a href="javascript:void(0);" @click="copyAnchorString">{{
+          anchorString
+        }}</a
         >.&nbsp;</span
       >
-      <p class="hw-message-name">{{ message.from.chara.chara_name.name }}</p>
-      <p class="hw-message-datetime">{{ message.time.datetime }}</p>
+      <p class="hw-message-name">
+        {{ message.from.chara.chara_name.full_name }}
+      </p>
+      <p class="hw-message-player" v-if="message.from.player">
+        [<a
+          :href="'https://twitter.com/' + message.from.player.twitter_user_name"
+          target="_blank"
+          >{{ message.from.player.twitter_user_name }}</a
+        >]
+      </p>
+      <p class="hw-message-datetime">
+        {{ isAnchorMessage ? message.time.day + 'd' : '' }}
+        {{ messageCount }}
+        {{ message.time.datetime.substring(11) }}
+      </p>
     </div>
     <div class="hw-message-content-area">
       <div class="hw-message-face-area">
@@ -30,6 +45,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import messageText from '~/components/village/message/message-text.vue'
+import Village from '~/components/type/village'
 import Message from '~/components/type/message'
 import { MESSAGE_TYPE } from '~/components/const/consts'
 
@@ -40,6 +56,9 @@ import { MESSAGE_TYPE } from '~/components/const/consts'
 })
 export default class MessageSay extends Vue {
   @Prop({ type: Object })
+  private village?: Village
+
+  @Prop({ type: Object })
   private message!: Message
 
   @Prop({ type: Boolean })
@@ -47,6 +66,24 @@ export default class MessageSay extends Vue {
 
   @Prop({ type: Boolean, default: false })
   private isAnchorMessage?: boolean
+
+  private messageClassMap: Map<string, string> = new Map([
+    [MESSAGE_TYPE.NORMAL_SAY, 'normal-say'],
+    [MESSAGE_TYPE.WEREWOLF_SAY, 'werewolf-say'],
+    [MESSAGE_TYPE.MONOLOGUE_SAY, 'monologue-say'],
+    [MESSAGE_TYPE.GRAVE_SAY, 'grave-say'],
+    [MESSAGE_TYPE.SPECTATE_SAY, 'spectate-say']
+  ])
+
+  private anchorPrefixMap: Map<string, string> = new Map([
+    [MESSAGE_TYPE.NORMAL_SAY, ''],
+    [MESSAGE_TYPE.MONOLOGUE_SAY, '-'],
+    [MESSAGE_TYPE.GRAVE_SAY, '+'],
+    [MESSAGE_TYPE.WEREWOLF_SAY, '*'],
+    [MESSAGE_TYPE.MASON_SAY, '='],
+    [MESSAGE_TYPE.SPECTATE_SAY, '@'],
+    [MESSAGE_TYPE.CREATOR_SAY, '#']
+  ])
 
   private get imageUrl(): string {
     const typeCode = this.message.content.face_code
@@ -64,56 +101,42 @@ export default class MessageSay extends Vue {
   }
 
   private get messageClass(): string {
-    switch (this.message.content.type.code) {
-      case MESSAGE_TYPE.NORMAL_SAY:
-        return 'normal-say'
-      case MESSAGE_TYPE.WEREWOLF_SAY:
-        return 'werewolf-say'
-      case MESSAGE_TYPE.MONOLOGUE_SAY:
-        return 'monologue-say'
-      case MESSAGE_TYPE.GRAVE_SAY:
-        return 'grave-say'
-      case MESSAGE_TYPE.SPECTATE_SAY:
-        return 'spectate-say'
-      default:
-        return ''
-    }
+    const className = this.messageClassMap.get(this.message.content.type.code)
+    if (className == null) return ''
+    return className
+  }
+
+  private get messageCount(): string {
+    if (this.message.content.count == null || this.village == null) return ''
+    const restrict = this.village.setting.rules.message_restrict.restrict_list.find(
+      restrict => {
+        return restrict.type.code === this.message.content.type.code
+      }
+    )
+    if (!restrict) return ''
+    return `(${this.message.content.count}/${restrict.count})`
   }
 
   private get isDispAnchorString(): boolean {
     return (
-      !this.isProgress || this.message.content.type.code !== 'MONOLOGUE_SAY'
+      !this.isProgress ||
+      this.message.content.type.code !== MESSAGE_TYPE.MONOLOGUE_SAY
     )
   }
 
   private get anchorString(): string {
-    let prefix: string = ''
-    switch (this.message.content.type.code) {
-      case 'NORMAL_SAY':
-        prefix = ''
-        break
-      case 'MONOLOGUE_SAY':
-        prefix = '-'
-        break
-      case 'GRAVE_SAY':
-        prefix = '+'
-        break
-      case 'WEREWOLF_SAY':
-        prefix = '*'
-        break
-      case 'MASON_SAY':
-        prefix = '='
-        break
-      case 'SPECTATE_SAY':
-        prefix = '@'
-        break
-      case 'CREATOR_SAY':
-        prefix = '#'
-        break
-      default:
-        prefix = ''
-    }
+    const prefix = this.anchorPrefixMap.get(this.message.content.type.code)
+    if (prefix == null) return ''
     return `>>${prefix}${this.message.content.num}`
+  }
+
+  private async copyAnchorString(): Promise<void> {
+    await (this as any).$copyText(this.anchorString)
+    this.$buefy.toast.open({
+      message: `クリップボードにコピーしました: ${this.anchorString}`,
+      type: 'is-info',
+      position: 'is-top'
+    })
   }
 }
 </script>
