@@ -99,8 +99,8 @@ export default class VillageSlider extends Vue {
 
   private charaName(participant: VillageParticipant): string {
     const fullName = participant.chara.chara_name.full_name
-    if (fullName.length < 18) return fullName
-    return fullName.substring(0, 18) + '...'
+    if (fullName.length < 20) return fullName
+    return fullName.substring(0, 20) + '...'
   }
 
   private charaStatus(participant: VillageParticipant): string {

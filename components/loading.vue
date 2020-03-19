@@ -24,16 +24,20 @@ export default class VillageCard extends Vue {
 }
 </script>
 
-<style>
+<style lang="scss">
 .loading-bg {
   z-index: 50;
-  position: absolute;
-  background: #fff;
+  position: relative;
+  background: rgba(255, 255, 255, 0.5);
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   opacity: 0.6;
+
+  img {
+    opacity: 1;
+  }
 }
 .loading-fixed {
   position: fixed;
