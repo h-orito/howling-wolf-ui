@@ -11,7 +11,7 @@
           <shadow-button
             :link="'/charachip-list'"
             :text="'キャラチップ一覧'"
-            :icon="images"
+            :icon="'images'"
           />
         </div>
       </div>
@@ -26,7 +26,7 @@ const shadowButton = () => import('~/components/index/shadow-button.vue')
 @Component({
   components: { shadowButton }
 })
-export default class IndexFooter extends Vue {}
+export default class MenuCharachip extends Vue {}
 </script>
 
 <style lang="scss" scoped></style>

@@ -24,7 +24,7 @@
         </b-button>
       </div>
       <div v-if="isLogin">
-        <div class="spotlight-shadow m-b-50">
+        <div class="spotlight-shadow m-b-20">
           <p class="is-size-5">
             ようこそ
           </p>
@@ -66,6 +66,18 @@
             </b-button>
           </div>
         </div>
+        <div v-if="isDispParticipatingVillages">
+          <div class="spotlight-shadow m-b-20">
+            <p class="is-size-6">参加している村</p>
+          </div>
+          <div class="columns">
+            <village-card
+              v-for="village in participatingVillages"
+              :key="village.key"
+              :village="village"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -73,10 +85,13 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
-import MyselfPlayer from '../type/myself-player'
+import Village from '~/components/type/village'
+import MyselfPlayer from '~/components/type/myself-player'
+import { VILLAGE_STATUS } from '~/components/const/consts'
+const villageCard = () => import('~/components/index/village-card.vue')
 
 @Component({
-  components: {}
+  components: { villageCard }
 })
 export default class extends Vue {
   /** data */
@@ -89,6 +104,21 @@ export default class extends Vue {
   /** computed */
   public get isLogin(): boolean {
     return this.$store.getters.isLogin
+  }
+
+  private get participatingVillages(): Village[] {
+    if (!this.isLogin) return []
+    if (!this.myselfPlayer) return []
+    const progressVillages = this.myselfPlayer.participate_progress_villages
+      .list
+    const epilogueVillages = this.myselfPlayer.participate_finished_villages.list.filter(
+      village => village.status.code === VILLAGE_STATUS.EPILOGUE
+    )
+    return progressVillages.concat(epilogueVillages)
+  }
+
+  private get isDispParticipatingVillages(): boolean {
+    return this.participatingVillages.length > 0
   }
 
   /** methods */
