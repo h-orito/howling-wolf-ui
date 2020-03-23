@@ -12,6 +12,7 @@ interface VillageParticipant {
   spectator: boolean
   skill: Skill | null
   skill_request: SkillRequest | null
+  win: boolean | null
 }
 
 export default VillageParticipant

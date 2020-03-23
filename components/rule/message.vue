@@ -111,7 +111,8 @@ export default class RuleMessage extends Vue {
         dead: null,
         spectator: false,
         skill: null,
-        skill_request: null
+        skill_request: null,
+        win: null
       },
       to: null,
       time: {

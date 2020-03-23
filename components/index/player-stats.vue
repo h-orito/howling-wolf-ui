@@ -40,7 +40,7 @@
         <div class="columns">
           <div class="column is-6">
             <b-button
-              :to="{ path: 'stats', query: { id: myselfPlayer.id } }"
+              :to="{ path: 'player-record', query: { id: myselfPlayer.id } }"
               tag="nuxt-link"
               type="is-white"
               icon-pack="fas"
