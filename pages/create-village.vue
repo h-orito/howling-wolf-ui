@@ -4,127 +4,27 @@
       <h1 class="title is-5">村を作成</h1>
       <div class="columns">
         <div class="column">
-          <!-- 村名 -->
+          <!-- 編成 -->
           <div class="field">
-            <label class="label">村名</label>
+            <label class="label">編成</label>
             <div class="control">
               <input
-                v-model="villageName"
-                :class="villageNameError ? 'is-danger' : 'is-success'"
+                v-model="organization"
                 class="input"
                 type="text"
-                placeholder="村名"
+                placeholder="構成"
               />
             </div>
-            <p v-if="villageNameError" class="help is-danger">
-              {{ villageNameError }}
-            </p>
-          </div>
-
-          <!-- 最低人数 -->
-          <div class="field">
-            <label class="label">最低人数</label>
-            <div class="control">
-              <input
-                v-model="personNumMin"
-                :class="personNumMinError ? 'is-danger' : 'is-success'"
-                class="input"
-                type="number"
-                step="1"
-                min="10"
-                max="17"
-              />
-            </div>
-            <p v-if="personNumMinError" class="help is-danger">
-              {{ personNumMinError }}
-            </p>
-          </div>
-
-          <!-- 最大人数 -->
-          <div class="field">
-            <label class="label">最大人数</label>
-            <div class="control">
-              <input
-                v-model="personNumMax"
-                :class="personNumMaxError ? 'is-danger' : 'is-success'"
-                class="input"
-                type="number"
-                step="1"
-                min="10"
-                max="17"
-              />
-            </div>
-            <p v-if="personNumMaxError" class="help is-danger">
-              {{ personNumMaxError }}
-            </p>
-          </div>
-
-          <!-- 昼時間 -->
-          <div class="field">
-            <label class="label">昼時間（秒）</label>
-            <div class="control">
-              <input
-                v-model="noonSeconds"
-                :class="noonSecondsError ? 'is-danger' : 'is-success'"
-                class="input"
-                type="number"
-                step="30"
-                min="180"
-                max="86400"
-              />
-            </div>
-            <p v-if="noonSecondsError" class="help is-danger">
-              {{ noonSecondsError }}
-            </p>
-          </div>
-
-          <!-- 夜時間 -->
-          <div class="field">
-            <label class="label">夜時間（秒）</label>
-            <div class="control">
-              <input
-                v-model="nightSeconds"
-                :class="nightSecondsError ? 'is-danger' : 'is-success'"
-                class="input"
-                type="number"
-                step="30"
-                min="0"
-                max="600"
-              />
-            </div>
-            <p v-if="nightSecondsError" class="help is-danger">
-              {{ nightSecondsError }}
-            </p>
           </div>
 
           <div class="field">
             <label class="label">開始日時</label>
             <div class="control">
-              <datetime
-                v-model="startDatetime"
-                :minute-step="10"
-                type="datetime"
-                input-class="input"
-                value-zone="Asia/Tokyo"
-                zone="Asia/Tokyo"
-                title="開始日時"
-                format="yyyy/MM/dd HH:mm"
-              ></datetime>
+              <input v-model="startDatetime" class="input" type="text" />
             </div>
-            <p v-if="startDatetimeError" class="help is-danger">
-              {{ startDatetimeError }}
-            </p>
           </div>
-
-          <div class="field" style="margin-top: 40px;">
+          <div class="field m-t-40">
             <div class="control has-text-centered">
-              <button
-                :disabled="submitting"
-                @click="checkCreateVillage"
-                class="button is-primary"
-              >
-                エラーチェック
-              </button>
               <button
                 :disabled="submitting"
                 @click="createVillage"
@@ -153,123 +53,55 @@ export default class extends Vue {
   }
 
   /** data */
-  private villageName: string = ''
-  private villageNameError: string = ''
-  private personNumMin: number = 10
-  private personNumMinError: string = ''
-  private personNumMax: number = 17
-  private personNumMaxError: string = ''
-  private noonSeconds: number = 86400
-  private noonSecondsError: string = ''
-  private nightSeconds: number = 0
-  private nightSecondsError: string = ''
-  private startDatetime: string = '2019-01-01T00:00:00.000Z'
-  private startDatetimeError: string = ''
-  private submitting: boolean = false // todo
+  private organization: string = '村村村村村村村村村占霊狩狼狼狼狂'
+  private startDatetime: string = this.defaultStartDatetime()
+  private submitting: boolean = false
 
   /** computed */
-  // private get hasVillageNameError(): boolean {
-  //   return this.villageNameError != null && this.villageNameError !== ''
-  // }
 
   /** created */
-  async created() {}
+  private created() {}
 
   /** methods */
-  private checkCreateVillage(): void {
-    this.$axios
-      .$post('/village/confirm', {
-        village_name: this.villageName,
-        person_min_num: this.personNumMin,
-        person_max_num: this.personNumMax,
-        noon_seconds: this.noonSeconds,
-        night_seconds: this.nightSeconds,
-        start_datetime: formatDateTime(new Date(this.startDatetime))
-      })
-      .then(res => {
-        Vue.prototype.$snackbar.open({
-          duration: 5000,
-          message: 'エラーなし',
-          type: 'is-success',
-          position: 'is-top-right',
-          actionText: '',
-          queue: false,
-          onAction: () => {}
-        })
-      })
-      .catch(err => {
-        const code = parseInt(err.response && err.response.status)
-        if (code !== 400) {
-          return // validation error以外だったら何もしない
-        }
-        if (!err || !err.response || !err.response.data) {
-          return // エラー内容なし
-        }
-        const errorFields = err!.response!.data!.errors.map(
-          error => error.field
-        )
-        // エラー項目表示
-        this.showErrorFields(errorFields)
-      })
+  private defaultStartDatetime(): string {
+    const defaultStartDatetime = new Date()
+    // 4日後の0時
+    defaultStartDatetime.setDate(defaultStartDatetime.getDate() + 4)
+    defaultStartDatetime.setHours(9) // toISOString()でUTC時間にされてしまうので9時間足しておく
+    defaultStartDatetime.setMinutes(0)
+    defaultStartDatetime.setSeconds(0)
+    defaultStartDatetime.setMilliseconds(0)
+    return defaultStartDatetime.toISOString().replace('Z', '')
   }
 
   private async createVillage() {
+    this.submitting = true
     const res = await this.$axios
-      .$post('/village', {
-        village_name: this.villageName,
-        person_min_num: this.personNumMin,
-        person_max_num: this.personNumMax,
-        noon_seconds: this.noonSeconds,
-        night_seconds: this.nightSeconds,
-        start_datetime: formatDateTime(new Date(this.startDatetime))
+      .$post('/auto-generated-village', {
+        organization: this.organization,
+        start_datetime: this.formatDateTime(new Date(this.startDatetime))
       })
       .catch(err => {
-        const code = parseInt(err.response && err.response.status)
-        if (code !== 400) {
-          return // validation error以外だったら何もしない
-        }
-        if (!err || !err.response || !err.response.data) {
-          return // エラー内容なし
-        }
-        const errorFields = err.response.data.errors.map(error => error.field)
-        // エラー項目表示
-        this.showErrorFields(errorFields)
+        console.log(err)
       })
+    this.submitting = false
     location.href = `/village?id=${res.village_id}`
   }
 
-  private showErrorFields(errorFields: Array<string>): void {
-    if (errorFields.some(fieldName => fieldName === 'villageName')) {
-      this.villageNameError = '村名は5文字以上40文字以内で入力してください'
-    }
-    if (errorFields.some(fieldName => fieldName === 'personMinNum')) {
-      this.personNumMinError = '最低人数は10名以上17名以下で入力してください'
-    }
-    if (errorFields.some(fieldName => fieldName === 'personMaxNum')) {
-      this.personNumMaxError =
-        '最大人数は10名以上17名以下かつ最低人数以上で入力してください'
-    }
-    if (errorFields.some(fieldName => fieldName === 'noonSeconds')) {
-      this.noonSecondsError = '昼時間は3分以上24時間以内で入力してください'
-    }
-    if (errorFields.some(fieldName => fieldName === 'nightSeconds')) {
-      this.nightSecondsError = '夜時間は0秒以上10分以内で入力してください'
-    }
+  private formatDateTime(date: Date): string {
+    return this.formatDateByFormat(date, 'yyyy-MM-ddTHH:mm:ss')
   }
-}
 
-function formatDateTime(date) {
-  return formatDateByFormat(date, 'yyyy-MM-ddTHH:mm:ss')
-}
-
-function formatDateByFormat(date, format) {
-  format = format.replace(/yyyy/g, date.getFullYear())
-  format = format.replace(/MM/g, ('0' + (date.getMonth() + 1)).slice(-2))
-  format = format.replace(/dd/g, ('0' + date.getDate()).slice(-2))
-  format = format.replace(/HH/g, ('0' + date.getHours()).slice(-2))
-  format = format.replace(/mm/g, ('0' + date.getMinutes()).slice(-2))
-  format = format.replace(/ss/g, ('0' + date.getSeconds()).slice(-2))
-  format = format.replace(/SSS/g, ('00' + date.getMilliseconds()).slice(-3))
-  return format
+  private formatDateByFormat(date: Date, formatString: string): string {
+    let format = formatString
+    format = format.replace(/yyyy/g, date.getFullYear().toString())
+    format = format.replace(/MM/g, ('0' + (date.getMonth() + 1)).slice(-2))
+    format = format.replace(/dd/g, ('0' + date.getDate()).slice(-2))
+    format = format.replace(/HH/g, ('0' + date.getHours()).slice(-2))
+    format = format.replace(/mm/g, ('0' + date.getMinutes()).slice(-2))
+    format = format.replace(/ss/g, ('0' + date.getSeconds()).slice(-2))
+    format = format.replace(/SSS/g, ('00' + date.getMilliseconds()).slice(-3))
+    return format
+  }
 }
 </script>
