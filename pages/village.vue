@@ -35,8 +35,8 @@
         v-if="messages"
         :village="village"
         :messages="messages"
+        :per-page="perPage"
         :is-progress="isNotFinished"
-        :per-page="perPageCount"
         :is-latest-day="
           displayVillageDay &&
             latestDay &&
@@ -76,6 +76,7 @@
       :charachip-name="charachipName"
       :is-expanded="isSliderExpanded"
       :messages="messages"
+      @refresh="reload"
       @filter="filter($event)"
       @hide-slider="hideSlider"
       ref="slider"
@@ -101,6 +102,9 @@ import SituationAsParticipant from '~/components/type/situation-as-participant'
 import DebugVillage from '~/components/type/debug-village'
 import Charachip from '~/components/type/charachip'
 import { VILLAGE_STATUS } from '~/components/const/consts'
+import villageUserSettings, {
+  VillageUserSettings
+} from '~/components/village/user-settings/village-user-settings'
 // dynamic imports
 const messageCards = () =>
   import('~/components/village/message/message-cards.vue')
@@ -161,10 +165,10 @@ export default class extends Vue {
   private situation: SituationAsParticipant | null = null
   /** ローカル環境限定の村情報 */
   private debugVillage: DebugVillage | null = null
-  /** 1ページあたりに表示する発言数 */
-  private perPageCount: number = 50
   /** 現在の発言ページ番号 */
   private currentPageNum: number | null = 1
+  /** 1ページあたりの表示件数 */
+  private perPage: number = 0
   /** 読込済発言の最新日時（unix time milli seconds) */
   private latestMessageUnixTimeMilli: number = 0
   /** 新しい発言があるか */
@@ -241,6 +245,8 @@ export default class extends Vue {
   private async created(): Promise<void> {
     // 認証を待つ
     await this.auth()
+    // 表示設定が作成されていなかったら作成
+    villageUserSettings.createCookieIfNeeded(this)
     // もろもろ読込
     await this.reload()
     // キャラチップ名
@@ -298,20 +304,23 @@ export default class extends Vue {
     }
     // 表示する日付
     const displayDay = isDispLatestDay ? this.latestDay : this.displayVillageDay
-    // 表示するページ
-    const pageNum = isDispLatestPage ? 10000 : this.currentPageNum
     // 読み込み
+    const params: any = {
+      message_type_list: this.messageTypeFilter,
+      participant_id_list: this.participantIdFilter
+    }
+    const pagingSetting = villageUserSettings.getPaging(this)
+    if (pagingSetting.is_paging) {
+      this.perPage = pagingSetting.message_per_page
+      params.page_size = pagingSetting.message_per_page
+      params.page_num = isDispLatestPage ? 10000 : this.currentPageNum
+    }
     this.messages = await this.$axios.$get(
       `/village/${this.village!.id}/day/${displayDay!.day}/time/${
         displayDay!.noonnight
       }/message-list`,
       {
-        params: {
-          message_type_list: this.messageTypeFilter,
-          participant_id_list: this.participantIdFilter,
-          page_size: this.perPageCount,
-          page_num: pageNum
-        },
+        params,
         paramsSerializer: params =>
           qs.stringify(params, { arrayFormat: 'repeat' })
       }

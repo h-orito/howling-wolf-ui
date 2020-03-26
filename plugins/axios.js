@@ -14,7 +14,7 @@ export default function({ store, $axios, app }) {
 
   $axios.onError(error => {
     const code = parseInt(error.response && error.response.status)
-    if (code === 499) {
+    if (code === 404 && error.response.data.status === 499) {
       return // business errorは個別にハンドリングするので何もしない
     }
     Toast.open({

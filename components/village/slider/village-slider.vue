@@ -70,7 +70,9 @@
     <modal-user-settings
       :is-open="isOpenUserSettingsModal"
       :village="village"
+      @refresh="refresh"
       @close-modal="closeUserSettingsModal"
+      ref="settings"
     />
     <modal-filter
       :is-open="isOpenFilterModal"
@@ -87,12 +89,12 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import Village from '~/components/type/village'
 import Messages from '~/components/type/messages'
 const modalVillageInfo = () =>
-  import('~/components/village/footer/modal-village-info.vue')
+  import('~/components/village/slider/modal-village-info.vue')
 const modalUserSettings = () =>
-  import('~/components/village/footer/modal-user-settings.vue')
+  import('~/components/village/slider/modal-user-settings.vue')
 const participantList = () =>
   import('~/components/village/slider/participant-list.vue')
-const modalFilter = () => import('~/components/village/footer/modal-filter.vue')
+const modalFilter = () => import('~/components/village/slider/modal-filter.vue')
 
 @Component({
   components: {
@@ -133,6 +135,7 @@ export default class VillageSlider extends Vue {
   }
 
   private openUserSettingsModal(): void {
+    ;(this.$refs.settings as any).refresh()
     this.isOpenUserSettingsModal = true
   }
 
@@ -146,6 +149,11 @@ export default class VillageSlider extends Vue {
 
   private closeFilterModal(): void {
     this.isOpenFilterModal = false
+  }
+
+  private async refresh(): Promise<void> {
+    this.$emit('hide-slider')
+    await this.$emit('refresh')
   }
 
   private async filter({ messageTypeList, participantIdList }): Promise<void> {
