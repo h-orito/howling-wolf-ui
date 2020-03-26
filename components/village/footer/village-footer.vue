@@ -1,28 +1,25 @@
 <template>
   <div class="village-footer">
-    <button class="village-footer-item" @click="$emit('toggle-slider')">
-      <b-icon pack="fas" icon="bars" size="is-small" type="is-white" />
+    <button class="village-footer-item b-r" @click="$emit('toggle-slider')">
+      <b-icon pack="fas" icon="bars" type="is-white" />
     </button>
-    <button class="village-footer-item" @click="refresh">
+    <button class="village-footer-item b-r" @click="refresh">
       <b-icon
         pack="fas"
         icon="sync-alt"
-        size="is-small"
         :type="existsNewMessages ? 'is-info' : 'is-white'"
         :custom-class="existsNewMessages ? 'rotate' : ''"
       />
     </button>
-    <b-button
-      class="village-footer-item flex"
-      icon-pack="fas"
-      icon-left="long-arrow-alt-down"
-      type="is-dark"
-      size="is-small"
-      @click="toBottom"
-    >
-      最下部
-    </b-button>
-    <div class="village-footer-item footer-timer">
+    <button class="village-footer-item flex" @click="toBottom">
+      <b-icon
+        pack="fas"
+        icon="arrow-down"
+        type="is-white"
+        style="border-bottom: 1px solid #fff; margin-bottom: 3px;"
+      />
+    </button>
+    <div class="village-footer-item footer-timer b-l">
       <p>{{ timer }}</p>
     </div>
   </div>
@@ -115,7 +112,7 @@ export default class VillageFooter extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .village-footer {
   position: fixed;
   bottom: 0;
@@ -162,6 +159,14 @@ export default class VillageFooter extends Vue {
 
   .flex {
     flex: 1;
+  }
+
+  .b-r {
+    border-right: 1px solid #555;
+  }
+
+  .b-l {
+    border-left: 1px solid #555;
   }
 }
 </style>

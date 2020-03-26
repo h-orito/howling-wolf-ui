@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-pagination
-      v-if="messages.all_page_count != null"
+      v-if="messages.all_page_count != null && messages.all_page_count > 1"
       :total="messages.all_record_count"
       :current="messages.current_page_num"
       :range-before="range"
@@ -31,7 +31,7 @@
       :is-latest-day="isLatestDay"
     />
     <b-pagination
-      v-if="messages.all_page_count != null"
+      v-if="messages.all_page_count != null && messages.all_page_count > 1"
       :total="messages.all_record_count"
       :current="messages.current_page_num"
       :range-before="range"

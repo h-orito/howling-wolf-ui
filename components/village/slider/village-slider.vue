@@ -184,6 +184,7 @@ export default class VillageSlider extends Vue {
   transition-duration: 200ms;
   transition-delay: 0s;
   transition-timing-function: ease;
+  z-index: 5;
 
   .side-item {
     color: $white;

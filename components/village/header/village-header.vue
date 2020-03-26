@@ -10,14 +10,14 @@
     >
       前日
     </b-button>
-    <b-button
-      class="village-header-item flex is-size-7"
-      type="is-dark"
-      icon-pack="fas"
-      icon-left="long-arrow-alt-up"
-      @click="$emit('to-head')"
-      >最上部</b-button
-    >
+    <button @click="$emit('to-head')" class="village-header-item flex">
+      <b-icon
+        pack="fas"
+        icon="arrow-up"
+        type="is-white"
+        style="border-top: 1px solid #fff; margin-top: 3px;"
+      ></b-icon>
+    </button>
     <b-button
       class="village-header-item is-size-7"
       type="is-dark"
@@ -105,6 +105,7 @@ export default class VillageFooter extends Vue {
     cursor: pointer;
     border: 0;
     border-radius: 0;
+    background-color: $dark;
   }
 
   .flex {
