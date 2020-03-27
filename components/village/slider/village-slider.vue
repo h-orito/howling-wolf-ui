@@ -156,9 +156,13 @@ export default class VillageSlider extends Vue {
     await this.$emit('refresh')
   }
 
-  private async filter({ messageTypeList, participantIdList }): Promise<void> {
+  private async filter({
+    messageTypeList,
+    participantIdList,
+    keyword
+  }): Promise<void> {
     this.$emit('hide-slider')
-    await this.$emit('filter', { messageTypeList, participantIdList })
+    await this.$emit('filter', { messageTypeList, participantIdList, keyword })
     this.closeFilterModal()
   }
 

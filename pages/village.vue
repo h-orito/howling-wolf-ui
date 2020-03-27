@@ -183,6 +183,8 @@ export default class extends Vue {
   private messageTypeFilter: string[] | null = null
   /** 発言抽出：参加者 */
   private participantIdFilter: number[] | null = null
+  /** 発言抽出：キーワード */
+  private keywordFilter: string | null = null
   /** サイドバー */
   private isSliderExpanded: boolean = false
 
@@ -307,7 +309,8 @@ export default class extends Vue {
     // 読み込み
     const params: any = {
       message_type_list: this.messageTypeFilter,
-      participant_id_list: this.participantIdFilter
+      participant_id_list: this.participantIdFilter,
+      keyword: this.keywordFilter
     }
     const pagingSetting = villageUserSettings.getPaging(this)
     if (pagingSetting.is_paging) {
@@ -412,9 +415,14 @@ export default class extends Vue {
   }
 
   /** 発言抽出 */
-  private async filter({ messageTypeList, participantIdList }): Promise<void> {
+  private async filter({
+    messageTypeList,
+    participantIdList,
+    keyword
+  }): Promise<void> {
     this.messageTypeFilter = messageTypeList
     this.participantIdFilter = participantIdList
+    this.keywordFilter = keyword
     await this.loadMessage()
   }
 

@@ -64,7 +64,7 @@
             </b-checkbox-button>
           </b-field>
         </section>
-        <section class="m-t-10">
+        <section class="m-t-20">
           <p style="font-weight: 700; margin-bottom: 6px;">キャラ</p>
           <b-field>
             <a @click="allParticipantOn">全てON</a>
@@ -74,32 +74,48 @@
             <a @click="reverseParticipant">反転</a>
           </b-field>
           <div
-            class="participant-checkbox-area"
-            v-for="participant in participantList"
-            :key="participant.id"
+            v-for="chunkParticipants in chunk(participantList, 2)"
+            :key="chunkParticipants[0].id"
+            class="columns m-l-0 m-r-0 is-mobile"
           >
-            <b-checkbox
-              v-model="participantIdGroup"
-              :native-value="participant.id"
-              size="is-small"
+            <div
+              v-for="participant in chunkParticipants"
+              :key="participant.id"
+              class="participant-checkbox-area column is-6"
             >
-              <div class="participant-area">
-                <div class="face-area m-r-5">
-                  <img
-                    :src="imageUrl(participant)"
-                    :width="imageWidth(participant)"
-                    :height="imageHeight(participant)"
-                    class="chara-image"
-                  />
+              <b-checkbox
+                v-model="participantIdGroup"
+                :native-value="participant.id"
+                size="is-small"
+              >
+                <div class="participant-area">
+                  <div class="face-area m-r-5">
+                    <img
+                      :src="imageUrl(participant)"
+                      :width="imageWidth(participant)"
+                      :height="imageHeight(participant)"
+                      class="chara-image"
+                    />
+                  </div>
+                  <div class="name-area is-size-7">
+                    <p class="chara-name">
+                      {{ participant.chara.chara_name.full_name }}
+                    </p>
+                  </div>
                 </div>
-                <div class="name-area is-size-7">
-                  <p class="chara-name">
-                    {{ participant.chara.chara_name.full_name }}
-                  </p>
-                </div>
-              </div>
-            </b-checkbox>
+              </b-checkbox>
+            </div>
           </div>
+        </section>
+        <section class="m-t-20">
+          <p style="font-weight: 700; margin-bottom: 6px;">キーワード</p>
+          <b-field>
+            <b-input
+              v-model="keyword"
+              size="is-small"
+              placeholder="スペース区切り"
+            />
+          </b-field>
         </section>
       </section>
       <footer
@@ -181,8 +197,8 @@ export default class ModalFilter extends Vue {
   // data
   // ----------------------------------------------------------------
   private messageTypeCodeGroup: string[] = this.allMessageTypeGroup
-
   private participantIdGroup: number[] = []
+  private keyword: string | null = null
 
   // ----------------------------------------------------------------
   // computed
@@ -222,15 +238,18 @@ export default class ModalFilter extends Vue {
     if (participantIdList.length === this.allParticipantIdList.length) {
       participantIdList = []
     }
+    const keyword = this.keyword
     await this.$emit('filter', {
       messageTypeList,
-      participantIdList
+      participantIdList,
+      keyword
     })
   }
 
   private refresh(): void {
     this.messageTypeCodeGroup = this.allMessageTypeGroup
     this.participantIdGroup = this.allParticipantIdList
+    this.keyword = null
     this.filter()
   }
 
@@ -279,12 +298,21 @@ export default class ModalFilter extends Vue {
   private imageHeight(participant: VillageParticipant): number {
     return participant.chara.display.height / 2
   }
+
+  private chunk<T extends any[]>(arr: T, size: number): Array<Array<T>> {
+    return arr.reduce(
+      (newarr, _, i) =>
+        i % size ? newarr : [...newarr, arr.slice(i, i + size)],
+      [] as T[][]
+    )
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 .participant-checkbox-area {
   border-top: 0.5px solid #999;
+  padding: 0;
 
   .participant-area {
     display: flex;
