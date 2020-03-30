@@ -114,11 +114,7 @@ export default class VillageFooter extends Vue {
 
 <style lang="scss" scoped>
 .village-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
   width: 100%;
-  height: 1.8rem;
   display: flex;
   z-index: 10;
   background-color: $dark;

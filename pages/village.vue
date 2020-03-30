@@ -1,57 +1,63 @@
 <template>
-  <div class="container is-size-7 village-main-area">
+  <div class="container is-size-7 village-wrapper">
     <village-header
+      class="village-header-wrapper"
       :current-village-day="displayVillageDay"
       :village="village"
       @to-head="toHead"
       @current-day-change="changeDisplayDay($event)"
     />
-    <loading
-      v-if="loadingVillage"
-      :message="'村情報を読み込み中...'"
-      :fixed="true"
-    ></loading>
-    <loading
-      v-if="loadingMessage"
-      :message="'発言を読み込み中...'"
-      :fixed="true"
-    ></loading>
-    <loading
-      v-if="!loadingMessage && loadingSituation"
-      :message="'参加状況を読み込み中...'"
-      :fixed="true"
-    ></loading>
-    <div v-if="village">
-      <h1 class="m-t-10 m-b-10 m-l-5 m-r-5 has-text-left">
-        {{ village.name + ' - ' + village.status.name }}
-      </h1>
-      <village-day-list
-        v-if="displayVillageDay"
-        :village="village"
-        :display-village-day-id="displayVillageDay.id"
-        @current-day-change="changeDisplayDay($event)"
-      />
-      <message-cards
-        v-if="messages"
-        :village="village"
-        :messages="messages"
-        :per-page="perPage"
-        :is-progress="isNotFinished"
-        :is-latest-day="
-          displayVillageDay &&
-            latestDay &&
-            displayVillageDay.id === latestDay.id
-        "
-        @change-message-page="changeMessagePage($event)"
-      />
-      <village-day-list
-        v-if="displayVillageDay"
-        :village="village"
-        :display-village-day-id="displayVillageDay.id"
-        @current-day-change="changeDisplayDay($event)"
-      />
-      <div id="message-bottom" />
-      <div v-if="situation">
+    <div class="village-main-wrapper">
+      <loading
+        v-if="loadingVillage"
+        :message="'村情報を読み込み中...'"
+        :fixed="true"
+      ></loading>
+      <loading
+        v-if="loadingMessage"
+        :message="'発言を読み込み中...'"
+        :fixed="true"
+      ></loading>
+      <loading
+        v-if="!loadingMessage && loadingSituation"
+        :message="'参加状況を読み込み中...'"
+        :fixed="true"
+      ></loading>
+      <div v-if="village" class="village-article-wrapper">
+        <h1 class="m-t-10 m-b-10 m-l-5 m-r-5 has-text-left">
+          {{ village.name + ' - ' + village.status.name }}
+        </h1>
+        <village-day-list
+          v-if="displayVillageDay"
+          :village="village"
+          :display-village-day-id="displayVillageDay.id"
+          @current-day-change="changeDisplayDay($event)"
+        />
+        <message-cards
+          v-if="messages"
+          :village="village"
+          :messages="messages"
+          :per-page="perPage"
+          :is-progress="isNotFinished"
+          :is-latest-day="
+            displayVillageDay &&
+              latestDay &&
+              displayVillageDay.id === latestDay.id
+          "
+          @change-message-page="changeMessagePage($event)"
+        />
+        <village-day-list
+          v-if="displayVillageDay"
+          :village="village"
+          :display-village-day-id="displayVillageDay.id"
+          @current-day-change="changeDisplayDay($event)"
+        />
+        <div id="message-bottom" />
+        <div v-if="isDispDebugMenu">
+          <village-debug :village="debugVillage" @reload="reload" />
+        </div>
+      </div>
+      <div v-if="situation" class="village-action-wrapper">
         <action
           :situation="situation"
           :village="village"
@@ -59,11 +65,18 @@
           ref="action"
         ></action>
       </div>
-    </div>
-    <div v-if="isDispDebugMenu">
-      <village-debug :village="debugVillage" @reload="reload" />
+      <!--
+      <div class="village-action-wrapper">
+        <div class="village-action-header">ここがメニューです</div>
+        <div class="village-action-container">
+          ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />
+          ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />
+        </div>
+      </div>
+      -->
     </div>
     <village-footer
+      class="village-footer-wrapper"
       :village="village"
       :exists-new-messages="existsNewMessages"
       @refresh="reload"
@@ -523,9 +536,106 @@ export default class extends Vue {
 </script>
 
 <style lang="scss">
+// 全体レイアウト
+.village-wrapper {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+
+  .village-header-wrapper {
+    height: 1.8rem;
+  }
+
+  .village-footer-wrapper {
+    height: 1.8rem;
+  }
+
+  .village-main-wrapper {
+    flex: 1;
+    display: flex;
+    flex-shrink: 0;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow-y: scroll;
+
+    .village-article-wrapper {
+      flex: 1;
+      overflow-y: scroll;
+    }
+    .village-action-wrapper {
+      height: 200px;
+      display: flex;
+      flex-shrink: 0;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .village-action-header {
+        height: 20px;
+      }
+
+      .village-action-container {
+        flex: 1;
+        flex-shrink: 0;
+        overflow-y: scroll;
+      }
+    }
+  }
+
+  .hw-message-card {
+    padding: 5px;
+    margin-bottom: 5px;
+
+    .hw-message-name-area {
+      padding-bottom: 5px;
+      display: flex;
+
+      .hw-message-name {
+        text-align: left;
+        font-weight: bold;
+      }
+      .hw-message-player {
+        margin-left: 5px;
+        text-align: left;
+      }
+      .hw-message-datetime {
+        margin-left: auto;
+        text-align: right;
+        color: #aaaaaa;
+      }
+    }
+    .hw-message-content-area {
+      display: flex;
+
+      .hw-message-face-area {
+        padding-right: 5px;
+
+        .hw-message-chara-image {
+          vertical-align: bottom;
+          border-radius: 5px;
+        }
+      }
+
+      .hw-message-text-area {
+        flex: 1;
+        border: 1px solid #dddddd;
+        border-radius: 5px;
+        padding: 5px;
+        font-family: sans-serif;
+
+        .hw-message-text {
+          text-align: left;
+          word-break: break-word;
+        }
+      }
+    }
+  }
+}
+
 .village-main-area {
   padding-top: 1.8rem;
-  padding-bottom: 1.8rem;
+  padding-bottom: calc(1.8rem + 200px);
 
   .hw-message-card {
     padding: 5px;
