@@ -178,7 +178,7 @@ export default class VillageSlider extends Vue {
   background-color: $dark;
   color: $white;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   .side-item {
     color: $white;
