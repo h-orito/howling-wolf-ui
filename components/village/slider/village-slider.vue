@@ -228,6 +228,7 @@ export default class VillageSlider extends Vue {
 @media screen and (min-width: 768px) {
   .village-side-menu {
     height: 100%;
+    max-height: 100vh;
     width: 280px;
     padding: 10px;
   }
