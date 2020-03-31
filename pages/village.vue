@@ -1,89 +1,102 @@
 <template>
   <div class="is-size-7 village-wrapper">
-    <village-header
-      class="village-header-wrapper"
-      :current-village-day="displayVillageDay"
-      :village="village"
-      @to-head="toHead"
-      @current-day-change="changeDisplayDay($event)"
-    />
-    <div class="village-main-wrapper">
-      <loading
-        v-if="loadingVillage"
-        :message="'村情報を読み込み中...'"
-        :fixed="true"
-      ></loading>
-      <loading
-        v-if="loadingMessage"
-        :message="'発言を読み込み中...'"
-        :fixed="true"
-      ></loading>
-      <loading
-        v-if="!loadingMessage && loadingSituation"
-        :message="'参加状況を読み込み中...'"
-        :fixed="true"
-      ></loading>
-      <div v-if="village" class="village-article-wrapper">
-        <h1 class="m-t-10 m-b-10 m-l-5 m-r-5 has-text-left">
-          {{ village.name + ' - ' + village.status.name }}
-        </h1>
-        <village-day-list
-          v-if="displayVillageDay"
-          :village="village"
-          :display-village-day-id="displayVillageDay.id"
-          @current-day-change="changeDisplayDay($event)"
-        />
-        <message-cards
-          v-if="messages"
-          :village="village"
-          :messages="messages"
-          :per-page="perPage"
-          :is-progress="isNotFinished"
-          :is-latest-day="
-            displayVillageDay &&
-              latestDay &&
-              displayVillageDay.id === latestDay.id
-          "
-          @change-message-page="changeMessagePage($event)"
-        />
-        <village-day-list
-          v-if="displayVillageDay"
-          :village="village"
-          :display-village-day-id="displayVillageDay.id"
-          @current-day-change="changeDisplayDay($event)"
-        />
-        <div id="message-bottom" />
-        <div v-if="isDispDebugMenu">
-          <village-debug :village="debugVillage" @reload="reload" />
-        </div>
-      </div>
-      <action
-        v-if="situation && existsAction"
-        :situation="situation"
+    <div v-if="!$window.isMobile" class="village-leftside-wrapper">
+      <village-slider
         :village="village"
-        @reload="reload"
-        ref="action"
-      ></action>
+        :charachip-name="charachipName"
+        :is-expanded="isSliderExpanded"
+        :messages="messages"
+        @refresh="reload"
+        @filter="filter($event)"
+        @hide-slider="hideSlider"
+        ref="slider"
+      />
     </div>
-    <village-footer
-      class="village-footer-wrapper"
-      :village="village"
-      :exists-new-messages="existsNewMessages"
-      @refresh="reload"
-      @to-bottom="toBottom"
-      @toggle-slider="toggleSlider"
-      ref="footer"
-    />
-    <village-slider
-      :village="village"
-      :charachip-name="charachipName"
-      :is-expanded="isSliderExpanded"
-      :messages="messages"
-      @refresh="reload"
-      @filter="filter($event)"
-      @hide-slider="hideSlider"
-      ref="slider"
-    />
+    <div class="village-rightside-wrapper">
+      <village-header
+        class="village-header-wrapper"
+        :current-village-day="displayVillageDay"
+        :village="village"
+        @to-head="toHead"
+        @current-day-change="changeDisplayDay($event)"
+      />
+      <div class="village-main-wrapper">
+        <loading
+          v-if="loadingVillage"
+          :message="'村情報を読み込み中...'"
+          :fixed="true"
+        ></loading>
+        <loading
+          v-if="loadingMessage"
+          :message="'発言を読み込み中...'"
+          :fixed="true"
+        ></loading>
+        <loading
+          v-if="!loadingMessage && loadingSituation"
+          :message="'参加状況を読み込み中...'"
+          :fixed="true"
+        ></loading>
+        <div v-if="village" class="village-article-wrapper">
+          <h1 class="village-name has-text-left">{{ villageName }}</h1>
+          <village-day-list
+            v-if="displayVillageDay"
+            :village="village"
+            :display-village-day-id="displayVillageDay.id"
+            @current-day-change="changeDisplayDay($event)"
+          />
+          <message-cards
+            v-if="messages"
+            :village="village"
+            :messages="messages"
+            :per-page="perPage"
+            :is-progress="isNotFinished"
+            :is-latest-day="
+              displayVillageDay &&
+                latestDay &&
+                displayVillageDay.id === latestDay.id
+            "
+            @change-message-page="changeMessagePage($event)"
+          />
+          <village-day-list
+            v-if="displayVillageDay"
+            :village="village"
+            :display-village-day-id="displayVillageDay.id"
+            @current-day-change="changeDisplayDay($event)"
+          />
+          <div id="message-bottom" />
+          <div v-if="isDispDebugMenu">
+            <village-debug :village="debugVillage" @reload="reload" />
+          </div>
+        </div>
+        <action
+          v-if="situation && existsAction"
+          :situation="situation"
+          :village="village"
+          @reload="reload"
+          ref="action"
+        ></action>
+      </div>
+      <village-footer
+        class="village-footer-wrapper"
+        :village="village"
+        :exists-new-messages="existsNewMessages"
+        @refresh="reload"
+        @to-bottom="toBottom"
+        @toggle-slider="toggleSlider"
+        ref="footer"
+      />
+      <village-slider
+        v-if="$window.isMobile"
+        :village="village"
+        :charachip-name="charachipName"
+        :is-expanded="isSliderExpanded"
+        :messages="messages"
+        @refresh="reload"
+        @filter="filter($event)"
+        @hide-slider="hideSlider"
+        ref="slider"
+      />
+    </div>
   </div>
 </template>
 
@@ -195,6 +208,11 @@ export default class extends Vue {
   // ----------------------------------------------------------------
   // computed
   // ----------------------------------------------------------------
+  /** 村名と状態 */
+  private get villageName(): string {
+    return this.village!.name + ' - ' + this.village!.status.name
+  }
+
   /** 最新村日付 */
   private get latestDay(): VillageDay | null {
     if (this.village == null) return null
@@ -449,12 +467,6 @@ export default class extends Vue {
     this.$scrollTo(element, {
       container: '.village-article-wrapper'
     })
-    // let paddingPx: number = this.convertRemToPx(1.8)
-    // if (this.existsAction) paddingPx += 200
-    // this.$scrollTo(element, {
-    //   container: '.village-article-wrapper',
-    //   offset: -window.innerHeight + paddingPx
-    // })
   }
 
   /** rem to px */
@@ -542,35 +554,53 @@ export default class extends Vue {
 .village-wrapper {
   display: flex;
   flex-shrink: 0;
-  flex-direction: column;
   justify-content: space-between;
+  width: 100vw;
   height: 100vh;
 
-  .village-header-wrapper {
-    height: 1.8rem;
+  .village-leftside-wrapper {
+    height: 100vh;
+    background-color: $dark;
   }
 
-  .village-footer-wrapper {
-    height: 1.8rem;
-  }
-
-  .village-main-wrapper {
+  .village-rightside-wrapper {
     flex: 1;
     display: flex;
     flex-shrink: 0;
     flex-direction: column;
     justify-content: space-between;
-    overflow-y: scroll;
+    height: 100vh;
 
-    .village-article-wrapper {
-      flex: 1;
-      overflow-y: scroll;
+    .village-header-wrapper {
+      height: 1.8rem;
     }
-    .village-action-wrapper {
+
+    .village-footer-wrapper {
+      height: 1.8rem;
+    }
+
+    .village-main-wrapper {
+      flex: 1;
       display: flex;
       flex-shrink: 0;
       flex-direction: column;
       justify-content: space-between;
+      overflow-y: scroll;
+
+      .village-article-wrapper {
+        flex: 1;
+        overflow-y: scroll;
+
+        .village-name {
+          margin: 10px 5px;
+        }
+      }
+      .village-action-wrapper {
+        display: flex;
+        flex-shrink: 0;
+        flex-direction: column;
+        justify-content: space-between;
+      }
     }
   }
 

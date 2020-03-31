@@ -131,7 +131,7 @@ const nuxtConfig: Configuration = {
   ],
 
   /* Plugins to load before mounting the App */
-  plugins: ['~/plugins/axios'],
+  plugins: ['~/plugins/axios', '~/plugins/window-resize'],
 
   axios: {
     baseURL:

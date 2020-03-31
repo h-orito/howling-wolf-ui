@@ -47,7 +47,7 @@
           トップページ
         </nuxt-link>
       </div>
-      <div class="close-icon">
+      <div v-if="$window.isMobile" class="close-icon">
         <b-button
           type="is-dark"
           icon-pack="fas"
@@ -175,20 +175,10 @@ export default class VillageSlider extends Vue {
 
 <style lang="scss" scoped>
 .village-side-menu {
-  position: fixed;
-  left: 0;
-  top: 1.8rem;
   background-color: $dark;
-  height: calc(100vh - 3.6rem);
-  width: 0%;
   color: $white;
   overflow-x: hidden;
   overflow-y: scroll;
-  transition-property: all;
-  transition-duration: 200ms;
-  transition-delay: 0s;
-  transition-timing-function: ease;
-  z-index: 5;
 
   .side-item {
     color: $white;
@@ -196,27 +186,50 @@ export default class VillageSlider extends Vue {
     line-height: 2.5rem;
     font-size: 14px;
   }
+}
 
-  .close-icon {
-    position: absolute;
-    top: 5px;
-    right: 5px;
+@media screen and (max-width: 767px) {
+  .village-side-menu {
+    position: fixed;
+    left: 0;
+    top: 1.8rem;
+    height: calc(100vh - 3.6rem);
+    width: 0%;
+    transition-property: all;
+    transition-duration: 200ms;
+    transition-delay: 0s;
+    transition-timing-function: ease;
+    z-index: 5;
+
+    .close-icon {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+    }
+  }
+  .village-side-menu.is-active {
+    width: 280px;
+    padding: 10px;
+  }
+  .village-side-menu-outside {
+    display: none;
+    position: fixed;
+    right: 0;
+    top: 0;
+    background-color: hsla(0, 0%, 21%, 0.4);
+    height: 100vh;
+    width: calc(100% - 280px);
+  }
+  .village-side-menu-outside.is-active {
+    display: block;
+    z-index: 5;
   }
 }
-.village-side-menu.is-active {
-  width: 280px;
-  padding: 10px;
-}
-.village-side-menu-outside {
-  display: none;
-  position: fixed;
-  right: 0;
-  top: 0;
-  background-color: hsla(0, 0%, 21%, 0.4);
-  height: 100vh;
-  width: calc(100% - 280px);
-}
-.village-side-menu-outside.is-active {
-  display: block;
+@media screen and (min-width: 768px) {
+  .village-side-menu {
+    height: 100%;
+    width: 280px;
+    padding: 10px;
+  }
 }
 </style>

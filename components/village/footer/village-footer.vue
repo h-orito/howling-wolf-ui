@@ -1,9 +1,17 @@
 <template>
   <div class="village-footer">
-    <button class="village-footer-item b-r" @click="$emit('toggle-slider')">
+    <button
+      v-if="$window.isMobile"
+      class="village-footer-item b-r"
+      @click="$emit('toggle-slider')"
+    >
       <b-icon pack="fas" icon="bars" type="is-white" />
     </button>
-    <button class="village-footer-item b-r" @click="refresh">
+    <button
+      class="village-footer-item b-r"
+      :class="$window.isMobile ? '' : 'wide-item'"
+      @click="refresh"
+    >
       <b-icon
         pack="fas"
         icon="sync-alt"
@@ -19,7 +27,7 @@
         style="border-bottom: 1px solid #fff; margin-bottom: 3px;"
       />
     </button>
-    <div class="village-footer-item footer-timer b-l">
+    <div class="village-footer-item footer-timer wide-item b-l">
       <p>{{ timer }}</p>
     </div>
   </div>
@@ -143,9 +151,12 @@ export default class VillageFooter extends Vue {
     }
   }
 
+  .wide-item {
+    width: 120px;
+  }
+
   .footer-timer {
     color: $white;
-    width: 120px;
     cursor: default;
 
     p {
