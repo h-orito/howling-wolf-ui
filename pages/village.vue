@@ -1,69 +1,72 @@
 <template>
-  <div class="container is-size-7 village-main-area">
+  <div class="is-size-7 village-wrapper">
     <village-header
+      class="village-header-wrapper"
       :current-village-day="displayVillageDay"
       :village="village"
       @to-head="toHead"
       @current-day-change="changeDisplayDay($event)"
     />
-    <loading
-      v-if="loadingVillage"
-      :message="'村情報を読み込み中...'"
-      :fixed="true"
-    ></loading>
-    <loading
-      v-if="loadingMessage"
-      :message="'発言を読み込み中...'"
-      :fixed="true"
-    ></loading>
-    <loading
-      v-if="!loadingMessage && loadingSituation"
-      :message="'参加状況を読み込み中...'"
-      :fixed="true"
-    ></loading>
-    <div v-if="village">
-      <h1 class="m-t-10 m-b-10 m-l-5 m-r-5 has-text-left">
-        {{ village.name + ' - ' + village.status.name }}
-      </h1>
-      <village-day-list
-        v-if="displayVillageDay"
-        :village="village"
-        :display-village-day-id="displayVillageDay.id"
-        @current-day-change="changeDisplayDay($event)"
-      />
-      <message-cards
-        v-if="messages"
-        :village="village"
-        :messages="messages"
-        :per-page="perPage"
-        :is-progress="isNotFinished"
-        :is-latest-day="
-          displayVillageDay &&
-            latestDay &&
-            displayVillageDay.id === latestDay.id
-        "
-        @change-message-page="changeMessagePage($event)"
-      />
-      <village-day-list
-        v-if="displayVillageDay"
-        :village="village"
-        :display-village-day-id="displayVillageDay.id"
-        @current-day-change="changeDisplayDay($event)"
-      />
-      <div id="message-bottom" />
-      <div v-if="situation">
-        <action
-          :situation="situation"
+    <div class="village-main-wrapper">
+      <loading
+        v-if="loadingVillage"
+        :message="'村情報を読み込み中...'"
+        :fixed="true"
+      ></loading>
+      <loading
+        v-if="loadingMessage"
+        :message="'発言を読み込み中...'"
+        :fixed="true"
+      ></loading>
+      <loading
+        v-if="!loadingMessage && loadingSituation"
+        :message="'参加状況を読み込み中...'"
+        :fixed="true"
+      ></loading>
+      <div v-if="village" class="village-article-wrapper">
+        <h1 class="m-t-10 m-b-10 m-l-5 m-r-5 has-text-left">
+          {{ village.name + ' - ' + village.status.name }}
+        </h1>
+        <village-day-list
+          v-if="displayVillageDay"
           :village="village"
-          @reload="reload"
-          ref="action"
-        ></action>
+          :display-village-day-id="displayVillageDay.id"
+          @current-day-change="changeDisplayDay($event)"
+        />
+        <message-cards
+          v-if="messages"
+          :village="village"
+          :messages="messages"
+          :per-page="perPage"
+          :is-progress="isNotFinished"
+          :is-latest-day="
+            displayVillageDay &&
+              latestDay &&
+              displayVillageDay.id === latestDay.id
+          "
+          @change-message-page="changeMessagePage($event)"
+        />
+        <village-day-list
+          v-if="displayVillageDay"
+          :village="village"
+          :display-village-day-id="displayVillageDay.id"
+          @current-day-change="changeDisplayDay($event)"
+        />
+        <div id="message-bottom" />
+        <div v-if="isDispDebugMenu">
+          <village-debug :village="debugVillage" @reload="reload" />
+        </div>
       </div>
-    </div>
-    <div v-if="isDispDebugMenu">
-      <village-debug :village="debugVillage" @reload="reload" />
+      <action
+        v-if="situation && existsAction"
+        :situation="situation"
+        :village="village"
+        @reload="reload"
+        ref="action"
+      ></action>
     </div>
     <village-footer
+      class="village-footer-wrapper"
       :village="village"
       :exists-new-messages="existsNewMessages"
       @refresh="reload"
@@ -105,6 +108,7 @@ import { VILLAGE_STATUS } from '~/components/const/consts'
 import villageUserSettings, {
   VillageUserSettings
 } from '~/components/village/user-settings/village-user-settings'
+import actionHelper from '~/components/village/action/village-action-helper'
 // dynamic imports
 const messageCards = () =>
   import('~/components/village/message/message-cards.vue')
@@ -239,6 +243,10 @@ export default class extends Vue {
       return false
 
     return true
+  }
+
+  private get existsAction(): boolean {
+    return !!this.situation && actionHelper.existsAction(this.situation)
   }
 
   // ----------------------------------------------------------------
@@ -387,7 +395,7 @@ export default class extends Vue {
         this.messages!.list.length - 1
       ].time.unix_time_milli
       // 能力行使等をリセット
-      refs.action.reset()
+      if (this.existsAction) refs.action.reset()
     }
     this.toBottom()
 
@@ -430,16 +438,23 @@ export default class extends Vue {
   private toHead(): void {
     const element = document.getElementsByClassName('site')
     if (element == null) return
-    this.$scrollTo(element[0])
+    this.$scrollTo(element[0], {
+      container: '.village-article-wrapper'
+    })
   }
 
-  /** 発言内容の最下部にスクロール */
   private toBottom(): void {
     const element = document.getElementById('message-bottom')
     if (element == null) return
     this.$scrollTo(element, {
-      offset: -window.innerHeight + this.convertRemToPx(1.8)
+      container: '.village-article-wrapper'
     })
+    // let paddingPx: number = this.convertRemToPx(1.8)
+    // if (this.existsAction) paddingPx += 200
+    // this.$scrollTo(element, {
+    //   container: '.village-article-wrapper',
+    //   offset: -window.innerHeight + paddingPx
+    // })
   }
 
   /** rem to px */
@@ -523,9 +538,41 @@ export default class extends Vue {
 </script>
 
 <style lang="scss">
-.village-main-area {
-  padding-top: 1.8rem;
-  padding-bottom: 1.8rem;
+// 全体レイアウト
+.village-wrapper {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+
+  .village-header-wrapper {
+    height: 1.8rem;
+  }
+
+  .village-footer-wrapper {
+    height: 1.8rem;
+  }
+
+  .village-main-wrapper {
+    flex: 1;
+    display: flex;
+    flex-shrink: 0;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow-y: scroll;
+
+    .village-article-wrapper {
+      flex: 1;
+      overflow-y: scroll;
+    }
+    .village-action-wrapper {
+      display: flex;
+      flex-shrink: 0;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  }
 
   .hw-message-card {
     padding: 5px;

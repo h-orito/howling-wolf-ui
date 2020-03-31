@@ -1,43 +1,38 @@
 <template>
-  <action-card :title="'投票する'">
-    <template v-slot:content>
-      <div class="content has-text-left">
-        <p>現在のセット先: {{ currentTargetName }}</p>
-        <p style="font-weight: 700; margin-bottom: 6px;">対象</p>
-        <b-field>
-          <b-select
-            v-model="participantId"
-            :disable="vote.target_list.length === 0"
-            expanded
-            size="is-small"
+  <div>
+    <div class="content has-text-left">
+      <p>現在のセット先: {{ currentTargetName }}</p>
+      <p style="font-weight: 700; margin-bottom: 6px;">対象</p>
+      <b-field>
+        <b-select
+          v-model="participantId"
+          :disable="vote.target_list.length === 0"
+          expanded
+          size="is-small"
+        >
+          <option
+            v-for="participant in vote.target_list"
+            :value="participant.id.toString()"
+            :key="participant.id.toString()"
+            >{{ participant.chara.chara_name.full_name }}</option
           >
-            <option
-              v-for="participant in vote.target_list"
-              :value="participant.id.toString()"
-              :key="participant.id.toString()"
-              >{{ participant.chara.chara_name.full_name }}</option
-            >
-          </b-select>
-        </b-field>
-      </div>
-    </template>
-    <template v-slot:footer>
-      <b-button @click="setVote" type="is-primary" size="is-small">
-        投票する
-      </b-button>
-    </template>
-  </action-card>
+        </b-select>
+      </b-field>
+    </div>
+    <b-button @click="setVote" type="is-primary" size="is-small" expanded>
+      投票する
+    </b-button>
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
-import actionCard from '~/components/village/action/action-card.vue'
 import Village from '~/components/type/village'
 import Chara from '~/components/type/chara'
 import VillageVoteSituation from '~/components/type/village-vote-situation'
 
 @Component({
-  components: { actionCard }
+  components: {}
 })
 export default class Vote extends Vue {
   @Prop({ type: Object })

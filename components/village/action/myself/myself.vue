@@ -1,51 +1,44 @@
 <template>
-  <action-card :title="'参加情報'" :exists-footer="false">
-    <template v-slot:content>
-      <div class="content has-text-left">
-        <div class="myself-area">
-          <div class="myself-name-area">
-            <p class="myself-name">{{ myself.chara.chara_name.full_name }}</p>
-          </div>
-          <b-message v-if="!isAlive" size="is-small" type="is-info">
-            あなたは死亡しました。
+  <div class="content has-text-left">
+    <div class="myself-area">
+      <div class="myself-name-area">
+        <p class="myself-name">{{ myself.chara.chara_name.full_name }}</p>
+      </div>
+      <b-message v-if="!isAlive" size="is-small" type="is-info">
+        あなたは死亡しました。
+      </b-message>
+      <div class="myself-content-area">
+        <div class="myself-face-area">
+          <img
+            :src="imageUrl"
+            :width="imageWidth"
+            :height="imageHeight"
+            class="myself-chara-image"
+          />
+        </div>
+        <div class="myself-health-area">
+          <b-message v-if="myself.skill == null" size="is-small">
+            <span style="white-space: pre-line;"
+              >1日目になると役職情報がここに表示されます。
+            </span>
           </b-message>
-          <div class="myself-content-area">
-            <div class="myself-face-area">
-              <img
-                :src="imageUrl"
-                :width="imageWidth"
-                :height="imageHeight"
-                class="myself-chara-image"
-              />
-            </div>
-            <div class="myself-health-area">
-              <b-message v-if="myself.skill == null" size="is-small">
-                <span style="white-space: pre-line;"
-                  >1日目になると役職情報がここに表示されます。
-                </span>
-              </b-message>
-              <b-message v-if="myself.skill" size="is-small">
-                <span style="white-space: pre-line;">{{
-                  skillDescription
-                }}</span>
-              </b-message>
-            </div>
-          </div>
+          <b-message v-if="myself.skill" size="is-small">
+            <span style="white-space: pre-line;">{{ skillDescription }}</span>
+          </b-message>
         </div>
       </div>
-    </template>
-  </action-card>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
-import actionCard from '~/components/village/action/action-card.vue'
 // type
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 import VillageParticipant from '~/components/type/village-participant'
 
 @Component({
-  components: { actionCard }
+  components: {}
 })
 export default class Participate extends Vue {
   @Prop({ type: Object })

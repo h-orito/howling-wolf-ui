@@ -12,12 +12,18 @@
       >
         <loading :message="'村情報を読み込み中'" />
       </div>
-      <div v-if="!loadingVillages && villages.length > 0" class="columns">
-        <village-card
-          v-for="village in villages"
-          :key="village.key"
-          :village="village"
-        />
+      <div v-if="!loadingVillages && villages.length > 0">
+        <div
+          v-for="chunkVillages in chunk(villages, 2)"
+          :key="chunkVillages[0].id"
+          class="columns is-mobile"
+        >
+          <village-card
+            v-for="village in chunkVillages"
+            :key="village.key"
+            :village="village"
+          />
+        </div>
       </div>
       <div v-if="!loadingVillages && villages.length === 0">
         <p class="is-size-5-tablet is-size-6-mobile spotlight-shadow">
@@ -133,6 +139,14 @@ export default class VillageList extends Vue {
         `${spectatorCount === 0 ? '' : '+' + spectatorCount}`
       )
     }
+  }
+
+  private chunk<T extends any[]>(arr: T, size: number): Array<Array<T>> {
+    return arr.reduce(
+      (newarr, _, i) =>
+        i % size ? newarr : [...newarr, arr.slice(i, i + size)],
+      [] as T[][]
+    )
   }
 }
 </script>

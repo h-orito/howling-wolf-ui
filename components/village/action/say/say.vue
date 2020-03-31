@@ -1,66 +1,62 @@
 <template>
-  <action-card :title="'発言する'">
-    <template v-slot:content>
-      <div class="content has-text-left">
-        <div class="say-area">
-          <b-field>
-            <b-radio-button
-              v-for="messageTypeSituation in situation.say
-                .selectable_message_type_list"
-              :key="messageTypeSituation.message_type.code"
-              v-model="messageType"
-              :native-value="messageTypeSituation.message_type.code"
-              type="is-primary"
-              size="is-small"
-            >
-              <span>{{ messageTypeSituation.message_type.name }}</span>
-            </b-radio-button>
-          </b-field>
+  <div>
+    <div class="content has-text-left">
+      <div class="say-area">
+        <b-field>
+          <b-radio-button
+            v-for="messageTypeSituation in situation.say
+              .selectable_message_type_list"
+            :key="messageTypeSituation.message_type.code"
+            v-model="messageType"
+            :native-value="messageTypeSituation.message_type.code"
+            type="is-primary"
+            size="is-small"
+          >
+            <span>{{ messageTypeSituation.message_type.name }}</span>
+          </b-radio-button>
+        </b-field>
 
-          <div class="say-content-area">
-            <div class="say-face-area">
-              <img
-                :src="imageUrl"
-                :width="imageWidth"
-                :height="imageHeight"
-                class="say-chara-image"
-              />
-            </div>
-            <div class="say-input-area">
-              <message-input
-                v-model="message"
-                :message-type="messageType"
-                :situation="situation.say"
-                ref="messageInput"
-              />
-            </div>
+        <div class="say-content-area">
+          <div class="say-face-area">
+            <img
+              :src="imageUrl"
+              :width="imageWidth"
+              :height="imageHeight"
+              class="say-chara-image"
+            />
+          </div>
+          <div class="say-input-area">
+            <message-input
+              v-model="message"
+              :message-type="messageType"
+              :situation="situation.say"
+              ref="messageInput"
+            />
           </div>
         </div>
       </div>
-    </template>
-    <template v-slot:footer>
-      <b-button
-        :disabled="!canSay"
-        @click="sayConfirm"
-        type="is-primary"
-        size="is-small"
-      >
-        発言する
-      </b-button>
-      <modal-say
-        :is-open="isSayModalOpen"
-        :confirm-message="confirmMessage"
-        :village="village"
-        @close="closeSayModal"
-        @say="say"
-      />
-    </template>
-  </action-card>
+    </div>
+    <b-button
+      :disabled="!canSay"
+      @click="sayConfirm"
+      type="is-primary"
+      size="is-small"
+      expanded
+    >
+      発言する
+    </b-button>
+    <modal-say
+      :is-open="isSayModalOpen"
+      :confirm-message="confirmMessage"
+      :village="village"
+      @close="closeSayModal"
+      @say="say"
+    />
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
-import actionCard from '~/components/village/action/action-card.vue'
 import messageInput from '~/components/village/action/message-input.vue'
 // type
 import SituationAsParticipant from '~/components/type/situation-as-participant'
@@ -70,7 +66,7 @@ import { FACE_TYPE, MESSAGE_TYPE } from '~/components/const/consts'
 const modalSay = () => import('~/components/village/action/say/modal-say.vue')
 
 @Component({
-  components: { actionCard, messageInput, modalSay }
+  components: { messageInput, modalSay }
 })
 export default class Say extends Vue {
   // ----------------------------------------------------------------

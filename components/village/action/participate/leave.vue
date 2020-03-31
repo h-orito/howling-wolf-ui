@@ -1,21 +1,18 @@
 <template>
-  <action-card :title="'退村する'" :exists-content="false">
-    <template v-slot:footer>
-      <b-button @click="confirmLeave" type="is-danger" size="is-small">
-        退村する
-      </b-button>
-    </template>
-  </action-card>
+  <div>
+    <b-button @click="confirmLeave" type="is-danger" size="is-small" expanded>
+      退村する
+    </b-button>
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
-import actionCard from '~/components/village/action/action-card.vue'
 import Village from '~/components/type/village'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 
 @Component({
-  components: { actionCard }
+  components: {}
 })
 export default class Leave extends Vue {
   @Prop({ type: Object })

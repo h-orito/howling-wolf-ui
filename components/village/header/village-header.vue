@@ -90,11 +90,8 @@ export default class VillageFooter extends Vue {
 
 <style lang="scss">
 .village-header {
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
-  height: 1.8rem;
+  height: 100%;
   display: flex;
   z-index: 10;
 

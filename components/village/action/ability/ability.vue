@@ -1,52 +1,48 @@
 <template>
-  <action-card :title="`能力行使（${ability.type.name}）`">
-    <template v-slot:content>
-      <div class="content has-text-left">
-        <p>現在のセット先: {{ currentTargetName }}</p>
-        <p style="font-weight: 700; margin-bottom: 6px;">対象</p>
-        <b-field>
-          <b-select
-            v-model="participantId"
-            :disabled="!ability.usable || ability.target_list.length === 0"
-            expanded
-            size="is-small"
+  <div>
+    <div class="content has-text-left">
+      <p>現在のセット先: {{ currentTargetName }}</p>
+      <p style="font-weight: 700; margin-bottom: 6px;">対象</p>
+      <b-field>
+        <b-select
+          v-model="participantId"
+          :disabled="!ability.usable || ability.target_list.length === 0"
+          expanded
+          size="is-small"
+        >
+          <option v-if="ability.available_no_target" value="">
+            なし
+          </option>
+          <option
+            v-for="participant in ability.target_list"
+            :value="participant.id.toString()"
+            :key="participant.id.toString()"
+            >{{ participant.chara.chara_name.full_name }}</option
           >
-            <option v-if="ability.available_no_target" value="">
-              なし
-            </option>
-            <option
-              v-for="participant in ability.target_list"
-              :value="participant.id.toString()"
-              :key="participant.id.toString()"
-              >{{ participant.chara.chara_name.full_name }}</option
-            >
-          </b-select>
-        </b-field>
-      </div>
-    </template>
-    <template v-slot:footer>
-      <b-button
-        :disabled="!canSubmit || submitting"
-        @click="setAbility"
-        type="is-primary"
-        size="is-small"
-        >セットする</b-button
-      >
-    </template>
-  </action-card>
+        </b-select>
+      </b-field>
+    </div>
+    <b-button
+      :disabled="!canSubmit || submitting"
+      @click="setAbility"
+      type="is-primary"
+      size="is-small"
+      expanded
+      >セットする</b-button
+    >
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 // components
-import actionCard from '~/components/village/action/action-card.vue'
 // type
 import Village from '~/components/type/village'
 import Chara from '~/components/type/chara'
 import VillageAbilitySituation from '~/components/type/village-ability-situation'
 
 @Component({
-  components: { actionCard }
+  components: {}
 })
 export default class Ability extends Vue {
   @Prop({ type: Object })
