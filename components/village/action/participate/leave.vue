@@ -1,7 +1,9 @@
 <template>
-  <b-button @click="confirmLeave" type="is-danger" size="is-small" expanded>
-    退村する
-  </b-button>
+  <div>
+    <b-button @click="confirmLeave" type="is-danger" size="is-small" expanded>
+      退村する
+    </b-button>
+  </div>
 </template>
 
 <script lang="ts">

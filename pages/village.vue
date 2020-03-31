@@ -1,5 +1,5 @@
 <template>
-  <div class="container is-size-7 village-wrapper">
+  <div class="is-size-7 village-wrapper">
     <village-header
       class="village-header-wrapper"
       :current-village-day="displayVillageDay"
@@ -57,23 +57,13 @@
           <village-debug :village="debugVillage" @reload="reload" />
         </div>
       </div>
-      <div v-if="situation" class="village-action-wrapper">
-        <action
-          :situation="situation"
-          :village="village"
-          @reload="reload"
-          ref="action"
-        ></action>
-      </div>
-      <!--
-      <div class="village-action-wrapper">
-        <div class="village-action-header">ここがメニューです</div>
-        <div class="village-action-container">
-          ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />
-          ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />ここが内容です<br />
-        </div>
-      </div>
-      -->
+      <action
+        v-if="situation && existsAction"
+        :situation="situation"
+        :village="village"
+        @reload="reload"
+        ref="action"
+      ></action>
     </div>
     <village-footer
       class="village-footer-wrapper"
@@ -118,6 +108,7 @@ import { VILLAGE_STATUS } from '~/components/const/consts'
 import villageUserSettings, {
   VillageUserSettings
 } from '~/components/village/user-settings/village-user-settings'
+import actionHelper from '~/components/village/action/village-action-helper'
 // dynamic imports
 const messageCards = () =>
   import('~/components/village/message/message-cards.vue')
@@ -252,6 +243,10 @@ export default class extends Vue {
       return false
 
     return true
+  }
+
+  private get existsAction(): boolean {
+    return !!this.situation && actionHelper.existsAction(this.situation)
   }
 
   // ----------------------------------------------------------------
@@ -400,7 +395,7 @@ export default class extends Vue {
         this.messages!.list.length - 1
       ].time.unix_time_milli
       // 能力行使等をリセット
-      refs.action.reset()
+      if (this.existsAction) refs.action.reset()
     }
     this.toBottom()
 
@@ -443,16 +438,23 @@ export default class extends Vue {
   private toHead(): void {
     const element = document.getElementsByClassName('site')
     if (element == null) return
-    this.$scrollTo(element[0])
+    this.$scrollTo(element[0], {
+      container: '.village-article-wrapper'
+    })
   }
 
-  /** 発言内容の最下部にスクロール */
   private toBottom(): void {
     const element = document.getElementById('message-bottom')
     if (element == null) return
     this.$scrollTo(element, {
-      offset: -window.innerHeight + this.convertRemToPx(1.8)
+      container: '.village-article-wrapper'
     })
+    // let paddingPx: number = this.convertRemToPx(1.8)
+    // if (this.existsAction) paddingPx += 200
+    // this.$scrollTo(element, {
+    //   container: '.village-article-wrapper',
+    //   offset: -window.innerHeight + paddingPx
+    // })
   }
 
   /** rem to px */
@@ -565,77 +567,12 @@ export default class extends Vue {
       overflow-y: scroll;
     }
     .village-action-wrapper {
-      height: 200px;
       display: flex;
       flex-shrink: 0;
       flex-direction: column;
       justify-content: space-between;
-
-      .village-action-header {
-        height: 20px;
-      }
-
-      .village-action-container {
-        flex: 1;
-        flex-shrink: 0;
-        overflow-y: scroll;
-      }
     }
   }
-
-  .hw-message-card {
-    padding: 5px;
-    margin-bottom: 5px;
-
-    .hw-message-name-area {
-      padding-bottom: 5px;
-      display: flex;
-
-      .hw-message-name {
-        text-align: left;
-        font-weight: bold;
-      }
-      .hw-message-player {
-        margin-left: 5px;
-        text-align: left;
-      }
-      .hw-message-datetime {
-        margin-left: auto;
-        text-align: right;
-        color: #aaaaaa;
-      }
-    }
-    .hw-message-content-area {
-      display: flex;
-
-      .hw-message-face-area {
-        padding-right: 5px;
-
-        .hw-message-chara-image {
-          vertical-align: bottom;
-          border-radius: 5px;
-        }
-      }
-
-      .hw-message-text-area {
-        flex: 1;
-        border: 1px solid #dddddd;
-        border-radius: 5px;
-        padding: 5px;
-        font-family: sans-serif;
-
-        .hw-message-text {
-          text-align: left;
-          word-break: break-word;
-        }
-      }
-    }
-  }
-}
-
-.village-main-area {
-  padding-top: 1.8rem;
-  padding-bottom: calc(1.8rem + 200px);
 
   .hw-message-card {
     padding: 5px;

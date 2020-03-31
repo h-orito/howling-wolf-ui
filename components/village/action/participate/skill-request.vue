@@ -4,6 +4,7 @@
       v-if="situation.skill_request.available_skill_request"
       class="content has-text-left"
     >
+      <p>現在の希望: {{ currentRequest }}</p>
       <b-field label="役職第1希望" custom-class="is-small">
         <b-select v-model="firstRequestSkillCode" expanded size="is-small">
           <option
@@ -73,6 +74,12 @@ export default class SkillRequest extends Vue {
     return (
       this.firstRequestSkillCode != null && this.secondRequestSkillCode != null
     )
+  }
+
+  private get currentRequest(): string {
+    const first = this.situation.skill_request.skill_request!.first.name
+    const second = this.situation.skill_request.skill_request!.second.name
+    return `${first} / ${second}`
   }
 
   private async changeSkillRequest(): Promise<void> {
