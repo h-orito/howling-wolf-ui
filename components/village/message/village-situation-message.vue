@@ -57,7 +57,7 @@ export default class MessageCard extends Vue {
     const capacity = this.village.setting.capacity.max
     const currentParticipantCount = this.village.participant.count
     const startDatetime = this.village.setting.time.start_datetime
-    return minPersonCount <= currentParticipantCount
+    return currentParticipantCount < minPersonCount
       ? `${startDatetime}時点で${minPersonCount}人集まれば村が開始されます。`
       : `${startDatetime}に村が開始されます。`
   }
