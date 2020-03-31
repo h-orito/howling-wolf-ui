@@ -16,7 +16,7 @@
         <div
           v-for="chunkVillages in chunk(villages, 2)"
           :key="chunkVillages[0].id"
-          class="columns is-mobile"
+          class="columns"
         >
           <village-card
             v-for="village in chunkVillages"
