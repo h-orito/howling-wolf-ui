@@ -551,11 +551,14 @@ export default class extends Vue {
 
 <style lang="scss">
 // 全体レイアウト
+html {
+  overflow-y: auto !important;
+}
 .village-wrapper {
   display: flex;
   flex-shrink: 0;
   justify-content: space-between;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
 
   .village-leftside-wrapper {
@@ -585,7 +588,7 @@ export default class extends Vue {
       flex-shrink: 0;
       flex-direction: column;
       justify-content: space-between;
-      overflow-y: scroll;
+      overflow-y: auto;
 
       .village-article-wrapper {
         flex: 1;
