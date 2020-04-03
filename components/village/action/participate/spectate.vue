@@ -31,6 +31,7 @@
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import Village from '~/components/type/village'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
+import api from '~/components/village/village-api'
 
 @Component({
   components: {}
@@ -53,12 +54,16 @@ export default class Spectate extends Vue {
   private async spectate(): Promise<void> {
     this.submitting = true
     try {
-      await this.$axios.$post(`/village/${this.village!.id}/participate`, {
-        chara_id: this.charaId,
-        join_message: 'dummy join message',
-        join_password: null,
-        spectator: true
-      })
+      await api.postParticipate(
+        this,
+        this.village.id,
+        this.charaId!,
+        null,
+        null,
+        'dummy join message',
+        'dummy password',
+        true
+      )
       this.$emit('reload')
     } catch (error) {}
   }

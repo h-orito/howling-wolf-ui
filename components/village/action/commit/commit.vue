@@ -8,6 +8,7 @@
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import Village from '~/components/type/village'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
+import api from '~/components/village/village-api'
 
 @Component({
   components: {}
@@ -20,9 +21,11 @@ export default class Vote extends Vue {
   private situation!: SituationAsParticipant
 
   private async commit(): Promise<void> {
-    await this.$axios.$post(`/village/${this.village!.id}/commit`, {
-      commit: !this.situation.commit.committing
-    })
+    await api.postCommit(
+      this,
+      this.village.id,
+      !this.situation.commit.committing
+    )
   }
 }
 </script>

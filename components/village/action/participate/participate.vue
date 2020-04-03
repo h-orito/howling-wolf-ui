@@ -93,6 +93,7 @@ import Village from '~/components/type/village'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 import Message from '~/components/type/message'
 import { MESSAGE_TYPE } from '~/components/const/consts'
+import api from '~/components/village/village-api'
 const modalParticipate = () =>
   import('~/components/village/action/participate/modal-participate.vue')
 
@@ -150,16 +151,15 @@ export default class Participate extends Vue {
   private async confirmParticipate(): Promise<void> {
     this.confirming = true
     try {
-      this.confirmMessage = await this.$axios.$post(
-        `/village/${this.village!.id}/participate-confirm`,
-        {
-          chara_id: this.charaId,
-          first_request_skill: this.firstRequestSkillCode,
-          second_request_skill: this.secondRequestSkillCode,
-          join_message: this.message,
-          join_password: null,
-          spectator: false
-        }
+      this.confirmMessage = await api.postConfirmParticipate(
+        this,
+        this.village.id,
+        this.charaId!,
+        this.firstRequestSkillCode!,
+        this.secondRequestSkillCode!,
+        this.message,
+        null,
+        false
       )
     } catch (error) {}
     this.confirming = false
@@ -168,14 +168,16 @@ export default class Participate extends Vue {
 
   private async participate(): Promise<void> {
     try {
-      await this.$axios.$post(`/village/${this.village!.id}/participate`, {
-        chara_id: this.charaId,
-        first_request_skill: this.firstRequestSkillCode,
-        second_request_skill: this.secondRequestSkillCode,
-        join_message: this.message,
-        join_password: null,
-        spectator: false
-      })
+      await api.postParticipate(
+        this,
+        this.village.id,
+        this.charaId!,
+        this.firstRequestSkillCode!,
+        this.secondRequestSkillCode!,
+        this.message,
+        null,
+        false
+      )
     } catch (error) {}
     this.$emit('reload')
   }

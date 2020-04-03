@@ -46,6 +46,8 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 import Village from '~/components/type/village'
 import Skill from '~/components/type/skill'
+import api from '~/components/village/village-api'
+import toast from '~/components/village/village-toast'
 
 @Component({
   components: {}
@@ -85,10 +87,13 @@ export default class SkillRequest extends Vue {
   private async changeSkillRequest(): Promise<void> {
     this.submitting = true
     try {
-      await this.$axios.$post(`/village/${this.village!.id}/change-skill`, {
-        first_request_skill: this.firstRequestSkillCode,
-        second_request_skill: this.secondRequestSkillCode
-      })
+      await api.postSkillRequest(
+        this,
+        this.village.id,
+        this.firstRequestSkillCode!,
+        this.secondRequestSkillCode!
+      )
+      toast.success(this, '変更しました')
       this.$emit('reload')
     } catch (error) {}
     this.submitting = false

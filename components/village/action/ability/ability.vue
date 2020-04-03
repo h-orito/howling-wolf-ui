@@ -40,6 +40,8 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import Village from '~/components/type/village'
 import Chara from '~/components/type/chara'
 import VillageAbilitySituation from '~/components/type/village-ability-situation'
+import api from '~/components/village/village-api'
+import toast from '~/components/village/village-toast'
 
 @Component({
   components: {}
@@ -80,16 +82,14 @@ export default class Ability extends Vue {
 
   private async setAbility(): Promise<void> {
     this.submitting = true
-    await this.$axios.$post(`/village/${this.village!.id}/ability`, {
-      target_id: this.participantId,
-      ability_type: this.ability.type.code
-    })
+    await api.postAbility(
+      this,
+      this.village!.id,
+      this.participantId,
+      this.ability.type.code
+    )
     this.submitting = false
-    this.$buefy.toast.open({
-      message: 'セットしました',
-      type: 'is-success',
-      position: 'is-top'
-    })
+    toast.success(this, 'セットしました')
     this.$emit('reload')
   }
 }

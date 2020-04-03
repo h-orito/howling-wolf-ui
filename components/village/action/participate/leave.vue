@@ -10,6 +10,8 @@
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import Village from '~/components/type/village'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
+import api from '~/components/village/village-api'
+import toast from '~/components/village/village-toast'
 
 @Component({
   components: {}
@@ -31,11 +33,7 @@ export default class Leave extends Vue {
       hasIcon: true,
       onConfirm: async () => {
         await self.leave()
-        this.$buefy.toast.open({
-          message: '退村しました。',
-          type: 'is-info',
-          position: 'is-top'
-        })
+        toast.info(self, '退村しました')
       },
       size: 'is-small',
       cancelText: 'キャンセル'
@@ -44,7 +42,7 @@ export default class Leave extends Vue {
 
   private async leave(): Promise<void> {
     try {
-      await this.$axios.$post(`/village/${this.village!.id}/leave`, {})
+      await api.postLeave(this, this.village.id)
       this.$emit('reload')
     } catch (error) {}
   }

@@ -30,6 +30,8 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import Village from '~/components/type/village'
 import Chara from '~/components/type/chara'
 import VillageVoteSituation from '~/components/type/village-vote-situation'
+import api from '~/components/village/village-api'
+import toast from '~/components/village/village-toast'
 
 @Component({
   components: {}
@@ -57,15 +59,9 @@ export default class Vote extends Vue {
 
   private async setVote(): Promise<void> {
     this.submitting = true
-    await this.$axios.$post(`/village/${this.village!.id}/vote`, {
-      target_id: this.participantId
-    })
+    await api.postVote(this, this.village.id, this.participantId!)
     this.submitting = false
-    this.$buefy.toast.open({
-      message: 'セットしました',
-      type: 'is-success',
-      position: 'is-top'
-    })
+    toast.success(this, 'セットしました')
     this.$emit('reload')
   }
 

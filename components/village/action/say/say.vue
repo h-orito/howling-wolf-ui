@@ -63,6 +63,7 @@ import SituationAsParticipant from '~/components/type/situation-as-participant'
 import Village from '~/components/type/village'
 import Message from '~/components/type/message'
 import { FACE_TYPE, MESSAGE_TYPE } from '~/components/const/consts'
+import api from '~/components/village/village-api'
 const modalSay = () => import('~/components/village/action/say/modal-say.vue')
 
 @Component({
@@ -159,13 +160,12 @@ export default class Say extends Vue {
   // ----------------------------------------------------------------
   private async sayConfirm(): Promise<void> {
     try {
-      this.confirmMessage = await this.$axios.$post(
-        `/village/${this.village!.id}/say-confirm`,
-        {
-          message: this.message,
-          message_type: this.messageType,
-          face_type: this.faceTypeCode
-        }
+      this.confirmMessage = await api.postConfirmSay(
+        this,
+        this.village.id,
+        this.message,
+        this.messageType,
+        this.faceTypeCode
       )
       this.isSayModalOpen = true
     } catch (error) {}
@@ -173,11 +173,13 @@ export default class Say extends Vue {
 
   private async say(): Promise<void> {
     try {
-      await this.$axios.$post(`/village/${this.village!.id}/say`, {
-        message: this.message,
-        message_type: this.messageType,
-        face_type: this.faceTypeCode
-      })
+      await api.postSay(
+        this,
+        this.village.id,
+        this.message,
+        this.messageType,
+        this.faceTypeCode
+      )
     } catch (error) {}
     this.message = ''
     await this.$emit('reload')

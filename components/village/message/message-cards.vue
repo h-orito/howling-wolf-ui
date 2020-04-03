@@ -61,6 +61,7 @@ import Messages from '~/components/type/messages'
 import villageUserSettings, {
   VillageUserSettings
 } from '~/components/village/user-settings/village-user-settings'
+import { VILLAGE_STATUS } from '~/components/const/consts'
 // dynamic imports
 const villageSituationMessage = () =>
   import('~/components/village/message/village-situation-message.vue')
@@ -82,12 +83,17 @@ export default class MessageCard extends Vue {
   private perPage!: number
 
   @Prop({ type: Boolean })
-  private isProgress!: boolean
-
-  @Prop({ type: Boolean })
   private isLatestDay!: boolean
 
   private range: number = 2
+
+  private get isProgress(): boolean {
+    const statusCode = this.village.status.code
+    return (
+      statusCode === VILLAGE_STATUS.PROLOGUE ||
+      statusCode === VILLAGE_STATUS.PROGRESS
+    )
+  }
 
   private change(pageNum: number) {
     this.$emit('change-message-page', {

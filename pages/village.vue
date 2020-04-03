@@ -49,7 +49,6 @@
             :village="village"
             :messages="messages"
             :per-page="perPage"
-            :is-progress="isNotFinished"
             :is-latest-day="
               displayVillageDay &&
                 latestDay &&
@@ -122,6 +121,8 @@ import villageUserSettings, {
   VillageUserSettings
 } from '~/components/village/user-settings/village-user-settings'
 import actionHelper from '~/components/village/action/village-action-helper'
+import api from '~/components/village/village-api'
+import toast from '~/components/village/village-toast'
 // dynamic imports
 const messageCards = () =>
   import('~/components/village/message/message-cards.vue')
@@ -186,8 +187,6 @@ export default class extends Vue {
   private currentPageNum: number | null = 1
   /** 1ページあたりの表示件数 */
   private perPage: number = 0
-  /** 読込済発言の最新日時（unix time milli seconds) */
-  private latestMessageUnixTimeMilli: number = 0
   /** 新しい発言があるか */
   private existsNewMessages: boolean = false
   /** 新しい発言があるか定期的にチェックするtimer */
@@ -229,23 +228,14 @@ export default class extends Vue {
     return this.isDebug && this.debugVillage != null && this.situation != null
   }
 
-  /** 終了していない村か */
-  private get isNotFinished(): boolean {
-    const statusCode = this.village == null ? '' : this.village.status.code
-    return (
-      statusCode === VILLAGE_STATUS.PROLOGUE ||
-      statusCode === VILLAGE_STATUS.PROGRESS
-    )
-  }
-
   /** 自動的に最新発言を読み込むか */
   private get shouldLoadMessage(): boolean {
     // 最新日の最新ページを見ていない場合は勝手に更新したくない
     if (!this.isViewingLatest) return false
     // 発言入力中も勝手に更新したくない
-    if ((this.$refs as any).action.isInputting) return false
+    if (this.refs.action.isInputting) return false
     // 発言抽出中も勝手に更新したくない
-    if ((this.$refs as any).slider.isFiltering) return false
+    if (this.refs.slider.isFiltering) return false
     return true
   }
 
@@ -267,6 +257,24 @@ export default class extends Vue {
     return !!this.situation && actionHelper.existsAction(this.situation)
   }
 
+  private get refs(): any {
+    return this.$refs
+  }
+
+  private get isNotFinished(): boolean {
+    const status = this.village!.status.code
+    return (
+      this.village!.status.code !== VILLAGE_STATUS.COMPLETE &&
+      this.village!.status.code !== VILLAGE_STATUS.CANCEL
+    )
+  }
+
+  private get latestMessageUnixTimeMilli(): number {
+    if (!this.messages) return 0
+    return this.messages!.list[this.messages!.list.length - 1].time
+      .unix_time_milli
+  }
+
   // ----------------------------------------------------------------
   // created
   // ----------------------------------------------------------------
@@ -280,10 +288,7 @@ export default class extends Vue {
     // キャラチップ名
     this.charachipName = await this.loadCharachipName()
     // 定期的に最新発言がないかチェックする
-    if (
-      this.village!.status.code !== VILLAGE_STATUS.COMPLETE &&
-      this.village!.status.code !== VILLAGE_STATUS.CANCEL
-    ) {
+    if (this.isNotFinished) {
       this.latestTimer = this.setLatestTimer()
       this.daychangeTimer = this.setDaychangeTimer()
     } else {
@@ -315,7 +320,7 @@ export default class extends Vue {
   /** 村を読み込み */
   private async loadVillage(): Promise<void> {
     this.loadingVillage = true
-    this.village = await this.$axios.$get(`/village/${this.villageId}`)
+    this.village = await api.fetchVillage(this, this.villageId)
     this.loadingVillage = false
   }
 
@@ -333,27 +338,19 @@ export default class extends Vue {
     // 表示する日付
     const displayDay = isDispLatestDay ? this.latestDay : this.displayVillageDay
     // 読み込み
-    const params: any = {
-      message_type_list: this.messageTypeFilter,
-      participant_id_list: this.participantIdFilter,
-      keyword: this.keywordFilter
-    }
-    const pagingSetting = villageUserSettings.getPaging(this)
-    if (pagingSetting.is_paging) {
-      this.perPage = pagingSetting.message_per_page
-      params.page_size = pagingSetting.message_per_page
-      params.page_num = isDispLatestPage ? 10000 : this.currentPageNum
-    }
-    this.messages = await this.$axios.$get(
-      `/village/${this.village!.id}/day/${displayDay!.day}/time/${
-        displayDay!.noonnight
-      }/message-list`,
-      {
-        params,
-        paramsSerializer: params =>
-          qs.stringify(params, { arrayFormat: 'repeat' })
-      }
+    this.messages = await api.fetchMessageList(
+      this,
+      this.villageId,
+      displayDay,
+      isDispLatestPage,
+      this.currentPageNum,
+      this.messageTypeFilter,
+      this.participantIdFilter,
+      this.keywordFilter
     )
+    if (villageUserSettings.getPaging(this).is_paging) {
+      this.perPage = villageUserSettings.getPaging(this).message_per_page
+    }
     this.currentPageNum = this.messages!.current_page_num
     this.loadingMessage = false
   }
@@ -367,58 +364,40 @@ export default class extends Vue {
       return
     }
     // 参加状況を読み込み
-    this.situation = await this.$axios.$get(
-      `/village/${this.village.id}/situation`
-    )
+    this.situation = await api.fetchSituation(this, this.villageId)
     this.loadingSituation = false
   }
 
   /** キャラチップ名を読み込み */
-  private async loadCharachipName(): Promise<string> {
-    const charachipId = this.village!.setting.charachip.charachip_id
-    const charachip: Charachip = await this.$axios.$get(
-      `/charachip/${charachipId}`
-    )
-    return charachip.name
+  private loadCharachipName(): Promise<string> {
+    return api.fetchCharachipName(this, this.village!)
   }
 
   /** デバッグ用村情報を読み込み */
-  private async loadDebugVillage(): Promise<DebugVillage> {
-    return await this.$axios.$get(`/admin/village/${this.villageId}`)
+  private loadDebugVillage(): Promise<DebugVillage> {
+    return api.fetchDebugVillage(this, this.villageId)
   }
 
   /** もろもろ読み込み */
   private async reload(): Promise<void> {
-    // 村
     await this.loadVillage()
     await Promise.all([
-      // 発言(最新の日の最新のページを表示)
-      this.loadMessage(true, true),
-      // 参加状況
+      this.loadMessage(true, true), // 最新
       this.loadSituation()
     ])
     // デバッグ用村情報
     if (this.isDebug) this.debugVillage = await this.loadDebugVillage()
-
-    // 初期表示時は最新日を表示する
+    // 最新日を表示
     this.displayVillageDay = this.latestDay!
     this.existsNewMessages = false
-    const refs = this.$refs as any
-    if (
-      this.village!.status.code !== VILLAGE_STATUS.COMPLETE &&
-      this.village!.status.code !== VILLAGE_STATUS.CANCEL
-    ) {
-      // 発言読込時点での最新日時をセットしておく
-      this.latestMessageUnixTimeMilli = this.messages!.list[
-        this.messages!.list.length - 1
-      ].time.unix_time_milli
+    if (this.isNotFinished) {
       // 能力行使等をリセット
-      if (this.existsAction) refs.action.reset()
+      if (this.existsAction) this.refs.action.reset()
     }
     this.toBottom()
 
     // 発言抽出欄を初期状態に戻す
-    refs.slider.filterRefresh()
+    this.refs.slider.filterRefresh()
   }
 
   /** 表示する村日付を変更 */
@@ -493,13 +472,10 @@ export default class extends Vue {
 
   /** 最新発言チェック */
   private async loadVillageLatest(): Promise<void> {
-    const latest: VillageLatest = await this.$axios.$get(
-      `/village/${this.villageId}/latest`,
-      {
-        params: {
-          from: this.latestMessageUnixTimeMilli
-        }
-      }
+    const latest: VillageLatest = await api.fetchVillageLatest(
+      this,
+      this.villageId,
+      this.latestMessageUnixTimeMilli
     )
     const currentLatestVillageDayId: number = this.latestDay!.id
     if (latest.village_day_id !== currentLatestVillageDayId) {
@@ -507,29 +483,16 @@ export default class extends Vue {
       this.existsNewMessages = true
       if (this.shouldLoadMessage) {
         this.reload()
-        this.$buefy.toast.open({
-          message: '日付が変わりました',
-          type: 'is-info',
-          position: 'is-top'
-        })
+        toast.info(this, '日付が変わりました')
       } else {
-        this.$buefy.toast.open({
-          message: '日付が変わりました。リロードしてください。',
-          type: 'is-info',
-          position: 'is-top'
-        })
+        toast.info(this, '日付が変わりました。リロードしてください。')
       }
     } else if (this.latestMessageUnixTimeMilli < latest.unix_time_milli) {
       // 発言が増えた
       this.existsNewMessages = true
-      this.latestMessageUnixTimeMilli = latest.unix_time_milli
       if (this.shouldLoadMessage) {
         this.loadMessage()
-        this.$buefy.toast.open({
-          message: '最新発言を読み込みました',
-          type: 'is-info',
-          position: 'is-top'
-        })
+        toast.info(this, '最新発言を読み込みました')
         this.existsNewMessages = false
       }
     }
