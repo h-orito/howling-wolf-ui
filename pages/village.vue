@@ -108,6 +108,7 @@ import loading from '~/components/loading.vue'
 import action from '~/components/village/action/action.vue'
 import villageFooter from '~/components/village/footer/village-footer.vue'
 import villageHeader from '~/components/village/header/village-header.vue'
+import villageSlider from '~/components/village/slider/village-slider.vue'
 // type
 import Village from '~/components/type/village'
 import VillageDay from '~/components/type/village-day'
@@ -129,8 +130,6 @@ const messageCards = () =>
 const villageDebug = () =>
   import('~/components/village/debug/village-debug.vue')
 const villageDayList = () => import('~/components/village/village-day-list.vue')
-const villageSlider = () =>
-  import('~/components/village/slider/village-slider.vue')
 
 @Component({
   components: {
@@ -295,6 +294,9 @@ export default class extends Vue {
       // 1回だけ実行
       this.updateDaychangeTimer()
     }
+    // safari対策
+    this.resizeHeight()
+    window.addEventListener('resize', () => this.resizeHeight())
   }
 
   // ----------------------------------------------------------------
@@ -468,6 +470,7 @@ export default class extends Vue {
   private clearTimer(): void {
     clearInterval(this.latestTimer)
     clearInterval(this.daychangeTimer)
+    if (this.resizeTimeout) clearTimeout(this.resizeTimeout)
   }
 
   /** 最新発言チェック */
@@ -508,6 +511,21 @@ export default class extends Vue {
 
   private hideSlider(): void {
     this.isSliderExpanded = false
+  }
+
+  // safariアドレスバーメニューバー対策
+  private resizeTimeout: any = null
+  private resizeHeight(): void {
+    if (this.resizeTimeout) clearTimeout(this.resizeTimeout)
+    this.resizeTimeout = setTimeout(() => {
+      const height = window.innerHeight
+      document
+        .getElementsByClassName('village-wrapper')[0]
+        .setAttribute('style', `height: ${height}px;`)
+      document
+        .getElementsByClassName('village-rightside-wrapper')[0]
+        .setAttribute('style', `height: ${height}px;`)
+    }, 500)
   }
 }
 </script>

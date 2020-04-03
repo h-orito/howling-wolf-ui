@@ -86,6 +86,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
+import modalFilter from '~/components/village/slider/modal-filter.vue'
 import Village from '~/components/type/village'
 import Messages from '~/components/type/messages'
 const modalVillageInfo = () =>
@@ -94,7 +95,6 @@ const modalUserSettings = () =>
   import('~/components/village/slider/modal-user-settings.vue')
 const participantList = () =>
   import('~/components/village/slider/participant-list.vue')
-const modalFilter = () => import('~/components/village/slider/modal-filter.vue')
 
 @Component({
   components: {
