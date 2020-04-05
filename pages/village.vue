@@ -186,6 +186,8 @@ export default class extends Vue {
   private currentPageNum: number | null = 1
   /** 1ページあたりの表示件数 */
   private perPage: number = 0
+  /** 最新発言unix time milli */
+  private latestMessageUnixTimeMilli: number = 0
   /** 新しい発言があるか */
   private existsNewMessages: boolean = false
   /** 新しい発言があるか定期的にチェックするtimer */
@@ -232,7 +234,7 @@ export default class extends Vue {
     // 最新日の最新ページを見ていない場合は勝手に更新したくない
     if (!this.isViewingLatest) return false
     // 発言入力中も勝手に更新したくない
-    if (this.refs.action.isInputting) return false
+    if (this.refs.action && this.refs.action.isInputting) return false
     // 発言抽出中も勝手に更新したくない
     if (this.refs.slider.isFiltering) return false
     return true
@@ -266,12 +268,6 @@ export default class extends Vue {
       this.village!.status.code !== VILLAGE_STATUS.COMPLETE &&
       this.village!.status.code !== VILLAGE_STATUS.CANCEL
     )
-  }
-
-  private get latestMessageUnixTimeMilli(): number {
-    if (!this.messages) return 0
-    return this.messages!.list[this.messages!.list.length - 1].time
-      .unix_time_milli
   }
 
   // ----------------------------------------------------------------
@@ -354,6 +350,7 @@ export default class extends Vue {
       this.perPage = villageUserSettings.getPaging(this).message_per_page
     }
     this.currentPageNum = this.messages!.current_page_num
+    this.updateLatestMessageUnixTimeMilliIfNeeded()
     this.loadingMessage = false
   }
 
@@ -450,12 +447,6 @@ export default class extends Vue {
     })
   }
 
-  /** rem to px */
-  private convertRemToPx(rem): number {
-    const fontSize = getComputedStyle(document.documentElement).fontSize
-    return rem * parseFloat(fontSize)
-  }
-
   /** 定期的に最新発言がないかチェック */
   private setLatestTimer(): any {
     return setInterval(this.loadVillageLatest, 30 * 1000)
@@ -471,6 +462,14 @@ export default class extends Vue {
     clearInterval(this.latestTimer)
     clearInterval(this.daychangeTimer)
     if (this.resizeTimeout) clearTimeout(this.resizeTimeout)
+  }
+
+  private updateLatestMessageUnixTimeMilliIfNeeded(): void {
+    if (!this.messages || this.messages.list.length <= 0) return
+    const unixTimeMilli = this.messages!.list[this.messages!.list.length - 1]
+      .time.unix_time_milli
+    if (this.latestMessageUnixTimeMilli < unixTimeMilli)
+      this.latestMessageUnixTimeMilli = unixTimeMilli
   }
 
   /** 最新発言チェック */
