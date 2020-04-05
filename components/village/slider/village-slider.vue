@@ -17,7 +17,7 @@
         <b-collapse :open="false" aria-id="participant-list-aria">
           <a class="side-item" slot="trigger" slot-scope="props">
             <b-icon pack="fas" icon="users" size="is-small" type="is-white" />
-            参加者
+            参加者（{{ personCount }}人）
             <span style="float: right; padding-right: 5px;">
               <b-icon
                 class=""
@@ -120,6 +120,11 @@ export default class VillageSlider extends Vue {
   private isOpenVillageInfoModal: boolean = false
   private isOpenUserSettingsModal: boolean = false
   private isOpenFilterModal: boolean = false
+
+  private get personCount(): number {
+    if (!this.village) return 0
+    return this.village.participant.count
+  }
 
   private get isFiltering(): boolean {
     const refs = this.$refs as any
