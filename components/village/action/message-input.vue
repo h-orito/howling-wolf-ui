@@ -3,6 +3,7 @@
     <b-input
       size="is-small"
       type="textarea"
+      :rows="rowSize"
       :value="value"
       @input="$emit('input', $event)"
       :custom-class="messageClass"
@@ -30,6 +31,9 @@ export default class MessageInput extends Vue {
 
   @Prop({ type: String })
   private messageType!: string
+
+  @Prop({ type: Number, default: 6 })
+  private rowSize!: number
 
   private get counter(): string {
     if (this.restrict == null) {

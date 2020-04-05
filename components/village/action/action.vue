@@ -42,6 +42,7 @@
         v-if="isDispSay"
         :village="village"
         :situation="situation"
+        :window-size="actionContainerSize"
         @reload="$emit('reload', $event)"
         ref="say"
       />

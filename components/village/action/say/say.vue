@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="content has-text-left">
+    <div class="content has-text-left m-b-5">
       <div class="say-area">
-        <b-field>
+        <b-field class="m-b-5">
           <b-radio-button
             v-for="messageTypeSituation in situation.say
               .selectable_message_type_list"
@@ -30,6 +30,7 @@
               v-model="message"
               :message-type="messageType"
               :situation="situation.say"
+              :row-size="rowSize"
               ref="messageInput"
             />
           </div>
@@ -79,6 +80,9 @@ export default class Say extends Vue {
   @Prop({ type: Object })
   private village!: Village
 
+  @Prop({ type: Number })
+  private windowSize!: number
+
   // ----------------------------------------------------------------
   // data
   // ----------------------------------------------------------------
@@ -110,6 +114,12 @@ export default class Say extends Vue {
     } else {
       return `${charaName}（${skill}）`
     }
+  }
+
+  // 縦幅に合わせる
+  private get rowSize(): number {
+    if (this.windowSize < 2) return 3
+    return 9
   }
 
   private get faceTypeCode(): string {
