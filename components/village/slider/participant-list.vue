@@ -78,7 +78,7 @@ export default class VillageSlider extends Vue {
   }
 
   private deadReasonPriority(reason: string) {
-    if (reason === '突然死') return 2
+    if (reason === '突然') return 2
     if (reason === '処刑') return 1
     return 0
   }
