@@ -1,8 +1,11 @@
 <template>
   <div class="m-b-10">
+    <div class="participant-area" v-if="isProgress">
+      生存（{{ aliveParticipantList.length }}人）
+    </div>
     <div
       class="participant-area"
-      v-for="participant in participantList"
+      v-for="participant in aliveParticipantList"
       :key="participant.id"
     >
       <div class="face-area m-r-5">
@@ -20,6 +23,34 @@
             {{ charaStatus(participant) }}
           </p>
           <p class="left-count">{{ remainingCount(participant) }}</p>
+        </div>
+      </div>
+    </div>
+    <div v-if="isProgress && deadParticipantList.length > 0">
+      <div class="participant-area">
+        死亡（{{ deadParticipantList.length }}人）
+      </div>
+      <div
+        class="participant-area"
+        v-for="participant in deadParticipantList"
+        :key="participant.id"
+      >
+        <div class="face-area m-r-5">
+          <img
+            :src="imageUrl(participant)"
+            :width="imageWidth(participant)"
+            :height="imageHeight(participant)"
+            class="chara-image"
+          />
+        </div>
+        <div class="name-area is-size-7">
+          <p class="chara-name">{{ charaName(participant) }}</p>
+          <div class="chara-situation">
+            <p :class="charaStatusClass(participant)">
+              {{ charaStatus(participant) }}
+            </p>
+            <p class="left-count">{{ remainingCount(participant) }}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -47,10 +78,27 @@ export default class VillageSlider extends Vue {
   @Prop({ type: Object })
   private messages?: Messages | null
 
-  private get participantList(): VillageParticipant[] {
-    return this.village!.participant.member_list.slice().sort((vp1, vp2) =>
-      this.compareParticipant(vp1, vp2)
+  private get isProgress(): boolean {
+    const statusCode = this.village.status.code
+    return (
+      statusCode !== VILLAGE_STATUS.PROLOGUE &&
+      statusCode !== VILLAGE_STATUS.CANCEL
     )
+  }
+
+  private get aliveParticipantList(): VillageParticipant[] {
+    return this.participantList.filter(p => !p.dead)
+  }
+
+  private get deadParticipantList(): VillageParticipant[] {
+    return this.participantList
+      .filter(p => !!p.dead)
+      .slice()
+      .sort((vp1, vp2) => this.compareParticipant(vp1, vp2))
+  }
+
+  private get participantList(): VillageParticipant[] {
+    return this.village!.participant.member_list
   }
 
   private compareParticipant(
