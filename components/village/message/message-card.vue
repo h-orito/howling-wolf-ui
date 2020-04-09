@@ -126,5 +126,9 @@ export default class MessageCard extends Vue {
       message1.content.num === message2.content.num
     )
   }
+
+  private clearAnchorMessages(): void {
+    this.anchorMessages = []
+  }
 }
 </script>

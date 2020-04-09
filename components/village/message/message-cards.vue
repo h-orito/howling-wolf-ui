@@ -25,6 +25,7 @@
       :village="village"
       :message="message"
       :is-progress="isProgress"
+      ref="messageCard"
     ></message-card>
     <village-situation-message
       :village="village"
@@ -99,6 +100,16 @@ export default class MessageCard extends Vue {
     this.$emit('change-message-page', {
       pageNum
     })
+  }
+
+  private clearAnchorMessages(): void {
+    const refs: any = this.$refs as any
+    if (this.messages.list.length > 0) {
+      const messageRefs: any[] = refs.messageCard
+      messageRefs.forEach(element => {
+        element.clearAnchorMessages()
+      })
+    }
   }
 }
 </script>

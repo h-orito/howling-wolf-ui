@@ -55,6 +55,7 @@
                 displayVillageDay.id === latestDay.id
             "
             @change-message-page="changeMessagePage($event)"
+            ref="messageCards"
           />
           <village-day-list
             v-if="displayVillageDay"
@@ -210,7 +211,18 @@ export default class extends Vue {
   // ----------------------------------------------------------------
   /** 村名と状態 */
   private get villageName(): string {
-    return this.village!.name + ' - ' + this.village!.status.name
+    const status = this.village!.status
+    if (status.code !== VILLAGE_STATUS.PROGRESS || !this.displayVillageDay) {
+      return this.village!.name + ' - ' + status.name
+    }
+    return (
+      this.village!.name +
+      ' - ' +
+      status.name +
+      ' - ' +
+      this.displayVillageDay!.day +
+      '日目'
+    )
   }
 
   /** 最新村日付 */
@@ -397,6 +409,8 @@ export default class extends Vue {
 
     // 発言抽出欄を初期状態に戻す
     this.refs.slider.filterRefresh()
+    // アンカーメッセージを非表示にする
+    if (this.refs.messageCards) this.refs.messageCards.clearAnchorMessages()
   }
 
   /** 表示する村日付を変更 */
