@@ -85,7 +85,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
-import Village from '~/components/type/village'
+import SimpleVillage from '~/components/type/simple-village'
 import MyselfPlayer from '~/components/type/myself-player'
 import { VILLAGE_STATUS } from '~/components/const/consts'
 const villageCard = () => import('~/components/index/village-card.vue')
@@ -106,7 +106,7 @@ export default class extends Vue {
     return this.$store.getters.isLogin
   }
 
-  private get participatingVillages(): Village[] {
+  private get participatingVillages(): SimpleVillage[] {
     if (!this.isLogin) return []
     if (!this.myselfPlayer) return []
     const progressVillages = this.myselfPlayer.participate_progress_villages

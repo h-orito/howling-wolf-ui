@@ -20,7 +20,14 @@
         @to-head="toHead"
         @current-day-change="changeDisplayDay($event)"
       />
-      <div class="village-main-wrapper">
+      <div
+        class="village-main-wrapper"
+        :style="
+          $window.isMobile
+            ? 'max-width: 100vw;'
+            : 'max-width: calc(100vw - 280px);'
+        "
+      >
         <loading
           v-if="loadingVillage"
           :message="'村情報を読み込み中...'"

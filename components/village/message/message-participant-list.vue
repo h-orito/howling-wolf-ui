@@ -1,6 +1,6 @@
 <template>
-  <div class="content has-text-left hw-message-text">
-    <b-table :data="participants">
+  <div class="hw-message-text">
+    <b-table :data="participants" :mobile-cards="false">
       <template slot-scope="props">
         <b-table-column field="chara_name" label="キャラクター">
           {{ props.row.chara_name }}
@@ -87,7 +87,12 @@ export default class ParticipantListMessage extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.b-table td {
-  vertical-align: middle !important;
+.b-table {
+  overflow: auto;
+  white-space: nowrap;
+
+  td {
+    vertical-align: middle !important;
+  }
 }
 </style>

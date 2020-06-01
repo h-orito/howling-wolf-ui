@@ -15,6 +15,8 @@
             <p>状態: {{ status }}</p>
             <p>参加人数: {{ participantStatus }}</p>
             <p v-if="daychangeDatetime">更新: {{ daychangeDatetime }}</p>
+            <p>編成: {{ organization }}</p>
+            <p>発言可能時間: {{ sayableTime }}</p>
           </div>
         </div>
       </div>
@@ -25,14 +27,15 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 // type
-import Village from '~/components/type/village'
+import SimpleVillage from '~/components/type/simple-village'
 import VillageDay from '~/components/type/village-day'
+import VillageTime from '~/components/type/village-time'
 import { VILLAGE_STATUS } from '~/components/const/consts'
 
 @Component({})
 export default class VillageCard extends Vue {
   @Prop({ type: Object })
-  private village!: Village
+  private village!: SimpleVillage
 
   private get status(): string {
     const villageStatus = this.village.status.name
@@ -75,6 +78,23 @@ export default class VillageCard extends Vue {
         `${spectatorCount === 0 ? '' : '+' + spectatorCount}`
       )
     }
+  }
+
+  private get sayableTime(): string {
+    const timeSetting: VillageTime = this.village.setting.time
+    const silentHours: number | null = timeSetting.silent_hours
+    if (!silentHours) return '24時間'
+    const start: string = timeSetting.sayable_start
+    const end: string = timeSetting.sayable_end
+    if (start === end) return '24時間'
+    return `${start.substring(0, 5)} - ${end.substring(0, 5)}（${24 -
+      silentHours}時間）`
+  }
+
+  private get organization(): string {
+    return this.village.setting.organizations.organization[
+      this.village.setting.capacity.max
+    ]
   }
 }
 </script>

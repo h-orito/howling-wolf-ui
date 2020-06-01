@@ -1,7 +1,7 @@
-import Village from '~/components/type/village'
+import SimpleVillage from '~/components/type/simple-village'
 
 interface Villages {
-  list: Village[]
+  list: SimpleVillage[]
 }
 
 export default Villages

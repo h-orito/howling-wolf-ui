@@ -1,39 +1,98 @@
 <template>
   <section class="section">
     <div class="container">
-      <h1 class="title is-5">村を作成</h1>
+      <h1 class="title is-5">予約村</h1>
+      <div class="content is-size-7">
+        <loading
+          v-if="isLoadingReservedVillages"
+          :message="'予約村を読み込み中...'"
+        ></loading>
+        <b-table
+          v-if="reservedVillages"
+          :data="reservedVillages.list"
+          :loading="isLoadingReservedVillages"
+          :mobile-cards="false"
+        >
+          <template slot-scope="props">
+            <b-table-column label="作成日時">
+              {{ props.row.village_create_datetime }}
+            </b-table-column>
+
+            <b-table-column label="開始日時">
+              {{ props.row.village_start_datetime }}
+            </b-table-column>
+
+            <b-table-column label="編成">
+              {{ props.row.organization }}
+            </b-table-column>
+
+            <b-table-column label="沈黙時間">
+              {{ props.row.silent_hours }}
+            </b-table-column>
+
+            <b-table-column label="削除">
+              <b-button
+                @click="deleteReservedVillage(props.row.id)"
+                type="is-danger"
+                size="is-small"
+                >削除</b-button
+              >
+            </b-table-column>
+          </template>
+
+          <template slot="empty">
+            <section class="section">
+              <div class="content has-text-grey has-text-centered">
+                <p>予約村がありません</p>
+              </div>
+            </section>
+          </template>
+        </b-table>
+      </div>
+
+      <h1 class="title is-5 m-t-40">村を作成</h1>
       <div class="columns">
         <div class="column">
-          <!-- 編成 -->
-          <div class="field">
-            <label class="label">編成</label>
-            <div class="control">
-              <input
-                v-model="organization"
-                class="input"
-                type="text"
-                placeholder="構成"
-              />
-            </div>
-          </div>
-
-          <div class="field">
-            <label class="label">開始日時</label>
-            <div class="control">
-              <input v-model="startDatetime" class="input" type="text" />
-            </div>
-          </div>
-          <div class="field m-t-40">
-            <div class="control has-text-centered">
-              <button
-                :disabled="submitting"
-                @click="createVillage"
-                class="button is-primary"
-              >
-                村を作成
-              </button>
-            </div>
-          </div>
+          <b-field label="作成日時">
+            <b-input
+              v-model="createDatetime"
+              type="text"
+              size="is-small"
+              placeholder="作成日時"
+            />
+          </b-field>
+          <b-field label="開始日時">
+            <b-input
+              v-model="startDatetime"
+              type="text"
+              size="is-small"
+              placeholder="開始日時"
+            />
+          </b-field>
+          <b-field label="編成">
+            <b-input
+              v-model="organization"
+              type="text"
+              size="is-small"
+              placeholder="構成"
+            />
+          </b-field>
+          <b-field label="沈黙時間">
+            <b-input
+              v-model="silentHours"
+              type="number"
+              size="is-small"
+              placeholder="0"
+            />
+          </b-field>
+          <b-field class="m-t-40">
+            <b-button
+              :disabled="submitting"
+              @click="createVillage"
+              type="is-primary"
+              >村を作成</b-button
+            >
+          </b-field>
         </div>
       </div>
     </div>
@@ -42,6 +101,9 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
+// component
+// type
+import ReservedVillages from '~/components/type/reserved-villages'
 
 @Component({
   components: {}
@@ -53,16 +115,29 @@ export default class extends Vue {
   }
 
   /** data */
+  private reservedVillages: ReservedVillages | null = null
+  private isLoadingReservedVillages: boolean = false
+
   private organization: string = '村村村村村村村村村占霊狩狼狼狼狂'
+  private createDatetime: string = this.defaultStartDatetime()
   private startDatetime: string = this.defaultStartDatetime()
+  private silentHours: number = 0
   private submitting: boolean = false
 
   /** computed */
 
   /** created */
-  private created() {}
+  private created() {
+    this.loadReservedVillages()
+  }
 
   /** methods */
+  private async loadReservedVillages(): Promise<void> {
+    this.isLoadingReservedVillages = true
+    this.reservedVillages = await this.$axios.$get('/reserved-village/list')
+    this.isLoadingReservedVillages = false
+  }
+
   private defaultStartDatetime(): string {
     const defaultStartDatetime = new Date()
     // 4日後の0時
@@ -77,15 +152,18 @@ export default class extends Vue {
   private async createVillage() {
     this.submitting = true
     const res = await this.$axios
-      .$post('/auto-generated-village', {
+      .$post('/reserved-village', {
         organization: this.organization,
-        start_datetime: this.formatDateTime(new Date(this.startDatetime))
+        create_datetime: this.formatDateTime(new Date(this.createDatetime)),
+        start_datetime: this.formatDateTime(new Date(this.startDatetime)),
+        silent_hours: this.silentHours
       })
       .catch(err => {
         console.log(err)
       })
     this.submitting = false
-    location.href = `/village?id=${res.village_id}`
+
+    this.loadReservedVillages()
   }
 
   private formatDateTime(date: Date): string {

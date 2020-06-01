@@ -30,6 +30,7 @@
     <village-situation-message
       :village="village"
       :is-latest-day="isLatestDay"
+      :messages="messages"
     />
     <b-pagination
       v-if="messages.all_page_count != null && messages.all_page_count > 1"

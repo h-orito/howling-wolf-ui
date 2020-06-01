@@ -36,6 +36,11 @@
             >他者への礼節を欠いたり、正常な運営を妨げるような行為を行なった場合、管理人の裁量により処罰される可能性があることについて理解しました。</b-checkbox
           >
         </div>
+        <div class="field">
+          <b-checkbox v-model="confirm3"
+            >発言可能時間および突然死の設定を確認し、進行中該当の時間に発言しなければ突然死してしまう可能性があることを理解しました。</b-checkbox
+          >
+        </div>
       </section>
       <footer
         class="modal-card-foot"
@@ -86,13 +91,14 @@ export default class ModalParticipate extends Vue {
   private submitting: boolean = false
   private confirm1: boolean = false
   private confirm2: boolean = false
+  private confirm3: boolean = false
   private isTermModalOpen: boolean = false
 
   // ----------------------------------------------------------------
   // computed
   // ----------------------------------------------------------------
   private get canParticipate(): boolean {
-    return this.confirm1 && this.confirm2
+    return this.confirm1 && this.confirm2 && this.confirm3
   }
 
   // ----------------------------------------------------------------

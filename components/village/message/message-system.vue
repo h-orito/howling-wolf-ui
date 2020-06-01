@@ -1,5 +1,5 @@
 <template>
-  <div class="card-content p-t-10 p-b-10 m-b-5" :class="messageClass">
+  <div class="card-content m-b-5" :class="messageClass">
     <div class="content has-text-left">
       <message-text
         v-if="message.content.type.code !== 'PARTICIPANTS'"
@@ -56,6 +56,10 @@ export default class SystemMessage extends Vue {
 </script>
 
 <style lang="scss">
+.card-content {
+  padding: 10px !important;
+}
+
 .message-system-private {
   border-top: 1px solid $private-system-border;
   border-bottom: 1px solid $private-system-border;

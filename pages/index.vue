@@ -20,7 +20,16 @@
       @signin="signin"
       @logout="logout"
     />
-    <village-list :loading-villages="loadingVillages" :villages="villages" />
+    <village-list :loading-villages="isLoadingVillages" :villages="villages" />
+    <reserved-village
+      v-if="
+        !isLoadingReservedVillages &&
+          reservedVillages &&
+          reservedVillages.list.length > 0
+      "
+      :is-loading="isLoadingReservedVillages"
+      :reserved-villages="reservedVillages"
+    />
     <charachip />
     <index-footer />
   </div>
@@ -36,9 +45,10 @@ import spotlight from '~/components/index/spotlight.vue'
 import intro from '~/components/index/intro.vue'
 import loading from '~/components/loading.vue'
 // type
-import Villages from '~/components/type/villages.ts'
-import Village from '~/components/type/village.ts'
-import MyselfPlayer from '~/components/type/myself-player.ts'
+import Villages from '~/components/type/villages'
+import SimpleVillage from '~/components/type/simple-village'
+import MyselfPlayer from '~/components/type/myself-player'
+import ReservedVillages from '~/components/type/reserved-villages'
 import { VILLAGE_STATUS } from '~/components/const/consts'
 
 // dynamic imports
@@ -46,6 +56,7 @@ const playerStats = () => import('~/components/index/player-stats.vue')
 const villageList = () => import('~/components/index/village-list.vue')
 const charachip = () => import('~/components/index/charachip.vue')
 const indexFooter = () => import('~/components/index/index-footer.vue')
+const reservedVillage = () => import('~/components/index/reserved-village.vue')
 
 @Component({
   components: {
@@ -55,7 +66,8 @@ const indexFooter = () => import('~/components/index/index-footer.vue')
     villageList,
     charachip,
     indexFooter,
-    loading
+    loading,
+    reservedVillage
   }
 })
 export default class TopPage extends Vue {
@@ -66,10 +78,12 @@ export default class TopPage extends Vue {
 
   /** data */
   // 村一覧
-  private villages: Village[] = []
+  private villages: SimpleVillage[] = []
+  private reservedVillages: ReservedVillages | null = null
   // loading
   private loadingAuth: boolean = true
-  private loadingVillages: boolean = true
+  private isLoadingVillages: boolean = true
+  private isLoadingReservedVillages: boolean = true
 
   /** computed */
   private get user(): MyselfPlayer | null {
@@ -95,10 +109,18 @@ export default class TopPage extends Vue {
     })
     // ログイン後のリダイレクトの際、ユーザ情報をサーバに保存
     this.registerUserIfNeeded()
+    this.loadingAuth = false
 
     // 自動生成村一覧
-    this.loadingAuth = false
-    this.loadingVillages = true
+    this.loadingVillages()
+
+    // 予約村一覧
+    this.loadReservedVillages()
+  }
+
+  /** methods */
+  private async loadingVillages(): Promise<void> {
+    this.isLoadingVillages = true
     const res = await this.$axios.$get('/village/list', {
       params: {
         village_status: [
@@ -112,10 +134,15 @@ export default class TopPage extends Vue {
         qs.stringify(params, { arrayFormat: 'repeat' })
     })
     this.villages = (res as Villages).list
-    this.loadingVillages = false
+    this.isLoadingVillages = false
   }
 
-  /** methods */
+  private async loadReservedVillages(): Promise<void> {
+    this.isLoadingReservedVillages = true
+    this.reservedVillages = await this.$axios.$get('/reserved-village/list')
+    this.isLoadingReservedVillages = false
+  }
+
   private openModal(selector: string): void {
     const modal = document.querySelector(selector)
     const html = document.querySelector('html')

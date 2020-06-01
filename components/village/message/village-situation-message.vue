@@ -1,15 +1,23 @@
 <template>
   <div v-if="isLatestDay">
-    <b-message size="is-small" type="is-default">
+    <b-message class="m-b-5" size="is-small" type="is-default">
       <span v-html="villageSituationMessage.replace(/\n/g, '<br />')" />
     </b-message>
     <b-message
-      v-if="isProgress && existsNoSayMember"
+      v-if="isDispSuddenlyDeathMessage"
       size="is-small"
       type="is-warning"
       class="m-b-5"
     >
       <span v-html="suddenlyDeathMessage.replace(/\n/g, '<br />')" />
+    </b-message>
+    <b-message
+      v-if="isSilentTime"
+      size="is-small"
+      type="is-warning"
+      class="m-b-5"
+    >
+      <span v-html="silentTimeMessage.replace(/\n/g, '<br />')" />
     </b-message>
   </div>
 </template>
@@ -18,6 +26,9 @@
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 // type
 import Village from '~/components/type/village'
+import VillageParticipant from '~/components/type/village-participant'
+import VillageTime from '~/components/type/village-time'
+import Messages from '~/components/type/messages'
 import { VILLAGE_STATUS } from '~/components/const/consts'
 
 @Component({
@@ -29,6 +40,9 @@ export default class MessageCard extends Vue {
 
   @Prop({ type: Boolean })
   private isLatestDay!: boolean
+
+  @Prop({ type: Object })
+  private messages!: Messages
 
   private get villageSituationMessage(): string {
     const status = this.village.status.code
@@ -48,8 +62,25 @@ export default class MessageCard extends Vue {
     }
   }
 
+  private get isDispSuddenlyDeathMessage(): boolean {
+    return (
+      this.isProgress &&
+      this.isAvailableSuddenlyDeath &&
+      this.existsNoSayMember &&
+      !this.isSilentTime
+    )
+  }
+
   private get isProgress(): boolean {
     return this.village.status.code === VILLAGE_STATUS.PROGRESS
+  }
+
+  private get isAvailableSuddenlyDeath(): boolean {
+    return this.village.setting.rules.available_suddenly_death
+  }
+
+  private get isSilentTime(): boolean {
+    return this.village.silent_time
   }
 
   private get prologueMessage(): string {
@@ -91,13 +122,40 @@ export default class MessageCard extends Vue {
   }
 
   private get suddenlyDeathMessage(): string {
-    // TODO
-    const noSayMembers = [''].join('\n')
-    return `日付更新までに通常発言がない人は突然死します。\n現在までに発言していない人\n${noSayMembers}`
+    const noSayMemberNames = this.noSayMembers.map(
+      member => member.chara.chara_name.full_name
+    )
+    return `日付更新までに通常発言がない人は突然死します。\n現在まで発言していない人\n${noSayMemberNames.join(
+      '\n'
+    )}`
   }
 
   private get existsNoSayMember(): boolean {
-    return false
+    return this.noSayMembers.length > 0
+  }
+
+  private get noSayMembers(): VillageParticipant[] {
+    return this.village.participant.member_list
+      .filter(member => !member.dead)
+      .filter(member => this.sayCount(member.id) === 0)
+  }
+
+  private sayCount(participantId: number): number {
+    return this.messages.today_message_count_map[participantId]
+  }
+
+  private get silentTimeMessage(): string {
+    return `通常発言ができない時間です。\n${this.sayableTime}に通常発言できます。`
+  }
+
+  private get sayableTime(): string {
+    const timeSetting = this.village.setting.time
+    const silentHours = timeSetting.silent_hours
+    const start = timeSetting.sayable_start.substring(0, 5)
+    const end = timeSetting.sayable_end.substring(0, 5)
+    const isNextday =
+      parseInt(start.substring(0, 2)) > parseInt(end.substring(0, 2))
+    return `${start} - ${isNextday ? '翌' : ''}${end}`
   }
 }
 </script>

@@ -55,7 +55,7 @@ import qs from 'qs'
 import loading from '~/components/loading.vue'
 // type
 import Villages from '~/components/type/villages'
-import Village from '~/components/type/village'
+import SimpleVillage from '~/components/type/simple-village'
 import VillageDay from '~/components/type/village-day'
 import { VILLAGE_STATUS } from '~/components/const/consts'
 
@@ -64,7 +64,7 @@ import { VILLAGE_STATUS } from '~/components/const/consts'
     loading
   }
 })
-export default class VillageList extends Vue {
+export default class CompleteVillageList extends Vue {
   /** head */
   private head() {
     return { title: ' | 終了した村一覧' }
@@ -73,7 +73,7 @@ export default class VillageList extends Vue {
   /** data */
   private hasMobileCard: boolean = false
   // 村一覧
-  private villages: Village[] | null = null
+  private villages: SimpleVillage[] | null = null
 
   /** computed */
   private get loadingVillages(): boolean {
@@ -82,7 +82,7 @@ export default class VillageList extends Vue {
 
   private get tableVillages(): any[] {
     if (this.villages == null) return []
-    return this.villages.map((village: Village) => ({
+    return this.villages.map((village: SimpleVillage) => ({
       village_id: village.id,
       village_name: village.name,
       participant_count: `${village.participant.count}人`,

@@ -64,6 +64,7 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 // component
 // type
 import Village from '~/components/type/village'
+import VillageTime from '~/components/type/village-time'
 import Chara from '~/components/type/chara'
 import { VILLAGE_STATUS } from '~/components/const/consts'
 
@@ -150,6 +151,22 @@ export default class ModalVillageInfo extends Vue {
       value: this.interval(timeSetting.day_change_interval_seconds),
       description: '実際にこの時間が経過すると村の1日が進行します。'
     })
+    settings.push({
+      name: '発言可能時間',
+      value: this.sayableTime(timeSetting),
+      description:
+        '進行中に通常発言が可能な時間です。\n24時間の場合はいつでも発言できます。\n通常発言以外（独り言や死者の呻き、人狼の囁き等）はいつでも発言できます。'
+    })
+  }
+
+  private sayableTime(timeSetting: VillageTime): string {
+    const silentHours = timeSetting.silent_hours
+    if (!silentHours || silentHours === 0) return '24時間'
+    const start = timeSetting.sayable_start.substring(0, 5)
+    const end = timeSetting.sayable_end.substring(0, 5)
+    const isNextday =
+      parseInt(start.substring(0, 2)) > parseInt(end.substring(0, 2))
+    return `${start} - ${isNextday ? '翌' : ''}${end}(${24 - silentHours}時間)`
   }
 
   private addCharachipSetting(settings: Settings[]): void {

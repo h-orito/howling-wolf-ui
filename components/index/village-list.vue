@@ -55,7 +55,7 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import shadowButton from '~/components/index/shadow-button.vue'
 import loading from '~/components/loading.vue'
 import VillageCard from '~/components/index/village-card.vue'
-import Village from '~/components/type/village'
+import SimpleVillage from '~/components/type/simple-village'
 import VillageDay from '~/components/type/village-day'
 import MyselfPlayer from '~/components/type/myself-player.ts'
 import { VILLAGE_STATUS } from '~/components/const/consts'
@@ -69,7 +69,7 @@ import { VILLAGE_STATUS } from '~/components/const/consts'
 })
 export default class VillageList extends Vue {
   @Prop({ type: Array })
-  private villages!: Village[]
+  private villages!: SimpleVillage[]
 
   @Prop({ type: Boolean })
   private loadingVillages!: boolean
@@ -90,7 +90,7 @@ export default class VillageList extends Vue {
 
   private get tableVillages(): any[] {
     if (this.villages == null) return []
-    return this.villages.map((village: Village) => ({
+    return this.villages.map((village: SimpleVillage) => ({
       village_id: village.id,
       village_name: village.name,
       status: this.status(village),
@@ -99,22 +99,22 @@ export default class VillageList extends Vue {
     }))
   }
 
-  private status(village: Village): string {
+  private status(village: SimpleVillage): string {
     const villageStatus = village.status.name
     if (village.status.code !== VILLAGE_STATUS.PROGRESS) return villageStatus
     return `${villageStatus} ${this.nowDate(village)}`
   }
 
-  private latestday(village: Village): VillageDay {
+  private latestday(village: SimpleVillage): VillageDay {
     return village.day.day_list.slice(-1)[0]
   }
 
-  private nowDate(village: Village): string | null {
+  private nowDate(village: SimpleVillage): string | null {
     if (village.status.code !== VILLAGE_STATUS.PROGRESS) return null
     return `${this.latestday(village).day}日目`
   }
 
-  private daychangeDatetime(village: Village): string | null {
+  private daychangeDatetime(village: SimpleVillage): string | null {
     if (
       [VILLAGE_STATUS.COMPLETE, VILLAGE_STATUS.CANCEL].includes(
         village.status.code
@@ -124,7 +124,7 @@ export default class VillageList extends Vue {
     return this.latestday(village).day_change_datetime.substring(0, 16)
   }
 
-  private participantStatus(village: Village): string {
+  private participantStatus(village: SimpleVillage): string {
     const participantCount: number = village.participant.count
     const spectatorCount: number = village.spectator.count
     if (village.status.code === VILLAGE_STATUS.PROLOGUE) {

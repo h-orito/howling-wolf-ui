@@ -28,7 +28,7 @@
       type="is-primary"
       size="is-small"
       expanded
-      >セットする</b-button
+      >{{ ability.type.name + 'セットする' }}</b-button
     >
   </div>
 </template>
