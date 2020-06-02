@@ -161,6 +161,13 @@ const nuxtConfig: Configuration = {
     'nuxt-clipboard2',
     // pwa
     '@nuxtjs/pwa',
+    // google-analytics
+    [
+      '@nuxtjs/google-analytics',
+      {
+        id: 'UA-168213386-1'
+      }
+    ],
     // Doc: https://github.com/nuxt-community/sitemap-module
     // ↓配列の最後でsitemapモジュールを宣言
     '@nuxtjs/sitemap'
