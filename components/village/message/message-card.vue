@@ -1,0 +1,134 @@
+<template>
+  <div v-if="message != null" class="card">
+    <message-say
+      v-if="isSayType"
+      :village="village"
+      :message="message"
+      :is-progress="isProgress"
+      :is-anchor-message="isAnchorMessage"
+      @click-anchor="clickAnchorMessage($event)"
+    />
+    <message-system v-if="isSystemType" :village="village" :message="message" />
+    <!-- アンカーメッセージ -->
+    <message-card
+      v-for="mes in anchorMessages"
+      :key="mes.id"
+      :village="village"
+      :message="mes"
+      :is-progress="isProgress"
+      :is-anchor-message="isAnchorTrue"
+      @click-anchor="clickAnchorMessage($event)"
+    ></message-card>
+  </div>
+</template>
+
+<script lang="ts">
+import { Component, Vue, Prop } from 'nuxt-property-decorator'
+import messageSay from '~/components/village/message/message-say.vue'
+import messageSystem from '~/components/village/message/message-system.vue'
+import messageText from '~/components/village/message/message-text.vue'
+import messageCard from '~/components/village/message/message-card.vue'
+// type
+import Village from '~/components/type/village'
+import Message from '~/components/type/message'
+import VillageAnchorMessage from '~/components/type/village-anchor-message'
+import { MESSAGE_TYPE } from '~/components/const/consts'
+
+@Component({
+  name: 'message-card',
+  components: {
+    messageText,
+    messageSay,
+    messageSystem,
+    messageCard
+  }
+})
+export default class MessageCard extends Vue {
+  @Prop({ type: Object })
+  private message!: Message
+
+  @Prop({ type: Object })
+  private village!: Village
+
+  @Prop({ type: Boolean })
+  private isProgress!: boolean
+
+  @Prop({ type: Boolean, default: false })
+  private isAnchorMessage?: boolean
+
+  private anchorMessages: Message[] = []
+
+  private get isAnchorTrue(): boolean {
+    return true
+  }
+
+  private get isSayType(): boolean {
+    return [
+      MESSAGE_TYPE.NORMAL_SAY,
+      MESSAGE_TYPE.WEREWOLF_SAY,
+      MESSAGE_TYPE.GRAVE_SAY,
+      MESSAGE_TYPE.MONOLOGUE_SAY,
+      MESSAGE_TYPE.MASON_SAY,
+      MESSAGE_TYPE.SPECTATE_SAY
+    ].some(code => this.message.content.type.code === code)
+  }
+
+  private get isSystemType(): boolean {
+    return [
+      MESSAGE_TYPE.PUBLIC_SYSTEM,
+      MESSAGE_TYPE.PRIVATE_SYSTEM,
+      MESSAGE_TYPE.PRIVATE_SEER,
+      MESSAGE_TYPE.PRIVATE_PSYCHIC,
+      MESSAGE_TYPE.PRIVATE_WEREWOLF,
+      MESSAGE_TYPE.PARTICIPANTS
+    ].some(code => this.message.content.type.code === code)
+  }
+
+  private async clickAnchorMessage({
+    messageTypeCode,
+    messageNumber
+  }): Promise<void> {
+    const villageAnchorMessage: VillageAnchorMessage | null = await this.loadAnchorMessage(
+      messageTypeCode,
+      messageNumber
+    )
+    if (villageAnchorMessage == null || villageAnchorMessage.message == null) {
+      return
+    }
+    const message = villageAnchorMessage.message
+    if (this.anchorMessages.some(mes => this.isSameMessage(mes, message))) {
+      this.anchorMessages = this.anchorMessages.filter(
+        mes => !this.isSameMessage(mes, message)
+      )
+    } else {
+      this.anchorMessages.unshift(message)
+    }
+  }
+
+  private async loadAnchorMessage(
+    messageTypeCode: string,
+    messageNumber: number
+  ): Promise<VillageAnchorMessage | null> {
+    try {
+      return await this.$axios.$get(
+        `/village/${
+          this.village!.id
+        }/message/type/${messageTypeCode}/number/${messageNumber}`
+      )
+    } catch (error) {
+      return null
+    }
+  }
+
+  private isSameMessage(message1: Message, message2: Message): boolean {
+    return (
+      message1.content.type.code === message2.content.type.code &&
+      message1.content.num === message2.content.num
+    )
+  }
+
+  private clearAnchorMessages(): void {
+    this.anchorMessages = []
+  }
+}
+</script>

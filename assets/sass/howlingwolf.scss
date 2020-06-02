@@ -1,0 +1,95 @@
+@import '~bulma/sass/utilities/_all';
+
+// Set your colors
+$primary: #3991f4;
+$primary-invert: findColorInvert($primary);
+
+$normal-say: #ffffff;
+$werewolf-say: #f2cece;
+$mason-say: #cef2ce;
+$monologue-say: #ddd;
+$grave-say: #ceedf2;
+$spectate-say: #f2f2ce;
+
+$private-system-border: #ccc;
+$private-system-bg: #eee;
+$seer-system-border: #0f0;
+$seer-system-bg: #efe;
+$psychic-system-border: #00f;
+$psychic-system-bg: #eef;
+$werewolf-system-border: #f00;
+$werewolf-system-bg: #fee;
+
+// Setup $colors to use as bulma classes (e.g. 'is-twitter')
+$colors: (
+  'white': (
+    $white,
+    $black
+  ),
+  'black': (
+    $black,
+    $white
+  ),
+  'light': (
+    $light,
+    $light-invert
+  ),
+  'dark': (
+    $dark,
+    $dark-invert
+  ),
+  'primary': (
+    $primary,
+    $primary-invert
+  ),
+  'info': (
+    $info,
+    $info-invert
+  ),
+  'success': (
+    $success,
+    $success-invert
+  ),
+  'warning': (
+    $warning,
+    $warning-invert
+  ),
+  'danger': (
+    $danger,
+    $danger-invert
+  ),
+  'dark-opacity': (
+    hsla(0, 0%, 21%, 0.9),
+    $dark-invert
+  )
+);
+
+// Links
+$link: $primary;
+$link-invert: $primary-invert;
+$link-focus-border: $primary;
+
+// $body-background-color: rgb(17, 19, 30);
+// $body-color: $white;
+// $strong-color: $white;
+
+// space
+// see https://www.virment.com/how-to-use-beufy-vuejs/
+$spaces: (0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50); // 0から50pxまでを用意
+$sides: (top, bottom, left, right); // 方向性
+
+@each $space in $spaces {
+  @each $side in $sides {
+    .m-#{str-slice($side, 0, 1)}-#{$space} {
+      margin-#{$side}: #{$space}px !important;
+    }
+
+    .p-#{str-slice($side, 0, 1)}-#{$space} {
+      padding-#{$side}: #{$space}px !important;
+    }
+  }
+}
+
+// Import Bulma and Buefy styles
+@import '~bulma';
+@import '~buefy/src/scss/buefy';
