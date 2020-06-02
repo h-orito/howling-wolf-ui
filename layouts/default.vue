@@ -1,5 +1,6 @@
 <template>
   <div class="site">
+    <google-ads />
     <div class="navbar-background-area"></div>
     <nav-bar />
     <div class="siteContent">
@@ -10,10 +11,11 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
+import googleAds from '~/components/common/nav/google-ads.vue'
 import NavBar from '~/components/common/nav/navbar.vue'
 
 @Component({
-  components: { NavBar }
+  components: { NavBar, googleAds }
 })
 export default class Default extends Vue {}
 </script>
