@@ -46,6 +46,8 @@ export default class SystemMessage extends Vue {
         return 'message-system-private-psychic'
       case MESSAGE_TYPE.PRIVATE_WEREWOLF:
         return 'message-system-private-werewolf'
+      case MESSAGE_TYPE.PRIVATE_MASON:
+        return 'message-system-private-mason'
       case MESSAGE_TYPE.PARTICIPANTS:
         return ''
       default:
@@ -79,5 +81,10 @@ export default class SystemMessage extends Vue {
   border-top: 1px solid $werewolf-system-border;
   border-bottom: 1px solid $werewolf-system-border;
   background-color: $werewolf-system-bg !important;
+}
+.message-system-private-mason {
+  border-top: 1px solid $mason-system-border;
+  border-bottom: 1px solid $mason-system-border;
+  background-color: $mason-system-bg !important;
 }
 </style>

@@ -88,6 +88,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import Skill from '~/components/type/skill'
+import Camp from '~/components/type/camp'
 import Ability from '~/components/type/ability'
 import MessageType from '~/components/type/message-type'
 
@@ -152,7 +153,7 @@ export default class RuleSkill extends Vue {
             }
           }
         ),
-        count_camp: skill.count_camp == null ? '-' : skill.count_camp.name,
+        count_camp: this.countCamp(skill.count_camp),
         description: skill.description
       }
     })
@@ -160,6 +161,18 @@ export default class RuleSkill extends Vue {
 
   private toggle(row: any): void {
     ;(this.$refs as any).table.toggleDetails(row)
+  }
+
+  private countCamp(camp: Camp | null): string {
+    if (camp == null) {
+      return '-'
+    } else if (camp.name === '村人陣営') {
+      return '人間'
+    } else if (camp.name === '人狼陣営') {
+      return '人狼'
+    } else {
+      return '-'
+    }
   }
 }
 </script>

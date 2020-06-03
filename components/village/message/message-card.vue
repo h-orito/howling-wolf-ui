@@ -80,6 +80,7 @@ export default class MessageCard extends Vue {
       MESSAGE_TYPE.PRIVATE_SEER,
       MESSAGE_TYPE.PRIVATE_PSYCHIC,
       MESSAGE_TYPE.PRIVATE_WEREWOLF,
+      MESSAGE_TYPE.PRIVATE_MASON,
       MESSAGE_TYPE.PARTICIPANTS
     ].some(code => this.message.content.type.code === code)
   }
