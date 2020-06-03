@@ -171,7 +171,6 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import Message from '~/components/type/message'
-import { MESSAGE_TYPE } from '~/components/const/consts'
 const messageText = () =>
   import('~/components/village/message/message-text.vue')
 

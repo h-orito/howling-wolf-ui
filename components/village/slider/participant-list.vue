@@ -62,11 +62,7 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import Village from '~/components/type/village'
 import VillageParticipant from '~/components/type/village-participant'
 import Messages from '~/components/type/messages'
-import {
-  VILLAGE_STATUS,
-  FACE_TYPE,
-  MESSAGE_TYPE
-} from '~/components/const/consts'
+import { VILLAGE_STATUS, FACE_TYPE } from '~/components/const/consts'
 
 @Component({
   components: {}

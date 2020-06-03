@@ -4,6 +4,8 @@
       <h1 class="title is-5">更新情報</h1>
       <div class="content">
         <ul class="has-text-left is-size-7">
+          <li>2020/06/03 共有者を追加</li>
+          <li>2020/06/02 C国狂人を追加</li>
           <li>2020/06/02 本番サーバ公開</li>
           <li>2020/02/10 テストサーバ公開</li>
         </ul>
