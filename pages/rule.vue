@@ -183,6 +183,11 @@
         <ul>
           <li>
             「人間」「人狼」どちらにカウントされるかは能力欄の「勝敗判定カウント」を参照してください。
+            <ul>
+              <li>
+                「勝敗判定カウント」が「-」の場合はどちらにもカウントされません。
+              </li>
+            </ul>
           </li>
           <li>同時に条件を満たした場合、上にあるものが優先されます。</li>
         </ul>
@@ -221,6 +226,11 @@ export default class extends Vue {
   /** computed */
   private get camps(): Camp[] {
     return [
+      {
+        name: '狐陣営',
+        win_condition:
+          '人狼陣営または村人陣営が勝利条件を満たした状態で妖狐が生存'
+      },
       {
         name: '人狼陣営',
         win_condition:
