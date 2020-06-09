@@ -201,7 +201,7 @@ export default class Say extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .say-area {
   .say-content-area {
     display: flex;

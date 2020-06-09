@@ -57,34 +57,34 @@ export default class SystemMessage extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .card-content {
   padding: 10px !important;
-}
 
-.message-system-private {
-  border-top: 1px solid $private-system-border;
-  border-bottom: 1px solid $private-system-border;
-  background-color: $private-system-bg !important;
-}
-.message-system-private-seer {
-  border-top: 1px solid $seer-system-border;
-  border-bottom: 1px solid $seer-system-border;
-  background-color: $seer-system-bg !important;
-}
-.message-system-private-psychic {
-  border-top: 1px solid $psychic-system-border;
-  border-bottom: 1px solid $psychic-system-border;
-  background-color: $psychic-system-bg !important;
-}
-.message-system-private-werewolf {
-  border-top: 1px solid $werewolf-system-border;
-  border-bottom: 1px solid $werewolf-system-border;
-  background-color: $werewolf-system-bg !important;
-}
-.message-system-private-mason {
-  border-top: 1px solid $mason-system-border;
-  border-bottom: 1px solid $mason-system-border;
-  background-color: $mason-system-bg !important;
+  &.message-system-private {
+    border-top: 1px solid $private-system-border;
+    border-bottom: 1px solid $private-system-border;
+    background-color: $private-system-bg !important;
+  }
+  &.message-system-private-seer {
+    border-top: 1px solid $seer-system-border;
+    border-bottom: 1px solid $seer-system-border;
+    background-color: $seer-system-bg !important;
+  }
+  &.message-system-private-psychic {
+    border-top: 1px solid $psychic-system-border;
+    border-bottom: 1px solid $psychic-system-border;
+    background-color: $psychic-system-bg !important;
+  }
+  &.message-system-private-werewolf {
+    border-top: 1px solid $werewolf-system-border;
+    border-bottom: 1px solid $werewolf-system-border;
+    background-color: $werewolf-system-bg !important;
+  }
+  &.message-system-private-mason {
+    border-top: 1px solid $mason-system-border;
+    border-bottom: 1px solid $mason-system-border;
+    background-color: $mason-system-bg !important;
+  }
 }
 </style>

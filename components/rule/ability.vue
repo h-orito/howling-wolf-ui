@@ -180,7 +180,7 @@ const messageText = () =>
 export default class RuleAbility extends Vue {}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .message-system-private {
   border-top: 1px solid $private-system-border;
   border-bottom: 1px solid $private-system-border;

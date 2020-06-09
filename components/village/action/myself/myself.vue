@@ -71,7 +71,7 @@ export default class Participate extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .myself-area {
   .myself-name-area {
     padding-bottom: 5px;

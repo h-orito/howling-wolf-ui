@@ -34,7 +34,7 @@ export default class ActionCard extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .action-card {
   margin-bottom: 5px;
 

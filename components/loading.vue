@@ -24,7 +24,7 @@ export default class VillageCard extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .loading-bg {
   z-index: 50;
   position: relative;

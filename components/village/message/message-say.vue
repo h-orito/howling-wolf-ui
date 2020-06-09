@@ -141,24 +141,74 @@ export default class MessageSay extends Vue {
 }
 </script>
 
-<style lang="scss">
-.normal-say {
-  background-color: $normal-say !important;
-}
-.werewolf-say {
-  background-color: $werewolf-say !important;
-}
-.monologue-say {
-  background-color: $monologue-say !important;
-}
-.grave-say {
-  background-color: $grave-say !important;
-}
-.spectate-say {
-  background-color: $spectate-say !important;
-}
-.anchor-message {
-  margin-left: 50px;
+<style lang="scss" scoped>
+.hw-message-card {
+  padding: 5px;
   margin-bottom: 5px;
+
+  &.anchor-message {
+    margin-left: 50px;
+    margin-bottom: 5px;
+  }
+
+  .hw-message-name-area {
+    padding-bottom: 5px;
+    display: flex;
+
+    .hw-message-name {
+      text-align: left;
+      font-weight: bold;
+    }
+    .hw-message-player {
+      margin-left: 5px;
+      text-align: left;
+    }
+    .hw-message-datetime {
+      margin-left: auto;
+      text-align: right;
+      color: #aaaaaa;
+    }
+  }
+  .hw-message-content-area {
+    display: flex;
+
+    .hw-message-face-area {
+      padding-right: 5px;
+
+      .hw-message-chara-image {
+        vertical-align: bottom;
+        border-radius: 5px;
+      }
+    }
+
+    .hw-message-text-area {
+      flex: 1;
+      border: 1px solid #dddddd;
+      border-radius: 5px;
+      padding: 5px;
+      font-family: sans-serif;
+
+      .hw-message-text {
+        text-align: left;
+        word-break: break-word;
+      }
+
+      &.normal-say {
+        background-color: $normal-say !important;
+      }
+      &.werewolf-say {
+        background-color: $werewolf-say !important;
+      }
+      &.monologue-say {
+        background-color: $monologue-say !important;
+      }
+      &.grave-say {
+        background-color: $grave-say !important;
+      }
+      &.spectate-say {
+        background-color: $spectate-say !important;
+      }
+    }
+  }
 }
 </style>
