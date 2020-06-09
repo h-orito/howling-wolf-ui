@@ -240,12 +240,6 @@ const nuxtConfig: Configuration = {
             minChunks: 2,
             priority: -20,
             reuseExistingChunk: true
-          },
-          styles: {
-            name: 'styles',
-            test: /\.(css|vue)$/,
-            chunks: 'all',
-            enforce: true
           }
         }
       }
