@@ -255,18 +255,18 @@ export default class Action extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .village-action-wrapper {
   transition-property: all;
   transition-duration: 200ms;
   transition-delay: 0s;
   transition-timing-function: ease;
-}
-.village-action-wrapper.action-small {
-  height: 200px;
-}
-.village-action-wrapper.action-large {
-  height: 320px;
+  .village-action-wrapper.action-small {
+    height: 200px;
+  }
+  .village-action-wrapper.action-large {
+    height: 320px;
+  }
 }
 
 .village-action-header {

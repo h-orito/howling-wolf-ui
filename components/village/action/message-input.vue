@@ -133,10 +133,13 @@ export default class MessageInput extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .textarea {
   font-family: sans-serif;
 }
+</style>
+
+<style lang="scss">
 .normal-say {
   background-color: $normal-say !important;
 }

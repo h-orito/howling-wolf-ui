@@ -102,6 +102,7 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
 // component
+import loading from '~/components/loading.vue'
 // type
 import ReservedVillages from '~/components/type/reserved-villages'
 
@@ -163,6 +164,13 @@ export default class extends Vue {
       })
     this.submitting = false
 
+    this.loadReservedVillages()
+  }
+
+  private async deleteReservedVillage(id: number): Promise<any> {
+    await this.$axios.$delete(`/reserved-village/${id}`).catch(err => {
+      console.log(err)
+    })
     this.loadReservedVillages()
   }
 

@@ -253,7 +253,7 @@ export default class extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .b-table {
   overflow: auto;
   white-space: nowrap;

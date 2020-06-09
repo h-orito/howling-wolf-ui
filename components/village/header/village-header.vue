@@ -88,7 +88,7 @@ export default class VillageFooter extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .village-header {
   width: 100%;
   height: 100%;

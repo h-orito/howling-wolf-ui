@@ -66,7 +66,7 @@ export default class VillageDayList extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .daylist {
   padding: 5px;
 

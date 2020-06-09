@@ -1,6 +1,6 @@
 <template>
   <div class="site">
-    <google-ads />
+    <google-ads v-if="isProduction" />
     <div class="navbar-background-area"></div>
     <nav-bar />
     <div class="siteContent">
@@ -17,7 +17,11 @@ import NavBar from '~/components/common/nav/navbar.vue'
 @Component({
   components: { NavBar, googleAds }
 })
-export default class Default extends Vue {}
+export default class Default extends Vue {
+  private get isProduction(): boolean {
+    return (process.env as any).ENV === 'production'
+  }
+}
 </script>
 
 <style lang="scss" scoped>
