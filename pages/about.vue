@@ -8,8 +8,6 @@
           <li>システムにより自動で村が作成される「自動生成村」があります。</li>
         </ul>
       </div>
-      <h2 class="title is-5">人狼ゲーム</h2>
-      <p class="content">執筆中です。</p>
       <h2 class="title is-5">注意事項</h2>
       <div class="content">
         <ul>
