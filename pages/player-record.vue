@@ -6,14 +6,40 @@
         :message="'戦績を読み込み中...'"
         :fixed="true"
       ></loading>
-      <div v-if="!loadingRecords && !playerRecords">
-        <p>戦績がありません。</p>
-      </div>
       <div v-if="!loadingRecords && playerRecords">
         <h1 class="title is-5 m-b-30" v-if="playerName">{{ playerName }}</h1>
+        <h2 class="title is-size-6">自己紹介</h2>
+        <div class="m-b-20">
+          <p class="is-size-7 m-b-20">
+            他人狼サイトでのID: {{ otherSiteName ? otherSiteName : '未登録' }}
+          </p>
+          <div v-if="introduction" class="is-size-7 has-text-left">
+            <p
+              v-for="intro in escapeAndSplitMessage(introduction)"
+              :key="intro.id"
+              v-html="intro"
+              style="word-break: break-word;"
+            ></p>
+          </div>
+          <b-button
+            class="m-t-20"
+            v-if="isMyself"
+            type="is-primary"
+            size="is-small"
+            @click="isModalOpen = true"
+            >編集する</b-button
+          >
+          <modal-intro
+            :is-open="isModalOpen"
+            :current-other-site-name="otherSiteName"
+            :current-intro="introduction"
+            @close-modal="isModalOpen = false"
+            @refresh="refresh"
+          />
+        </div>
         <div class="columns">
           <div class="column is-6">
-            <h2 class="title is-size-5">総合戦績</h2>
+            <h2 class="title is-size-6">総合戦績</h2>
             <div class="columns is-mobile">
               <div class="column is-12 chart-container m-b-20">
                 <doughnut-chart
@@ -27,7 +53,7 @@
                 </div>
               </div>
             </div>
-            <h2 class="title is-size-5">陣営戦績</h2>
+            <h2 class="title is-size-6">陣営戦績</h2>
             <div class="columns is-mobile">
               <div
                 v-for="campRecord in playerRecords.camp_record_list"
@@ -45,7 +71,7 @@
             </div>
           </div>
           <div class="column is-6">
-            <h2 class="title is-size-5">役職戦績</h2>
+            <h2 class="title is-size-6">役職戦績</h2>
             <div class="m-b-20">
               <div
                 v-for="chunkRecords in chunk(
@@ -86,11 +112,13 @@ import { Component, Vue } from 'nuxt-property-decorator'
 import { ChartData, ChartOptions } from 'chart.js'
 // components
 import loading from '~/components/loading.vue'
+import modalIntro from '~/components/player-record/modal-intro.vue'
 // type
 import PlayerRecords from '~/components/type/player-records'
 import CampRecord from '~/components/type/camp-record'
 import SkillRecord from '~/components/type/skill-record'
 import ParticipateVillage from '~/components/type/participate-village'
+import MyselfPlayer from '~/components/type/myself-player'
 
 const doughnutChart = () =>
   import('~/components/player-record/doughnut-chart.vue')
@@ -98,7 +126,7 @@ const participateVillageList = () =>
   import('~/components/player-record/participate-village-list.vue')
 
 @Component({
-  components: { loading, doughnutChart, participateVillageList },
+  components: { loading, doughnutChart, participateVillageList, modalIntro },
   asyncData({ query }) {
     return { playerId: query.id }
   }
@@ -113,6 +141,7 @@ export default class extends Vue {
   private playerId: number = 0
   private playerRecords: PlayerRecords | null = null
   private loadingRecords: boolean = false
+  private isModalOpen: boolean = false
 
   private emptyData: ChartData = {
     labels: ['no data'],
@@ -143,6 +172,18 @@ export default class extends Vue {
     return `${player.nickname}@${player.twitter_user_name}`
   }
 
+  private get otherSiteName(): string | null {
+    if (this.loadingRecords || !this.playerRecords) return null
+    const player = this.playerRecords.player
+    return player.other_site_name
+  }
+
+  private get introduction(): string | null {
+    if (this.loadingRecords || !this.playerRecords) return null
+    const player = this.playerRecords.player
+    return player.introduction
+  }
+
   private get wholeData(): ChartData {
     const wholeRecords = this.playerRecords!.whole_record
     return this.chartData(wholeRecords.win_count, this.wholeLoseCount)
@@ -162,15 +203,19 @@ export default class extends Vue {
     )
   }
 
+  private get user(): MyselfPlayer | null {
+    return this.$store.getters.getPlayer
+  }
+
+  private get isMyself(): boolean {
+    if (!this.user) return false
+    if (this.loadingRecords || !this.playerRecords) return false
+    return this.user.id === this.playerRecords.player.id
+  }
+
   /** created */
   private async created(): Promise<any> {
-    this.loadingRecords = true
-    try {
-      this.playerRecords = await this.$axios.$get(
-        `/player/${this.playerId}/record`
-      )
-    } catch (error) {}
-    this.loadingRecords = false
+    await this.loadRecord()
   }
 
   /** methods */
@@ -186,6 +231,20 @@ export default class extends Vue {
         }
       ]
     }
+  }
+
+  private async loadRecord(): Promise<void> {
+    this.loadingRecords = true
+    try {
+      this.playerRecords = await this.$axios.$get(
+        `/player/${this.playerId}/record`
+      )
+    } catch (error) {}
+    this.loadingRecords = false
+  }
+
+  private async refresh(): Promise<void> {
+    await this.loadRecord()
   }
 
   private titleString(
@@ -237,6 +296,21 @@ export default class extends Vue {
         i % size ? newarr : [...newarr, arr.slice(i, i + size)],
       [] as T[][]
     )
+  }
+
+  private escapeAndSplitMessage = (message: string): string[] => {
+    return message
+      .replace(/(\r\n|\n|\r)/gm, '<br>')
+      .split('<br>')
+      .map(item => {
+        item = item
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;')
+        return item
+      })
   }
 }
 </script>
