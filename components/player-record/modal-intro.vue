@@ -14,6 +14,10 @@
       <section class="modal-card-body has-text-left">
         <section>
           <p style="font-weight: 700; margin-bottom: 6px;">他人狼サイトのID</p>
+          <p class="is-size-7">
+            戦績サイトにこのIDで登録されます。未登録の場合はtwitter
+            idで登録されます。
+          </p>
           <b-field>
             <b-input v-model="otherSiteName" size="is-small" />
           </b-field>
