@@ -38,7 +38,7 @@
         <template slot="empty">
           <section class="section">
             <div class="content has-text-grey has-text-centered">
-              <p>終了した村はありません</p>
+              <p>参加した村はありません</p>
             </div>
           </section>
         </template>
