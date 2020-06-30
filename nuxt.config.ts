@@ -38,13 +38,7 @@ const pwa = {
       },
       {
         urlPattern: '/.*',
-        handler: 'staleWhileRevalidate',
-        strategyOptions: {
-          cacheName: 'my-cache',
-          cacheExpiration: {
-            maxAgeSeconds: 24 * 60 * 60 * 30
-          }
-        }
+        handler: 'networkOnly'
       }
     ]
   }
