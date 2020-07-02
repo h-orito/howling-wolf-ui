@@ -162,6 +162,14 @@ const nuxtConfig: Configuration = {
         id: 'UA-168213386-1'
       }
     ],
+    // google adsense
+    [
+      '@nuxtjs/google-adsense',
+      {
+        id: 'ca-pub-0917187897820609',
+        pageLevelAds: true
+      }
+    ],
     // Doc: https://github.com/nuxt-community/sitemap-module
     // ↓配列の最後でsitemapモジュールを宣言
     '@nuxtjs/sitemap'
@@ -193,7 +201,6 @@ const nuxtConfig: Configuration = {
       }
     ]
   ],
-  // TODO google analytics https://github.com/nuxt-community/analytics-module
 
   build: {
     babel: {
