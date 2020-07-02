@@ -1,24 +1,47 @@
 <template>
-  <div v-if="message != null" class="card">
-    <message-say
-      v-if="isSayType"
-      :village="village"
-      :message="message"
-      :is-progress="isProgress"
-      :is-anchor-message="isAnchorMessage"
-      @click-anchor="clickAnchorMessage($event)"
-    />
-    <message-system v-if="isSystemType" :village="village" :message="message" />
-    <!-- アンカーメッセージ -->
-    <message-card
-      v-for="mes in anchorMessages"
-      :key="mes.id"
-      :village="village"
-      :message="mes"
-      :is-progress="isProgress"
-      :is-anchor-message="isAnchorTrue"
-      @click-anchor="clickAnchorMessage($event)"
-    ></message-card>
+  <div>
+    <div v-if="message != null" class="card">
+      <message-say
+        v-if="isSayType"
+        :village="village"
+        :message="message"
+        :is-progress="isProgress"
+        :is-anchor-message="isAnchorMessage"
+        @click-anchor="clickAnchorMessage($event)"
+      />
+      <message-system
+        v-if="isSystemType"
+        :village="village"
+        :message="message"
+      />
+      <!-- アンカーメッセージ -->
+      <message-card
+        v-for="mes in anchorMessages"
+        :key="mes.id"
+        :village="village"
+        :message="mes"
+        :is-progress="isProgress"
+        :is-anchor-message="isAnchorTrue"
+        @click-anchor="clickAnchorMessage($event)"
+      ></message-card>
+    </div>
+    <div v-if="index == 9 || index == 24 || index == 39">
+      <script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+      ></script>
+      <ins
+        class="adsbygoogle"
+        style="display:block"
+        data-ad-format="fluid"
+        data-ad-layout-key="-hm-c+2i-1u-38"
+        data-ad-client="ca-pub-0917187897820609"
+        data-ad-slot="5122687444"
+      ></ins>
+      <script>
+        ;(adsbygoogle = window.adsbygoogle || []).push({})
+      </script>
+    </div>
   </div>
 </template>
 
@@ -55,6 +78,9 @@ export default class MessageCard extends Vue {
 
   @Prop({ type: Boolean, default: false })
   private isAnchorMessage?: boolean
+
+  @Prop({ type: Number, default: null })
+  private index?: number
 
   private anchorMessages: Message[] = []
 

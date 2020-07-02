@@ -20,11 +20,12 @@
       class="m-l-5 m-r-5 m-t-10 m-b-10"
     />
     <message-card
-      v-for="message in messages.list"
+      v-for="(message, idx) in messages.list"
       :key="message.time.unix_time_milli"
       :village="village"
       :message="message"
       :is-progress="isProgress"
+      :index="idx"
       ref="messageCard"
     ></message-card>
     <village-situation-message
