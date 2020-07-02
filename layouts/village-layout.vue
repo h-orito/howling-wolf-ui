@@ -1,6 +1,5 @@
 <template>
   <div class="site">
-    <google-ads v-if="isProduction" />
     <div class="siteContent">
       <nuxt class="has-text-centered" />
     </div>
@@ -9,16 +8,11 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
-import googleAds from '~/components/common/nav/google-ads.vue'
 
 @Component({
-  components: { googleAds }
+  components: {}
 })
-export default class VillageLayout extends Vue {
-  private get isProduction(): boolean {
-    return (process.env as any).ENV === 'production'
-  }
-}
+export default class VillageLayout extends Vue {}
 </script>
 
 <style lang="scss" scoped></style>
