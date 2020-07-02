@@ -46,6 +46,7 @@
           <b-icon pack="fas" icon="home" size="is-small" type="is-white" />
           トップページ
         </nuxt-link>
+        <adsbygoogle ad-slot="2365194990" />
       </div>
       <div v-if="$window.isMobile" class="close-icon">
         <b-button

@@ -18,6 +18,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
+import scrollTo from 'vue-scrollto'
 // component
 import navbarBurger from '~/components/common/nav/navbar-burger.vue'
 // type
