@@ -163,13 +163,13 @@ const nuxtConfig: Configuration = {
       }
     ],
     // google adsense
-    [
-      '@nuxtjs/google-adsense',
-      {
-        id: 'ca-pub-0917187897820609',
-        pageLevelAds: true
-      }
-    ],
+    // [
+    //   '@nuxtjs/google-adsense',
+    //   {
+    //     id: 'ca-pub-0917187897820609',
+    //     pageLevelAds: true
+    //   }
+    // ],
     // Doc: https://github.com/nuxt-community/sitemap-module
     // ↓配列の最後でsitemapモジュールを宣言
     '@nuxtjs/sitemap'
