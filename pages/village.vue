@@ -310,7 +310,8 @@ export default class extends Vue {
       this.updateDaychangeTimer()
     }
     // safari対策
-    this.resizeHeight()
+    setTimeout(() => this.resizeHeight(), 2000)
+
     window.addEventListener('resize', () => this.resizeHeight())
   }
 
