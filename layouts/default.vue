@@ -1,5 +1,6 @@
 <template>
   <div class="site">
+    <google-ads v-if="isProduction" />
     <div class="navbar-background-area"></div>
     <nav-bar />
     <div class="siteContent">
@@ -11,9 +12,10 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
 import NavBar from '~/components/common/nav/navbar.vue'
+import googleAds from '~/components/common/nav/google-ads.vue'
 
 @Component({
-  components: { NavBar }
+  components: { NavBar, googleAds }
 })
 export default class Default extends Vue {
   private get isProduction(): boolean {
