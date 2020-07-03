@@ -309,9 +309,18 @@ export default class extends Vue {
       // 1回だけ実行
       this.updateDaychangeTimer()
     }
-    // safari対策
-    // this.resizeHeight()
-    window.addEventListener('resize', () => this.resizeHeight())
+  }
+
+  // ----------------------------------------------------------------
+  // mounted
+  // ----------------------------------------------------------------
+  private mounted() {
+    this.$nextTick(() => {
+      // ビュー全体がレンダリングされた後に実行
+      // safari対策
+      this.resizeHeight()
+      window.addEventListener('resize', () => this.resizeHeight())
+    })
   }
 
   // ----------------------------------------------------------------
