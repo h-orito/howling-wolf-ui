@@ -318,8 +318,10 @@ export default class extends Vue {
     this.$nextTick(() => {
       // ビュー全体がレンダリングされた後に実行
       // safari対策
-      this.resizeHeight()
-      window.addEventListener('resize', () => this.resizeHeight())
+      const vh = window.innerHeight * 0.01
+      document.documentElement.style.setProperty('--vh', `${vh}px`)
+      // this.resizeHeight()
+      // window.addEventListener('resize', () => this.resizeHeight())
     })
   }
 
