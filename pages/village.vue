@@ -318,8 +318,10 @@ export default class extends Vue {
     this.$nextTick(() => {
       // ビュー全体がレンダリングされた後に実行
       // safari対策
-      this.resizeHeight()
-      window.addEventListener('resize', () => this.resizeHeight())
+      const vh = window.innerHeight * 0.01
+      document.documentElement.style.setProperty('--vh', `${vh}px`)
+      // this.resizeHeight()
+      // window.addEventListener('resize', () => this.resizeHeight())
     })
   }
 
@@ -546,11 +548,8 @@ export default class extends Vue {
   private resizeTimeout: any = null
   private resizeHeight(): void {
     if (this.resizeTimeout) clearTimeout(this.resizeTimeout)
-    const wheight = window.innerHeight
     this.resizeTimeout = setTimeout(() => {
       const height = window.innerHeight
-      console.log(`innerHeight: ${height}`)
-      console.log(`wheight: ${wheight}`)
       if (height < 200) return
       document
         .getElementsByClassName('village-wrapper')[0]
