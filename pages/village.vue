@@ -548,8 +548,11 @@ export default class extends Vue {
   private resizeTimeout: any = null
   private resizeHeight(): void {
     if (this.resizeTimeout) clearTimeout(this.resizeTimeout)
+    const wheight = window.innerHeight
     this.resizeTimeout = setTimeout(() => {
       const height = window.innerHeight
+      console.log(`innerHeight: ${height}`)
+      console.log(`wheight: ${wheight}`)
       if (height < 200) return
       document
         .getElementsByClassName('village-wrapper')[0]
