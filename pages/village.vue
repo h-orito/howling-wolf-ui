@@ -310,8 +310,7 @@ export default class extends Vue {
       this.updateDaychangeTimer()
     }
     // safari対策
-    setTimeout(() => this.resizeHeight(), 2000)
-
+    this.resizeHeight()
     window.addEventListener('resize', () => this.resizeHeight())
   }
 
@@ -540,6 +539,7 @@ export default class extends Vue {
     if (this.resizeTimeout) clearTimeout(this.resizeTimeout)
     this.resizeTimeout = setTimeout(() => {
       const height = window.innerHeight
+      if (height < 200) return
       document
         .getElementsByClassName('village-wrapper')[0]
         .setAttribute('style', `height: ${height}px;`)
