@@ -573,6 +573,7 @@ html {
   justify-content: space-between;
   width: 100%;
   height: 100vh;
+  height: calc(100 * var(--vh, 1vh));
 
   .village-leftside-wrapper {
     height: 100vh;
@@ -586,6 +587,7 @@ html {
     flex-direction: column;
     justify-content: space-between;
     height: 100vh;
+    height: calc(100 * var(--vh, 1vh));
 
     .village-header-wrapper {
       height: 1.8rem;
