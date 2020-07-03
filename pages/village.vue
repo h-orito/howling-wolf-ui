@@ -318,10 +318,8 @@ export default class extends Vue {
     this.$nextTick(() => {
       // ビュー全体がレンダリングされた後に実行
       // safari対策
-      const vh = window.innerHeight * 0.01
-      document.documentElement.style.setProperty('--vh', `${vh}px`)
-      // this.resizeHeight()
-      // window.addEventListener('resize', () => this.resizeHeight())
+      this.resizeHeight()
+      window.addEventListener('resize', () => this.resizeHeight())
     })
   }
 
@@ -549,14 +547,16 @@ export default class extends Vue {
   private resizeHeight(): void {
     if (this.resizeTimeout) clearTimeout(this.resizeTimeout)
     this.resizeTimeout = setTimeout(() => {
-      const height = window.innerHeight
-      if (height < 200) return
-      document
-        .getElementsByClassName('village-wrapper')[0]
-        .setAttribute('style', `height: ${height}px;`)
-      document
-        .getElementsByClassName('village-rightside-wrapper')[0]
-        .setAttribute('style', `height: ${height}px;`)
+      const vh = window.innerHeight * 0.01
+      document.documentElement.style.setProperty('--vh', `${vh}px`)
+      // const height = window.innerHeight
+      // if (height < 200) return
+      // document
+      //   .getElementsByClassName('village-wrapper')[0]
+      //   .setAttribute('style', `height: ${height}px;`)
+      // document
+      //   .getElementsByClassName('village-rightside-wrapper')[0]
+      //   .setAttribute('style', `height: ${height}px;`)
     }, 500)
   }
 }
