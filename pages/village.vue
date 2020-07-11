@@ -549,14 +549,6 @@ export default class extends Vue {
     this.resizeTimeout = setTimeout(() => {
       const vh = window.innerHeight * 0.01
       document.documentElement.style.setProperty('--vh', `${vh}px`)
-      // const height = window.innerHeight
-      // if (height < 200) return
-      // document
-      //   .getElementsByClassName('village-wrapper')[0]
-      //   .setAttribute('style', `height: ${height}px;`)
-      // document
-      //   .getElementsByClassName('village-rightside-wrapper')[0]
-      //   .setAttribute('style', `height: ${height}px;`)
     }, 500)
   }
 }
