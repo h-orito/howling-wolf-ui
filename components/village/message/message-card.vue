@@ -25,7 +25,7 @@
         @click-anchor="clickAnchorMessage($event)"
       ></message-card>
     </div>
-    <div v-if="index == 9 || index == 24 || index == 39">
+    <div v-if="index == 19 || index == 39">
       <script
         async
         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
