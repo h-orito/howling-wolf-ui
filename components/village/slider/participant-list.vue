@@ -17,7 +17,14 @@
         />
       </div>
       <div class="name-area is-size-7">
-        <p class="chara-name">{{ charaName(participant) }}</p>
+        <div class="chara-name">
+          <p>{{ charaName(participant) }}</p>
+          <p class="chara-filter">
+            <a href="javascript:void(0);" @click="charaFilter(participant)"
+              >抽出</a
+            >
+          </p>
+        </div>
         <div class="chara-situation">
           <p :class="charaStatusClass(participant)">
             {{ charaStatus(participant) }}
@@ -44,7 +51,14 @@
           />
         </div>
         <div class="name-area is-size-7">
-          <p class="chara-name">{{ charaName(participant) }}</p>
+          <div class="chara-name">
+            <p>{{ charaName(participant) }}</p>
+            <p class="chara-filter">
+              <a href="javascript:void(0);" @click="charaFilter(participant)"
+                >抽出</a
+              >
+            </p>
+          </div>
           <div class="chara-situation">
             <p :class="charaStatusClass(participant)">
               {{ charaStatus(participant) }}
@@ -170,6 +184,12 @@ export default class VillageSlider extends Vue {
     if (!this.messages) return 0
     return this.messages.today_message_count_map[participantId]
   }
+
+  private charaFilter(participant: VillageParticipant): void {
+    this.$emit('chara-filter', {
+      participant
+    })
+  }
 }
 </script>
 
@@ -194,6 +214,17 @@ export default class VillageSlider extends Vue {
 
     .chara-name {
       margin-bottom: 5px;
+      display: flex;
+
+      p.chara-filter {
+        flex: 1;
+        text-align: right;
+
+        a:hover {
+          font-weight: bold;
+          color: $info;
+        }
+      }
     }
 
     .chara-situation {
