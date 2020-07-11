@@ -1,6 +1,7 @@
 import { LOGINOUT } from '~/store/action-types'
 
 const state = {
+  authenticated: false,
   player: null,
   photoUrl: null,
   user: null
@@ -8,13 +9,16 @@ const state = {
 
 const mutations = {
   login(state, { player, photoUrl, user }) {
+    state.authenticated = true
     state.player = player
     state.photoUrl = photoUrl
     state.user = user
   },
   logout(state) {
+    state.authenticated = true
     state.player = null
     state.photoUrl = null
+    state.user = null
   }
 }
 
@@ -62,6 +66,7 @@ const actions = {
 }
 
 const getters = {
+  isAuthenticated: state => state.authenticated,
   getPlayer: state => state.player,
   isLogin: state => state.player != null,
   getPhotoUrl: state => state.photoUrl

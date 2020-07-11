@@ -98,15 +98,14 @@ export default class TopPage extends Vue {
     return (process.env as any).ENV !== 'production'
   }
 
+  private get isAlreadyAuthenticated(): boolean {
+    return this.$store.getters.isAuthenticated
+  }
+
   /** created */
   async created() {
     // 認証を待つ
-    const user = await new Promise((resolve, reject) => {
-      firebase.auth().onAuthStateChanged(user => resolve(user))
-    })
-    await this.$store.dispatch('LOGINOUT', {
-      user
-    })
+    await this.auth()
     // ログイン後のリダイレクトの際、ユーザ情報をサーバに保存
     this.registerUserIfNeeded()
     this.loadingAuth = false
@@ -119,6 +118,17 @@ export default class TopPage extends Vue {
   }
 
   /** methods */
+  private async auth(): Promise<void> {
+    // 認証済みなら何もしない
+    if (this.isAlreadyAuthenticated) return
+    const user = await new Promise((resolve, reject) => {
+      firebase.auth().onAuthStateChanged(user => resolve(user))
+    })
+    await this.$store.dispatch('LOGINOUT', {
+      user
+    })
+  }
+
   private async loadingVillages(): Promise<void> {
     this.isLoadingVillages = true
     const res = await this.$axios.$get('/village/list', {

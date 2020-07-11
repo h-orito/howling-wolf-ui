@@ -47,6 +47,22 @@
           <b-icon pack="fas" icon="home" size="is-small" type="is-white" />
           トップページ
         </nuxt-link>
+        <div class="slider-ads">
+          <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+          ></script>
+          <!-- howling-wolf-slider -->
+          <ins
+            class="adsbygoogle"
+            style="display:inline-block;width:260px;height:90px"
+            data-ad-client="ca-pub-0917187897820609"
+            data-ad-slot="2365194990"
+          ></ins>
+          <script>
+            ;(adsbygoogle = window.adsbygoogle || []).push({})
+          </script>
+        </div>
       </div>
       <div v-if="$window.isMobile" class="close-icon">
         <b-button

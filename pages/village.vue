@@ -334,7 +334,13 @@ export default class extends Vue {
   // methods
   // ----------------------------------------------------------------
   /** 認証 */
+  private get isAlreadyAuthenticated(): boolean {
+    return this.$store.getters.isAuthenticated
+  }
+
   private async auth(): Promise<void> {
+    // 認証済みなら何もしない
+    if (this.isAlreadyAuthenticated) return
     const user = await new Promise((resolve, reject) => {
       firebase.auth().onAuthStateChanged(user => resolve(user))
     })
@@ -427,6 +433,14 @@ export default class extends Vue {
     this.refs.slider.filterRefresh()
     // アンカーメッセージを非表示にする
     if (this.refs.messageCards) this.refs.messageCards.clearAnchorMessages()
+  }
+
+  private async reloadVillage(): Promise<void> {
+    await this.loadVillage()
+    // デバッグ用村情報
+    if (this.isDebug) this.debugVillage = await this.loadDebugVillage()
+    // 最新日を表示
+    this.displayVillageDay = this.latestDay!
   }
 
   /** 表示する村日付を変更 */
