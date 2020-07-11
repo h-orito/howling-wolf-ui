@@ -32,6 +32,7 @@
             v-if="village"
             :village="village"
             :messages="messages"
+            @chara-filter="charaFilter($event)"
           />
         </b-collapse>
         <a class="side-item" @click="openFilterModal">
@@ -174,6 +175,11 @@ export default class VillageSlider extends Vue {
   private filterRefresh(): void {
     const refs = this.$refs as any
     refs.filter.refresh()
+  }
+
+  private charaFilter({ participant }): void {
+    const refs = this.$refs as any
+    refs.filter.charaFilter(participant)
   }
 }
 </script>

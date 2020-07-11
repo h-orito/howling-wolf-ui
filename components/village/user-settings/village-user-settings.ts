@@ -25,6 +25,17 @@ const villageUserSettings = {
     const cookie = this.getCookie(app)
     cookie.paging = settings
     this.setCookie(app, cookie)
+  },
+  getActionWindow(app: Vue): ActionWindowSettings {
+    const cookie = this.getCookie(app)
+    if (cookie.action_window) return cookie.action_window
+    this.setActionWindow(app, DEFAULT_ACTION_WINDOW)
+    return DEFAULT_ACTION_WINDOW
+  },
+  setActionWindow(app: Vue, settings: ActionWindowSettings): void {
+    const cookie = this.getCookie(app)
+    cookie.action_window = settings
+    this.setCookie(app, cookie)
   }
 }
 
@@ -32,6 +43,7 @@ export default villageUserSettings
 
 export interface VillageUserSettings {
   paging: PagingSettings
+  action_window?: ActionWindowSettings
 }
 
 export interface PagingSettings {
@@ -39,11 +51,22 @@ export interface PagingSettings {
   message_per_page: number
 }
 
+export interface ActionWindowSettings {
+  size: number
+  tab_code: string
+}
+
 const DEFAULT_PAGING: PagingSettings = {
   is_paging: true,
   message_per_page: 50
 }
 
+const DEFAULT_ACTION_WINDOW: ActionWindowSettings = {
+  size: 1,
+  tab_code: 'myself'
+}
+
 const DEFAULT_SETTINGS: VillageUserSettings = {
-  paging: DEFAULT_PAGING
+  paging: DEFAULT_PAGING,
+  action_window: DEFAULT_ACTION_WINDOW
 }

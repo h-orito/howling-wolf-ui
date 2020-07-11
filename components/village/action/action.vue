@@ -2,14 +2,14 @@
   <div class="village-action-wrapper" :class="containerSizeClass">
     <div class="village-action-header">
       <b-button
-        v-for="(tab, idx) in activeTabs"
+        v-for="tab in activeTabs"
         :key="tab.name"
         icon-pack="fas"
         :icon-left="tab.icon"
         class="village-action-header-item flex"
-        :class="idx === activeTabIndex ? 'active' : ''"
+        :class="tab.code === activeTabCode ? 'active' : ''"
         size="is-small"
-        @click="changeActiveTab(idx)"
+        @click="changeActiveTab(tab.code)"
         >{{ tab.name }}</b-button
       >
       <b-button
@@ -119,6 +119,7 @@ import VillageAbilitySituation from '~/components/type/village-ability-situation
 import actionHelper, {
   VillageAction
 } from '~/components/village/action/village-action-helper'
+import villageUserSettings from '~/components/village/user-settings/village-user-settings'
 // dynamic imports
 const participate = () =>
   import('~/components/village/action/participate/participate.vue')
@@ -155,22 +156,12 @@ export default class Action extends Vue {
   private village!: Village
 
   /** data */
-  private activeTabIndex = 0
-  private actionContainerSize = 1
+  private activeTabCode: string = 'myself'
+  private actionContainerSize: number = 0
 
   /** computed */
   private get activeTabs(): VillageAction[] {
     return actionHelper.getAvailableActions(this.situation)
-  }
-
-  private get activeTabCode(): string {
-    const activeTab = this.activeTabs[this.activeTabIndex]
-    if (!activeTab) {
-      this.reset()
-      return this.activeTabs[0].code
-    } else {
-      return this.activeTabs[this.activeTabIndex].code
-    }
   }
 
   private get existsAction(): boolean {
@@ -227,7 +218,8 @@ export default class Action extends Vue {
 
   /** method */
   private reset(): void {
-    this.activeTabIndex = 0
+    this.activeTabCode = this.getActiveTabCodeOrDefault()
+    this.actionContainerSize = this.getActionContainerSize()
     const refs: any = this.$refs as any
     if (this.abilities.length > 0) {
       const abilityRefs: any[] = refs.ability
@@ -240,17 +232,39 @@ export default class Action extends Vue {
     }
   }
 
-  private changeActiveTab(idx: number): void {
-    this.activeTabIndex = idx
+  private getActiveTabCodeOrDefault(): string {
+    const code = villageUserSettings.getActionWindow(this).tab_code
+    if (this.activeTabs.some(tab => tab.code === code)) return code
+    // ないのでデフォルト
+    return 'myself'
+  }
+
+  private getActionContainerSize(): number {
+    return villageUserSettings.getActionWindow(this).size
+  }
+
+  private changeActiveTab(tabCode: string): void {
+    this.activeTabCode = tabCode
+    const actionWindowSetting = villageUserSettings.getActionWindow(this)
+    actionWindowSetting.tab_code = tabCode
+    villageUserSettings.setActionWindow(this, actionWindowSetting)
     if (this.actionContainerSize === 0) this.handleExpand()
   }
 
   private handleMinimize(): void {
-    this.actionContainerSize -= 1
+    const actionWindowSetting = villageUserSettings.getActionWindow(this)
+    actionWindowSetting.size -= 1
+    if (actionWindowSetting.size < 0) actionWindowSetting.size = 0
+    villageUserSettings.setActionWindow(this, actionWindowSetting)
+    this.actionContainerSize = actionWindowSetting.size
   }
 
   private handleExpand(): void {
-    this.actionContainerSize += 1
+    const actionWindowSetting = villageUserSettings.getActionWindow(this)
+    actionWindowSetting.size += 1
+    if (actionWindowSetting.size >= 2) actionWindowSetting.size = 2
+    villageUserSettings.setActionWindow(this, actionWindowSetting)
+    this.actionContainerSize = actionWindowSetting.size
   }
 }
 </script>

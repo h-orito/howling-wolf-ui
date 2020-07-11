@@ -60,7 +60,15 @@
               type="is-primary"
               size="is-small"
             >
-              システム
+              公開システム
+            </b-checkbox-button>
+            <b-checkbox-button
+              v-model="messageTypeCodeGroup"
+              native-value="PRIVATE_SYSTEM"
+              type="is-primary"
+              size="is-small"
+            >
+              非公開システム
             </b-checkbox-button>
           </b-field>
         </section>
@@ -165,16 +173,15 @@ export default class ModalFilter extends Vue {
   // const
   // ----------------------------------------------------------------
   private messageTypeGroupMap: Map<string, string[]> = new Map([
+    ['SYSTEM', [MESSAGE_TYPE.PUBLIC_SYSTEM, MESSAGE_TYPE.PARTICIPANTS]],
     [
-      'SYSTEM',
+      'PRIVATE_SYSTEM',
       [
-        MESSAGE_TYPE.PUBLIC_SYSTEM,
         MESSAGE_TYPE.PRIVATE_SYSTEM,
         MESSAGE_TYPE.PRIVATE_SEER,
         MESSAGE_TYPE.PRIVATE_PSYCHIC,
         MESSAGE_TYPE.PRIVATE_WEREWOLF,
-        MESSAGE_TYPE.PRIVATE_MASON,
-        MESSAGE_TYPE.PARTICIPANTS
+        MESSAGE_TYPE.PRIVATE_MASON
       ]
     ],
     [MESSAGE_TYPE.NORMAL_SAY, [MESSAGE_TYPE.NORMAL_SAY]],
@@ -188,6 +195,7 @@ export default class ModalFilter extends Vue {
 
   private allMessageTypeGroup: string[] = [
     'SYSTEM',
+    'PRIVATE_SYSTEM',
     MESSAGE_TYPE.NORMAL_SAY,
     MESSAGE_TYPE.WEREWOLF_SAY,
     MESSAGE_TYPE.MONOLOGUE_SAY,
@@ -250,6 +258,13 @@ export default class ModalFilter extends Vue {
   private refresh(): void {
     this.messageTypeCodeGroup = this.allMessageTypeGroup
     this.participantIdGroup = this.allParticipantIdList
+    this.keyword = null
+    this.filter()
+  }
+
+  private charaFilter(participant: VillageParticipant): void {
+    this.messageTypeCodeGroup = this.allMessageTypeGroup
+    this.participantIdGroup = [participant.id]
     this.keyword = null
     this.filter()
   }

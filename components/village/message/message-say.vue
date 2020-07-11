@@ -131,9 +131,13 @@ export default class MessageSay extends Vue {
   }
 
   private async copyAnchorString(): Promise<void> {
-    await (this as any).$copyText(this.anchorString)
+    const charaShortName = this.message.from
+      ? this.message.from.chara.chara_name.short_name
+      : ''
+    await (this as any).$copyText(charaShortName + this.anchorString)
     this.$buefy.toast.open({
-      message: `クリップボードにコピーしました: ${this.anchorString}`,
+      message: `クリップボードにコピーしました: ${charaShortName +
+        this.anchorString}`,
       type: 'is-info',
       position: 'is-top'
     })

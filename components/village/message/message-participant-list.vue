@@ -7,12 +7,7 @@
         </b-table-column>
 
         <b-table-column field="twitter" label="Twitter">
-          {{ props.row.nickname }}
-          <a
-            :href="`https://twitter.com/${props.row.twitter_user_name}`"
-            target="_blank"
-            >{{ props.row.twitter_user_name }}</a
-          >
+          {{ props.row.nickname }}@{{ props.row.twitter_user_name }}
         </b-table-column>
 
         <b-table-column field="skill" label="役職">
@@ -27,7 +22,7 @@
           {{ props.row.health }}
         </b-table-column>
 
-        <b-table-column field="player_id" label="戦績">
+        <b-table-column field="player_id" label="">
           <b-button
             tag="nuxt-link"
             :to="{ path: '/player-record', query: { id: props.row.player_id } }"
@@ -36,6 +31,15 @@
             type="is-primary"
             >戦績</b-button
           >
+          <b-button
+            tag="a"
+            :href="`https://twitter.com/${props.row.twitter_user_name}`"
+            target="_blank"
+            size="is-small"
+            icon-pack="fab"
+            icon-left="twitter"
+            type="is-primary"
+          />
         </b-table-column>
       </template>
 
