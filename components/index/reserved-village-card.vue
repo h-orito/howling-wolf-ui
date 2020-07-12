@@ -17,6 +17,7 @@
           </p>
           <p>編成: {{ reservedVillage.organization }}</p>
           <p>発言可能時間: {{ sayableTime }}</p>
+          <p>ダミー役欠け: {{ dummySkill }}</p>
         </div>
       </div>
     </div>
@@ -44,6 +45,10 @@ export default class ReservedVillageCard extends Vue {
 
   private daychangeTime(datetime: string): string {
     return datetime.substring(11, 16)
+  }
+
+  private get dummySkill(): string {
+    return this.reservedVillage.available_dummy_skill ? 'あり' : 'なし'
   }
 }
 </script>

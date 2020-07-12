@@ -289,6 +289,10 @@ export default class extends Vue {
     )
   }
 
+  private get isAlreadyAuthenticated(): boolean {
+    return this.$store.getters.isAuthenticated
+  }
+
   // ----------------------------------------------------------------
   // created
   // ----------------------------------------------------------------
@@ -334,10 +338,6 @@ export default class extends Vue {
   // methods
   // ----------------------------------------------------------------
   /** 認証 */
-  private get isAlreadyAuthenticated(): boolean {
-    return this.$store.getters.isAuthenticated
-  }
-
   private async auth(): Promise<void> {
     // 認証済みなら何もしない
     if (this.isAlreadyAuthenticated) return

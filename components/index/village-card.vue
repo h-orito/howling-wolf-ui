@@ -17,6 +17,7 @@
             <p v-if="daychangeDatetime">更新: {{ daychangeDatetime }}</p>
             <p>編成: {{ organization }}</p>
             <p>発言可能時間: {{ sayableTime }}</p>
+            <p>ダミー役欠け: {{ dummySkill }}</p>
           </div>
         </div>
       </div>
@@ -95,6 +96,10 @@ export default class VillageCard extends Vue {
     return this.village.setting.organizations.organization[
       this.village.setting.capacity.max
     ]
+  }
+
+  private get dummySkill(): string {
+    return this.village.setting.rules.available_dummy_skill ? 'あり' : 'なし'
   }
 }
 </script>
