@@ -281,6 +281,13 @@ export default class ModalVillageInfo extends Vue {
       description:
         '発言文字数や発言回数の制限です。\n記載がない発言種別は1発言ごとに200文字20行で、1日の回数は無制限となります。'
     })
+    // ダミー役欠け
+    settings.push({
+      name: 'ダミー役欠け',
+      value: rules.available_dummy_skill ? 'あり' : 'なし',
+      description:
+        '「あり」の場合、きぐるみ ピギーに村人以外の役職が割り当てられる可能性があります。\n「なし」の場合、必ず村人が割り当てられます。'
+    })
   }
 
   private addPasswordSetting(settings: Settings[]): void {

@@ -30,6 +30,10 @@
               {{ props.row.silent_hours }}
             </b-table-column>
 
+            <b-table-column label="ダミー役欠け">
+              {{ props.row.available_dummy_skill ? 'あり' : 'なし' }}
+            </b-table-column>
+
             <b-table-column label="削除">
               <b-button
                 @click="deleteReservedVillage(props.row.id)"
@@ -85,6 +89,9 @@
               placeholder="0"
             />
           </b-field>
+          <b-field label="ダミー役欠け">
+            <b-switch v-model="isAvailableDummySkill" />
+          </b-field>
           <b-field class="m-t-40">
             <b-button
               :disabled="submitting"
@@ -123,6 +130,7 @@ export default class extends Vue {
   private createDatetime: string = this.defaultStartDatetime()
   private startDatetime: string = this.defaultStartDatetime()
   private silentHours: number = 0
+  private isAvailableDummySkill: boolean = false
   private submitting: boolean = false
 
   /** computed */
@@ -157,7 +165,8 @@ export default class extends Vue {
         organization: this.organization,
         create_datetime: this.formatDateTime(new Date(this.createDatetime)),
         start_datetime: this.formatDateTime(new Date(this.startDatetime)),
-        silent_hours: this.silentHours
+        silent_hours: this.silentHours,
+        available_dummy_skill: this.isAvailableDummySkill
       })
       .catch(err => {
         console.log(err)
