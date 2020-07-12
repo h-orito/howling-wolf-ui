@@ -9,6 +9,7 @@ interface VillageRules {
   available_suddenly_death: boolean
   available_commit: boolean
   auto_generated: boolean
+  available_dummy_skill: boolean
   message_restrict: VillageMessageRestricts
 }
 
