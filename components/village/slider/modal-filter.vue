@@ -21,9 +21,10 @@
             &nbsp;/&nbsp;
             <a @click="reverseMessageType">反転</a>
           </b-field>
-          <b-field>
+          <b-field class="message-type-checkbox-area">
             <b-checkbox-button
               v-model="messageTypeCodeGroup"
+              class="message-type-checkbox"
               native-value="NORMAL_SAY"
               type="is-primary"
               size="is-small"
@@ -32,6 +33,7 @@
             </b-checkbox-button>
             <b-checkbox-button
               v-model="messageTypeCodeGroup"
+              class="message-type-checkbox"
               native-value="WEREWOLF_SAY"
               type="is-primary"
               size="is-small"
@@ -40,14 +42,18 @@
             </b-checkbox-button>
             <b-checkbox-button
               v-model="messageTypeCodeGroup"
+              class="message-type-checkbox"
               native-value="GRAVE_SAY"
               type="is-primary"
               size="is-small"
             >
               墓下見学
             </b-checkbox-button>
+          </b-field>
+          <b-field class="message-type-checkbox-area">
             <b-checkbox-button
               v-model="messageTypeCodeGroup"
+              class="message-type-checkbox"
               native-value="MONOLOGUE_SAY"
               type="is-primary"
               size="is-small"
@@ -56,6 +62,7 @@
             </b-checkbox-button>
             <b-checkbox-button
               v-model="messageTypeCodeGroup"
+              class="message-type-checkbox"
               native-value="SYSTEM"
               type="is-primary"
               size="is-small"
@@ -64,6 +71,7 @@
             </b-checkbox-button>
             <b-checkbox-button
               v-model="messageTypeCodeGroup"
+              class="message-type-checkbox"
               native-value="PRIVATE_SYSTEM"
               type="is-primary"
               size="is-small"
@@ -326,6 +334,19 @@ export default class ModalFilter extends Vue {
 </script>
 
 <style lang="scss" scoped>
+/** header, footerを隠さない */
+.modal-card {
+  max-height: calc(100vh - 6.5rem);
+}
+
+.message-type-checkbox-area {
+  display: flex;
+
+  .message-type-checkbox {
+    flex: 1;
+  }
+}
+
 .participant-checkbox-area {
   border-top: 0.5px solid #999;
   padding: 0;
