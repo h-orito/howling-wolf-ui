@@ -1,63 +1,64 @@
 <template>
   <div class="hw-message-text">
-    <b-table :data="participants" :mobile-cards="false">
-      <template slot-scope="props">
-        <b-table-column field="chara_name" label="キャラクター">
-          {{ props.row.chara_name }}
-        </b-table-column>
-
-        <b-table-column field="twitter" label="Twitter">
-          {{ props.row.nickname }}@{{ props.row.twitter_user_name }}
-        </b-table-column>
-
-        <b-table-column field="skill" label="役職">
-          {{ props.row.skill }}
-        </b-table-column>
-
-        <b-table-column field="skill_request" label="役職希望">
-          {{ props.row.skill_request }}
-        </b-table-column>
-
-        <b-table-column field="health" label="生死">
-          {{ props.row.health }}
-        </b-table-column>
-
-        <b-table-column field="player_id" label="">
-          <b-button
-            tag="nuxt-link"
-            :to="{ path: '/player-record', query: { id: props.row.player_id } }"
-            target="_blank"
-            size="is-small"
-            type="is-primary"
-            >戦績</b-button
-          >
-          <b-button
-            tag="a"
-            :href="`https://twitter.com/${props.row.twitter_user_name}`"
-            target="_blank"
-            size="is-small"
-            icon-pack="fab"
-            icon-left="twitter"
-            type="is-primary"
-          />
-        </b-table-column>
-      </template>
-
-      <template slot="empty">
-        <section class="section">
-          <div class="content has-text-grey has-text-centered">
-            <p>終了した村はありません</p>
-          </div>
-        </section>
-      </template>
-    </b-table>
+    <strong>参加者一覧</strong>
+    <div
+      class="participant-area"
+      v-for="participant in participantList"
+      :key="participant.id"
+    >
+      <div class="face-area m-r-5">
+        <img
+          :src="imageUrl(participant)"
+          :width="imageWidth(participant)"
+          :height="imageHeight(participant)"
+          class="chara-image"
+        />
+      </div>
+      <div class="name-area is-size-7">
+        <div class="chara-name">
+          <p>{{ charaName(participant) }}</p>
+          <p class="twitter-username">
+            <a
+              :href="
+                `https://twitter.com/${participant.player.twitter_user_name}`
+              "
+              target="_blank"
+            >
+              @{{ participant.player.twitter_user_name }}
+            </a>
+          </p>
+          <p class="chara-status" :class="charaStatusClass(participant)">
+            {{ charaStatus(participant) }}
+          </p>
+        </div>
+        <div class="skill-area">
+          <p class="skill">
+            <strong>{{ participant.skill.name }}</strong>
+            {{ skillRequest(participant) }}
+          </p>
+        </div>
+      </div>
+      <div class="button-area m-l-5 is-size-7">
+        <b-button
+          tag="nuxt-link"
+          :to="{ path: '/player-record', query: { id: participant.player.id } }"
+          target="_blank"
+          size="is-small"
+          icon-pack="fas"
+          icon-left="chart-bar"
+          type="is-primary"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import Village from '~/components/type/village'
+import VillageParticipant from '~/components/type/village-participant'
 import SkillRequest from '~/components/type/skill-request'
+import { FACE_TYPE } from '~/components/const/consts'
 
 @Component({
   components: {}
@@ -66,37 +67,135 @@ export default class ParticipantListMessage extends Vue {
   @Prop({ type: Object })
   private village!: Village
 
-  private get participants(): any[] {
-    return this.village.participant.member_list.map(member => ({
-      chara_name: member.chara.chara_name.name,
-      nickname: member.player!.nickname,
-      twitter_user_name: member.player!.twitter_user_name,
-      twitter: `${member.player!.nickname} <a href="https://twitter.com/${
-        member.player!.twitter_user_name
-      }" target="_blank">@${member.player!.twitter_user_name}</a>`,
-      skill: member.skill!.name,
-      skill_request: this.skillRequest(member.skill_request!),
-      health:
-        member.dead == null
-          ? '生存'
-          : `${member.dead.village_day.day}日目に${member.dead.reason}死`,
-      player_id: member.player!.id
-    }))
+  private get participantList(): VillageParticipant[] {
+    return this.village.participant.member_list
+      .slice()
+      .sort((vp1, vp2) => this.compareParticipant(vp1, vp2))
   }
 
-  private skillRequest(request: SkillRequest): string {
-    return `${request.first.name}/${request.second.name}`
+  private compareParticipant(
+    vp1: VillageParticipant,
+    vp2: VillageParticipant
+  ): number {
+    // 死亡している人が先
+    const vp1isDead = !!vp1.dead
+    const vp2isDead = !!vp2.dead
+    if (vp1isDead && !vp2isDead) return -1
+    if (!vp1isDead && vp2isDead) return 1
+    // どちらも死亡していなければ等価
+    if (!vp1isDead && !vp2isDead) return 0
+    // どちらも死亡している場合は日付が早い順
+    const vp1DeadDay = vp1.dead!.village_day.day
+    const vp2DeadDay = vp2.dead!.village_day.day
+    if (vp1DeadDay !== vp2DeadDay) return vp1DeadDay - vp2DeadDay
+    // 日付も同じ場合は凸->処刑->他
+    const vp1DeadReason = vp1.dead!.reason
+    const vp2DeadReason = vp2.dead!.reason
+    return (
+      this.deadReasonPriority(vp2DeadReason) -
+      this.deadReasonPriority(vp1DeadReason)
+    )
+  }
+
+  private deadReasonPriority(reason: string) {
+    if (reason === '突然') return 2
+    if (reason === '処刑') return 1
+    return 0
+  }
+
+  private imageUrl(participant: VillageParticipant): string {
+    return participant.chara.face_list.find(
+      face => face.type === FACE_TYPE.NORMAL
+    )!.image_url
+  }
+
+  private imageWidth(participant: VillageParticipant): number {
+    return participant.chara.display.width / 2
+  }
+
+  private imageHeight(participant: VillageParticipant): number {
+    return participant.chara.display.height / 2
+  }
+
+  private charaName(participant: VillageParticipant): string {
+    const fullName = participant.chara.chara_name.name
+    if (fullName.length < 20) return fullName
+    return fullName.substring(0, 20) + '...'
+  }
+
+  private charaStatus(participant: VillageParticipant): string {
+    if (!participant.dead) return '生存'
+    const day = participant.dead.village_day.day
+    const reason = participant.dead.reason
+    return `${day}d${reason}`
+  }
+
+  private charaStatusClass(participant: VillageParticipant): string {
+    if (!participant.dead) return ''
+    const reason = participant.dead.reason
+    if (reason === '突然' || reason === '処刑') return 'has-text-info'
+    return 'has-text-danger'
+  }
+
+  private skillRequest(participant: VillageParticipant): string {
+    const req1 = participant.skill_request!.first.name
+    const req2 = participant.skill_request!.second.name
+    return `（${req1}/${req2}希望）`
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.b-table {
-  overflow: auto;
-  white-space: nowrap;
+.participant-area {
+  display: flex;
+  border-top: 0.5px solid #ccc;
+  padding-top: 5px;
+  padding-bottom: 5px;
 
-  td {
-    vertical-align: middle !important;
+  .face-area {
+    .chara-image {
+      vertical-align: bottom;
+      border-radius: 5px;
+    }
+  }
+
+  .name-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    p {
+      margin-bottom: 0;
+    }
+
+    .chara-name {
+      margin-bottom: 5px;
+      display: flex;
+
+      p.twitter-username {
+        margin-left: 5px;
+      }
+
+      .chara-status {
+        flex: 1;
+        text-align: right;
+      }
+    }
+
+    .skill-area {
+      margin-bottom: 0;
+      display: flex;
+
+      p.skill {
+        flex: 1;
+      }
+    }
+  }
+
+  .button-area {
+    padding-left: 10px;
+    margin-top: auto;
+    margin-bottom: auto;
   }
 }
 </style>
