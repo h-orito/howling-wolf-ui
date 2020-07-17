@@ -25,12 +25,7 @@
     </div>
     <div class="hw-message-content-area">
       <div class="hw-message-face-area">
-        <img
-          :src="imageUrl"
-          :width="imageWidth"
-          :height="imageHeight"
-          class="hw-message-chara-image"
-        />
+        <chara-image :chara="chara" :face-type="faceType" />
       </div>
       <div class="hw-message-text-area" :class="messageClass">
         <message-text
@@ -47,11 +42,14 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import messageText from '~/components/village/message/message-text.vue'
 import Village from '~/components/type/village'
 import Message from '~/components/type/message'
+import Chara from '~/components/type/chara'
 import { MESSAGE_TYPE } from '~/components/const/consts'
+const charaImage = () => import('~/components/village/chara-image.vue')
 
 @Component({
   components: {
-    messageText
+    messageText,
+    charaImage
   }
 })
 export default class MessageSay extends Vue {
@@ -85,19 +83,12 @@ export default class MessageSay extends Vue {
     [MESSAGE_TYPE.CREATOR_SAY, '#']
   ])
 
-  private get imageUrl(): string {
-    const typeCode = this.message.content.face_code
-    return this.message.from!.chara.face_list.find(
-      face => face.type === typeCode
-    )!.image_url
+  private get chara(): Chara {
+    return this.message.from!.chara
   }
 
-  private get imageWidth(): number {
-    return this.message.from!.chara.display.width
-  }
-
-  private get imageHeight(): number {
-    return this.message.from!.chara.display.height
+  private get faceType(): string {
+    return this.message.content.face_code!
   }
 
   private get messageClass(): string {

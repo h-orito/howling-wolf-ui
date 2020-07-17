@@ -7,12 +7,7 @@
       :key="participant.id"
     >
       <div class="face-area m-r-5">
-        <img
-          :src="imageUrl(participant)"
-          :width="imageWidth(participant)"
-          :height="imageHeight(participant)"
-          class="chara-image"
-        />
+        <chara-image :chara="participant.chara" :is-small="true" />
       </div>
       <div class="name-area is-size-7">
         <div class="chara-name">
@@ -58,10 +53,12 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import Village from '~/components/type/village'
 import VillageParticipant from '~/components/type/village-participant'
 import SkillRequest from '~/components/type/skill-request'
+import Chara from '~/components/type/chara'
 import { FACE_TYPE } from '~/components/const/consts'
+const charaImage = () => import('~/components/village/chara-image.vue')
 
 @Component({
-  components: {}
+  components: { charaImage }
 })
 export default class ParticipantListMessage extends Vue {
   @Prop({ type: Object })
@@ -103,20 +100,6 @@ export default class ParticipantListMessage extends Vue {
     return 0
   }
 
-  private imageUrl(participant: VillageParticipant): string {
-    return participant.chara.face_list.find(
-      face => face.type === FACE_TYPE.NORMAL
-    )!.image_url
-  }
-
-  private imageWidth(participant: VillageParticipant): number {
-    return participant.chara.display.width / 2
-  }
-
-  private imageHeight(participant: VillageParticipant): number {
-    return participant.chara.display.height / 2
-  }
-
   private charaName(participant: VillageParticipant): string {
     const fullName = participant.chara.chara_name.name
     if (fullName.length < 20) return fullName
@@ -151,13 +134,6 @@ export default class ParticipantListMessage extends Vue {
   border-top: 0.5px solid #ccc;
   padding-top: 5px;
   padding-bottom: 5px;
-
-  .face-area {
-    .chara-image {
-      vertical-align: bottom;
-      border-radius: 5px;
-    }
-  }
 
   .name-area {
     flex: 1;

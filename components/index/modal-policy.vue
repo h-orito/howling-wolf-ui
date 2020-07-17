@@ -160,4 +160,9 @@ export default class PolicyModal extends Vue {
 }
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+/** header, footerを隠さない */
+.modal-card {
+  max-height: calc(100vh - 6.5rem);
+}
+</style>

@@ -296,7 +296,11 @@ export default class extends Vue {
   // ----------------------------------------------------------------
   // created
   // ----------------------------------------------------------------
-  private async created(): Promise<void> {
+  private created(): void {
+    this.createdLoading() // 完了を待たない
+  }
+
+  private async createdLoading(): Promise<void> {
     // 認証を待つ
     await this.auth()
     // 表示設定が作成されていなかったら作成

@@ -21,9 +21,10 @@
             &nbsp;/&nbsp;
             <a @click="reverseMessageType">反転</a>
           </b-field>
-          <b-field>
+          <b-field class="message-type-checkbox-area">
             <b-checkbox-button
               v-model="messageTypeCodeGroup"
+              class="message-type-checkbox"
               native-value="NORMAL_SAY"
               type="is-primary"
               size="is-small"
@@ -32,6 +33,7 @@
             </b-checkbox-button>
             <b-checkbox-button
               v-model="messageTypeCodeGroup"
+              class="message-type-checkbox"
               native-value="WEREWOLF_SAY"
               type="is-primary"
               size="is-small"
@@ -40,14 +42,18 @@
             </b-checkbox-button>
             <b-checkbox-button
               v-model="messageTypeCodeGroup"
+              class="message-type-checkbox"
               native-value="GRAVE_SAY"
               type="is-primary"
               size="is-small"
             >
               墓下見学
             </b-checkbox-button>
+          </b-field>
+          <b-field class="message-type-checkbox-area">
             <b-checkbox-button
               v-model="messageTypeCodeGroup"
+              class="message-type-checkbox"
               native-value="MONOLOGUE_SAY"
               type="is-primary"
               size="is-small"
@@ -56,6 +62,7 @@
             </b-checkbox-button>
             <b-checkbox-button
               v-model="messageTypeCodeGroup"
+              class="message-type-checkbox"
               native-value="SYSTEM"
               type="is-primary"
               size="is-small"
@@ -64,6 +71,7 @@
             </b-checkbox-button>
             <b-checkbox-button
               v-model="messageTypeCodeGroup"
+              class="message-type-checkbox"
               native-value="PRIVATE_SYSTEM"
               type="is-primary"
               size="is-small"
@@ -98,12 +106,7 @@
               >
                 <div class="participant-area">
                   <div class="face-area m-r-5">
-                    <img
-                      :src="imageUrl(participant)"
-                      :width="imageWidth(participant)"
-                      :height="imageHeight(participant)"
-                      class="chara-image"
-                    />
+                    <chara-image :chara="participant.chara" :is-small="true" />
                   </div>
                   <div class="name-area is-size-7">
                     <p class="chara-name">
@@ -155,9 +158,10 @@ import Village from '~/components/type/village'
 import VillageParticipant from '~/components/type/village-participant'
 import Chara from '~/components/type/chara'
 import { MESSAGE_TYPE, FACE_TYPE } from '~/components/const/consts'
+const charaImage = () => import('~/components/village/chara-image.vue')
 
 @Component({
-  components: {}
+  components: { charaImage }
 })
 export default class ModalFilter extends Vue {
   // ----------------------------------------------------------------
@@ -301,20 +305,6 @@ export default class ModalFilter extends Vue {
     })
   }
 
-  private imageUrl(participant: VillageParticipant): string {
-    return participant.chara.face_list.find(
-      face => face.type === FACE_TYPE.NORMAL
-    )!.image_url
-  }
-
-  private imageWidth(participant: VillageParticipant): number {
-    return participant.chara.display.width / 2
-  }
-
-  private imageHeight(participant: VillageParticipant): number {
-    return participant.chara.display.height / 2
-  }
-
   private chunk<T extends any[]>(arr: T, size: number): Array<Array<T>> {
     return arr.reduce(
       (newarr, _, i) =>
@@ -326,6 +316,19 @@ export default class ModalFilter extends Vue {
 </script>
 
 <style lang="scss" scoped>
+/** header, footerを隠さない */
+.modal-card {
+  max-height: calc(100vh - 6.5rem);
+}
+
+.message-type-checkbox-area {
+  display: flex;
+
+  .message-type-checkbox {
+    flex: 1;
+  }
+}
+
 .participant-checkbox-area {
   border-top: 0.5px solid #999;
   padding: 0;
@@ -335,13 +338,6 @@ export default class ModalFilter extends Vue {
 
     padding-top: 5px;
     padding-bottom: 5px;
-
-    .face-area {
-      .chara-image {
-        vertical-align: bottom;
-        border-radius: 5px;
-      }
-    }
 
     .name-area {
       flex: 1;
