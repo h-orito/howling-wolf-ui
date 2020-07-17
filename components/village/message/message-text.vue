@@ -5,12 +5,7 @@
       :key="escapedMessageLine.id"
       ><span v-for="mes in splitAnchor(escapedMessageLine)" :key="mes.id">
         <span v-if="!mes.isAnchor" v-html="mes.text"></span>
-        <a
-          v-if="mes.isAnchor"
-          @click="clickAnchor(mes)"
-          v-html="mes.text"
-          href="javascript:void(0);"
-        ></a>
+        <anchor :mes="mes" @click-anchor="clickAnchor($event)" />
       </span>
       <br />
     </span>
@@ -25,8 +20,14 @@ import AnchorType from '~/components/village/message/anchor-type'
 import Message from '~/components/type/message'
 import VillageAnchorMessage from '~/components/type/village-anchor-message'
 import { MESSAGE_TYPE } from '~/components/const/consts'
+// component
+const anchor = () => import('~/components/village/message/anchor.vue')
 
-@Component({})
+@Component({
+  components: {
+    anchor
+  }
+})
 export default class MessageText extends Vue {
   @Prop({ type: String })
   private messageText!: string
@@ -59,10 +60,10 @@ export default class MessageText extends Vue {
       })
   }
 
-  private clickAnchor(mes: MesParts) {
+  private clickAnchor({ messageTypeCode, messageNumber }) {
     this.$emit('click-anchor', {
-      messageTypeCode: this.anchorTypeMessageTypeMap.get(mes.anchorType!),
-      messageNumber: mes.messageNum
+      messageTypeCode,
+      messageNumber
     })
   }
 
