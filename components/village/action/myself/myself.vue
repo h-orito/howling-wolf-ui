@@ -9,12 +9,7 @@
       </b-message>
       <div class="myself-content-area">
         <div class="myself-face-area">
-          <img
-            :src="imageUrl"
-            :width="imageWidth"
-            :height="imageHeight"
-            class="myself-chara-image"
-          />
+          <chara-image :chara="myself.chara" />
         </div>
         <div class="myself-health-area">
           <b-message v-if="myself.skill == null" size="is-small">
@@ -36,9 +31,10 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 // type
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 import VillageParticipant from '~/components/type/village-participant'
+const charaImage = () => import('~/components/village/chara-image.vue')
 
 @Component({
-  components: {}
+  components: { charaImage }
 })
 export default class Participate extends Vue {
   @Prop({ type: Object })
@@ -88,10 +84,6 @@ export default class Participate extends Vue {
 
     .myself-face-area {
       padding-right: 5px;
-
-      .myself-chara-image {
-        border-radius: 5px;
-      }
     }
 
     .myself-health-area {

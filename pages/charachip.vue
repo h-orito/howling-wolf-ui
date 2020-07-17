@@ -20,13 +20,12 @@
               :key="chara.id"
               class="has-text-centered chara-select-box"
             >
-              <img
+              <chara-image
                 v-for="face in chara.face_list"
                 :key="face.type"
-                :src="face.image_url"
+                :chara="chara"
+                :face-type="face.type"
                 :alt="chara.chara_name.name"
-                :width="chara.display.width"
-                :height="chara.display.height"
               />
               <p class="is-size-7">{{ chara.chara_name.name }}</p>
             </div>
@@ -46,10 +45,12 @@ import loading from '~/components/loading.vue'
 import Charachip from '~/components/type/charachip'
 import Chara from '~/components/type/chara'
 import { FACE_TYPE } from '~/components/const/consts'
+const charaImage = () => import('~/components/village/chara-image.vue')
 
 @Component({
   components: {
-    loading
+    loading,
+    charaImage
   },
   asyncData({ query }) {
     return { charachipId: query.id }
@@ -79,20 +80,6 @@ export default class CharachipDetail extends Vue {
     this.loadingCharachip = true
     this.charachip = await this.$axios.$get(`/charachip/${this.charachipId}`)
     this.loadingCharachip = false
-  }
-
-  /** methods */
-  private imageUrl(chara: Chara): string {
-    return chara.face_list.find(face => face.type === FACE_TYPE.NORMAL)!
-      .image_url
-  }
-
-  private imageWidth(chara: Chara): number {
-    return chara.display.width
-  }
-
-  private imageHeight(chara: Chara): number {
-    return chara.display.height
   }
 }
 </script>

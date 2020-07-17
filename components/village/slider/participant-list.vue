@@ -9,12 +9,7 @@
       :key="participant.id"
     >
       <div class="face-area m-r-5">
-        <img
-          :src="imageUrl(participant)"
-          :width="imageWidth(participant)"
-          :height="imageHeight(participant)"
-          class="chara-image"
-        />
+        <chara-image :chara="participant.chara" :is-small="true" />
       </div>
       <div class="name-area is-size-7">
         <div class="chara-name">
@@ -43,12 +38,7 @@
         :key="participant.id"
       >
         <div class="face-area m-r-5">
-          <img
-            :src="imageUrl(participant)"
-            :width="imageWidth(participant)"
-            :height="imageHeight(participant)"
-            class="chara-image"
-          />
+          <chara-image :chara="participant.chara" :is-small="true" />
         </div>
         <div class="name-area is-size-7">
           <div class="chara-name">
@@ -76,10 +66,12 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import Village from '~/components/type/village'
 import VillageParticipant from '~/components/type/village-participant'
 import Messages from '~/components/type/messages'
+import Chara from '~/components/type/chara'
 import { VILLAGE_STATUS, FACE_TYPE } from '~/components/const/consts'
+const charaImage = () => import('~/components/village/chara-image.vue')
 
 @Component({
-  components: {}
+  components: { charaImage }
 })
 export default class VillageSlider extends Vue {
   @Prop({ type: Object })
@@ -199,13 +191,6 @@ export default class VillageSlider extends Vue {
   border-top: 0.5px solid #999;
   padding-top: 5px;
   padding-bottom: 5px;
-
-  .face-area {
-    .chara-image {
-      vertical-align: bottom;
-      border-radius: 5px;
-    }
-  }
 
   .name-area {
     flex: 1;
