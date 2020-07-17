@@ -11,12 +11,7 @@
           class="has-text-centered chara-select-box"
           @click="selected(chara.id)"
         >
-          <img
-            :src="normalImageUrl(chara)"
-            :alt="chara.chara_name.name"
-            :width="chara.display.width"
-            :height="chara.display.height"
-          />
+          <chara-image :chara="chara" />
           <p class="is-size-7">{{ chara.chara_name.name }}</p>
         </div>
       </div>
@@ -27,9 +22,10 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import Chara from '~/components/type/chara'
+const charaImage = () => import('~/components/village/chara-image.vue')
 
 @Component({
-  components: {}
+  components: { charaImage }
 })
 export default class CharaSelectModal extends Vue {
   @Prop({ type: Array })

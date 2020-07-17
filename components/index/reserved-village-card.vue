@@ -15,7 +15,7 @@
             更新時間:
             {{ daychangeTime(reservedVillage.village_start_datetime) }}
           </p>
-          <p>編成: {{ reservedVillage.organization }}</p>
+          <p>編成: {{ organization }}</p>
           <p>発言可能時間: {{ sayableTime }}</p>
           <p>ダミー役欠け: {{ dummySkill }}</p>
         </div>
@@ -41,6 +41,11 @@ export default class ReservedVillageCard extends Vue {
     if (start === end) return '24時間'
     return `${start.substring(0, 5)} - ${end.substring(0, 5)}（${24 -
       silentHours}時間）`
+  }
+
+  private get organization(): string {
+    const org = this.reservedVillage.organization
+    return `${org.length}人: ${org}`
   }
 
   private daychangeTime(datetime: string): string {

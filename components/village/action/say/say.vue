@@ -18,12 +18,7 @@
 
         <div class="say-content-area">
           <div class="say-face-area">
-            <img
-              :src="imageUrl"
-              :width="imageWidth"
-              :height="imageHeight"
-              class="say-chara-image"
-            />
+            <chara-image :chara="chara" :face-type="faceTypeCode" />
           </div>
           <div class="say-input-area">
             <message-input
@@ -63,12 +58,14 @@ import messageInput from '~/components/village/action/message-input.vue'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 import Village from '~/components/type/village'
 import Message from '~/components/type/message'
+import Chara from '~/components/type/chara'
 import { FACE_TYPE, MESSAGE_TYPE } from '~/components/const/consts'
 import api from '~/components/village/village-api'
 const modalSay = () => import('~/components/village/action/say/modal-say.vue')
+const charaImage = () => import('~/components/village/chara-image.vue')
 
 @Component({
-  components: { messageInput, modalSay }
+  components: { messageInput, modalSay, charaImage }
 })
 export default class Say extends Vue {
   // ----------------------------------------------------------------
@@ -135,18 +132,8 @@ export default class Say extends Vue {
     return FACE_TYPE.NORMAL
   }
 
-  private get imageUrl(): string {
-    return this.situation.participate.myself!.chara.face_list.find(
-      face => face.type === this.faceTypeCode
-    )!.image_url
-  }
-
-  private get imageWidth(): number {
-    return this.situation.participate.myself!.chara.display.width
-  }
-
-  private get imageHeight(): number {
-    return this.situation.participate.myself!.chara.display.height
+  private get chara(): Chara {
+    return this.situation.participate.myself!.chara
   }
 
   private get canSay(): boolean {
@@ -208,11 +195,6 @@ export default class Say extends Vue {
 
     .say-face-area {
       padding-right: 5px;
-
-      .say-chara-image {
-        vertical-align: bottom;
-        border-radius: 5px;
-      }
     }
 
     .say-input-area {

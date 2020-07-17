@@ -93,9 +93,10 @@ export default class VillageCard extends Vue {
   }
 
   private get organization(): string {
-    return this.village.setting.organizations.organization[
+    const org = this.village.setting.organizations.organization[
       this.village.setting.capacity.max
     ]
+    return `${org.length}人: ${org}`
   }
 
   private get dummySkill(): string {

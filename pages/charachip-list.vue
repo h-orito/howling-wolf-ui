@@ -29,12 +29,7 @@
               </b-table-column>
 
               <b-table-column field="chara_list" label="例">
-                <img
-                  :src="imageUrl(props.row.chara)"
-                  :width="imageWidth(props.row.chara)"
-                  :height="imageHeight(props.row.chara)"
-                  class="hw-message-chara-image"
-                />
+                <chara-image :chara="props.row.chara" />
               </b-table-column>
             </template>
 
@@ -62,10 +57,12 @@ import Charachips from '~/components/type/charachips'
 import Charachip from '~/components/type/charachip'
 import Chara from '~/components/type/chara'
 import { FACE_TYPE } from '~/components/const/consts'
+const charaImage = () => import('~/components/village/chara-image.vue')
 
 @Component({
   components: {
-    loading
+    loading,
+    charaImage
   }
 })
 export default class CharachipList extends Vue {
@@ -88,19 +85,6 @@ export default class CharachipList extends Vue {
       designer_name: charachip.designer.name,
       chara: charachip.chara_list[0]
     }))
-  }
-
-  private imageUrl(chara: Chara): string {
-    return chara.face_list.find(face => face.type === FACE_TYPE.NORMAL)!
-      .image_url
-  }
-
-  private imageWidth(chara: Chara): number {
-    return chara.display.width
-  }
-
-  private imageHeight(chara: Chara): number {
-    return chara.display.height
   }
 
   /** created */
