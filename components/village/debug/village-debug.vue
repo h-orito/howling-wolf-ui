@@ -60,6 +60,12 @@
               日付を進める
             </button>
           </p>
+          <p style="font-weight: 700; margin-bottom: 6px;">100回発言する</p>
+          <p class="control has-text-right">
+            <button class="button is-primary is-small" @click="sayMulti">
+              100回発言する
+            </button>
+          </p>
         </div>
       </template>
       <template v-slot:footer> </template>
@@ -156,6 +162,12 @@ export default class Action extends Vue {
     await this.$axios.$post(
       `/admin/village/${this.village!.id}/no-suddenly-death`
     )
+    this.$emit('reload')
+  }
+
+  /** 突然死なしに変更 */
+  private async sayMulti(): Promise<void> {
+    await this.$axios.$post(`/admin/village/${this.village!.id}/multiple-say`)
     this.$emit('reload')
   }
 }
