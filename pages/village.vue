@@ -605,6 +605,7 @@ html {
 
     .village-footer-wrapper {
       height: 1.8rem;
+      height: calc(1.8rem + env(safe-area-inset-bottom));
     }
 
     .village-main-wrapper {

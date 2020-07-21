@@ -161,6 +161,7 @@ export default class VillageFooter extends Vue {
 
     p {
       line-height: 1.8rem;
+      line-height: calc(1.8rem + env(safe-area-inset-bottom));
     }
   }
 
