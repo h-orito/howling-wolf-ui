@@ -1,8 +1,6 @@
-# Wolf for busy
+# HOWLING WOLF
 
 ## Overview
-
-- 忙しい人のためのオプションルールを盛り込んだ人狼がプレイできるサイトです
 
 - Vue.js で画面 UI を提供します
 
