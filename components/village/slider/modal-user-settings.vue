@@ -16,7 +16,7 @@
         <div class="field">
           <b-switch v-model="isPaging">ページ分割する</b-switch>
         </div>
-        <div class="field">
+        <div class="field m-b-40">
           <p class="is-7">1ページあたりの発言数</p>
           <b-slider
             class="p-l-5 p-r-10"
@@ -31,6 +31,10 @@
               <b-slider-tick :value="val" :key="val">{{ val }}</b-slider-tick>
             </template>
           </b-slider>
+        </div>
+        <p class="title is-6">発言表示</p>
+        <div class="field">
+          <b-switch v-model="isDispDate">日付を表示する</b-switch>
         </div>
       </section>
       <footer
@@ -70,11 +74,15 @@ export default class ModalUserSettings extends Vue {
 
   private isPaging: boolean = true
   private messagePerPage: number = 10
+  private isDispDate: boolean = false
 
   private save(): void {
     villageUserSettings.setPaging(this, {
       is_paging: this.isPaging,
       message_per_page: this.messagePerPage
+    })
+    villageUserSettings.setMessageDisplay(this, {
+      is_disp_date: this.isDispDate
     })
     this.$emit('refresh')
     this.close()
@@ -88,6 +96,8 @@ export default class ModalUserSettings extends Vue {
     const pagingSettings = villageUserSettings.getPaging(this)
     this.isPaging = pagingSettings.is_paging
     this.messagePerPage = pagingSettings.message_per_page
+    const messageDisplaySettings = villageUserSettings.getMessageDisplay(this)
+    this.isDispDate = messageDisplaySettings.is_disp_date
   }
 }
 </script>
