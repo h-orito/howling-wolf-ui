@@ -20,7 +20,7 @@
       <p class="hw-message-datetime">
         {{ isAnchorMessage ? message.time.day + 'd' : '' }}
         {{ messageCount }}
-        {{ message.time.datetime.substring(11) }}
+        {{ messageDatetime }}
       </p>
     </div>
     <div class="hw-message-content-area">
@@ -44,6 +44,7 @@ import Village from '~/components/type/village'
 import Message from '~/components/type/message'
 import Chara from '~/components/type/chara'
 import { MESSAGE_TYPE } from '~/components/const/consts'
+import villageUserSettings from '~/components/village/user-settings/village-user-settings'
 const charaImage = () => import('~/components/village/chara-image.vue')
 
 @Component({
@@ -106,6 +107,13 @@ export default class MessageSay extends Vue {
     )
     if (!restrict) return ''
     return `(${this.message.content.count}/${restrict.count})`
+  }
+
+  private get messageDatetime(): string {
+    const isDispDate = villageUserSettings.getMessageDisplay(this).is_disp_date
+    return isDispDate
+      ? this.message.time.datetime
+      : this.message.time.datetime.substring(11)
   }
 
   private get isDispAnchorString(): boolean {

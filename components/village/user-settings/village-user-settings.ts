@@ -36,6 +36,17 @@ const villageUserSettings = {
     const cookie = this.getCookie(app)
     cookie.action_window = settings
     this.setCookie(app, cookie)
+  },
+  getMessageDisplay(app: Vue): MessageDisplaySettings {
+    const cookie = this.getCookie(app)
+    if (cookie.message_display) return cookie.message_display
+    this.setMessageDisplay(app, DEFAULT_MESSAGE_DISPLAY)
+    return DEFAULT_MESSAGE_DISPLAY
+  },
+  setMessageDisplay(app: Vue, settings: MessageDisplaySettings): void {
+    const cookie = this.getCookie(app)
+    cookie.message_display = settings
+    this.setCookie(app, cookie)
   }
 }
 
@@ -44,6 +55,7 @@ export default villageUserSettings
 export interface VillageUserSettings {
   paging: PagingSettings
   action_window?: ActionWindowSettings
+  message_display?: MessageDisplaySettings
 }
 
 export interface PagingSettings {
@@ -56,6 +68,10 @@ export interface ActionWindowSettings {
   tab_code: string
 }
 
+export interface MessageDisplaySettings {
+  is_disp_date: boolean
+}
+
 const DEFAULT_PAGING: PagingSettings = {
   is_paging: true,
   message_per_page: 50
@@ -66,7 +82,12 @@ const DEFAULT_ACTION_WINDOW: ActionWindowSettings = {
   tab_code: 'myself'
 }
 
+const DEFAULT_MESSAGE_DISPLAY: MessageDisplaySettings = {
+  is_disp_date: false
+}
+
 const DEFAULT_SETTINGS: VillageUserSettings = {
   paging: DEFAULT_PAGING,
-  action_window: DEFAULT_ACTION_WINDOW
+  action_window: DEFAULT_ACTION_WINDOW,
+  message_display: DEFAULT_MESSAGE_DISPLAY
 }
