@@ -9,11 +9,11 @@
   }
 
   .spinner {
-    margin: 100px auto 50px auto;
-    width: 50px;
-    height: 40px;
+    margin: 100px auto 20px auto;
+    width: 300px;
+    height: 50px;
     text-align: center;
-    font-size: 10px;
+    font-size: 20px;
   }
 
   .description {
@@ -21,13 +21,14 @@
   }
 
   .spinner > div {
-    background-color: #3991f4;
-    height: 100%;
-    width: 6px;
     display: inline-block;
 
     -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;
     animation: sk-stretchdelay 1.2s infinite ease-in-out;
+  }
+
+  .spinner .rect1 {
+    color: #00f;
   }
 
   .spinner .rect2 {
@@ -50,14 +51,45 @@
     animation-delay: -0.8s;
   }
 
+  .spinner .rect6 {
+    -webkit-animation-delay: -0.7s;
+    animation-delay: -0.7s;
+  }
+
+  .spinner .rect7 {
+    -webkit-animation-delay: -0.6s;
+    animation-delay: -0.6s;
+  }
+
+  .spinner .rect8 {
+    color: #00f;
+    -webkit-animation-delay: -0.5s;
+    animation-delay: -0.5s;
+  }
+
+  .spinner .rect9 {
+    -webkit-animation-delay: -0.4s;
+    animation-delay: -0.4s;
+  }
+
+  .spinner .rect10 {
+    -webkit-animation-delay: -0.3s;
+    animation-delay: -0.3s;
+  }
+
+  .spinner .rect11 {
+    -webkit-animation-delay: -0.2s;
+    animation-delay: -0.2s;
+  }
+
   @-webkit-keyframes sk-stretchdelay {
     0%,
     40%,
     100% {
-      -webkit-transform: scaleY(0.4);
+      -webkit-transform: scaleY(0.6);
     }
     20% {
-      -webkit-transform: scaleY(1);
+      -webkit-transform: scaleY(1.2);
     }
   }
 
@@ -65,24 +97,31 @@
     0%,
     40%,
     100% {
-      transform: scaleY(0.4);
-      -webkit-transform: scaleY(0.4);
+      transform: scaleY(0.6);
+      -webkit-transform: scaleY(0.6);
     }
     20% {
       transform: scaleY(1);
-      -webkit-transform: scaleY(1);
+      -webkit-transform: scaleY(1.2);
     }
   }
 </style>
 <div>
   <div class="spinner">
-    <div class="rect1"></div>
-    <div class="rect2"></div>
-    <div class="rect3"></div>
-    <div class="rect4"></div>
-    <div class="rect5"></div>
+    <div class="rect1">H</div>
+    <div class="rect2">O</div>
+    <div class="rect3">W</div>
+    <div class="rect4">L</div>
+    <div class="rect5">I</div>
+    <div class="rect6">N</div>
+    <div class="rect7">G</div>
+    <div class="rect8">W</div>
+    <div class="rect9">O</div>
+    <div class="rect10">L</div>
+    <div class="rect11">F</div>
   </div>
   <div class="description">
     <p>読み込み中<br />（初回やアップデート後は時間がかかる場合があります）</p>
   </div>
 </div>
+</html>

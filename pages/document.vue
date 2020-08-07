@@ -80,6 +80,14 @@
             </tr>
             <tr>
               <td></td>
+              <td>prologue_datetime</td>
+              <td></td>
+              <td>string</td>
+              <td>○</td>
+              <td>プロローグが開始した日時。yyyy/MM/dd HH:mm型</td>
+            </tr>
+            <tr>
+              <td></td>
               <td>epilogue_datetime</td>
               <td></td>
               <td>string</td>
@@ -203,6 +211,19 @@
         >
         </b-input>
       </div>
+      <hr />
+      <h2 class="is-size-6">村戦績が取得できる最大村ID</h2>
+      <div class="content m-t-10">
+        <p>戦績取得可能な最大の村IDを取得できます。</p>
+        <h3 class="is-size-6">Request</h3>
+        <p>GET: https://wolfort.net/howling-wolf/village-record/latest-vid</p>
+        <h3>Response</h3>
+        <p>型：application/json</p>
+        <p>文字コード：UTF8</p>
+        <p>例</p>
+        <b-input size="is-small" :rows="1" type="textarea" value="{ vid: 1 }">
+        </b-input>
+      </div>
     </div>
   </section>
 </template>
@@ -228,6 +249,7 @@ export default class extends Vue {
         "id": 1,
         "name": "0001村",
         "start_datetime": "2020/01/01 00:00",
+        "prologue_datetime": "2019/12/31 00:00",
         "epilogue_datetime": "2020/01/03 00:00",
         "epilogue_day": 3,
         "organization": "村占霊狼狂",
