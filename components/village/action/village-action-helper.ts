@@ -10,7 +10,7 @@ const actionHelper = {
   getAvailableActions(situation: SituationAsParticipant): VillageAction[] {
     const actions: VillageAction[] = []
     if (this.isDispMyself(situation))
-      actions.push({ code: 'myself', name: '参加情報', icon: 'user' })
+      actions.push({ code: 'myself', name: '参加', icon: 'user' })
     if (this.isDispSay(situation))
       actions.push({ code: 'say', name: '発言', icon: 'comment-dots' })
     if (this.isDispParticipate(situation))
@@ -23,17 +23,19 @@ const actionHelper = {
       actions.push({ code: 'leave', name: '退村', icon: 'sign-out-alt' })
     if (this.isDispVote(situation))
       actions.push({ code: 'vote', name: '投票', icon: 'skull' })
+    if (this.isDispComingout(situation))
+      actions.push({ code: 'comingout', name: 'CO', icon: 'hand-paper' })
     situation.ability.list
       .filter(ab => ab.usable)
       .forEach(ability => {
         actions.push({
           code: ability.type.code,
-          name: '能力: ' + ability.type.name,
+          name: ability.type.name,
           icon: 'bolt'
         })
       })
     if (this.isDispCommit(situation))
-      actions.push({ code: 'commit', name: '時短希望', icon: 'clock' })
+      actions.push({ code: 'commit', name: '時短', icon: 'clock' })
     return actions
   },
   existsAction(situation: SituationAsParticipant): boolean {
@@ -65,6 +67,9 @@ const actionHelper = {
   },
   isDispCommit(situation: SituationAsParticipant): boolean {
     return situation.commit.available_commit
+  },
+  isDispComingout(situation: SituationAsParticipant): boolean {
+    return situation.coming_out.available_coming_out
   }
 }
 

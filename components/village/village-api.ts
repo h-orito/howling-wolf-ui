@@ -93,6 +93,12 @@ const api = {
     })
   },
 
+  postComingout(app: Vue, villageId: number, skills: string[]): Promise<void> {
+    return app.$axios.$post(`/village/${villageId}/comingout`, {
+      skill_code: skills
+    })
+  },
+
   postLeave(app: Vue, villageId: number): Promise<void> {
     return app.$axios.$post(`/village/${villageId}/leave`)
   },

@@ -10,6 +10,7 @@
       <p class="hw-message-name">
         {{ message.from.chara.chara_name.full_name }}
       </p>
+      <p v-if="comingout" class="coming-out">{{ comingout }}</p>
       <p class="hw-message-player" v-if="message.from.player">
         [<a
           :href="'https://twitter.com/' + message.from.player.twitter_user_name"
@@ -98,6 +99,12 @@ export default class MessageSay extends Vue {
     return className
   }
 
+  private get comingout(): string | null {
+    const colist = this.message.from!.coming_outs.list
+    if (colist.length === 0) return null
+    return colist.map(co => co.skill.short_name).join(',') + 'CO'
+  }
+
   private get messageCount(): string {
     if (this.message.content.count == null || this.village == null) return ''
     const restrict = this.village.setting.rules.message_restrict.restrict_list.find(
@@ -161,6 +168,13 @@ export default class MessageSay extends Vue {
     .hw-message-name {
       text-align: left;
       font-weight: bold;
+    }
+    .coming-out {
+      font-size: 11px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-left: 5px;
+      padding: 1px 3px;
     }
     .hw-message-player {
       margin-left: 5px;

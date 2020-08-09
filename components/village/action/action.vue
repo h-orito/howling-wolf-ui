@@ -4,8 +4,6 @@
       <b-button
         v-for="tab in activeTabs"
         :key="tab.name"
-        icon-pack="fas"
-        :icon-left="tab.icon"
         class="village-action-header-item flex"
         :class="tab.code === activeTabCode ? 'active' : ''"
         size="is-small"
@@ -85,6 +83,14 @@
         ref="vote"
         @reload="$emit('reload', $event)"
       />
+      <comingout
+        :class="activeTabCode === 'comingout' ? '' : 'no-visible'"
+        v-if="isDispComingout"
+        :village="village"
+        :situation="situation.coming_out"
+        ref="comingout"
+        @reload="$emit('reload', $event)"
+      />
       <div v-for="ability in abilities" :key="ability.type.code">
         <ability
           :class="activeTabCode === ability.type.code ? '' : 'no-visible'"
@@ -130,6 +136,8 @@ const skillRequest = () =>
   import('~/components/village/action/participate/skill-request.vue')
 const say = () => import('~/components/village/action/say/say.vue')
 const commit = () => import('~/components/village/action/commit/commit.vue')
+const comingout = () =>
+  import('~/components/village/action/comingout/comingout.vue')
 const myself = () => import('~/components/village/action/myself/myself.vue')
 
 const containerSizeClasses = ['minimized', 'small', 'large']
@@ -144,6 +152,7 @@ const containerSizeClasses = ['minimized', 'small', 'large']
     vote,
     ability,
     commit,
+    comingout,
     myself
   }
 })
@@ -203,6 +212,10 @@ export default class Action extends Vue {
     return this.situation.commit.available_commit
   }
 
+  private get isDispComingout(): boolean {
+    return this.situation.coming_out.available_coming_out
+  }
+
   private get isInputting(): boolean {
     if (!this.situation.say.available_say) return false
     return (this.$refs as any).say.isInputting
@@ -227,8 +240,11 @@ export default class Action extends Vue {
         element.resetTarget()
       })
     }
-    if (this.situation.vote.available_vote) {
+    if (this.situation.vote.available_vote && refs.vote) {
       refs.vote.resetTarget()
+    }
+    if (this.situation.coming_out.available_coming_out && refs.comingout) {
+      refs.comingout.reset()
     }
   }
 
@@ -296,6 +312,7 @@ export default class Action extends Vue {
     border-left: 0;
     border-bottom: 0;
     height: 100%;
+    border-right: 1px solid #ccc;
   }
   .village-action-header-item.flex {
     flex: 1;
