@@ -20,15 +20,17 @@
         <div class="m-t-20" v-if="isNotFinished">
           <p style="font-weight: 700; margin-bottom: 6px;">誤爆防止確認</p>
           <p>発言しようとしている種別を選択してください</p>
-          <b-field>
-            <b-select v-model="confirmType" expanded size="is-small">
-              <option
-                v-for="type in messageTypes"
-                :key="type.code"
-                :value="type.code"
-                >{{ type.label }}</option
-              >
-            </b-select>
+          <b-field class="m-b-5">
+            <b-radio-button
+              v-for="type in messageTypes"
+              :key="type.code"
+              v-model="confirmType"
+              :native-value="type.code"
+              type="is-primary"
+              size="is-small"
+            >
+              <span>{{ type.label }}</span>
+            </b-radio-button>
           </b-field>
         </div>
       </section>
@@ -55,6 +57,7 @@
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import messageCard from '~/components/village/message/message-card.vue'
 import Village from '~/components/type/village'
+import SituationAsParticipant from '~/components/type/situation-as-participant'
 import Message from '~/components/type/message'
 import { VILLAGE_STATUS, MESSAGE_TYPE } from '~/components/const/consts'
 
@@ -74,6 +77,9 @@ export default class ModalSay extends Vue {
   @Prop({ type: Object })
   private village!: Village
 
+  @Prop({ type: Object })
+  private situation!: SituationAsParticipant
+
   // ----------------------------------------------------------------
   // data
   // ----------------------------------------------------------------
@@ -92,10 +98,6 @@ export default class ModalSay extends Vue {
 
   private get messageTypes(): any[] {
     return [
-      {
-        label: '選択してください',
-        code: ''
-      },
       {
         label: '通常発言',
         code: MESSAGE_TYPE.NORMAL_SAY
@@ -120,7 +122,13 @@ export default class ModalSay extends Vue {
         label: '村建て発言',
         code: MESSAGE_TYPE.CREATOR_SAY
       }
-    ]
+    ].filter(type => this.availableMessageTypes.includes(type.code))
+  }
+
+  private get availableMessageTypes(): string[] {
+    return this.situation.say.selectable_message_type_list.map(
+      type => type.message_type.code
+    )
   }
 
   private get canSubmit(): boolean {

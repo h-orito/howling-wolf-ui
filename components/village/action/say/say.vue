@@ -45,6 +45,7 @@
       :is-open="isSayModalOpen"
       :confirm-message="confirmMessage"
       :village="village"
+      :situation="situation"
       @close="closeSayModal"
       @say="say"
     />
