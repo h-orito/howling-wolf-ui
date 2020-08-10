@@ -140,10 +140,13 @@ export default class MessageSay extends Vue {
     const charaShortName = this.message.from
       ? this.message.from.chara.chara_name.short_name
       : ''
-    await (this as any).$copyText(charaShortName + this.anchorString)
+    const text =
+      this.message.content.type.code === MESSAGE_TYPE.WEREWOLF_SAY
+        ? this.anchorString
+        : charaShortName + this.anchorString
+    await (this as any).$copyText(text)
     this.$buefy.toast.open({
-      message: `クリップボードにコピーしました: ${charaShortName +
-        this.anchorString}`,
+      message: `クリップボードにコピーしました: ${text}`,
       type: 'is-info',
       position: 'is-top'
     })
