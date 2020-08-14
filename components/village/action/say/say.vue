@@ -45,6 +45,7 @@
       :is-open="isSayModalOpen"
       :confirm-message="confirmMessage"
       :village="village"
+      :situation="situation"
       @close="closeSayModal"
       @say="say"
     />
@@ -61,6 +62,7 @@ import Message from '~/components/type/message'
 import Chara from '~/components/type/chara'
 import { FACE_TYPE, MESSAGE_TYPE } from '~/components/const/consts'
 import api from '~/components/village/village-api'
+import toast from '~/components/village/village-toast'
 const modalSay = () => import('~/components/village/action/say/modal-say.vue')
 const charaImage = () => import('~/components/village/chara-image.vue')
 
@@ -165,7 +167,9 @@ export default class Say extends Vue {
         this.faceTypeCode
       )
       this.isSayModalOpen = true
-    } catch (error) {}
+    } catch (error) {
+      toast.danger(this, '発言確認失敗しました。')
+    }
   }
 
   private async say(): Promise<void> {
@@ -177,8 +181,10 @@ export default class Say extends Vue {
         this.messageType,
         this.faceTypeCode
       )
-    } catch (error) {}
-    this.message = ''
+      this.message = ''
+    } catch (error) {
+      toast.danger(this, '発言失敗しました。')
+    }
     await this.$emit('reload')
   }
 

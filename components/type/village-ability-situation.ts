@@ -1,8 +1,8 @@
 import VillageParticipant from '~/components/type/village-participant'
-import Ability from '~/components/type/ability'
+import AbilityType from '~/components/type/ability-type'
 
 interface VillageAbilitySituation {
-  type: Ability
+  type: AbilityType
   target_list: VillageParticipant[]
   target: VillageParticipant | null
   usable: boolean

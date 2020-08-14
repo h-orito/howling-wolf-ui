@@ -113,7 +113,10 @@ export default class RuleMessage extends Vue {
         spectator: false,
         skill: null,
         skill_request: null,
-        win: null
+        win: null,
+        coming_outs: {
+          list: []
+        }
       },
       to: null,
       time: {

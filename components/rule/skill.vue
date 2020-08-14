@@ -89,7 +89,7 @@
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import Skill from '~/components/type/skill'
 import Camp from '~/components/type/camp'
-import Ability from '~/components/type/ability'
+import AbilityType from '~/components/type/ability-type'
 import MessageType from '~/components/type/message-type'
 
 interface TableSkill {
@@ -129,7 +129,7 @@ export default class RuleSkill extends Vue {
         name: skill.name,
         short_name: skill.short_name,
         camp: skill.win_judge_camp == null ? '-' : skill.win_judge_camp.name,
-        abilities: skill.manual_ability_list.map((ability: Ability) => {
+        abilities: skill.manual_ability_list.map((ability: AbilityType) => {
           return {
             name: ability.name,
             link: ability.code.toLowerCase()

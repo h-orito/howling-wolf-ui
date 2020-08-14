@@ -14,6 +14,9 @@
       <div class="name-area is-size-7">
         <div class="chara-name">
           <p>{{ charaName(participant) }}</p>
+          <p v-if="comingout(participant)" class="coming-out">
+            {{ comingout(participant) }}
+          </p>
           <p class="chara-filter">
             <a href="javascript:void(0);" @click="charaFilter(participant)"
               >抽出</a
@@ -43,6 +46,9 @@
         <div class="name-area is-size-7">
           <div class="chara-name">
             <p>{{ charaName(participant) }}</p>
+            <p v-if="comingout(participant)" class="coming-out">
+              {{ comingout(participant) }}
+            </p>
             <p class="chara-filter">
               <a href="javascript:void(0);" @click="charaFilter(participant)"
                 >抽出</a
@@ -153,6 +159,12 @@ export default class VillageSlider extends Vue {
     return fullName.substring(0, 20) + '...'
   }
 
+  private comingout(participant: VillageParticipant): string | null {
+    const colist = participant.coming_outs.list
+    if (colist.length === 0) return null
+    return colist.map(co => co.skill.short_name).join(',') + 'CO'
+  }
+
   private charaStatus(participant: VillageParticipant): string {
     if (!participant.dead) return ''
     const day = participant.dead.village_day.day
@@ -200,6 +212,13 @@ export default class VillageSlider extends Vue {
     .chara-name {
       margin-bottom: 5px;
       display: flex;
+
+      .coming-out {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-left: 5px;
+        padding: 1px 3px;
+      }
 
       p.chara-filter {
         flex: 1;
