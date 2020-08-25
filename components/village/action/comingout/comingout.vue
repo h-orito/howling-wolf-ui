@@ -111,7 +111,35 @@ export default class Comingout extends Vue {
     }
   }
 
-  private async setComingout(): Promise<void> {
+  private setComingout(): void {
+    const self = this
+    const colist: string[] = []
+    if (!!this.co1 && this.co1 !== '') {
+      colist.push(this.co1)
+      if (!!this.co2 && this.co2 !== '' && this.co1 !== this.co2) {
+        colist.push(this.co2)
+      }
+    }
+
+    this.$buefy.dialog.confirm({
+      title: 'カミングアウト確認',
+      message:
+        colist.length > 0
+          ? '本当にカミングアウトしますか？'
+          : '本当にカミングアウトを取り消しますか？',
+      confirmText:
+        colist.length > 0 ? 'カミングアウトする' : 'カミングアウトを取り消す',
+      type: 'is-primary',
+      hasIcon: true,
+      onConfirm: async () => {
+        await self.comingout()
+      },
+      size: 'is-small',
+      cancelText: 'キャンセル'
+    })
+  }
+
+  private async comingout(): Promise<void> {
     this.submitting = true
     const colist: string[] = []
     if (!!this.co1 && this.co1 !== '') {
