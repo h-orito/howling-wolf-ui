@@ -33,6 +33,23 @@
       :is-latest-day="isLatestDay"
       :messages="messages"
     />
+    <div>
+      <script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+      ></script>
+      <ins
+        class="adsbygoogle"
+        style="display:block"
+        data-ad-format="fluid"
+        data-ad-layout-key="-hm-c+2i-1u-38"
+        data-ad-client="ca-pub-0917187897820609"
+        data-ad-slot="5122687444"
+      ></ins>
+      <script>
+        ;(adsbygoogle = window.adsbygoogle || []).push({})
+      </script>
+    </div>
     <b-pagination
       v-if="messages.all_page_count != null && messages.all_page_count > 1"
       :total="messages.all_record_count"

@@ -149,7 +149,9 @@ export default class TopPage extends Vue {
 
   private async loadReservedVillages(): Promise<void> {
     this.isLoadingReservedVillages = true
-    this.reservedVillages = await this.$axios.$get('/reserved-village/list')
+    this.reservedVillages = await this.$axios.$get(
+      '/reserved-village/list?limit=3'
+    )
     this.isLoadingReservedVillages = false
   }
 
