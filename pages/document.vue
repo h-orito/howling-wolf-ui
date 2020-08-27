@@ -5,7 +5,7 @@
       <hr />
       <h2 class="is-size-6">村戦績</h2>
       <div class="content m-t-10">
-        <p>エピローグを迎えた村の戦績を取得できます。</p>
+        <p>エピローグを迎えた、もしくは廃村した村の戦績を取得できます。</p>
         <h3 class="is-size-6">Request</h3>
         <p>GET: https://wolfort.net/howling-wolf/village-record/list</p>
         <strong>Parameter</strong>
@@ -72,10 +72,18 @@
             </tr>
             <tr>
               <td></td>
-              <td>start_datetime</td>
+              <td>status</td>
               <td></td>
               <td>string</td>
               <td>○</td>
+              <td>ステータス。「廃村」「エピローグ」「終了」のいずれか。</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>start_datetime</td>
+              <td></td>
+              <td>string</td>
+              <td>-</td>
               <td>1日目が開始した日時。yyyy/MM/dd HH:mm型</td>
             </tr>
             <tr>
@@ -91,7 +99,7 @@
               <td>epilogue_datetime</td>
               <td></td>
               <td>string</td>
-              <td>○</td>
+              <td>-</td>
               <td>エピローグが開始した日時。yyyy/MM/dd HH:mm型</td>
             </tr>
             <tr>
@@ -99,7 +107,7 @@
               <td>epilogue_day</td>
               <td></td>
               <td>number</td>
-              <td>○</td>
+              <td>-</td>
               <td>エピローグが何日目か</td>
             </tr>
             <tr>
@@ -123,7 +131,7 @@
               <td>win_camp_name</td>
               <td></td>
               <td>string</td>
-              <td>○</td>
+              <td>-</td>
               <td>勝利陣営。村人陣営、人狼陣営、狐陣営のいずれか。</td>
             </tr>
             <tr>
@@ -163,7 +171,7 @@
               <td></td>
               <td>skill_name</td>
               <td>string</td>
-              <td>○</td>
+              <td>-</td>
               <td>役職名</td>
             </tr>
             <tr>
@@ -197,7 +205,7 @@
               <td></td>
               <td>win</td>
               <td>boolean</td>
-              <td>○</td>
+              <td>-</td>
               <td>勝利したか</td>
             </tr>
           </tbody>
@@ -248,6 +256,7 @@ export default class extends Vue {
       {
         "id": 1,
         "name": "0001村",
+        "status": "エピローグ",
         "start_datetime": "2020/01/01 00:00",
         "prologue_datetime": "2019/12/31 00:00",
         "epilogue_datetime": "2020/01/03 00:00",
