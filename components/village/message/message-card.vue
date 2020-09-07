@@ -159,3 +159,15 @@ export default class MessageCard extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.card {
+  background-color: transparent !important;
+  border-top: 1px solid #ccc !important;
+  border-bottom: 1px solid #ccc !important;
+  // border-top-color: #fff !important;
+  // border-bottom-color: #fff !important;
+  // border-left-color: #fff !important;
+  // border-right-color: #fff !important;
+}
+</style>

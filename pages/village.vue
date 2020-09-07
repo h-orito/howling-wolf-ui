@@ -619,6 +619,10 @@ html {
       .village-article-wrapper {
         flex: 1;
         overflow-y: scroll;
+        background-image: url('~static/image/top-bg.jpg');
+        background-repeat: repeat-y;
+        background-size: cover;
+        background-position: left top;
 
         .village-name {
           margin: 10px 5px;

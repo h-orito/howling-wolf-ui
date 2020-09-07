@@ -171,6 +171,7 @@ export default class MessageSay extends Vue {
     .hw-message-name {
       text-align: left;
       font-weight: bold;
+      color: #ccc;
     }
     .coming-out {
       font-size: 11px;
@@ -186,7 +187,7 @@ export default class MessageSay extends Vue {
     .hw-message-datetime {
       margin-left: auto;
       text-align: right;
-      color: #aaaaaa;
+      color: #bbb;
     }
   }
   .hw-message-content-area {

@@ -60,6 +60,8 @@ export default class SystemMessage extends Vue {
 <style lang="scss" scoped>
 .card-content {
   padding: 10px !important;
+  background-color: transparent;
+  color: #fff;
 
   &.message-system-private {
     border-top: 1px solid $private-system-border;
