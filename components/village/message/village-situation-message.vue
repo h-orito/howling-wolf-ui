@@ -135,8 +135,10 @@ export default class MessageCard extends Vue {
   }
 
   private get noSayMembers(): VillageParticipant[] {
+    const dummyCharaId: number = this.village.setting.charachip.dummy_chara_id
     return this.village.participant.member_list
       .filter(member => !member.dead)
+      .filter(member => member.chara.id !== dummyCharaId)
       .filter(member => this.sayCount(member.id) === 0)
   }
 
