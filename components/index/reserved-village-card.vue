@@ -18,6 +18,7 @@
           <p>編成: {{ organization }}</p>
           <p>発言可能時間: {{ sayableTime }}</p>
           <p>ダミー役欠け: {{ dummySkill }}</p>
+          <p>初心者村か: {{ forBeginner }}</p>
         </div>
       </div>
     </div>
@@ -54,6 +55,10 @@ export default class ReservedVillageCard extends Vue {
 
   private get dummySkill(): string {
     return this.reservedVillage.available_dummy_skill ? 'あり' : 'なし'
+  }
+
+  private get forBeginner(): string {
+    return this.reservedVillage.for_beginner ? 'はい' : 'いいえ'
   }
 }
 </script>

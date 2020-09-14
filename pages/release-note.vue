@@ -4,6 +4,7 @@
       <h1 class="title is-5">更新情報</h1>
       <div class="content">
         <ul class="has-text-left is-size-7">
+          <li>2020/09/15 村設定：初心者村を追加</li>
           <li>
             2020/09/14
             開始2時間前以降は24時間発言がなくても自動で村を去らないよう変更

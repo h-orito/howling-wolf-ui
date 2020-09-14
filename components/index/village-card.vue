@@ -7,7 +7,7 @@
       <div class="card village-card">
         <header class="card-header village-card-header">
           <p class="card-header-title village-card-header-title">
-            {{ village.name }}
+            {{ villageName }}
           </p>
         </header>
         <div class="card-content">
@@ -37,6 +37,12 @@ import { VILLAGE_STATUS } from '~/components/const/consts'
 export default class VillageCard extends Vue {
   @Prop({ type: Object })
   private village!: SimpleVillage
+
+  private get villageName(): string {
+    const name = this.village.name
+    const isForBeginner = this.village.setting.rules.for_beginner
+    return `${name}${isForBeginner ? '（初心者村）' : ''}`
+  }
 
   private get status(): string {
     const villageStatus = this.village.status.name
