@@ -74,6 +74,10 @@
           <div v-if="isDispDebugMenu">
             <village-debug :village="debugVillage" @reload="reload" />
           </div>
+          <village-admin
+            v-if="situation && situation.admin.admin"
+            :situation="situation.admin"
+          />
         </div>
         <action
           v-if="situation && existsAction"
@@ -138,6 +142,8 @@ const messageCards = () =>
 const villageDebug = () =>
   import('~/components/village/debug/village-debug.vue')
 const villageDayList = () => import('~/components/village/village-day-list.vue')
+const villageAdmin = () =>
+  import('~/components/village/admin/village-admin.vue')
 
 @Component({
   components: {
@@ -148,7 +154,8 @@ const villageDayList = () => import('~/components/village/village-day-list.vue')
     villageDayList,
     villageFooter,
     villageHeader,
-    villageSlider
+    villageSlider,
+    villageAdmin
   },
   asyncData({ query }) {
     return { villageId: query.id }

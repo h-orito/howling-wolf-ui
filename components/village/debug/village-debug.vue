@@ -31,12 +31,12 @@
           </b-field>
           <p style="font-weight: 700; margin-bottom: 6px;">ダミーログイン</p>
           <b-field>
-            <b-select v-model="participantId" expanded size="is-small">
+            <b-select v-model="playerId" expanded size="is-small">
               <option
-                v-for="participant in participantList"
-                :value="participant.id"
-                :key="participant.id"
-                >{{ dummyLoginCharaName(participant) }}</option
+                v-for="player in playerList"
+                :value="player.player_id"
+                :key="player.player_id"
+                >{{ player.name }}</option
               >
             </b-select>
             <p class="control">
@@ -100,7 +100,7 @@ export default class Action extends Vue {
       ? this.participateMemberNumList[0]
       : 1
 
-  private participantId: number = this.participantList[0].id
+  private playerId: number = this.playerList[0].player_id
 
   // ----------------------------------------------------------------
   // computed
@@ -119,8 +119,35 @@ export default class Action extends Vue {
     return list
   }
 
-  private get participantList(): Array<VillageParticipant> {
-    return this.village.participant.member_list
+  private get playerList(): Array<Player> {
+    const list: Player[] = []
+    for (let i = 1; i <= 18; i++) {
+      const participant = this.village.participant.member_list.find(
+        p => p.player!.id === i
+      )
+      if (participant) {
+        list.push({
+          name: this.dummyLoginCharaName(participant),
+          player_id: i
+        })
+        continue
+      }
+      const spectator = this.village.spectator.member_list.find(
+        p => p.player!.id === i
+      )
+      if (spectator) {
+        list.push({
+          name: `（見学）${this.dummyLoginCharaName(spectator)}`,
+          player_id: i
+        })
+        continue
+      }
+      list.push({
+        name: `未参加: player_id: ${i}`,
+        player_id: i
+      })
+    }
+    return list
   }
 
   // ----------------------------------------------------------------
@@ -146,7 +173,7 @@ export default class Action extends Vue {
   /** 選択したキャラでログインして表示 */
   private async dummyLogin(): Promise<void> {
     await this.$axios.$post(`/admin/village/${this.village!.id}/dummy-login`, {
-      target_id: this.participantId
+      target_id: this.playerId
     })
     this.$emit('reload')
   }
@@ -170,5 +197,10 @@ export default class Action extends Vue {
     await this.$axios.$post(`/admin/village/${this.village!.id}/multiple-say`)
     this.$emit('reload')
   }
+}
+
+interface Player {
+  name: string
+  player_id: number
 }
 </script>
