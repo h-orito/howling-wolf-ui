@@ -89,8 +89,20 @@ export default class MessageCard extends Vue {
     const currentParticipantCount = this.village.participant.count
     const startDatetime = this.village.setting.time.start_datetime
     return currentParticipantCount < minPersonCount
-      ? `${startDatetime}時点で${minPersonCount}人集まれば村が開始されます。`
-      : `${startDatetime}に村が開始されます。`
+      ? `${this.forBeginnerRecruitingMessage}${startDatetime}時点で${minPersonCount}人集まれば村が開始されます。`
+      : `${this.forBeginnerMessage}${startDatetime}に村が開始されます。`
+  }
+
+  private get forBeginnerRecruitingMessage(): string {
+    const isForBeginner = this.village.setting.rules.for_beginner
+    return isForBeginner
+      ? 'この村は初心者村です。\n村作成から24時間経過するまで、一度以上参加したことがある方の参加が制限されます。\n'
+      : ''
+  }
+
+  private get forBeginnerMessage(): string {
+    const isForBeginner = this.village.setting.rules.for_beginner
+    return isForBeginner ? 'この村は初心者村です。\n' : ''
   }
 
   private get progressMessage(): string {

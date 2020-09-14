@@ -1,3 +1,4 @@
+import VillageAdminSituation from '~/components/type/village-admin-situation'
 import VillageSaySituation from '~/components/type/village-say-situation'
 import VillageParticipateSituation from '~/components/type/village-participate-situation'
 import VillageSkillRequestSituation from '~/components/type/village-skill-request-situation'
@@ -14,6 +15,7 @@ interface SituationAsParticipant {
   say: VillageSaySituation
   ability: VillageAbilitySituations
   vote: VillageVoteSituation
+  admin: VillageAdminSituation
 }
 
 export default SituationAsParticipant

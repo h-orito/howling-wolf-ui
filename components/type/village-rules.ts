@@ -10,6 +10,7 @@ interface VillageRules {
   available_commit: boolean
   auto_generated: boolean
   available_dummy_skill: boolean
+  for_beginner: boolean
   message_restrict: VillageMessageRestricts
 }
 

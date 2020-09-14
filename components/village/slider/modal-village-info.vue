@@ -288,6 +288,13 @@ export default class ModalVillageInfo extends Vue {
       description:
         '「あり」の場合、きぐるみ ピギーに村人以外の役職が割り当てられる可能性があります。\n「なし」の場合、必ず村人が割り当てられます。'
     })
+    // 初心者村
+    settings.push({
+      name: '初心者村か',
+      value: rules.for_beginner ? 'はい' : 'いいえ',
+      description:
+        '初心者村の場合、村建てから24時間経過するまでは1戦以上参加したことのある方の参加が制限されます。'
+    })
   }
 
   private addPasswordSetting(settings: Settings[]): void {
