@@ -233,9 +233,11 @@ export default class ModalFilter extends Vue {
   }
 
   private get isFiltering(): boolean {
+    if (!this.village) return false
     return (
       this.messageTypeCodeGroup.length !== this.allMessageTypeGroup.length ||
-      this.participantIdGroup.length !== this.village!.participant.count
+      (this.participantIdGroup.length !== 0 &&
+        this.participantIdGroup.length !== this.village!.participant.count)
     )
   }
 
