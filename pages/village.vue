@@ -1,5 +1,5 @@
 <template>
-  <div class="is-size-7 village-wrapper">
+  <div :class="charSizeClass" class="village-wrapper">
     <div v-if="!$window.isMobile" class="village-leftside-wrapper">
       <village-slider
         :village="village"
@@ -78,6 +78,17 @@
             v-if="situation && situation.admin.admin"
             :situation="situation.admin"
           />
+          <b-button
+            v-if="isFiltering"
+            @click="cancelFiltering"
+            class="cancel-filtering"
+            type="is-primary"
+            size="is-small"
+            icon-pack="fas"
+            icon-left="search"
+            outlined
+            >抽出解除</b-button
+          >
         </div>
         <action
           v-if="situation && existsAction"
@@ -300,6 +311,21 @@ export default class extends Vue {
     return this.$store.getters.isAuthenticated
   }
 
+  private get charSizeClass(): string {
+    return this.isCharSizeLarge ? 'is-size-6' : 'is-size-7'
+  }
+
+  private get isCharSizeLarge(): boolean {
+    const cookie = villageUserSettings.getCookie(this)
+    if (!cookie) return false
+    return villageUserSettings.getMessageDisplay(this).is_char_large
+  }
+
+  private get isFiltering(): boolean {
+    if (!this.refs || !this.refs.slider) return false
+    return this.refs.slider.isFiltering
+  }
+
   // ----------------------------------------------------------------
   // created
   // ----------------------------------------------------------------
@@ -313,7 +339,7 @@ export default class extends Vue {
     // 表示設定が作成されていなかったら作成
     villageUserSettings.createCookieIfNeeded(this)
     // もろもろ読込
-    await this.reload()
+    await this.reload(true)
     // キャラチップ名
     this.charachipName = await this.loadCharachipName()
     // 定期的に最新発言がないかチェックする
@@ -423,7 +449,7 @@ export default class extends Vue {
   }
 
   /** もろもろ読み込み */
-  private async reload(): Promise<void> {
+  private async reload(cancelFilter: boolean = false): Promise<void> {
     await this.loadVillage()
     await Promise.all([
       this.loadMessage(true, true), // 最新
@@ -441,7 +467,9 @@ export default class extends Vue {
     this.toBottom()
 
     // 発言抽出欄を初期状態に戻す
-    this.refs.slider.filterRefresh()
+    if (cancelFilter) {
+      this.refs.slider.filterRefresh()
+    }
     // アンカーメッセージを非表示にする
     if (this.refs.messageCards) this.refs.messageCards.clearAnchorMessages()
   }
@@ -483,6 +511,10 @@ export default class extends Vue {
     this.participantIdFilter = participantIdList
     this.keywordFilter = keyword
     await this.loadMessage()
+  }
+
+  private cancelFiltering(): void {
+    this.refs.slider.filterRefresh()
   }
 
   /** 発言内容の最上部にスクロール */
@@ -607,12 +639,12 @@ html {
     height: calc(100 * var(--vh, 1vh));
 
     .village-header-wrapper {
-      height: 1.8rem;
+      height: $village-header-height;
     }
 
     .village-footer-wrapper {
-      height: 1.8rem;
-      height: calc(1.8rem + env(safe-area-inset-bottom));
+      height: $village-footer-height;
+      height: calc(#{$village-footer-height} + env(safe-area-inset-bottom));
     }
 
     .village-main-wrapper {
@@ -629,6 +661,16 @@ html {
 
         .village-name {
           margin: 10px 5px;
+        }
+
+        .cancel-filtering {
+          position: absolute;
+          cursor: pointer;
+          top: calc(#{$village-footer-height} + 10px);
+          top: calc(
+            #{$village-footer-height} + env(safe-area-inset-bottom) + 10px
+          );
+          right: 10px;
         }
       }
       .village-action-wrapper {

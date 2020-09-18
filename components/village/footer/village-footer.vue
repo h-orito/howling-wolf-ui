@@ -1,5 +1,5 @@
 <template>
-  <div class="village-footer">
+  <div class="village-footer is-size-7">
     <button
       v-if="$window.isMobile"
       class="village-footer-item b-r"
@@ -160,8 +160,10 @@ export default class VillageFooter extends Vue {
     cursor: default;
 
     p {
-      line-height: 1.8rem;
-      line-height: calc(1.8rem + env(safe-area-inset-bottom));
+      line-height: $village-footer-height;
+      line-height: calc(
+        #{$village-footer-height} + env(safe-area-inset-bottom)
+      );
     }
   }
 
