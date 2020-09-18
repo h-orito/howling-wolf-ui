@@ -88,6 +88,10 @@ $sides: (top, bottom, left, right); // 方向性
   }
 }
 
+// village header, footer height
+$village-header-height: 2rem;
+$village-footer-height: 2rem;
+
 // Import Bulma and Buefy styles
 @import '~bulma';
 @import '~buefy/src/scss/buefy';

@@ -70,6 +70,8 @@ export interface ActionWindowSettings {
 
 export interface MessageDisplaySettings {
   is_disp_date: boolean
+  is_char_large: boolean
+  is_img_large: boolean
 }
 
 const DEFAULT_PAGING: PagingSettings = {
@@ -83,7 +85,9 @@ const DEFAULT_ACTION_WINDOW: ActionWindowSettings = {
 }
 
 const DEFAULT_MESSAGE_DISPLAY: MessageDisplaySettings = {
-  is_disp_date: false
+  is_disp_date: false,
+  is_char_large: false,
+  is_img_large: false
 }
 
 const DEFAULT_SETTINGS: VillageUserSettings = {

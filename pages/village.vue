@@ -1,5 +1,5 @@
 <template>
-  <div class="is-size-7 village-wrapper">
+  <div :class="charSizeClass" class="village-wrapper">
     <div v-if="!$window.isMobile" class="village-leftside-wrapper">
       <village-slider
         :village="village"
@@ -298,6 +298,16 @@ export default class extends Vue {
 
   private get isAlreadyAuthenticated(): boolean {
     return this.$store.getters.isAuthenticated
+  }
+
+  private get charSizeClass(): string {
+    return this.isCharSizeLarge ? 'is-size-6' : 'is-size-7'
+  }
+
+  private get isCharSizeLarge(): boolean {
+    const cookie = villageUserSettings.getCookie(this)
+    if (!cookie) return false
+    return villageUserSettings.getMessageDisplay(this).is_char_large
   }
 
   // ----------------------------------------------------------------
@@ -607,12 +617,12 @@ html {
     height: calc(100 * var(--vh, 1vh));
 
     .village-header-wrapper {
-      height: 1.8rem;
+      height: $village-header-height;
     }
 
     .village-footer-wrapper {
-      height: 1.8rem;
-      height: calc(1.8rem + env(safe-area-inset-bottom));
+      height: $village-footer-height;
+      height: calc(#{$village-footer-height} + env(safe-area-inset-bottom));
     }
 
     .village-main-wrapper {

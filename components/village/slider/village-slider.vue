@@ -223,8 +223,8 @@ export default class VillageSlider extends Vue {
   .village-side-menu {
     position: fixed;
     left: 0;
-    top: 1.8rem;
-    height: calc(100vh - 3.6rem);
+    top: $village-header-height;
+    height: calc(100vh - #{$village-header-height} - #{$village-footer-height});
     width: 0%;
     transition-property: all;
     transition-duration: 200ms;

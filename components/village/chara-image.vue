@@ -5,8 +5,14 @@
       props.chara.face_list.find(face => face.type === props.faceType).image_url
     "
     :alt="props.chara.chara_name.name"
-    :width="props.chara.display.width / (props.isSmall ? 2 : 1)"
-    :height="props.chara.display.height / (props.isSmall ? 2 : 1)"
+    :width="
+      (props.chara.display.width * (props.isLarge ? 1.5 : 1)) /
+        (props.isSmall ? 2 : 1)
+    "
+    :height="
+      (props.chara.display.height * (props.isLarge ? 1.5 : 1)) /
+        (props.isSmall ? 2 : 1)
+    "
   />
 </template>
 
@@ -26,6 +32,9 @@ export default class CharaSelectModal extends Vue {
 
   @Prop({ type: Boolean, default: false })
   private isSmall?: boolean
+
+  @Prop({ type: Boolean, default: false })
+  private isLarge?: boolean
 }
 </script>
 

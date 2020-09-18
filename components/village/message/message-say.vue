@@ -26,7 +26,11 @@
     </div>
     <div class="hw-message-content-area">
       <div class="hw-message-face-area">
-        <chara-image :chara="chara" :face-type="faceType" />
+        <chara-image
+          :chara="chara"
+          :face-type="faceType"
+          :is-large="isImgLarge"
+        />
       </div>
       <div class="hw-message-text-area" :class="messageClass">
         <message-text
@@ -134,6 +138,10 @@ export default class MessageSay extends Vue {
     const prefix = this.anchorPrefixMap.get(this.message.content.type.code)
     if (prefix == null) return ''
     return `>>${prefix}${this.message.content.num}`
+  }
+
+  private get isImgLarge(): boolean {
+    return villageUserSettings.getMessageDisplay(this).is_img_large
   }
 
   private async copyAnchorString(): Promise<void> {

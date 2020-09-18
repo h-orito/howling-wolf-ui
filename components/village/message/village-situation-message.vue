@@ -1,6 +1,11 @@
 <template>
   <div v-if="isLatestDay">
-    <b-message class="m-b-5" size="is-small" type="is-default">
+    <b-message
+      :class="charSizeClass"
+      class="m-b-5"
+      size="is-small"
+      type="is-default"
+    >
       <span v-html="villageSituationMessage.replace(/\n/g, '<br />')" />
     </b-message>
     <b-message
@@ -8,6 +13,7 @@
       size="is-small"
       type="is-warning"
       class="m-b-5"
+      :class="charSizeClass"
     >
       <span v-html="suddenlyDeathMessage.replace(/\n/g, '<br />')" />
     </b-message>
@@ -16,6 +22,7 @@
       size="is-small"
       type="is-warning"
       class="m-b-5"
+      :class="charSizeClass"
     >
       <span v-html="silentTimeMessage.replace(/\n/g, '<br />')" />
     </b-message>
@@ -30,6 +37,9 @@ import VillageParticipant from '~/components/type/village-participant'
 import VillageTime from '~/components/type/village-time'
 import Messages from '~/components/type/messages'
 import { VILLAGE_STATUS } from '~/components/const/consts'
+import villageUserSettings, {
+  VillageUserSettings
+} from '~/components/village/user-settings/village-user-settings'
 
 @Component({
   components: {}
@@ -170,6 +180,16 @@ export default class MessageCard extends Vue {
     const isNextday =
       parseInt(start.substring(0, 2)) > parseInt(end.substring(0, 2))
     return `${start} - ${isNextday ? '翌' : ''}${end}`
+  }
+
+  private get charSizeClass(): string {
+    return this.isCharSizeLarge ? 'is-size-6' : 'is-size-7'
+  }
+
+  private get isCharSizeLarge(): boolean {
+    const cookie = villageUserSettings.getCookie(this)
+    if (!cookie) return false
+    return villageUserSettings.getMessageDisplay(this).is_char_large
   }
 }
 </script>
