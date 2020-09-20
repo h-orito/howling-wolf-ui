@@ -9,7 +9,6 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import Village from '~/components/type/village'
-import SituationAsParticipant from '~/components/type/situation-as-participant'
 import api from '~/components/village/village-api'
 import toast from '~/components/village/village-toast'
 
@@ -17,11 +16,9 @@ import toast from '~/components/village/village-toast'
   components: {}
 })
 export default class Leave extends Vue {
-  @Prop({ type: Object })
-  private village!: Village
-
-  @Prop({ type: Object })
-  private situation!: SituationAsParticipant
+  private get village(): Village {
+    return this.$store.getters.getVillage!
+  }
 
   private confirmLeave(): void {
     const self = this

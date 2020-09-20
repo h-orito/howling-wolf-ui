@@ -7,7 +7,6 @@
       />
       <message-participant-list
         v-if="message.content.type.code === 'PARTICIPANTS'"
-        :village="village"
       />
     </div>
   </div>
@@ -31,8 +30,9 @@ export default class SystemMessage extends Vue {
   @Prop({ type: Object })
   private message!: Message
 
-  @Prop({ type: Object })
-  private village!: Village
+  private get village(): Village {
+    return this.$store.getters.getVillage!
+  }
 
   private get messageClass(): string {
     switch (this.message.content.type.code) {

@@ -14,11 +14,13 @@ import api from '~/components/village/village-api'
   components: {}
 })
 export default class Vote extends Vue {
-  @Prop({ type: Object })
-  private village!: Village
+  private get village(): Village {
+    return this.$store.getters.getVillage!
+  }
 
-  @Prop({ type: Object })
-  private situation!: SituationAsParticipant
+  private get situation(): SituationAsParticipant {
+    return this.$store.getters.getSituation!
+  }
 
   private async commit(): Promise<void> {
     await api.postCommit(

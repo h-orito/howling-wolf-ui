@@ -74,12 +74,6 @@ export default class ModalSay extends Vue {
   @Prop({ type: Object })
   private confirmMessage!: Message | null
 
-  @Prop({ type: Object })
-  private village!: Village
-
-  @Prop({ type: Object })
-  private situation!: SituationAsParticipant
-
   // ----------------------------------------------------------------
   // data
   // ----------------------------------------------------------------
@@ -89,6 +83,14 @@ export default class ModalSay extends Vue {
   // ----------------------------------------------------------------
   // computed
   // ----------------------------------------------------------------
+  private get village(): Village {
+    return this.$store.getters.getVillage!
+  }
+
+  private get situation(): SituationAsParticipant {
+    return this.$store.getters.getSituation!
+  }
+
   private get isNotFinished(): boolean {
     const status = this.village.status.code
     return (

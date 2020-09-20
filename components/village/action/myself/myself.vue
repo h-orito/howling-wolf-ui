@@ -37,8 +37,9 @@ const charaImage = () => import('~/components/village/chara-image.vue')
   components: { charaImage }
 })
 export default class Participate extends Vue {
-  @Prop({ type: Object })
-  private situation!: SituationAsParticipant
+  private get situation(): SituationAsParticipant {
+    return this.$store.getters.getSituation!
+  }
 
   private get myself(): VillageParticipant {
     return this.situation.participate.myself!

@@ -82,9 +82,6 @@ export default class ModalParticipate extends Vue {
   @Prop({ type: Object })
   private confirmMessage!: Message | null
 
-  @Prop({ type: Object })
-  private village!: Village
-
   // ----------------------------------------------------------------
   // data
   // ----------------------------------------------------------------
@@ -97,6 +94,10 @@ export default class ModalParticipate extends Vue {
   // ----------------------------------------------------------------
   // computed
   // ----------------------------------------------------------------
+  private get village(): Village {
+    return this.$store.getters.getVillage!
+  }
+
   private get canParticipate(): boolean {
     return this.confirm1 && this.confirm2 && this.confirm3
   }

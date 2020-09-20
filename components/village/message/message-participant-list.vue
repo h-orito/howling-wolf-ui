@@ -61,8 +61,9 @@ const charaImage = () => import('~/components/village/chara-image.vue')
   components: { charaImage }
 })
 export default class ParticipantListMessage extends Vue {
-  @Prop({ type: Object })
-  private village!: Village
+  private get village(): Village {
+    return this.$store.getters.getVillage!
+  }
 
   private get participantList(): VillageParticipant[] {
     return this.village.participant.member_list

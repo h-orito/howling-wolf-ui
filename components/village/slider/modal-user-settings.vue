@@ -76,9 +76,6 @@ import villageUserSettings, {
   components: {}
 })
 export default class ModalUserSettings extends Vue {
-  @Prop({ type: Object })
-  private village?: Village | null
-
   @Prop({ type: Boolean })
   private isOpen!: boolean
 
@@ -87,6 +84,10 @@ export default class ModalUserSettings extends Vue {
   private isDispDate: boolean = false
   private isCharLarge: boolean = false
   private isImgLarge: boolean = false
+
+  private get village(): Village | null {
+    return this.$store.getters.getVillage
+  }
 
   private save(): void {
     villageUserSettings.setPaging(this, {

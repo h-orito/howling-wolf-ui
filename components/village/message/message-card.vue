@@ -3,22 +3,16 @@
     <div v-if="message != null" class="card">
       <message-say
         v-if="isSayType"
-        :village="village"
         :message="message"
         :is-progress="isProgress"
         :is-anchor-message="isAnchorMessage"
         @click-anchor="clickAnchorMessage($event)"
       />
-      <message-system
-        v-if="isSystemType"
-        :village="village"
-        :message="message"
-      />
+      <message-system v-if="isSystemType" :message="message" />
       <!-- アンカーメッセージ -->
       <message-card
         v-for="mes in anchorMessages"
         :key="mes.id"
-        :village="village"
         :message="mes"
         :is-progress="isProgress"
         :is-anchor-message="isAnchorTrue"
@@ -70,9 +64,6 @@ export default class MessageCard extends Vue {
   @Prop({ type: Object })
   private message!: Message
 
-  @Prop({ type: Object })
-  private village!: Village
-
   @Prop({ type: Boolean })
   private isProgress!: boolean
 
@@ -83,6 +74,10 @@ export default class MessageCard extends Vue {
   private index?: number
 
   private anchorMessages: Message[] = []
+
+  private get village(): Village {
+    return this.$store.getters.getVillage!
+  }
 
   private get isAnchorTrue(): boolean {
     return true

@@ -259,6 +259,9 @@ export default class ModalFilter extends Vue {
       participantIdList,
       keyword
     })
+    this.$store.dispatch('STORE_FILTERING', {
+      isFiltering: this.isFiltering
+    })
   }
 
   private refresh(): void {

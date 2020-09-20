@@ -53,12 +53,6 @@ import toast from '~/components/village/village-toast'
   components: {}
 })
 export default class SkillRequest extends Vue {
-  @Prop({ type: Object })
-  private village!: Village
-
-  @Prop({ type: Object })
-  private situation!: SituationAsParticipant
-
   private firstRequestSkillCode: string | null =
     this.situation.skill_request.skill_request == null
       ? null
@@ -70,6 +64,14 @@ export default class SkillRequest extends Vue {
       : this.situation.skill_request.skill_request.second.code
 
   private submitting = false
+
+  private get village(): Village {
+    return this.$store.getters.getVillage!
+  }
+
+  private get situation(): SituationAsParticipant {
+    return this.$store.getters.getSituation!
+  }
 
   // 変更ボタンを押下できるか
   private get canSubmit(): boolean {

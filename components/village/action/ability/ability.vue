@@ -48,14 +48,15 @@ import toast from '~/components/village/village-toast'
 })
 export default class Ability extends Vue {
   @Prop({ type: Object })
-  private village!: Village
-
-  @Prop({ type: Object })
   private ability!: VillageAbilitySituation
 
   private submitting: boolean = false
   private participantId: number | null =
     this.ability.target == null ? null : this.ability.target.id
+
+  private get village(): Village {
+    return this.$store.getters.getVillage!
+  }
 
   private get currentTargetName(): string {
     if (!this.ability.target) return 'なし'
