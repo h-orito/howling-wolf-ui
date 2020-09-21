@@ -44,7 +44,6 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
-import Village from '~/components/type/village'
 import Skill from '~/components/type/skill'
 import api from '~/components/village/village-api'
 import toast from '~/components/village/village-toast'
@@ -65,8 +64,8 @@ export default class SkillRequest extends Vue {
 
   private submitting = false
 
-  private get village(): Village {
-    return this.$store.getters.getVillage!
+  private get villageId(): number {
+    return this.$store.getters.getVillageId!
   }
 
   private get situation(): SituationAsParticipant {
@@ -91,7 +90,7 @@ export default class SkillRequest extends Vue {
     try {
       await api.postSkillRequest(
         this,
-        this.village.id,
+        this.villageId,
         this.firstRequestSkillCode!,
         this.secondRequestSkillCode!
       )

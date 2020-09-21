@@ -54,8 +54,8 @@ export default class Ability extends Vue {
   private participantId: number | null =
     this.ability.target == null ? null : this.ability.target.id
 
-  private get village(): Village {
-    return this.$store.getters.getVillage!
+  private get villageId(): number {
+    return this.$store.getters.getVillageId!
   }
 
   private get currentTargetName(): string {
@@ -85,7 +85,7 @@ export default class Ability extends Vue {
     this.submitting = true
     await api.postAbility(
       this,
-      this.village!.id,
+      this.villageId,
       this.participantId,
       this.ability.type.code
     )

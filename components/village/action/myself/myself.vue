@@ -49,19 +49,6 @@ export default class Participate extends Vue {
     return this.myself.dead == null
   }
 
-  private get imageUrl(): string {
-    return this.myself.chara.face_list.find(face => face.type === 'NORMAL')!
-      .image_url
-  }
-
-  private get imageWidth(): number {
-    return this.myself.chara.display.width
-  }
-
-  private get imageHeight(): number {
-    return this.myself.chara.display.height
-  }
-
   private get skillDescription(): string {
     return this.myself.skill!.description.replace('。', '。\n')
   }

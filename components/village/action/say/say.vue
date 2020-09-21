@@ -54,7 +54,6 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import messageInput from '~/components/village/action/message-input.vue'
 // type
 import SituationAsParticipant from '~/components/type/situation-as-participant'
-import Village from '~/components/type/village'
 import Message from '~/components/type/message'
 import Chara from '~/components/type/chara'
 import { FACE_TYPE, MESSAGE_TYPE } from '~/components/const/consts'
@@ -95,8 +94,8 @@ export default class Say extends Vue {
   // ----------------------------------------------------------------
   // computed
   // ----------------------------------------------------------------
-  private get village(): Village {
-    return this.$store.getters.getVillage!
+  private get villageId(): number {
+    return this.$store.getters.getVillageId!
   }
 
   private get situation(): SituationAsParticipant {
@@ -160,7 +159,7 @@ export default class Say extends Vue {
     try {
       this.confirmMessage = await api.postConfirmSay(
         this,
-        this.village.id,
+        this.villageId,
         this.message,
         this.messageType,
         this.faceTypeCode
@@ -175,7 +174,7 @@ export default class Say extends Vue {
     try {
       await api.postSay(
         this,
-        this.village.id,
+        this.villageId,
         this.message,
         this.messageType,
         this.faceTypeCode

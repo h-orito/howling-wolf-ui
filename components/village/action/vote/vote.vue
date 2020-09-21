@@ -27,7 +27,6 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
-import Village from '~/components/type/village'
 import Chara from '~/components/type/chara'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 import VillageVoteSituation from '~/components/type/village-vote-situation'
@@ -42,8 +41,8 @@ export default class Vote extends Vue {
   private participantId: number | null =
     this.vote.target == null ? null : this.vote.target.id
 
-  private get village(): Village {
-    return this.$store.getters.getVillage!
+  private get villageId(): number {
+    return this.$store.getters.getVillageId!
   }
 
   private get situation(): SituationAsParticipant {
@@ -66,7 +65,7 @@ export default class Vote extends Vue {
 
   private async setVote(): Promise<void> {
     this.submitting = true
-    await api.postVote(this, this.village.id, this.participantId!)
+    await api.postVote(this, this.villageId, this.participantId!)
     this.submitting = false
     toast.success(this, 'セットしました')
     this.$emit('reload')

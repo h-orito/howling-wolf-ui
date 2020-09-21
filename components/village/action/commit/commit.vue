@@ -14,8 +14,8 @@ import api from '~/components/village/village-api'
   components: {}
 })
 export default class Vote extends Vue {
-  private get village(): Village {
-    return this.$store.getters.getVillage!
+  private get villageId(): number {
+    return this.$store.getters.getVillageId!
   }
 
   private get situation(): SituationAsParticipant {
@@ -25,7 +25,7 @@ export default class Vote extends Vue {
   private async commit(): Promise<void> {
     await api.postCommit(
       this,
-      this.village.id,
+      this.villageId,
       !this.situation.commit.committing
     )
   }

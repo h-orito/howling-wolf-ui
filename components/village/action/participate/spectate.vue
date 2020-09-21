@@ -40,8 +40,8 @@ export default class Spectate extends Vue {
   private submitting: boolean = false
   private charaId: number | null = null
 
-  private get village(): Village {
-    return this.$store.getters.getVillage!
+  private get villageId(): number {
+    return this.$store.getters.getVillageId!
   }
 
   private get situation(): SituationAsParticipant {
@@ -58,7 +58,7 @@ export default class Spectate extends Vue {
     try {
       await api.postParticipate(
         this,
-        this.village.id,
+        this.villageId,
         this.charaId!,
         null,
         null,

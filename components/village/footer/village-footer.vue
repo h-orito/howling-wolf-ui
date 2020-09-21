@@ -44,7 +44,6 @@
     </div>
     <modal-filter
       :is-open="isOpenFilterModal"
-      :village="village"
       @filter="filter($event)"
       @close-modal="closeFilterModal"
       ref="filter"

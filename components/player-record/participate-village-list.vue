@@ -5,7 +5,7 @@
         <template slot-scope="props">
           <b-table-column field="village_name" label="村名">
             <nuxt-link
-              :to="{ path: 'village', query: { id: props.row.village_id } }"
+              :to="{ path: '/village', query: { id: props.row.village_id } }"
               >{{ props.row.village_name }}</nuxt-link
             >
           </b-table-column>

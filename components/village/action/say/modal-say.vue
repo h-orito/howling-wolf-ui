@@ -12,11 +12,7 @@
       </header>
       <section class="modal-card-body has-text-left">
         <p>この内容で発言しますか？</p>
-        <message-card
-          :message="confirmMessage"
-          :village="village"
-          :is-progress="true"
-        />
+        <message-card :message="confirmMessage" :is-progress="true" />
         <div class="m-t-20" v-if="isNotFinished">
           <p style="font-weight: 700; margin-bottom: 6px;">誤爆防止確認</p>
           <p>発言しようとしている種別を選択してください</p>

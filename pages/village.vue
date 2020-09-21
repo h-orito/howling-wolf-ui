@@ -312,7 +312,9 @@ export default class extends Vue {
   // created
   // ----------------------------------------------------------------
   private created(): void {
-    this.$store.dispatch('INIT_VILLAGE')
+    this.$store.dispatch('INIT_VILLAGE', {
+      villageId: this.villageId
+    })
     this.createdLoading() // 完了を待たない
   }
 

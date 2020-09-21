@@ -10,11 +10,13 @@ import Messages from '~/components/type/messages'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 
 const state: {
+  villageId: number | null
   village: Village | null
   messages: Messages | null
   situation: SituationAsParticipant | null
   isFiltering: boolean
 } = {
+  villageId: null,
   village: null,
   messages: null,
   situation: null,
@@ -22,7 +24,8 @@ const state: {
 }
 
 const mutations = {
-  init(state) {
+  init(state, { villageId }) {
+    state.villageId = villageId
     state.village = null
     state.messages = null
     state.situation = null
@@ -42,8 +45,8 @@ const mutations = {
 }
 
 const actions = {
-  async [INIT_VILLAGE]({ commit }) {
-    await commit('init')
+  async [INIT_VILLAGE]({ commit }, { villageId }) {
+    await commit('init', { villageId })
   },
   async [STORE_VILLAGE]({ commit }, { village }) {
     await commit('saveVillage', { village })
@@ -60,6 +63,7 @@ const actions = {
 }
 
 const getters = {
+  getVillageId: state => state.villageId,
   getVillage: state => state.village,
   getMessages: state => state.messages,
   getSituation: state => state.situation,

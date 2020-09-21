@@ -88,7 +88,6 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import messageInput from '~/components/village/action/message-input.vue'
 import charaSelectModal from '~/components/village/action/participate/chara-select-modal.vue'
 // type
-import Village from '~/components/type/village'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 import Message from '~/components/type/message'
 import { MESSAGE_TYPE } from '~/components/const/consts'
@@ -121,8 +120,8 @@ export default class Participate extends Vue {
   /** 入村確認 */
   private confirmMessage: Message | null = null
 
-  private get village(): Village {
-    return this.$store.getters.getVillage!
+  private get villageId(): number {
+    return this.$store.getters.getVillageId!
   }
 
   private get situation(): SituationAsParticipant {
@@ -154,7 +153,7 @@ export default class Participate extends Vue {
     try {
       this.confirmMessage = await api.postConfirmParticipate(
         this,
-        this.village.id,
+        this.villageId,
         this.charaId!,
         this.firstRequestSkillCode!,
         this.secondRequestSkillCode!,
@@ -171,7 +170,7 @@ export default class Participate extends Vue {
     try {
       await api.postParticipate(
         this,
-        this.village.id,
+        this.villageId,
         this.charaId!,
         this.firstRequestSkillCode!,
         this.secondRequestSkillCode!,

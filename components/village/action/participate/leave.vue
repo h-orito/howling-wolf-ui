@@ -16,8 +16,8 @@ import toast from '~/components/village/village-toast'
   components: {}
 })
 export default class Leave extends Vue {
-  private get village(): Village {
-    return this.$store.getters.getVillage!
+  private get villageId(): number {
+    return this.$store.getters.getVillageId!
   }
 
   private confirmLeave(): void {
@@ -39,7 +39,7 @@ export default class Leave extends Vue {
 
   private async leave(): Promise<void> {
     try {
-      await api.postLeave(this, this.village.id)
+      await api.postLeave(this, this.villageId)
       this.$emit('reload')
     } catch (error) {}
   }
