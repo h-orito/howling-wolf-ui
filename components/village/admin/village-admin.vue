@@ -4,7 +4,10 @@
     <action-card :title="'管理者メニュー'" :exists-footer="false">
       <template v-slot:content>
         <div class="content has-text-left">
-          <b-table :data="situation.participant_list" :mobile-cards="false">
+          <b-table
+            :data="adminSituation.participant_list"
+            :mobile-cards="false"
+          >
             <template slot-scope="props">
               <b-table-column field="name" label="キャラ名">
                 {{ props.row.name }}
@@ -43,13 +46,19 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import actionCard from '~/components/village/action/action-card.vue'
 // type
 import VillageAdminSituation from '~/components/type/village-admin-situation'
+import SituationAsParticipant from '~/components/type/situation-as-participant'
 const modalSay = () => import('~/components/village/action/say/modal-say.vue')
 
 @Component({
   components: { actionCard }
 })
 export default class VillageAdmin extends Vue {
-  @Prop({ type: Object })
-  private situation!: VillageAdminSituation
+  private get situation(): SituationAsParticipant {
+    return this.$store.getters.getSituation!
+  }
+
+  private get adminSituation(): VillageAdminSituation {
+    return this.situation.admin
+  }
 }
 </script>

@@ -37,8 +37,9 @@ const charaImage = () => import('~/components/village/chara-image.vue')
   components: { charaImage }
 })
 export default class Participate extends Vue {
-  @Prop({ type: Object })
-  private situation!: SituationAsParticipant
+  private get situation(): SituationAsParticipant {
+    return this.$store.getters.getSituation!
+  }
 
   private get myself(): VillageParticipant {
     return this.situation.participate.myself!
@@ -46,19 +47,6 @@ export default class Participate extends Vue {
 
   private get isAlive(): boolean {
     return this.myself.dead == null
-  }
-
-  private get imageUrl(): string {
-    return this.myself.chara.face_list.find(face => face.type === 'NORMAL')!
-      .image_url
-  }
-
-  private get imageWidth(): number {
-    return this.myself.chara.display.width
-  }
-
-  private get imageHeight(): number {
-    return this.myself.chara.display.height
   }
 
   private get skillDescription(): string {

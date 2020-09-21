@@ -77,7 +77,6 @@
     <modal-participate
       :is-open="isParticipateModalOpen"
       :confirm-message="confirmMessage"
-      :village="village"
       @close="closeParticipateModal"
       @participate="participate"
     />
@@ -89,7 +88,6 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import messageInput from '~/components/village/action/message-input.vue'
 import charaSelectModal from '~/components/village/action/participate/chara-select-modal.vue'
 // type
-import Village from '~/components/type/village'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 import Message from '~/components/type/message'
 import { MESSAGE_TYPE } from '~/components/const/consts'
@@ -101,12 +99,6 @@ const modalParticipate = () =>
   components: { messageInput, charaSelectModal, modalParticipate }
 })
 export default class Participate extends Vue {
-  @Prop({ type: Object })
-  private village!: Village
-
-  @Prop({ type: Object })
-  private situation!: SituationAsParticipant
-
   private confirming: boolean = false
 
   private charaId: number | null = null
@@ -127,6 +119,14 @@ export default class Participate extends Vue {
 
   /** 入村確認 */
   private confirmMessage: Message | null = null
+
+  private get villageId(): number {
+    return this.$store.getters.getVillageId!
+  }
+
+  private get situation(): SituationAsParticipant {
+    return this.$store.getters.getSituation!
+  }
 
   private get normalSay(): string {
     return MESSAGE_TYPE.NORMAL_SAY
@@ -153,7 +153,7 @@ export default class Participate extends Vue {
     try {
       this.confirmMessage = await api.postConfirmParticipate(
         this,
-        this.village.id,
+        this.villageId,
         this.charaId!,
         this.firstRequestSkillCode!,
         this.secondRequestSkillCode!,
@@ -170,7 +170,7 @@ export default class Participate extends Vue {
     try {
       await api.postParticipate(
         this,
-        this.village.id,
+        this.villageId,
         this.charaId!,
         this.firstRequestSkillCode!,
         this.secondRequestSkillCode!,

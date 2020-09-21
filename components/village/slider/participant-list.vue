@@ -80,11 +80,13 @@ const charaImage = () => import('~/components/village/chara-image.vue')
   components: { charaImage }
 })
 export default class VillageSlider extends Vue {
-  @Prop({ type: Object })
-  private village!: Village
+  private get village(): Village {
+    return this.$store.getters.getVillage!
+  }
 
-  @Prop({ type: Object })
-  private messages?: Messages | null
+  private get messages(): Messages | null {
+    return this.$store.getters.getMessages
+  }
 
   private get isProgress(): boolean {
     const statusCode = this.village.status.code

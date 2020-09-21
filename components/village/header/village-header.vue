@@ -43,10 +43,11 @@ import VillageDay from '~/components/type/village-day'
 })
 export default class VillageFooter extends Vue {
   @Prop({ type: Object })
-  private village?: Village | null
-
-  @Prop({ type: Object })
   private currentVillageDay?: VillageDay | null
+
+  private get village(): Village | null {
+    return this.$store.getters.getVillage
+  }
 
   private get existPrevDay(): boolean {
     if (this.village == null || this.currentVillageDay == null) return false

@@ -27,8 +27,8 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
-import Village from '~/components/type/village'
 import Chara from '~/components/type/chara'
+import SituationAsParticipant from '~/components/type/situation-as-participant'
 import VillageVoteSituation from '~/components/type/village-vote-situation'
 import api from '~/components/village/village-api'
 import toast from '~/components/village/village-toast'
@@ -37,15 +37,21 @@ import toast from '~/components/village/village-toast'
   components: {}
 })
 export default class Vote extends Vue {
-  @Prop({ type: Object })
-  private village!: Village
-
-  @Prop({ type: Object })
-  private vote!: VillageVoteSituation
-
   private submitting: boolean = false
   private participantId: number | null =
     this.vote.target == null ? null : this.vote.target.id
+
+  private get villageId(): number {
+    return this.$store.getters.getVillageId!
+  }
+
+  private get situation(): SituationAsParticipant {
+    return this.$store.getters.getSituation!
+  }
+
+  private get vote(): VillageVoteSituation {
+    return this.situation.vote
+  }
 
   private get currentTargetName(): string {
     if (!this.vote.target) return 'なし'
@@ -59,7 +65,7 @@ export default class Vote extends Vue {
 
   private async setVote(): Promise<void> {
     this.submitting = true
-    await api.postVote(this, this.village.id, this.participantId!)
+    await api.postVote(this, this.villageId, this.participantId!)
     this.submitting = false
     toast.success(this, 'セットしました')
     this.$emit('reload')

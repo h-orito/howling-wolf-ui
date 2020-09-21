@@ -27,11 +27,12 @@ import { VILLAGE_STATUS } from '~/components/const/consts'
   components: {}
 })
 export default class VillageDayList extends Vue {
-  @Prop({ type: Object })
-  private village!: Village
-
   @Prop({ type: Number })
   private displayVillageDayId?: number | null
+
+  private get village(): Village {
+    return this.$store.getters.getVillage!
+  }
 
   private get latestday(): VillageDay {
     return this.village.day.day_list.slice(-1)[0]

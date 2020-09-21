@@ -65,12 +65,6 @@ import toast from '~/components/village/village-toast'
   components: {}
 })
 export default class Comingout extends Vue {
-  @Prop({ type: Object })
-  private village!: Village
-
-  @Prop({ type: Object })
-  private situation!: VillageComingOutSituation
-
   private submitting: boolean = false
   private co1: string | null = null
   private co2: string | null = null
@@ -78,6 +72,14 @@ export default class Comingout extends Vue {
     const colist = this.situation.current_coming_outs.list
     if (colist.length === 0) return 'なし'
     return colist.map(co => co.skill.name).join('と')
+  }
+
+  private get villageId(): number {
+    return this.$store.getters.getVillageId!
+  }
+
+  private get situation(): VillageComingOutSituation {
+    return this.$store.getters.getSituation!.coming_out
   }
 
   private get canSubmit(): boolean {
@@ -148,7 +150,7 @@ export default class Comingout extends Vue {
         colist.push(this.co2)
       }
     }
-    await api.postComingout(this, this.village!.id, colist)
+    await api.postComingout(this, this.villageId, colist)
     this.submitting = false
     if (colist.length > 0) {
       toast.success(this, 'カミングアウトしました')

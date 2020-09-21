@@ -48,14 +48,15 @@ import toast from '~/components/village/village-toast'
 })
 export default class Ability extends Vue {
   @Prop({ type: Object })
-  private village!: Village
-
-  @Prop({ type: Object })
   private ability!: VillageAbilitySituation
 
   private submitting: boolean = false
   private participantId: number | null =
     this.ability.target == null ? null : this.ability.target.id
+
+  private get villageId(): number {
+    return this.$store.getters.getVillageId!
+  }
 
   private get currentTargetName(): string {
     if (!this.ability.target) return 'なし'
@@ -84,7 +85,7 @@ export default class Ability extends Vue {
     this.submitting = true
     await api.postAbility(
       this,
-      this.village!.id,
+      this.villageId,
       this.participantId,
       this.ability.type.code
     )

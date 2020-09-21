@@ -78,14 +78,15 @@ interface Settings {
   components: {}
 })
 export default class ModalVillageInfo extends Vue {
-  @Prop({ type: Object })
-  private village?: Village | null
-
   @Prop({ type: String })
   private charachipName?: string | null
 
   @Prop({ type: Boolean })
   private isOpen!: boolean
+
+  private get village(): Village | null {
+    return this.$store.getters.getVillage
+  }
 
   private get settings(): Settings[] {
     if (!this.village) return []

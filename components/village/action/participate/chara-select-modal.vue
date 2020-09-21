@@ -31,10 +31,6 @@ export default class CharaSelectModal extends Vue {
   @Prop({ type: Array })
   private charaList!: Chara[]
 
-  private normalImageUrl(chara: Chara): string {
-    return chara.face_list.find(face => face.type === 'NORMAL')!.image_url
-  }
-
   private selected(charaId: number): void {
     this.$emit('chara-select', { charaId })
   }

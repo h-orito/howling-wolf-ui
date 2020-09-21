@@ -27,9 +27,27 @@
         style="border-bottom: 1px solid #fff; margin-bottom: 3px;"
       />
     </button>
-    <div class="village-footer-item footer-timer wide-item b-l">
+    <b-button
+      class="village-footer-item b-l"
+      :class="
+        ($window.isMobile ? '' : 'wide-item') +
+          (isFiltering ? ' filter-refresh' : ' filter-button')
+      "
+      @click="openFilterModalOrRefresh"
+      icon-pack="fas"
+      icon-left="search"
+    >
+      <p v-if="isFiltering" class="is-size-7 filter-refresh">解除</p>
+    </b-button>
+    <div class="village-footer-item footer-timer b-l">
       <p>{{ timer }}</p>
     </div>
+    <modal-filter
+      :is-open="isOpenFilterModal"
+      @filter="filter($event)"
+      @close-modal="closeFilterModal"
+      ref="filter"
+    />
   </div>
 </template>
 
@@ -39,18 +57,57 @@ import scrollTo from 'vue-scrollto'
 // type
 import Village from '~/components/type/village'
 import { VILLAGE_STATUS, MESSAGE_TYPE } from '~/components/const/consts'
+import modalFilter from '~/components/village/footer/modal-filter.vue'
 
 @Component({
-  components: {}
+  components: { modalFilter }
 })
 export default class VillageFooter extends Vue {
-  @Prop({ type: Object })
-  private village?: Village | null
-
   @Prop({ type: Boolean })
   private existsNewMessages!: boolean
 
+  private isOpenFilterModal: boolean = false
   private timer: string = ''
+
+  private get village(): Village | null {
+    return this.$store.getters.getVillage
+  }
+
+  private get isFiltering(): boolean {
+    return this.$store.getters.isFiltering
+  }
+
+  private openFilterModalOrRefresh(): void {
+    if (this.isFiltering) {
+      this.filterRefresh()
+    } else {
+      this.isOpenFilterModal = true
+    }
+  }
+
+  private closeFilterModal(): void {
+    this.isOpenFilterModal = false
+  }
+
+  private async filter({
+    messageTypeList,
+    participantIdList,
+    keyword
+  }): Promise<void> {
+    this.$emit('hide-slider')
+    await this.$emit('filter', { messageTypeList, participantIdList, keyword })
+    this.closeFilterModal()
+  }
+
+  private charaFilter(participant) {
+    // @ts-ignore
+    this.$refs.filter.charaFilter(participant)
+  }
+
+  private filterRefresh() {
+    // @ts-ignore
+    this.$refs.filter.refresh()
+  }
 
   private refreshTimer(): void {
     if (!this.village) {
@@ -66,7 +123,6 @@ export default class VillageFooter extends Vue {
       return
     }
 
-    const prefix = this.timerPrefix
     const daychange = this.nextDaychangeDatetime
     const left = daychange.getTime() - new Date().getTime()
     const hour = Math.floor(left / 3600000)
@@ -74,25 +130,14 @@ export default class VillageFooter extends Vue {
     const second = Math.floor((left % 60000) / 1000)
 
     if (left < 0) {
-      this.timer = `${prefix} 00:00:00`
+      this.timer = `残00:00:00`
     } else if (hour > 99) {
-      this.timer = `${prefix} 99:59:59`
+      this.timer = `残99:59:59`
     } else {
-      this.timer = `${prefix} ${('0' + hour).slice(-2)}:${('0' + minute).slice(
-        -2
-      )}:${('0' + second).slice(-2)}`
+      this.timer = `残${('0' + hour).slice(-2)}:${('0' + minute).slice(-2)}:${(
+        '0' + second
+      ).slice(-2)}`
     }
-  }
-
-  private get timerPrefix(): string {
-    const statusCode = this.village!.status.code
-    return statusCode === VILLAGE_STATUS.PROLOGUE
-      ? '開始まで'
-      : statusCode === VILLAGE_STATUS.PROGRESS
-      ? '更新まで'
-      : statusCode === VILLAGE_STATUS.EPILOGUE
-      ? '終了まで'
-      : ''
   }
 
   private get nextDaychangeDatetime(): Date {
@@ -155,9 +200,18 @@ export default class VillageFooter extends Vue {
     width: 120px;
   }
 
+  .filter-button {
+    color: $white;
+  }
+
+  .filter-refresh {
+    color: $info;
+  }
+
   .footer-timer {
     color: $white;
     cursor: default;
+    width: 80px;
 
     p {
       line-height: $village-footer-height;

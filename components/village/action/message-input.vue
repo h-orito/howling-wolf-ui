@@ -15,6 +15,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import Village from '~/components/type/village'
+import SituationAsParticipant from '~/components/type/situation-as-participant'
 import VillageSaySituation from '~/components/type/village-say-situation'
 import VillageSayRestrictSituation from '~/components/type/village-say-restrict-situation'
 import { MESSAGE_TYPE } from '~/components/const/consts'
@@ -26,14 +27,19 @@ export default class MessageInput extends Vue {
   @Prop({ type: String })
   private value!: string
 
-  @Prop({ type: Object })
-  private situation!: VillageSaySituation | null
-
   @Prop({ type: String })
   private messageType!: string
 
   @Prop({ type: Number, default: 6 })
   private rowSize!: number
+
+  private get situation(): SituationAsParticipant {
+    return this.$store.getters.getSituation!
+  }
+
+  private get saySituation(): VillageSaySituation {
+    return this.situation.say
+  }
 
   private get counter(): string {
     if (this.restrict == null) {
@@ -44,8 +50,8 @@ export default class MessageInput extends Vue {
   }
 
   private get restrict(): VillageSayRestrictSituation | null {
-    if (this.situation == null) return null
-    const messageTypeSituation = this.situation.selectable_message_type_list.find(
+    if (this.saySituation == null) return null
+    const messageTypeSituation = this.saySituation.selectable_message_type_list.find(
       restrictSituation =>
         restrictSituation.message_type.code === this.messageType
     )

@@ -44,7 +44,6 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
-import Village from '~/components/type/village'
 import Skill from '~/components/type/skill'
 import api from '~/components/village/village-api'
 import toast from '~/components/village/village-toast'
@@ -53,12 +52,6 @@ import toast from '~/components/village/village-toast'
   components: {}
 })
 export default class SkillRequest extends Vue {
-  @Prop({ type: Object })
-  private village!: Village
-
-  @Prop({ type: Object })
-  private situation!: SituationAsParticipant
-
   private firstRequestSkillCode: string | null =
     this.situation.skill_request.skill_request == null
       ? null
@@ -70,6 +63,14 @@ export default class SkillRequest extends Vue {
       : this.situation.skill_request.skill_request.second.code
 
   private submitting = false
+
+  private get villageId(): number {
+    return this.$store.getters.getVillageId!
+  }
+
+  private get situation(): SituationAsParticipant {
+    return this.$store.getters.getSituation!
+  }
 
   // 変更ボタンを押下できるか
   private get canSubmit(): boolean {
@@ -89,7 +90,7 @@ export default class SkillRequest extends Vue {
     try {
       await api.postSkillRequest(
         this,
-        this.village.id,
+        this.villageId,
         this.firstRequestSkillCode!,
         this.secondRequestSkillCode!
       )

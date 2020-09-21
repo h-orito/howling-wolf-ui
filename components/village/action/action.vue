@@ -33,13 +33,10 @@
       <myself
         :class="activeTabCode === 'myself' ? '' : 'no-visible'"
         v-if="isDispMyself"
-        :situation="situation"
       />
       <say
         :class="activeTabCode === 'say' ? '' : 'no-visible'"
         v-if="isDispSay"
-        :village="village"
-        :situation="situation"
         :window-size="actionContainerSize"
         @reload="$emit('reload', $event)"
         ref="say"
@@ -47,54 +44,41 @@
       <participate
         :class="activeTabCode === 'participate' ? '' : 'no-visible'"
         v-if="isDispParticipate"
-        :village="village"
-        :situation="situation"
         ref="participate"
         @reload="$emit('reload', $event)"
       />
       <spectate
         :class="activeTabCode === 'spectate' ? '' : 'no-visible'"
         v-if="isDispSpectate"
-        :village="village"
-        :situation="situation"
         ref="spectate"
         @reload="$emit('reload', $event)"
       />
       <skill-request
         :class="activeTabCode === 'skill_request' ? '' : 'no-visible'"
         v-if="isDispSkillRequest"
-        :village="village"
-        :situation="situation"
         ref="skillRequest"
         @reload="$emit('reload', $event)"
       />
       <leave
         :class="activeTabCode === 'leave' ? '' : 'no-visible'"
         v-if="isDispLeave"
-        :village="village"
-        :situation="situation"
         @reload="$emit('reload', $event)"
       />
       <vote
         :class="activeTabCode === 'vote' ? '' : 'no-visible'"
         v-if="isDispVote"
-        :village="village"
-        :vote="situation.vote"
         ref="vote"
         @reload="$emit('reload', $event)"
       />
       <comingout
         :class="activeTabCode === 'comingout' ? '' : 'no-visible'"
         v-if="isDispComingout"
-        :village="village"
-        :situation="situation.coming_out"
         ref="comingout"
         @reload="$emit('reload', $event)"
       />
       <div v-for="ability in abilities" :key="ability.type.code">
         <ability
           :class="activeTabCode === ability.type.code ? '' : 'no-visible'"
-          :village="village"
           :ability="ability"
           ref="ability"
           @reload="$emit('reload', $event)"
@@ -103,8 +87,6 @@
       <commit
         :class="activeTabCode === 'commit' ? '' : 'no-visible'"
         v-if="isDispCommit"
-        :village="village"
-        :situation="situation"
         ref="commit"
         @reload="$emit('reload', $event)"
       />
@@ -119,7 +101,6 @@ import ability from '~/components/village/action/ability/ability.vue'
 import vote from '~/components/village/action/vote/vote.vue'
 // type
 import SituationAsParticipant from '~/components/type/situation-as-participant'
-import Village from '~/components/type/village'
 import VillageAbilitySituation from '~/components/type/village-ability-situation'
 // helper
 import actionHelper, {
@@ -157,18 +138,15 @@ const containerSizeClasses = ['minimized', 'small', 'large']
   }
 })
 export default class Action extends Vue {
-  /** props */
-  @Prop({ type: Object })
-  private situation!: SituationAsParticipant
-
-  @Prop({ type: Object })
-  private village!: Village
-
   /** data */
   private activeTabCode: string = 'myself'
   private actionContainerSize: number = 0
 
   /** computed */
+  private get situation(): SituationAsParticipant {
+    return this.$store.getters.getSituation!
+  }
+
   private get activeTabs(): VillageAction[] {
     return actionHelper.getAvailableActions(this.situation)
   }

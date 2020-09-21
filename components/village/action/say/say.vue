@@ -24,7 +24,6 @@
             <message-input
               v-model="message"
               :message-type="messageType"
-              :situation="situation.say"
               :row-size="rowSize"
               ref="messageInput"
             />
@@ -44,8 +43,6 @@
     <modal-say
       :is-open="isSayModalOpen"
       :confirm-message="confirmMessage"
-      :village="village"
-      :situation="situation"
       @close="closeSayModal"
       @say="say"
     />
@@ -57,7 +54,6 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import messageInput from '~/components/village/action/message-input.vue'
 // type
 import SituationAsParticipant from '~/components/type/situation-as-participant'
-import Village from '~/components/type/village'
 import Message from '~/components/type/message'
 import Chara from '~/components/type/chara'
 import { FACE_TYPE, MESSAGE_TYPE } from '~/components/const/consts'
@@ -73,12 +69,6 @@ export default class Say extends Vue {
   // ----------------------------------------------------------------
   // props
   // ----------------------------------------------------------------
-  @Prop({ type: Object })
-  private situation!: SituationAsParticipant
-
-  @Prop({ type: Object })
-  private village!: Village
-
   @Prop({ type: Number })
   private windowSize!: number
 
@@ -104,6 +94,14 @@ export default class Say extends Vue {
   // ----------------------------------------------------------------
   // computed
   // ----------------------------------------------------------------
+  private get villageId(): number {
+    return this.$store.getters.getVillageId!
+  }
+
+  private get situation(): SituationAsParticipant {
+    return this.$store.getters.getSituation!
+  }
+
   private get myself(): string {
     const self = this.situation.participate.myself!
     const charaName = self.chara.chara_name.name
@@ -161,7 +159,7 @@ export default class Say extends Vue {
     try {
       this.confirmMessage = await api.postConfirmSay(
         this,
-        this.village.id,
+        this.villageId,
         this.message,
         this.messageType,
         this.faceTypeCode
@@ -176,7 +174,7 @@ export default class Say extends Vue {
     try {
       await api.postSay(
         this,
-        this.village.id,
+        this.villageId,
         this.message,
         this.messageType,
         this.faceTypeCode

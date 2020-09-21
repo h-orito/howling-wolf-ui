@@ -37,14 +37,16 @@ import api from '~/components/village/village-api'
   components: {}
 })
 export default class Spectate extends Vue {
-  @Prop({ type: Object })
-  private village!: Village
-
-  @Prop({ type: Object })
-  private situation!: SituationAsParticipant
-
   private submitting: boolean = false
   private charaId: number | null = null
+
+  private get villageId(): number {
+    return this.$store.getters.getVillageId!
+  }
+
+  private get situation(): SituationAsParticipant {
+    return this.$store.getters.getSituation!
+  }
 
   // 参加ボタンを押下できるか
   private get canSubmit(): boolean {
@@ -56,7 +58,7 @@ export default class Spectate extends Vue {
     try {
       await api.postParticipate(
         this,
-        this.village.id,
+        this.villageId,
         this.charaId!,
         null,
         null,

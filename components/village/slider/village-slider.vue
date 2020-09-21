@@ -30,15 +30,9 @@
           </a>
           <participant-list
             v-if="village"
-            :village="village"
-            :messages="messages"
-            @chara-filter="charaFilter($event)"
+            @chara-filter="$emit('chara-filter', $event)"
           />
         </b-collapse>
-        <a class="side-item" @click="openFilterModal">
-          <b-icon pack="fas" icon="search" size="is-small" type="is-white" />
-          発言抽出
-        </a>
         <a class="side-item" @click="openUserSettingsModal">
           <b-icon pack="fas" icon="users-cog" size="is-small" type="is-white" />
           ユーザ設定
@@ -80,32 +74,22 @@
     ></div>
     <modal-village-info
       :is-open="isOpenVillageInfoModal"
-      :village="village"
       :charachip-name="charachipName"
       @close="closeVillageInfoModal"
     />
     <modal-user-settings
       :is-open="isOpenUserSettingsModal"
-      :village="village"
       @refresh="refresh"
       @close-modal="closeUserSettingsModal"
       ref="settings"
-    />
-    <modal-filter
-      :is-open="isOpenFilterModal"
-      :village="village"
-      @filter="filter($event)"
-      @close-modal="closeFilterModal"
-      ref="filter"
     />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
-import modalFilter from '~/components/village/slider/modal-filter.vue'
+
 import Village from '~/components/type/village'
-import Messages from '~/components/type/messages'
 const modalVillageInfo = () =>
   import('~/components/village/slider/modal-village-info.vue')
 const modalUserSettings = () =>
@@ -117,36 +101,26 @@ const participantList = () =>
   components: {
     modalVillageInfo,
     modalUserSettings,
-    participantList,
-    modalFilter
+    participantList
   }
 })
 export default class VillageSlider extends Vue {
   @Prop({ type: Boolean })
   private isExpanded!: boolean
 
-  @Prop({ type: Object })
-  private village?: Village | null
-
   @Prop({ type: String })
   private charachipName?: string | null
 
-  @Prop({ type: Object })
-  private messages?: Messages | null
-
   private isOpenVillageInfoModal: boolean = false
   private isOpenUserSettingsModal: boolean = false
-  private isOpenFilterModal: boolean = false
+
+  private get village(): Village | null {
+    return this.$store.getters.getVillage
+  }
 
   private get personCount(): number {
     if (!this.village) return 0
     return this.village.participant.count
-  }
-
-  private get isFiltering(): boolean {
-    const refs = this.$refs as any
-    if (!refs || !refs.filter) return false
-    return refs.filter.isFiltering
   }
 
   private openVillageInfoModal(): void {
@@ -166,37 +140,9 @@ export default class VillageSlider extends Vue {
     this.isOpenUserSettingsModal = false
   }
 
-  private openFilterModal(): void {
-    this.isOpenFilterModal = true
-  }
-
-  private closeFilterModal(): void {
-    this.isOpenFilterModal = false
-  }
-
   private async refresh(): Promise<void> {
     this.$emit('hide-slider')
     await this.$emit('refresh')
-  }
-
-  private async filter({
-    messageTypeList,
-    participantIdList,
-    keyword
-  }): Promise<void> {
-    this.$emit('hide-slider')
-    await this.$emit('filter', { messageTypeList, participantIdList, keyword })
-    this.closeFilterModal()
-  }
-
-  private filterRefresh(): void {
-    const refs = this.$refs as any
-    refs.filter.refresh()
-  }
-
-  private charaFilter({ participant }): void {
-    const refs = this.$refs as any
-    refs.filter.charaFilter(participant)
   }
 }
 </script>

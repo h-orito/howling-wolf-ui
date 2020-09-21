@@ -45,14 +45,16 @@ import villageUserSettings, {
   components: {}
 })
 export default class MessageCard extends Vue {
-  @Prop({ type: Object })
-  private village!: Village
-
   @Prop({ type: Boolean })
   private isLatestDay!: boolean
 
-  @Prop({ type: Object })
-  private messages!: Messages
+  private get village(): Village {
+    return this.$store.getters.getVillage!
+  }
+
+  private get messages(): Messages {
+    return this.$store.getters.getMessages!
+  }
 
   private get villageSituationMessage(): string {
     const status = this.village.status.code

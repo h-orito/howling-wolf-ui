@@ -11,11 +11,7 @@
         <p class="modal-card-title has-text-left">入村確認</p>
       </header>
       <section class="modal-card-body has-text-left">
-        <message-card
-          :message="confirmMessage"
-          :village="village"
-          :is-progress="true"
-        />
+        <message-card :message="confirmMessage" :is-progress="true" />
       </section>
       <section class="modal-card-body has-text-left">
         <div class="field">
@@ -65,7 +61,6 @@
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import messageCard from '~/components/village/message/message-card.vue'
 // type
-import Village from '~/components/type/village'
 import Message from '~/components/type/message'
 const termModal = () => import('~/components/index/modal-term.vue')
 
@@ -81,9 +76,6 @@ export default class ModalParticipate extends Vue {
 
   @Prop({ type: Object })
   private confirmMessage!: Message | null
-
-  @Prop({ type: Object })
-  private village!: Village
 
   // ----------------------------------------------------------------
   // data
