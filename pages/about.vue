@@ -33,6 +33,31 @@
           </li>
         </ul>
       </div>
+      <h2 class="title is-5">姉妹サイト</h2>
+      <div class="content">
+        <ul>
+          <li>
+            <a href="https://firewolf.netlify.app" target="_blank">FIREWOLF</a>
+            <ul>
+              <li>長期人狼が遊べるサイトです。</li>
+              <li>
+                当サイトと似たようなUIで、好きな設定の村を作成して遊ぶことができます。
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="https://wolfort.net/wolf-mansion/" target="_blank"
+              >WOLF MANSION</a
+            >
+            <ul>
+              <li>特殊ルール人狼「人狼館の事件簿村」が遊べるサイトです。</li>
+              <li>
+                対話がないため時間がない人でもパズル感覚で楽しめます。
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
     </div>
   </section>
 </template>
