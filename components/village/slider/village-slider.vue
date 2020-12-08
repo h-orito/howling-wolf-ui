@@ -41,6 +41,23 @@
           <b-icon pack="fas" icon="home" size="is-small" type="is-white" />
           トップページ
         </nuxt-link>
+        <div class="m-t-10">
+          <a
+            :href="
+              `https://twitter.com/share?text=${village ? village.name : ''}`
+            "
+            class="twitter-share-button"
+            data-hashtags="吠狼国"
+            data-lang="ja"
+            data-show-count="false"
+          ></a>
+          <script
+            v-if="!isDebug"
+            async
+            src="https://platform.twitter.com/widgets.js"
+            charset="utf-8"
+          ></script>
+        </div>
         <div class="slider-ads">
           <script
             async
