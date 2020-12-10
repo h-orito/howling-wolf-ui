@@ -30,5 +30,3 @@ export default class ShadowButton extends Vue {
   private icon?: string
 }
 </script>
-
-<style lang="scss" scoped></style>

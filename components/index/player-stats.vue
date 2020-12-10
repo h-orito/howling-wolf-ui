@@ -124,5 +124,3 @@ export default class extends Vue {
   /** methods */
 }
 </script>
-
-<style lang="scss" scoped></style>

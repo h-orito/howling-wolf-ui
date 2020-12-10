@@ -111,5 +111,3 @@ export default class ParticipantVillageList extends Vue {
   }
 }
 </script>
-
-<style lang="scss" scoped></style>

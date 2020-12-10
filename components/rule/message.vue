@@ -140,5 +140,3 @@ export default class RuleMessage extends Vue {
   }
 }
 </script>
-
-<style lang="scss" scoped></style>

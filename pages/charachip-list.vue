@@ -99,5 +99,3 @@ export default class CharachipList extends Vue {
   /** methods */
 }
 </script>
-
-<style lang="scss" scoped></style>

@@ -70,5 +70,3 @@ export default class ReservedVillageList extends Vue {
   }
 }
 </script>
-
-<style lang="scss" scoped></style>

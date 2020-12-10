@@ -120,5 +120,3 @@ export default class ModalIntro extends Vue {
   }
 }
 </script>
-
-<style lang="scss" scoped></style>

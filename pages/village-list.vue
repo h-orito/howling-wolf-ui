@@ -107,5 +107,3 @@ export default class CompleteVillageList extends Vue {
   /** methods */
 }
 </script>
-
-<style lang="scss" scoped></style>

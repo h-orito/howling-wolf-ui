@@ -40,5 +40,3 @@ export default class DoughnutChart extends mixins(Doughnut, reactiveProp) {
   }
 }
 </script>
-
-<style lang="scss" scoped></style>
