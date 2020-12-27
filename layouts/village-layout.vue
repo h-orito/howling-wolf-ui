@@ -16,5 +16,3 @@ import googleAds from '~/components/common/nav/google-ads.vue'
 })
 export default class VillageLayout extends Vue {}
 </script>
-
-<style lang="scss" scoped></style>

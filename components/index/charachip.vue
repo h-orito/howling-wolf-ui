@@ -28,5 +28,3 @@ const shadowButton = () => import('~/components/index/shadow-button.vue')
 })
 export default class MenuCharachip extends Vue {}
 </script>
-
-<style lang="scss" scoped></style>

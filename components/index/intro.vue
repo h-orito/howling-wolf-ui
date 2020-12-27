@@ -41,5 +41,3 @@ import shadowButton from '~/components/index/shadow-button.vue'
 })
 export default class Intro extends Vue {}
 </script>
-
-<style lang="scss" scoped></style>
