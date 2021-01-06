@@ -18,20 +18,17 @@ const matome = {
   setCookie(app: Vue, village: Village, cookie: Matomes): void {
     app.$cookies.set(getCookieName(village.id), cookie, COOKIE_OPTIONS)
   },
-  addLine(app: Vue, village: Village): void {
-    const matomes = this.getCookie(app, village)
+  addLine(matomes: Matomes): Matomes {
     matomes.matomes.push({
       contents: matomes.chara_names.map(_ => '＿')
     })
-    this.setCookie(app, village, matomes)
+    return matomes
   },
-  removeLine(app: Vue, village: Village, index: number): void {
-    const matomes = this.getCookie(app, village)
+  removeLine(matomes: Matomes, index: number): Matomes {
     matomes.matomes.splice(index, 1)
-    this.setCookie(app, village, matomes)
+    return matomes
   },
-  toLeft(app: Vue, village: Village, index: number): void {
-    const matomes = this.getCookie(app, village)
+  toLeft(matomes: Matomes, index: number): Matomes {
     matomes.chara_names.splice(
       index - 1,
       2,
@@ -46,10 +43,9 @@ const matome = {
         matome.contents[index - 1]
       )
     })
-    this.setCookie(app, village, matomes)
+    return matomes
   },
-  toRight(app: Vue, village: Village, index: number): void {
-    const matomes = this.getCookie(app, village)
+  toRight(matomes: Matomes, index: number): Matomes {
     matomes.chara_names.splice(
       index,
       2,
@@ -64,27 +60,30 @@ const matome = {
         matome.contents[index]
       )
     })
-    this.setCookie(app, village, matomes)
+    return matomes
   },
   changeContent(
-    app: Vue,
-    village: Village,
+    matomes: Matomes,
     lineIndex: number,
     contentIndex: number
-  ): void {
-    const matomes = this.getCookie(app, village)
+  ): Matomes {
     const current: string = matomes.matomes[lineIndex].contents[contentIndex]
     const currentIndex = contents.indexOf(current)
     if (currentIndex === contents.length - 1) {
-      matomes.matomes[lineIndex].contents[contentIndex] = contents[0]
+      const matome = matomes.matomes[lineIndex]
+      matome.contents.splice(contentIndex, 1, contents[0])
+      matomes.matomes.splice(lineIndex, 1, matome)
+      // matomes.matomes[lineIndex].contents[contentIndex] = contents[0]
     } else {
-      matomes.matomes[lineIndex].contents[contentIndex] =
-        contents[currentIndex + 1]
+      const matome = matomes.matomes[lineIndex]
+      matome.contents.splice(contentIndex, 1, contents[currentIndex + 1])
+      matomes.matomes.splice(lineIndex, 1, matome)
+      // matomes.matomes[lineIndex].contents[contentIndex] =
+      //   contents[currentIndex + 1]
     }
-    this.setCookie(app, village, matomes)
+    return matomes
   },
-  output(app: Vue, village: Village): string {
-    const matomes = this.getCookie(app, village)
+  output(matomes: Matomes): string {
     const charas = matomes.chara_names.join('')
     const lines = matomes.matomes.map(line => line.contents.join('')).join('\n')
     return `${charas}\n${lines}`

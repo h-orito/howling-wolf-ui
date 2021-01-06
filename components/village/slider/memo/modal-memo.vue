@@ -12,7 +12,9 @@
         <p class="modal-card-title has-text-left">メモ</p>
       </header>
       <section class="modal-card-body has-text-left" v-if="village">
-        <p class="m-b-5">端末に保存され、30日で削除されます。</p>
+        <p class="m-b-5">
+          端末に保存され、30日で削除されます。<br />自動保存されないため、下部の保存ボタンの押し忘れにご注意ください。
+        </p>
         <b-tabs type="is-boxed" size="is-small">
           <b-tab-item label="メモ1">
             <memo-input v-model="memo1String" />
@@ -27,7 +29,11 @@
             <memo-matome
               :matomes="matomes"
               ref="matome"
-              @refresh="refreshMatome"
+              @remove-line="removeLine($event)"
+              @change-content="changeContent($event)"
+              @add-line="addLine"
+              @to-left="toLeft($event)"
+              @to-right="toRight($event)"
             />
           </b-tab-item>
         </b-tabs>
@@ -95,6 +101,12 @@ export default class ModalMemo extends Vue {
     textMemo.setCookie(this, this.villageId, 2, this.memo2String)
     textMemo.createCookieIfNeeded(this, this.villageId, 3)
     textMemo.setCookie(this, this.villageId, 3, this.memo3String)
+    matome.setCookie(this, this.village!, this.matomes)
+    this.$buefy.toast.open({
+      message: '保存しました',
+      type: 'is-info',
+      position: 'is-top'
+    })
   }
 
   private saveAndClose(): void {
@@ -117,6 +129,28 @@ export default class ModalMemo extends Vue {
 
   private refreshMatome(): void {
     this.matomes = matome.getCookie(this, this.village!)
+  }
+
+  private addLine(): void {
+    this.matomes = matome.addLine(this.matomes)
+  }
+
+  private removeLine({ index }): void {
+    this.matomes = matome.removeLine(this.matomes, index)
+  }
+
+  private toLeft({ index }): void {
+    if (index === 0) return
+    this.matomes = matome.toLeft(this.matomes, index)
+  }
+
+  private toRight({ index }): void {
+    if (index === this.village!.participant.count - 1) return
+    this.matomes = matome.toRight(this.matomes, index)
+  }
+
+  private changeContent({ lineIndex, contentIndex }): void {
+    this.matomes = matome.changeContent(this.matomes, lineIndex, contentIndex)
   }
 }
 </script>
