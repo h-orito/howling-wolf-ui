@@ -101,10 +101,6 @@
         </tr>
       </tfoot>
     </table>
-    <b-notification>
-      ・クリックするたびに以下の順番で変化します。<br />
-      &nbsp;&nbsp;&nbsp;＿ → 非 → 占 → 霊 → 狩 → 狼 → 狂 → 白 → 黒 → 偽 → 灰<br />
-    </b-notification>
   </div>
 </template>
 
