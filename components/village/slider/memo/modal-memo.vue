@@ -135,8 +135,8 @@ export default class ModalMemo extends Vue {
     this.matomes = matome.addLine(this.matomes)
   }
 
-  private removeLine({ index }): void {
-    this.matomes = matome.removeLine(this.matomes, index)
+  private removeLine({ lineIndex }): void {
+    this.matomes = matome.removeLine(this.matomes, lineIndex)
   }
 
   private toLeft({ index }): void {
@@ -149,8 +149,13 @@ export default class ModalMemo extends Vue {
     this.matomes = matome.toRight(this.matomes, index)
   }
 
-  private changeContent({ lineIndex, contentIndex }): void {
-    this.matomes = matome.changeContent(this.matomes, lineIndex, contentIndex)
+  private changeContent({ lineIndex, contentIndex, content }): void {
+    this.matomes = matome.changeContent(
+      this.matomes,
+      lineIndex,
+      contentIndex,
+      content
+    )
   }
 }
 </script>
