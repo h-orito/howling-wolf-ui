@@ -33,6 +33,15 @@
             @chara-filter="$emit('chara-filter', $event)"
           />
         </b-collapse>
+        <a class="side-item" @click="openMemoModal">
+          <b-icon
+            pack="fas"
+            icon="sticky-note"
+            size="is-small"
+            type="is-white"
+          />
+          メモ
+        </a>
         <a class="side-item" @click="openUserSettingsModal">
           <b-icon pack="fas" icon="users-cog" size="is-small" type="is-white" />
           ユーザ設定
@@ -52,7 +61,6 @@
             data-show-count="false"
           ></a>
           <script
-            v-if="!isDebug"
             async
             src="https://platform.twitter.com/widgets.js"
             charset="utf-8"
@@ -100,6 +108,11 @@
       @close-modal="closeUserSettingsModal"
       ref="settings"
     />
+    <modal-memo
+      :is-open="isOpenMemoModal"
+      @close-modal="closeMemoModal"
+      ref="memo"
+    />
   </div>
 </template>
 
@@ -111,6 +124,8 @@ const modalVillageInfo = () =>
   import('~/components/village/slider/modal-village-info.vue')
 const modalUserSettings = () =>
   import('~/components/village/slider/modal-user-settings.vue')
+const modalMemo = () =>
+  import('~/components/village/slider/memo/modal-memo.vue')
 const participantList = () =>
   import('~/components/village/slider/participant-list.vue')
 
@@ -118,6 +133,7 @@ const participantList = () =>
   components: {
     modalVillageInfo,
     modalUserSettings,
+    modalMemo,
     participantList
   }
 })
@@ -149,12 +165,24 @@ export default class VillageSlider extends Vue {
   }
 
   private openUserSettingsModal(): void {
-    ;(this.$refs.settings as any).refresh()
+    // @ts-ignore
+    this.$refs.settings.refresh()
     this.isOpenUserSettingsModal = true
   }
 
   private closeUserSettingsModal(): void {
     this.isOpenUserSettingsModal = false
+  }
+
+  private isOpenMemoModal: boolean = false
+  private openMemoModal(): void {
+    // @ts-ignore
+    if (this.$refs.memo) this.$refs.memo.initialize()
+    this.isOpenMemoModal = true
+  }
+
+  private closeMemoModal(): void {
+    this.isOpenMemoModal = false
   }
 
   private async refresh(): Promise<void> {
