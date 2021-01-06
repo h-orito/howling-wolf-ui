@@ -14,13 +14,16 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(matome, index) in matomes.matomes" :key="matome.content">
+        <tr
+          v-for="(matome, lineIndex) in matomes.matomes"
+          :key="matome.content"
+        >
           <td>
             <b-button
               size="is-small"
               icon-left="trash-alt"
               icon-pack="fas"
-              @click="removeLine(index)"
+              @click="$emit('remove-line', { lineIndex })"
               >削除</b-button
             >
           </td>
@@ -30,7 +33,7 @@
           >
             <b-button
               size="is-small"
-              @click="changeContent(index, contentIndex)"
+              @click="$emit('change-content', { lineIndex, contentIndex })"
               >{{ content }}</b-button
             >
           </td>
@@ -40,7 +43,10 @@
         <tr>
           <td></td>
           <td :colspan="matomes.chara_names.length">
-            <b-button size="is-small" type="is-primary" @click="addLine"
+            <b-button
+              size="is-small"
+              type="is-primary"
+              @click="$emit('add-line')"
               >行を追加する</b-button
             >
           </td>
@@ -56,13 +62,13 @@
               size="is-small"
               icon-left="arrow-left"
               icon-pack="fas"
-              @click="toLeft(index)"
+              @click="$emit('to-left', { index })"
             /><br />
             <b-button
               size="is-small"
               icon-left="arrow-right"
               icon-pack="fas"
-              @click="toRight(index)"
+              @click="$emit('to-right', { index })"
             />
           </td>
         </tr>
@@ -79,13 +85,12 @@
     <b-notification>
       ・クリックするたびに以下の順番で変化します。<br />
       &nbsp;&nbsp;&nbsp;＿ → 非 → 占 → 霊 → 狩 → 狼 → 狂 → 白 → 黒 → 偽 → 灰<br />
-      ・まとめは自動保存されます。
     </b-notification>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'nuxt-property-decorator'
+import { Component, Vue, Prop, Watch } from 'nuxt-property-decorator'
 // type
 import Village from '~/components/type/village'
 // component
@@ -102,35 +107,8 @@ export default class MemoMatome extends Vue {
     return this.$store.getters.getVillage
   }
 
-  private addLine(): void {
-    matome.addLine(this, this.village!)
-    this.$emit('refresh')
-  }
-
-  private removeLine(index: number): void {
-    matome.removeLine(this, this.village!, index)
-    this.$emit('refresh')
-  }
-
-  private toLeft(index: number): void {
-    if (index === 0) return
-    matome.toLeft(this, this.village!, index)
-    this.$emit('refresh')
-  }
-
-  private toRight(index: number): void {
-    if (index === this.village!.participant.count - 1) return
-    matome.toRight(this, this.village!, index)
-    this.$emit('refresh')
-  }
-
-  private changeContent(lineIndex: number, contentIndex: number): void {
-    matome.changeContent(this, this.village!, lineIndex, contentIndex)
-    this.$emit('refresh')
-  }
-
   private async copy(): Promise<void> {
-    const str: string = matome.output(this, this.village!)
+    const str: string = matome.output(this.matomes)
     // @ts-ignore
     await this.$copyText(str)
     this.$buefy.toast.open({
