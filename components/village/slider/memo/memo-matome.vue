@@ -14,30 +14,49 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="(matome, lineIndex) in matomes.matomes"
-          :key="matome.content"
-        >
-          <td>
-            <b-button
-              size="is-small"
-              icon-left="trash-alt"
-              icon-pack="fas"
-              @click="$emit('remove-line', { lineIndex })"
-              >削除</b-button
+        <template v-for="(matome, lineIndex) in matomes.matomes">
+          <tr :key="matome.content">
+            <td>
+              <b-button
+                size="is-small"
+                icon-left="trash-alt"
+                icon-pack="fas"
+                type="is-danger"
+                @click="$emit('remove-line', { lineIndex })"
+                >削除</b-button
+              >
+            </td>
+            <td
+              v-for="(content, contentIndex) in matome.contents"
+              :key="`${content}${contentIndex}`"
             >
-          </td>
-          <td
-            v-for="(content, contentIndex) in matome.contents"
-            :key="`${content}${contentIndex}`"
-          >
-            <b-button
-              size="is-small"
-              @click="$emit('change-content', { lineIndex, contentIndex })"
-              >{{ content }}</b-button
-            >
-          </td>
-        </tr>
+              <b-button
+                size="is-small"
+                @click="select(lineIndex, contentIndex)"
+                outlined
+                :type="
+                  selectingLineIndex === lineIndex &&
+                  selectingContentIndex === contentIndex
+                    ? 'is-primary'
+                    : ''
+                "
+                >{{ content }}</b-button
+              >
+            </td>
+          </tr>
+          <tr :key="matome.content" v-if="selectingLineIndex === lineIndex">
+            <td></td>
+            <td :colspan="matome.contents.length">
+              <b-button
+                v-for="content in contents"
+                :key="content"
+                @click="updateContent(content)"
+                class="m-r-5"
+                >{{ content }}</b-button
+              >
+            </td>
+          </tr>
+        </template>
       </tbody>
       <tfoot>
         <tr>
@@ -102,6 +121,28 @@ import matome, { Matomes } from '~/components/village/slider/memo/matome'
 export default class MemoMatome extends Vue {
   @Prop({ type: Object })
   private matomes!: Matomes
+
+  private selectingLineIndex: number | null = null
+  private selectingContentIndex: number | null = null
+
+  private get contents(): string[] {
+    return ['＿', '非', '占', '霊', '狩', '狼', '狂', '白', '黒', '偽', '灰']
+  }
+
+  private select(lineIndex: number, contentIndex: number): void {
+    this.selectingLineIndex = lineIndex
+    this.selectingContentIndex = contentIndex
+  }
+
+  private updateContent(content: string): void {
+    this.$emit('change-content', {
+      lineIndex: this.selectingLineIndex,
+      contentIndex: this.selectingContentIndex,
+      content
+    })
+    this.selectingLineIndex = null
+    this.selectingContentIndex = null
+  }
 
   private get village(): Village | null {
     return this.$store.getters.getVillage

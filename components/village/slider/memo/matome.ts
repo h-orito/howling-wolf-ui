@@ -65,22 +65,12 @@ const matome = {
   changeContent(
     matomes: Matomes,
     lineIndex: number,
-    contentIndex: number
+    contentIndex: number,
+    content: string
   ): Matomes {
-    const current: string = matomes.matomes[lineIndex].contents[contentIndex]
-    const currentIndex = contents.indexOf(current)
-    if (currentIndex === contents.length - 1) {
-      const matome = matomes.matomes[lineIndex]
-      matome.contents.splice(contentIndex, 1, contents[0])
-      matomes.matomes.splice(lineIndex, 1, matome)
-      // matomes.matomes[lineIndex].contents[contentIndex] = contents[0]
-    } else {
-      const matome = matomes.matomes[lineIndex]
-      matome.contents.splice(contentIndex, 1, contents[currentIndex + 1])
-      matomes.matomes.splice(lineIndex, 1, matome)
-      // matomes.matomes[lineIndex].contents[contentIndex] =
-      //   contents[currentIndex + 1]
-    }
+    const matome = matomes.matomes[lineIndex]
+    matome.contents.splice(contentIndex, 1, content)
+    matomes.matomes.splice(lineIndex, 1, matome)
     return matomes
   },
   output(matomes: Matomes): string {
@@ -91,20 +81,6 @@ const matome = {
 }
 
 export default matome
-
-const contents: string[] = [
-  '＿',
-  '非',
-  '占',
-  '霊',
-  '狩',
-  '狼',
-  '狂',
-  '白',
-  '黒',
-  '偽',
-  '灰'
-]
 
 export interface Matomes {
   chara_names: string[]
