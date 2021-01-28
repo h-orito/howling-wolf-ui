@@ -31,7 +31,10 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import SimpleVillage from '~/components/type/simple-village'
 import VillageDay from '~/components/type/village-day'
 import VillageTime from '~/components/type/village-time'
-import { VILLAGE_STATUS } from '~/components/const/consts'
+import {
+  VILLAGE_STATUS,
+  ORGANIZATION_TEMPLATE
+} from '~/components/const/consts'
 
 @Component({})
 export default class VillageCard extends Vue {
@@ -102,7 +105,8 @@ export default class VillageCard extends Vue {
     const org = this.village.setting.organizations.organization[
       this.village.setting.capacity.max
     ]
-    return `${org.length}人: ${org}`
+    const shortOrg = ORGANIZATION_TEMPLATE.get(org)
+    return shortOrg ? `${org}（${shortOrg}編成）` : `${org.length}人: ${org}`
   }
 
   private get dummySkill(): string {

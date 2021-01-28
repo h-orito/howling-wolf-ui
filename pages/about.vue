@@ -56,6 +56,12 @@
               </li>
             </ul>
           </li>
+          <li>
+            <a href="https://lastwolf.netlify.app" target="_blank">LASTWOLF</a>
+            <ul>
+              <li>短期人狼が遊べるサイトです。</li>
+            </ul>
+          </li>
         </ul>
       </div>
     </div>
