@@ -62,7 +62,7 @@ import loading from '~/components/loading.vue'
 import Villages from '~/components/type/villages'
 import SimpleVillage from '~/components/type/simple-village'
 import VillageDay from '~/components/type/village-day'
-import { VILLAGE_STATUS } from '~/components/const/consts'
+import { VILLAGE_STATUS, ORGANIZATION_TEMPLATE } from '~/components/const/consts'
 
 @Component({
   components: {
@@ -93,8 +93,7 @@ export default class CompleteVillageList extends Vue {
       village_id: village.id,
       village_name: village.name,
       participant_count: `${village.participant.count}人`,
-      organization:
-        village.setting.organizations.organization[village.setting.capacity.max],
+      organization: organization(village),
       win_camp: village.win_camp?.name || '廃村'
     }))
   }
@@ -126,5 +125,11 @@ export default class CompleteVillageList extends Vue {
 
     this.villages = villages.list
   }
+}
+
+const organization = (village: SimpleVillage): string => {
+  const org = village.setting.organizations.organization[village.setting.capacity.max]
+  const shortOrg = ORGANIZATION_TEMPLATE.get(org)
+  return shortOrg ? `${org}（${shortOrg}編成）` : org
 }
 </script>

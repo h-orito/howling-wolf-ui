@@ -29,6 +29,7 @@
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 // type
 import ReservedVillage from '~/components/type/reserved-village'
+import { ORGANIZATION_TEMPLATE } from '~/components/const/consts'
 
 @Component({})
 export default class ReservedVillageCard extends Vue {
@@ -46,7 +47,8 @@ export default class ReservedVillageCard extends Vue {
 
   private get organization(): string {
     const org = this.reservedVillage.organization
-    return `${org.length}人: ${org}`
+    const shortOrg = ORGANIZATION_TEMPLATE.get(org)
+    return shortOrg ? `${org}（${shortOrg}編成）` : `${org.length}人: ${org}`
   }
 
   private daychangeTime(datetime: string): string {
