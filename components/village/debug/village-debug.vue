@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="isDarkTheme ? 'dark-theme' : ''">
     <hr />
     <action-card :title="'デバッグメニュー'" :exists-footer="false">
       <template v-slot:content>
@@ -81,6 +81,7 @@ import actionCard from '~/components/village/action/action-card.vue'
 import DebugVillage from '~/components/type/debug-village'
 import VillageParticipant from '~/components/type/village-participant'
 import { VILLAGE_STATUS } from '~/components/const/consts'
+import { VillageUserSettings } from '~/components/village/user-settings/village-user-settings'
 
 @Component({
   components: { actionCard }
@@ -150,6 +151,12 @@ export default class Action extends Vue {
     return list
   }
 
+  private get isDarkTheme(): boolean {
+    const settings: VillageUserSettings = this.$store.getters
+      .getVillageUserSettings
+    return settings.theme?.is_dark || false
+  }
+
   // ----------------------------------------------------------------
   // methods
   // ----------------------------------------------------------------
@@ -204,3 +211,12 @@ interface Player {
   player_id: number
 }
 </script>
+
+<style lang="scss" scoped>
+.dark-theme {
+  .card {
+    background-color: transparent;
+    color: #eee;
+  }
+}
+</style>

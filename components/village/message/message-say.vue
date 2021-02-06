@@ -18,7 +18,7 @@
           >{{ message.from.player.twitter_user_name }}</a
         >]
       </p>
-      <p class="hw-message-datetime">
+      <p class="hw-message-datetime" :class="isDarkTheme ? 'dark-theme' : ''">
         {{ isAnchorMessage ? message.time.day + 'd' : '' }}
         {{ messageCount }}
         {{ messageDatetime }}
@@ -49,7 +49,7 @@ import Village from '~/components/type/village'
 import Message from '~/components/type/message'
 import Chara from '~/components/type/chara'
 import { MESSAGE_TYPE } from '~/components/const/consts'
-import villageUserSettings from '~/components/village/user-settings/village-user-settings'
+import villageUserSettings, {VillageUserSettings} from '~/components/village/user-settings/village-user-settings'
 const charaImage = () => import('~/components/village/chara-image.vue')
 
 @Component({
@@ -99,9 +99,16 @@ export default class MessageSay extends Vue {
   }
 
   private get messageClass(): string {
-    const className = this.messageClassMap.get(this.message.content.type.code)
-    if (className == null) return ''
+    let className = this.messageClassMap.get(this.message.content.type.code)
+    if (className == null) className = ''
+    if (this.isDarkTheme) className += ' dark-theme'
     return className
+  }
+
+  private get isDarkTheme(): boolean {
+    const settings: VillageUserSettings = this.$store.getters
+      .getVillageUserSettings
+    return settings.theme?.is_dark || false
   }
 
   private get comingout(): string | null {
@@ -196,6 +203,10 @@ export default class MessageSay extends Vue {
       margin-left: auto;
       text-align: right;
       color: #aaaaaa;
+
+      &.dark-theme {
+        color: #ddd;
+      }
     }
   }
   .hw-message-content-area {
@@ -223,19 +234,44 @@ export default class MessageSay extends Vue {
       }
 
       &.normal-say {
-        background-color: $normal-say !important;
+        background-color: $normal-say;
+
+        &.dark-theme {
+          background-color: rgba(0, 0, 0, 0.2);
+          border: 1px solid $normal-say;
+        }
       }
       &.werewolf-say {
-        background-color: $werewolf-say !important;
+        background-color: $werewolf-say;
+
+        &.dark-theme {
+          background-color: rgba(255, 0, 0, 0.2);
+          border: 1px solid $werewolf-system-border;
+        }
       }
       &.monologue-say {
-        background-color: $monologue-say !important;
+        background-color: $monologue-say;
+
+        &.dark-theme {
+          background-color: rgba(200, 200, 200, 0.5);
+          border: 1px solid #000;
+        }
       }
       &.grave-say {
-        background-color: $grave-say !important;
+        background-color: $grave-say;
+
+        &.dark-theme {
+          background-color: rgba(0, 0, 255, 0.2);
+          border: 1px solid $psychic-system-border;
+        }
       }
       &.spectate-say {
-        background-color: $spectate-say !important;
+        background-color: $spectate-say;
+
+        &.dark-theme {
+          background-color: rgba(255, 255, 0, 0.2);
+          border: 1px solid $spectate-say;
+        }
       }
     }
   }

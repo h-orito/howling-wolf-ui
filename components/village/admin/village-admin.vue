@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="isDarkTheme ? 'dark-theme' : ''">
     <hr />
     <action-card :title="'管理者メニュー'" :exists-footer="false">
       <template v-slot:content>
@@ -47,7 +47,7 @@ import actionCard from '~/components/village/action/action-card.vue'
 // type
 import VillageAdminSituation from '~/components/type/village-admin-situation'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
-const modalSay = () => import('~/components/village/action/say/modal-say.vue')
+import { VillageUserSettings } from '~/components/village/user-settings/village-user-settings'
 
 @Component({
   components: { actionCard }
@@ -60,5 +60,20 @@ export default class VillageAdmin extends Vue {
   private get adminSituation(): VillageAdminSituation {
     return this.situation.admin
   }
+
+  private get isDarkTheme(): boolean {
+    const settings: VillageUserSettings = this.$store.getters
+      .getVillageUserSettings
+    return settings.theme?.is_dark || false
+  }
 }
 </script>
+
+<style lang="scss" scoped>
+.dark-theme {
+  .card {
+    background-color: transparent;
+    color: #eee;
+  }
+}
+</style>

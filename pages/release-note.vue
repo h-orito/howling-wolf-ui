@@ -4,6 +4,7 @@
       <h1 class="title is-5">更新情報</h1>
       <div class="content">
         <ul class="has-text-left is-size-7">
+          <li>2021/02/07 ダークテーマを追加</li>
           <li>2021/01/06 メモ機能を追加</li>
           <li>2020/12/08 国主呼び出し機能を追加</li>
           <li>2020/12/08 Twitterシェアボタンを追加</li>
