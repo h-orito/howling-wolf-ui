@@ -1,31 +1,24 @@
 <template>
-  <div v-if="isLatestDay">
-    <b-message
-      :class="charSizeClass"
-      class="m-b-5"
-      size="is-small"
-      type="is-default"
-    >
+  <div v-if="isLatestDay" class="m-r-5 m-l-5">
+    <notification :class="charSizeClass" class="m-b-5" type="default">
       <span v-html="villageSituationMessage.replace(/\n/g, '<br />')" />
-    </b-message>
-    <b-message
-      v-if="isDispSuddenlyDeathMessage"
-      size="is-small"
-      type="is-warning"
-      class="m-b-5"
+    </notification>
+    <notification
       :class="charSizeClass"
+      class="m-b-5"
+      type="warning"
+      v-if="isDispSuddenlyDeathMessage"
     >
       <span v-html="suddenlyDeathMessage.replace(/\n/g, '<br />')" />
-    </b-message>
-    <b-message
-      v-if="isSilentTime"
-      size="is-small"
-      type="is-warning"
-      class="m-b-5"
+    </notification>
+    <notification
       :class="charSizeClass"
+      class="m-b-5"
+      type="warning"
+      v-if="isSilentTime"
     >
       <span v-html="silentTimeMessage.replace(/\n/g, '<br />')" />
-    </b-message>
+    </notification>
   </div>
 </template>
 
@@ -34,15 +27,14 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 // type
 import Village from '~/components/type/village'
 import VillageParticipant from '~/components/type/village-participant'
-import VillageTime from '~/components/type/village-time'
 import Messages from '~/components/type/messages'
 import { VILLAGE_STATUS } from '~/components/const/consts'
-import villageUserSettings, {
-  VillageUserSettings
-} from '~/components/village/user-settings/village-user-settings'
+import villageUserSettings from '~/components/village/user-settings/village-user-settings'
 
 @Component({
-  components: {}
+  components: {
+    notification: () => import('~/components/village/village-notification.vue')
+  }
 })
 export default class MessageCard extends Vue {
   @Prop({ type: Boolean })

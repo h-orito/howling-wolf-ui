@@ -1,6 +1,10 @@
 <template>
   <div>
-    <div v-if="message != null" class="card">
+    <div
+      v-if="message != null"
+      class="card"
+      :class="isDarkTheme ? 'dark-theme' : ''"
+    >
       <message-say
         v-if="isSayType"
         :message="message"
@@ -50,6 +54,7 @@ import Village from '~/components/type/village'
 import Message from '~/components/type/message'
 import VillageAnchorMessage from '~/components/type/village-anchor-message'
 import { MESSAGE_TYPE } from '~/components/const/consts'
+import { VillageUserSettings } from '~/components/village/user-settings/village-user-settings'
 
 @Component({
   name: 'message-card',
@@ -77,6 +82,12 @@ export default class MessageCard extends Vue {
 
   private get village(): Village {
     return this.$store.getters.getVillage!
+  }
+
+  private get isDarkTheme(): boolean {
+    const settings: VillageUserSettings = this.$store.getters
+      .getVillageUserSettings
+    return settings.theme?.is_dark || false
   }
 
   private get isAnchorTrue(): boolean {
@@ -154,3 +165,14 @@ export default class MessageCard extends Vue {
   }
 }
 </script>
+
+<style lang="scss">
+.card {
+  &.dark-theme {
+    background-color: transparent !important;
+    border-top: 1px solid #ccc !important;
+    border-bottom: 1px solid #ccc !important;
+    color: #eee;
+  }
+}
+</style>

@@ -46,6 +46,12 @@
             >キャラ画像を大きく表示する（要リロード）</b-switch
           >
         </div>
+        <p class="title is-6 m-t-20">テーマ（調整中）</p>
+        <div class="field">
+          <b-switch v-model="isDarkTheme"
+            >ダークテーマにする（要リロード）</b-switch
+          >
+        </div>
       </section>
       <footer
         class="modal-card-foot"
@@ -84,6 +90,7 @@ export default class ModalUserSettings extends Vue {
   private isDispDate: boolean = false
   private isCharLarge: boolean = false
   private isImgLarge: boolean = false
+  private isDarkTheme: boolean = false
 
   private get village(): Village | null {
     return this.$store.getters.getVillage
@@ -98,6 +105,9 @@ export default class ModalUserSettings extends Vue {
       is_disp_date: this.isDispDate,
       is_char_large: this.isCharLarge,
       is_img_large: this.isImgLarge
+    })
+    villageUserSettings.setTheme(this, {
+      is_dark: this.isDarkTheme
     })
     this.$emit('refresh')
     this.close()
@@ -115,6 +125,8 @@ export default class ModalUserSettings extends Vue {
     this.isDispDate = messageDisplaySettings.is_disp_date
     this.isCharLarge = messageDisplaySettings.is_char_large
     this.isImgLarge = messageDisplaySettings.is_img_large
+    const theme = villageUserSettings.getTheme(this)
+    this.isDarkTheme = theme.is_dark
   }
 }
 </script>

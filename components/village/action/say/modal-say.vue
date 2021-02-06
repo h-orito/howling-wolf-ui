@@ -154,3 +154,14 @@ export default class ModalSay extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.dark-theme {
+  .modal-card-body {
+    background-image: url('~static/image/top-bg.jpg');
+    background-repeat: repeat-y;
+    background-size: contain;
+    background-position: left top;
+  }
+}
+</style>

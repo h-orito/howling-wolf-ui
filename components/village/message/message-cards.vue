@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="isDarkTheme ? 'dark-theme' : ''">
     <b-pagination
       v-if="messages.all_page_count != null && messages.all_page_count > 1"
       :total="messages.all_record_count"
@@ -73,9 +73,7 @@ import messageCard from '~/components/village/message/message-card.vue'
 // type
 import Village from '~/components/type/village'
 import Messages from '~/components/type/messages'
-import villageUserSettings, {
-  VillageUserSettings
-} from '~/components/village/user-settings/village-user-settings'
+import { VillageUserSettings } from '~/components/village/user-settings/village-user-settings'
 import { VILLAGE_STATUS } from '~/components/const/consts'
 // dynamic imports
 const villageSituationMessage = () =>
@@ -112,6 +110,12 @@ export default class MessageCard extends Vue {
     )
   }
 
+  private get isDarkTheme(): boolean {
+    const settings: VillageUserSettings = this.$store.getters
+      .getVillageUserSettings
+    return settings.theme?.is_dark || false
+  }
+
   private change(pageNum: number) {
     this.$emit('change-message-page', {
       pageNum
@@ -129,3 +133,11 @@ export default class MessageCard extends Vue {
   }
 }
 </script>
+
+<style lang="scss">
+.dark-theme {
+  a.pagination-link {
+    color: #eee;
+  }
+}
+</style>

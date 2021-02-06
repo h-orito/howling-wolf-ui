@@ -1,5 +1,5 @@
 <template>
-  <div class="hw-message-text">
+  <div class="hw-message-text" :class="isDarkTheme ? 'dark-theme' : ''">
     <strong>参加者一覧</strong>
     <div
       class="participant-area"
@@ -52,9 +52,7 @@
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import Village from '~/components/type/village'
 import VillageParticipant from '~/components/type/village-participant'
-import SkillRequest from '~/components/type/skill-request'
-import Chara from '~/components/type/chara'
-import { FACE_TYPE } from '~/components/const/consts'
+import { VillageUserSettings } from '~/components/village/user-settings/village-user-settings'
 const charaImage = () => import('~/components/village/chara-image.vue')
 
 @Component({
@@ -69,6 +67,12 @@ export default class ParticipantListMessage extends Vue {
     return this.village.participant.member_list
       .slice()
       .sort((vp1, vp2) => this.compareParticipant(vp1, vp2))
+  }
+
+  private get isDarkTheme(): boolean {
+    const settings: VillageUserSettings = this.$store.getters
+      .getVillageUserSettings
+    return settings.theme?.is_dark || false
   }
 
   private compareParticipant(
@@ -173,6 +177,11 @@ export default class ParticipantListMessage extends Vue {
     padding-left: 10px;
     margin-top: auto;
     margin-bottom: auto;
+  }
+}
+.dark-theme {
+  strong {
+    color: #eee;
   }
 }
 </style>

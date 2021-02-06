@@ -19,6 +19,7 @@ import messageParticipantList from '~/components/village/message/message-partici
 import Village from '~/components/type/village'
 import Message from '~/components/type/message'
 import { MESSAGE_TYPE } from '~/components/const/consts'
+import { VillageUserSettings } from '~/components/village/user-settings/village-user-settings'
 
 @Component({
   components: {
@@ -35,24 +36,37 @@ export default class SystemMessage extends Vue {
   }
 
   private get messageClass(): string {
+    let clazz = ''
     switch (this.message.content.type.code) {
       case MESSAGE_TYPE.PUBLIC_SYSTEM:
-        return ''
+        clazz = ''
+        break
       case MESSAGE_TYPE.PRIVATE_SYSTEM:
-        return 'message-system-private'
+        clazz = 'message-system-private'
+        break
       case MESSAGE_TYPE.PRIVATE_SEER:
-        return 'message-system-private-seer'
+        clazz = 'message-system-private-seer'
+        break
       case MESSAGE_TYPE.PRIVATE_PSYCHIC:
-        return 'message-system-private-psychic'
+        clazz = 'message-system-private-psychic'
+        break
       case MESSAGE_TYPE.PRIVATE_WEREWOLF:
-        return 'message-system-private-werewolf'
+        clazz = 'message-system-private-werewolf'
+        break
       case MESSAGE_TYPE.PRIVATE_MASON:
-        return 'message-system-private-mason'
+        clazz = 'message-system-private-mason'
+        break
       case MESSAGE_TYPE.PARTICIPANTS:
-        return ''
       default:
-        return ''
     }
+    if (this.isDarkTheme) clazz += ' dark-theme'
+    return clazz
+  }
+
+  private get isDarkTheme(): boolean {
+    const settings: VillageUserSettings = this.$store.getters
+      .getVillageUserSettings
+    return settings.theme?.is_dark || false
   }
 }
 </script>
@@ -61,30 +75,59 @@ export default class SystemMessage extends Vue {
 .card-content {
   padding: 10px !important;
 
+  &.dark-theme {
+    box-shadow: 0px 0px 10px 2px $private-system-border inset;
+  }
+
   &.message-system-private {
     border-top: 1px solid $private-system-border;
     border-bottom: 1px solid $private-system-border;
-    background-color: $private-system-bg !important;
+    background-color: $private-system-bg;
+
+    &.dark-theme {
+      box-shadow: 0px 0px 10px 2px $private-system-border inset;
+      background-color: rgba(20, 20, 20, 0.5);
+    }
   }
   &.message-system-private-seer {
     border-top: 1px solid $seer-system-border;
     border-bottom: 1px solid $seer-system-border;
-    background-color: $seer-system-bg !important;
+    background-color: $seer-system-bg;
+
+    &.dark-theme {
+      box-shadow: 0px 0px 10px 2px $seer-system-border inset;
+      background-color: transparent;
+    }
   }
   &.message-system-private-psychic {
     border-top: 1px solid $psychic-system-border;
     border-bottom: 1px solid $psychic-system-border;
-    background-color: $psychic-system-bg !important;
+    background-color: $psychic-system-bg;
+
+    &.dark-theme {
+      box-shadow: 0px 0px 10px 2px $psychic-system-border inset;
+      background-color: transparent;
+    }
   }
   &.message-system-private-werewolf {
     border-top: 1px solid $werewolf-system-border;
     border-bottom: 1px solid $werewolf-system-border;
-    background-color: $werewolf-system-bg !important;
+    background-color: $werewolf-system-bg;
+
+    &.dark-theme {
+      box-shadow: 0px 0px 10px 2px $werewolf-system-border inset;
+      background-color: transparent;
+    }
   }
   &.message-system-private-mason {
     border-top: 1px solid $mason-system-border;
     border-bottom: 1px solid $mason-system-border;
-    background-color: $mason-system-bg !important;
+    background-color: $mason-system-bg;
+
+    &.dark-theme {
+      box-shadow: 0px 0px 10px 2px $mason-system-border inset;
+      background-color: transparent;
+    }
   }
 }
 </style>

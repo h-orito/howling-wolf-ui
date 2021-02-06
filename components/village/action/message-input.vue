@@ -19,6 +19,7 @@ import SituationAsParticipant from '~/components/type/situation-as-participant'
 import VillageSaySituation from '~/components/type/village-say-situation'
 import VillageSayRestrictSituation from '~/components/type/village-say-restrict-situation'
 import { MESSAGE_TYPE } from '~/components/const/consts'
+import { VillageUserSettings } from '~/components/village/user-settings/village-user-settings'
 
 @Component({
   components: {}
@@ -121,21 +122,36 @@ export default class MessageInput extends Vue {
   }
 
   private get messageClass(): string {
+    let className: string = ''
     switch (this.messageType) {
       case MESSAGE_TYPE.NORMAL_SAY:
-        return 'normal-say'
+        className = 'normal-say-input'
+        break
       case MESSAGE_TYPE.WEREWOLF_SAY:
-        return 'werewolf-say'
+        className = 'werewolf-say-input'
+        break
       case MESSAGE_TYPE.MONOLOGUE_SAY:
-        return 'monologue-say'
+        className = 'monologue-say-input'
+        break
       case MESSAGE_TYPE.GRAVE_SAY:
-        return 'grave-say'
+        className = 'grave-say-input'
+        break
       case MESSAGE_TYPE.SPECTATE_SAY:
-        return 'spectate-say'
+        className = 'spectate-say-input'
+        break
       default:
         return ''
     }
+    if (this.isDarkTheme) className += ' dark-theme'
+    return className
   }
+
+  private get isDarkTheme(): boolean {
+    const settings: VillageUserSettings = this.$store.getters
+      .getVillageUserSettings
+    return settings.theme?.is_dark || false
+  }
+
 }
 </script>
 
@@ -146,19 +162,48 @@ export default class MessageInput extends Vue {
 </style>
 
 <style lang="scss">
-.normal-say {
-  background-color: $normal-say !important;
+.dark-theme {
+  color: #eee !important;
 }
-.werewolf-say {
-  background-color: $werewolf-say !important;
+
+.normal-say-input {
+  background-color: $normal-say;
+
+  &.dark-theme {
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid $normal-say;
+  }
 }
-.monologue-say {
-  background-color: $monologue-say !important;
+.werewolf-say-input {
+  background-color: $werewolf-say;
+
+  &.dark-theme {
+    background-color: rgba(255, 0, 0, 0.2);
+    border: 1px solid $werewolf-system-border;
+  }
 }
-.grave-say {
-  background-color: $grave-say !important;
+.monologue-say-input {
+  background-color: $monologue-say;
+
+  &.dark-theme {
+    background-color: rgba(200, 200, 200, 0.5);
+    border: 1px solid #000;
+  }
 }
-.spectate-say {
-  background-color: $spectate-say !important;
+.grave-say-input {
+  background-color: $grave-say;
+
+  &.dark-theme {
+    background-color: rgba(0, 0, 255, 0.2);
+    border: 1px solid $psychic-system-border;
+  }
+}
+.spectate-say-input {
+  background-color: $spectate-say;
+
+  &.dark-theme {
+    background-color: rgba(255, 255, 0, 0.2);
+    border: 1px solid $spectate-say;
+  }
 }
 </style>

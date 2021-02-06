@@ -1,5 +1,8 @@
 <template>
-  <div :class="charSizeClass" class="village-wrapper">
+  <div
+    :class="[charSizeClass, isDarkTheme ? 'dark-theme' : '']"
+    class="village-wrapper"
+  >
     <div v-if="!$window.isMobile" class="village-leftside-wrapper">
       <village-slider
         :charachip-name="charachipName"
@@ -19,6 +22,7 @@
       />
       <div
         class="village-main-wrapper"
+        :class="isDarkTheme ? 'dark-theme' : ''"
         :style="
           $window.isMobile
             ? 'max-width: 100vw;'
@@ -308,6 +312,12 @@ export default class extends Vue {
     return this.refs.footer.isFiltering
   }
 
+  private get isDarkTheme(): boolean {
+    const settings: VillageUserSettings = this.$store.getters
+      .getVillageUserSettings
+    return settings.theme?.is_dark || false
+  }
+
   // ----------------------------------------------------------------
   // created
   // ----------------------------------------------------------------
@@ -315,6 +325,7 @@ export default class extends Vue {
     this.$store.dispatch('INIT_VILLAGE', {
       villageId: this.villageId
     })
+    this.$store.dispatch('INIT_VILLAGE_SETTINGS')
     this.createdLoading() // 完了を待たない
   }
 
@@ -607,7 +618,7 @@ export default class extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 // 全体レイアウト
 html {
   overflow-y: auto !important;
@@ -651,6 +662,14 @@ html {
       justify-content: space-between;
       overflow-y: auto;
 
+      &.dark-theme {
+        background-image: url('~static/image/top-bg.jpg');
+        background-repeat: repeat-y;
+        background-size: contain;
+        background-position: left top;
+        color: #eee;
+      }
+
       .village-article-wrapper {
         flex: 1;
         overflow-y: scroll;
@@ -664,6 +683,29 @@ html {
         flex-shrink: 0;
         flex-direction: column;
         justify-content: space-between;
+      }
+    }
+  }
+
+  &.dark-theme {
+    .modal-card {
+      color: #eee;
+      .title {
+        color: #eee;
+      }
+      .modal-card-body {
+        background-color: #333;
+      }
+    }
+    .b-table .table {
+      background-color: transparent;
+      color: #eee;
+      th {
+        color: #eee;
+      }
+      tr.detail {
+        background-color: transparent;
+        color: #eee;
       }
     }
   }
