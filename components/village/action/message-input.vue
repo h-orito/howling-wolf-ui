@@ -167,42 +167,42 @@ export default class MessageInput extends Vue {
 }
 
 .normal-say-input {
-  background-color: $normal-say;
+  background-color: $normal-say !important;
 
   &.dark-theme {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.2) !important;
     border: 1px solid $normal-say;
   }
 }
 .werewolf-say-input {
-  background-color: $werewolf-say;
+  background-color: $werewolf-say !important;
 
   &.dark-theme {
-    background-color: rgba(255, 0, 0, 0.2);
+    background-color: rgba(255, 0, 0, 0.2) !important;
     border: 1px solid $werewolf-system-border;
   }
 }
 .monologue-say-input {
-  background-color: $monologue-say;
+  background-color: $monologue-say !important;
 
   &.dark-theme {
-    background-color: rgba(200, 200, 200, 0.5);
+    background-color: rgba(200, 200, 200, 0.5) !important;
     border: 1px solid #000;
   }
 }
 .grave-say-input {
-  background-color: $grave-say;
+  background-color: $grave-say !important;
 
   &.dark-theme {
-    background-color: rgba(0, 0, 255, 0.2);
+    background-color: rgba(0, 0, 255, 0.2) !important;
     border: 1px solid $psychic-system-border;
   }
 }
 .spectate-say-input {
-  background-color: $spectate-say;
+  background-color: $spectate-say !important;
 
   &.dark-theme {
-    background-color: rgba(255, 255, 0, 0.2);
+    background-color: rgba(255, 255, 0, 0.2) !important;
     border: 1px solid $spectate-say;
   }
 }
