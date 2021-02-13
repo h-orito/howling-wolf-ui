@@ -74,59 +74,52 @@ export default class SystemMessage extends Vue {
 <style lang="scss" scoped>
 .card-content {
   padding: 10px !important;
+  font-family: sans-serif;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 
   &.dark-theme {
-    box-shadow: 0px 0px 10px 2px $private-system-border inset;
+    border: 1px solid $white;
   }
 
   &.message-system-private {
-    border-top: 1px solid $private-system-border;
-    border-bottom: 1px solid $private-system-border;
+    border: 1px solid $private-system-border;
     background-color: $private-system-bg;
 
     &.dark-theme {
-      box-shadow: 0px 0px 10px 2px $private-system-border inset;
-      background-color: rgba(20, 20, 20, 0.5);
+      background-color: $private-system-bg-dark;
     }
   }
   &.message-system-private-seer {
-    border-top: 1px solid $seer-system-border;
-    border-bottom: 1px solid $seer-system-border;
+    border: 1px solid $seer-system-border;
     background-color: $seer-system-bg;
 
     &.dark-theme {
-      box-shadow: 0px 0px 10px 2px $seer-system-border inset;
-      background-color: transparent;
+      background-color: $seer-system-bg-dark;
     }
   }
   &.message-system-private-psychic {
-    border-top: 1px solid $psychic-system-border;
-    border-bottom: 1px solid $psychic-system-border;
+    border: 1px solid $psychic-system-border;
     background-color: $psychic-system-bg;
 
     &.dark-theme {
-      box-shadow: 0px 0px 10px 2px $psychic-system-border inset;
-      background-color: transparent;
+      background-color: $psychic-system-bg-dark;
     }
   }
   &.message-system-private-werewolf {
-    border-top: 1px solid $werewolf-system-border;
-    border-bottom: 1px solid $werewolf-system-border;
+    border: 1px solid $werewolf-system-border;
     background-color: $werewolf-system-bg;
 
     &.dark-theme {
-      box-shadow: 0px 0px 10px 2px $werewolf-system-border inset;
-      background-color: transparent;
+      background-color: $werewolf-system-bg-dark;
     }
   }
   &.message-system-private-mason {
-    border-top: 1px solid $mason-system-border;
-    border-bottom: 1px solid $mason-system-border;
+    border: 1px solid $mason-system-border;
     background-color: $mason-system-bg;
 
     &.dark-theme {
-      box-shadow: 0px 0px 10px 2px $mason-system-border inset;
-      background-color: transparent;
+      background-color: $mason-system-bg-dark;
     }
   }
 }

@@ -172,7 +172,6 @@ export default class MessageSay extends Vue {
 
 <style lang="scss" scoped>
 .hw-message-card {
-  padding: 5px;
   margin-bottom: 5px;
 
   &.anchor-message {
@@ -253,8 +252,8 @@ export default class MessageSay extends Vue {
         background-color: $monologue-say;
 
         &.dark-theme {
-          background-color: rgba(200, 200, 200, 0.5);
-          border: 1px solid #000;
+          background-color: rgba(100, 100, 100, 0.5);
+          border: 1px solid #ccc;
         }
       }
       &.grave-say {
