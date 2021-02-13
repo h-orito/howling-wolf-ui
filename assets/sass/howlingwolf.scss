@@ -3,6 +3,7 @@
 // Set your colors
 $primary: #3991f4;
 $primary-invert: findColorInvert($primary);
+$primary-dark: rgb(20, 180, 255);
 
 $normal-say: #ffffff;
 $werewolf-say: #f2cece;
@@ -13,14 +14,19 @@ $spectate-say: #f2f2ce;
 
 $private-system-border: #ccc;
 $private-system-bg: #eee;
+$private-system-bg-dark: #404040;
 $seer-system-border: #0f0;
 $seer-system-bg: #efe;
+$seer-system-bg-dark: #334033;
 $psychic-system-border: #00f;
 $psychic-system-bg: #eef;
+$psychic-system-bg-dark: #333340;
 $werewolf-system-border: #f00;
 $werewolf-system-bg: #fee;
+$werewolf-system-bg-dark: #403333;
 $mason-system-border: #fa0;
 $mason-system-bg: #ffe;
+$mason-system-bg-dark: #404033;
 
 // Setup $colors to use as bulma classes (e.g. 'is-twitter')
 $colors: (

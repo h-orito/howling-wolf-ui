@@ -663,11 +663,12 @@ html {
       overflow-y: auto;
 
       &.dark-theme {
-        background-image: url('~static/image/top-bg.jpg');
-        background-repeat: repeat-y;
-        background-size: contain;
-        background-position: left top;
-        color: #eee;
+        background-color: #222;
+        color: #fff;
+
+        a:not(.button):not(.is-current) {
+          color: $primary-dark;
+        }
       }
 
       .village-article-wrapper {
@@ -689,23 +690,36 @@ html {
 
   &.dark-theme {
     .modal-card {
-      color: #eee;
+      color: #fff;
       .title {
-        color: #eee;
+        color: #fff;
+      }
+      .modal-card-head,
+      .modal-card-foot {
+        background-color: $dark;
+        .modal-card-title {
+          color: $white;
+        }
+      }
+      .modal-card-head {
+        border-bottom: none;
+      }
+      .modal-card-foot {
+        border-top: none;
       }
       .modal-card-body {
-        background-color: #333;
+        background-color: #222;
       }
     }
-    .b-table .table {
+    .table {
       background-color: transparent;
-      color: #eee;
+      color: #fff;
       th {
-        color: #eee;
+        color: #fff;
       }
       tr.detail {
         background-color: transparent;
-        color: #eee;
+        color: #fff;
       }
     }
   }

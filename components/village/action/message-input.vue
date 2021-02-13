@@ -186,8 +186,8 @@ export default class MessageInput extends Vue {
   background-color: $monologue-say !important;
 
   &.dark-theme {
-    background-color: rgba(200, 200, 200, 0.5) !important;
-    border: 1px solid #000;
+    background-color: rgba(100, 100, 100, 0.5) !important;
+    border: 1px solid #fff;
   }
 }
 .grave-say-input {

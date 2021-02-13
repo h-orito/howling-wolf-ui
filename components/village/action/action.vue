@@ -1,6 +1,6 @@
 <template>
   <div class="village-action-wrapper" :class="containerSizeClass">
-    <div class="village-action-header">
+    <div class="village-action-header" :class="isDarkTheme ? 'dark-theme' : ''">
       <b-button
         v-for="tab in activeTabs"
         :key="tab.name"
@@ -106,7 +106,7 @@ import VillageAbilitySituation from '~/components/type/village-ability-situation
 import actionHelper, {
   VillageAction
 } from '~/components/village/action/village-action-helper'
-import villageUserSettings from '~/components/village/user-settings/village-user-settings'
+import villageUserSettings, { VillageUserSettings } from '~/components/village/user-settings/village-user-settings'
 // dynamic imports
 const participate = () =>
   import('~/components/village/action/participate/participate.vue')
@@ -207,6 +207,12 @@ export default class Action extends Vue {
     return `action-${containerSizeClasses[this.actionContainerSize]}`
   }
 
+  private get isDarkTheme(): boolean {
+    const settings: VillageUserSettings = this.$store.getters
+      .getVillageUserSettings
+    return settings.theme?.is_dark || false
+  }
+
   /** method */
   private reset(): void {
     this.activeTabCode = this.getActiveTabCodeOrDefault()
@@ -291,20 +297,42 @@ export default class Action extends Vue {
     border-bottom: 0;
     height: 100%;
     border-right: 1px solid #ccc;
+
+    &.flex {
+      flex: 1;
+    }
+    :hover {
+      border-bottom: 1px solid #000;
+    }
+    &.active {
+      color: $primary;
+      border-bottom: 1px solid $primary !important;
+    }
+    :focus {
+      outline: none !important;
+      box-shadow: none !important;
+    }
   }
-  .village-action-header-item.flex {
-    flex: 1;
-  }
-  .village-action-header-item:hover {
-    border-bottom: 1px solid #000;
-  }
-  .village-action-header-item.active {
-    color: $primary;
-    border-bottom: 1px solid $primary !important;
-  }
-  .village-action-header-item:focus {
-    outline: none !important;
-    box-shadow: none !important;
+  &.dark-theme {
+    border-top: 1.5px solid #777;
+    border-bottom: 1px solid #777;
+
+    .village-action-header-item {
+      background-color: $dark;
+      color: $white;
+      border-left: 1px solid #777;
+      border-right: 1px solid #777;
+
+      &:first-child {
+        border-left: none;
+      }
+      &:last-child {
+        border-right: none;
+      }
+      &.active {
+        border-bottom: 1px solid $primary-dark !important;
+      }
+    }
   }
 }
 
