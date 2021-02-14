@@ -162,48 +162,42 @@ export default class MessageInput extends Vue {
 </style>
 
 <style lang="scss">
-.dark-theme {
-  color: #eee !important;
-}
-
 .normal-say-input {
   background-color: $normal-say !important;
 
   &.dark-theme {
-    background-color: rgba(0, 0, 0, 0.2) !important;
-    border: 1px solid $normal-say;
+    color: $black !important;
   }
 }
 .werewolf-say-input {
   background-color: $werewolf-say !important;
 
   &.dark-theme {
-    background-color: rgba(255, 0, 0, 0.2) !important;
-    border: 1px solid $werewolf-system-border;
+    background-color: $werewolf-say-dark !important;
+    color: $black !important;
   }
 }
 .monologue-say-input {
   background-color: $monologue-say !important;
 
   &.dark-theme {
-    background-color: rgba(100, 100, 100, 0.5) !important;
-    border: 1px solid #fff;
+    background-color: $monologue-say-dark !important;
+    color: $black !important;
   }
 }
 .grave-say-input {
   background-color: $grave-say !important;
 
   &.dark-theme {
-    background-color: rgba(0, 0, 255, 0.2) !important;
-    border: 1px solid $psychic-system-border;
+    background-color: $grave-say-dark !important;
+    color: $black !important;
   }
 }
 .spectate-say-input {
   background-color: $spectate-say !important;
 
   &.dark-theme {
-    background-color: rgba(255, 255, 0, 0.2) !important;
-    border: 1px solid $spectate-say;
+    color: $black !important;
   }
 }
 </style>

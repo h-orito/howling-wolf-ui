@@ -234,43 +234,38 @@ export default class MessageSay extends Vue {
 
       &.normal-say {
         background-color: $normal-say;
-
-        &.dark-theme {
-          background-color: rgba(0, 0, 0, 0.2);
-          border: 1px solid $normal-say;
-        }
+        color: $black;
       }
       &.werewolf-say {
         background-color: $werewolf-say;
+        color: $black;
 
         &.dark-theme {
-          background-color: rgba(255, 0, 0, 0.2);
-          border: 1px solid $werewolf-system-border;
+          background-color: $werewolf-say-dark;
+          border: 1px solid $werewolf-say-dark;
         }
       }
       &.monologue-say {
         background-color: $monologue-say;
+        color: $black;
 
         &.dark-theme {
-          background-color: rgba(100, 100, 100, 0.5);
-          border: 1px solid #ccc;
+          background-color: $monologue-say-dark;
+          border: 1px solid $monologue-say-dark;
         }
       }
       &.grave-say {
         background-color: $grave-say;
+        color: $black;
 
         &.dark-theme {
-          background-color: rgba(0, 0, 255, 0.2);
-          border: 1px solid $psychic-system-border;
+          background-color: $grave-say-dark;
+          border: 1px solid $grave-say-dark;
         }
       }
       &.spectate-say {
         background-color: $spectate-say;
-
-        &.dark-theme {
-          background-color: rgba(255, 255, 0, 0.2);
-          border: 1px solid $spectate-say;
-        }
+        color: $black;
       }
     }
   }

@@ -80,6 +80,10 @@ export default class SystemMessage extends Vue {
 
   &.dark-theme {
     border: 1px solid $white;
+    color: $white;
+  }
+  &:not(.dark-theme) {
+    color: $black;
   }
 
   &.message-system-private {
