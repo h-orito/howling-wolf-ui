@@ -343,7 +343,8 @@ export default class extends Vue {
     await this.reload(true)
     // 個人抽出があれば抽出
     if (this.filterId) {
-      const participant = this.village!.participant.member_list.find(p => p.id === parseInt(this.filterId!))
+      const filterId: number = parseInt(this.filterId!)
+      const participant = this.village!.participant.member_list.find(p => p.id === filterId)
       this.charaFilter({participant})
     }
     // キャラチップ名

@@ -20,7 +20,7 @@
           <p class="chara-filter">
             <nuxt-link
               :to="{
-                path: 'village',
+                path: '/village',
                 query: { id: villageId, filterId: participant.id }
               }"
               target="_blank"
@@ -57,7 +57,7 @@
             <p class="chara-filter">
               <nuxt-link
                 :to="{
-                  path: 'village',
+                  path: '/village',
                   query: { id: villageId, filterId: participant.id }
                 }"
                 target="_blank"
