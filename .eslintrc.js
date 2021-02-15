@@ -6,11 +6,9 @@ module.exports = {
   },
   extends: [
     '@nuxtjs/eslint-config-typescript',
-    'plugin:vue/recommended',
-    'plugin:nuxt/recommended',
-    'plugin:prettier/recommended',
     'prettier',
-    'prettier/vue'
+    'prettier/vue',
+    'plugin:nuxt/recommended'
   ],
   plugins: ['vue'],
   globals: {
@@ -21,10 +19,10 @@ module.exports = {
     'vue/attributes-order': 'off',
     'vue/html-closing-bracket-newline': 'off',
     'no-return-await': 'off',
-    "no-unused-vars": "off",
-    "camelcase": "off",
-    "no-undef": "off",
-    "@typescript-eslint/no-unused-vars": "off",
+    'no-unused-vars': 'off',
+    camelcase: 'off',
+    'no-undef': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
   }

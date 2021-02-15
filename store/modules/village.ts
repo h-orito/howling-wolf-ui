@@ -6,6 +6,7 @@ import {
   STORE_FILTERING
 } from '~/store/action-types'
 import Village from '~/components/type/village'
+import VillageDay from '~/components/type/village-day'
 import Messages from '~/components/type/messages'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 
@@ -63,8 +64,13 @@ const actions = {
 }
 
 const getters = {
-  getVillageId: state => state.villageId,
-  getVillage: state => state.village,
+  getVillageId: (state): number => state.villageId,
+  getVillage: (state): Village | null => state.village,
+  getLatestDay: (state): VillageDay | null => {
+    const village = state.village
+    if (!village) return null
+    return village.day.day_list[village.day.day_list.length - 1]
+  },
   getMessages: state => state.messages,
   getSituation: state => state.situation,
   isFiltering: state => state.isFiltering
