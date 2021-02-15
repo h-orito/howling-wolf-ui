@@ -149,7 +149,10 @@ const villageAdmin = () =>
     villageAdmin
   },
   asyncData({ query }) {
-    return { villageId: query.id }
+    return {
+      villageId: query.id,
+      filterId: query.filterId
+    }
   }
 })
 export default class extends Vue {
@@ -172,6 +175,8 @@ export default class extends Vue {
   // ----------------------------------------------------------------
   /** village_id */
   private villageId: number = 0
+  /** filter_id */
+  private filterId: string | null = null
   /** 現在表示している村日付 */
   private displayVillageDay: VillageDay | null = null
   /** 村情報を取得中か */
@@ -336,6 +341,11 @@ export default class extends Vue {
     villageUserSettings.createCookieIfNeeded(this)
     // もろもろ読込
     await this.reload(true)
+    // 個人抽出があれば抽出
+    if (this.filterId) {
+      const participant = this.village!.participant.member_list.find(p => p.id === parseInt(this.filterId!))
+      this.charaFilter({participant})
+    }
     // キャラチップ名
     this.charachipName = await this.loadCharachipName()
     // 定期的に最新発言がないかチェックする

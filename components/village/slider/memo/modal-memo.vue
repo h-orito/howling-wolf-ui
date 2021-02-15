@@ -182,9 +182,6 @@ export default class ModalMemo extends Vue {
 }
 .dark-theme {
   .b-tabs .tabs.is-boxed {
-    // ul {
-    //   border-bottom: none;
-    // }
     li a {
       background-color: $dark;
       color: $white;

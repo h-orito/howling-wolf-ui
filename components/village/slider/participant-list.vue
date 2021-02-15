@@ -18,8 +18,13 @@
             {{ comingout(participant) }}
           </p>
           <p class="chara-filter">
-            <a href="javascript:void(0);" @click="charaFilter(participant)"
-              >抽出</a
+            <nuxt-link
+              :to="{
+                path: 'village',
+                query: { id: villageId, filterId: participant.id }
+              }"
+              target="_blank"
+              >抽出</nuxt-link
             >
           </p>
         </div>
@@ -50,8 +55,13 @@
               {{ comingout(participant) }}
             </p>
             <p class="chara-filter">
-              <a href="javascript:void(0);" @click="charaFilter(participant)"
-                >抽出</a
+              <nuxt-link
+                :to="{
+                  path: 'village',
+                  query: { id: villageId, filterId: participant.id }
+                }"
+                target="_blank"
+                >抽出</nuxt-link
               >
             </p>
           </div>
@@ -80,6 +90,10 @@ const charaImage = () => import('~/components/village/chara-image.vue')
   components: { charaImage }
 })
 export default class VillageSlider extends Vue {
+  private get villageId(): number {
+    return this.$store.getters.getVillageId
+  }
+
   private get village(): Village {
     return this.$store.getters.getVillage!
   }
@@ -189,12 +203,6 @@ export default class VillageSlider extends Vue {
   private sayCount(participantId: number): number {
     if (!this.messages) return 0
     return this.messages.today_message_count_map[participantId]
-  }
-
-  private charaFilter(participant: VillageParticipant): void {
-    this.$emit('chara-filter', {
-      participant
-    })
   }
 }
 </script>
