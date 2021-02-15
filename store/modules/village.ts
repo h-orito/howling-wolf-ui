@@ -1,10 +1,12 @@
 import {
   INIT_VILLAGE,
+  LOAD_VILLAGE,
   STORE_VILLAGE,
   STORE_MESSAGES,
   STORE_SITUATION,
   STORE_FILTERING
 } from '~/store/action-types'
+import api from '~/components/village/village-api'
 import Village from '~/components/type/village'
 import VillageDay from '~/components/type/village-day'
 import Messages from '~/components/type/messages'
@@ -49,7 +51,8 @@ const actions = {
   async [INIT_VILLAGE]({ commit }, { villageId }) {
     await commit('init', { villageId })
   },
-  async [STORE_VILLAGE]({ commit }, { village }) {
+  async [LOAD_VILLAGE]({ commit, state }) {
+    const village = await api.fetchVillage(<any>this, state.villageId)
     await commit('saveVillage', { village })
   },
   async [STORE_MESSAGES]({ commit }, { messages }) {

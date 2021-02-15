@@ -80,8 +80,8 @@ export default class MessageCard extends Vue {
 
   private anchorMessages: Message[] = []
 
-  private get village(): Village {
-    return this.$store.getters.getVillage!
+  private get villageId(): number {
+    return this.$store.getters.getVillageId!
   }
 
   private get isDarkTheme(): boolean {
@@ -145,7 +145,7 @@ export default class MessageCard extends Vue {
     try {
       return await this.$axios.$get(
         `/village/${
-          this.village!.id
+          this.villageId
         }/message/type/${messageTypeCode}/number/${messageNumber}`
       )
     } catch (error) {
