@@ -19,7 +19,6 @@ import messageParticipantList from '~/components/village/message/message-partici
 import Village from '~/components/type/village'
 import Message from '~/components/type/message'
 import { MESSAGE_TYPE } from '~/components/const/consts'
-import { VillageUserSettings } from '~/components/village/user-settings/village-user-settings'
 
 @Component({
   components: {
@@ -30,10 +29,6 @@ import { VillageUserSettings } from '~/components/village/user-settings/village-
 export default class SystemMessage extends Vue {
   @Prop({ type: Object })
   private message!: Message
-
-  private get village(): Village {
-    return this.$store.getters.getVillage!
-  }
 
   private get messageClass(): string {
     let clazz = ''
@@ -59,14 +54,8 @@ export default class SystemMessage extends Vue {
       case MESSAGE_TYPE.PARTICIPANTS:
       default:
     }
-    if (this.isDarkTheme) clazz += ' dark-theme'
+    if (this.$store.getters.isDarkTheme) clazz += ' dark-theme'
     return clazz
-  }
-
-  private get isDarkTheme(): boolean {
-    const settings: VillageUserSettings = this.$store.getters
-      .getVillageUserSettings
-    return settings.theme?.is_dark || false
   }
 }
 </script>

@@ -14,8 +14,8 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free-webfonts": "^1.0.9",
-    "@nuxt/typescript-runtime": "^0.3.8",
-    "@nuxtjs/axios": "5.6.0",
+    "@nuxt/typescript-runtime": "^2.0.1",
+    "@nuxtjs/axios": "^5.13.1",
     "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/google-analytics": "^2.3.0",
     "@nuxtjs/pwa": "^3.0.0-beta.20",
@@ -23,9 +23,9 @@
     "chart.js": "^2.9.3",
     "cookie-universal-nuxt": "2.0.18",
     "cross-env": "5.2.1",
-    "firebase": "^7.14.6",
+    "firebase": "^8.2.7",
     "luxon": "1.17.2",
-    "nuxt": "2.11.0",
+    "nuxt": "^2.14.12",
     "nuxt-buefy": "^0.3.14",
     "nuxt-clipboard2": "^0.2.1",
     "nuxt-property-decorator": "^2.5.0",
@@ -37,7 +37,8 @@
     "weekstart": "^1.0.1"
   },
   "devDependencies": {
-    "@nuxt/typescript-build": "^0.5.1",
+    "@nuxt/types": "^2.14.12",
+    "@nuxt/typescript-build": "^1.0.3",
     "@nuxtjs/eslint-config-typescript": "^1.0.0",
     "@nuxtjs/style-resources": "^1.0.0",
     "@types/node-sass": "4.11.0",
@@ -45,9 +46,8 @@
     "eslint-config-prettier": "^6.1.0",
     "eslint-loader": "^3.0.0",
     "eslint-plugin-nuxt": "^0.5.0",
-    "eslint-plugin-prettier": "^3.1.0",
     "node-sass": "^4.14.1",
-    "prettier": "^1.18.2",
+    "prettier": "^1.19.1",
     "sass-loader": "^8.0.2"
   }
 }

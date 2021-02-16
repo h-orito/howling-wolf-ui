@@ -7,10 +7,10 @@ const reactiveProp = VueChartMixins.reactiveProp
 @Component
 export default class DoughnutChart extends mixins(Doughnut, reactiveProp) {
   @Prop({ default: {} })
-  chartData: Chart.ChartData
+  chartData!: Chart.ChartData
 
   @Prop({ default: {} })
-  options: Chart.ChartOptions
+  options!: Chart.ChartOptions
 
   @Prop()
   text?: string

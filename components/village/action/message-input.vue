@@ -14,12 +14,10 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
-import Village from '~/components/type/village'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 import VillageSaySituation from '~/components/type/village-say-situation'
 import VillageSayRestrictSituation from '~/components/type/village-say-restrict-situation'
 import { MESSAGE_TYPE } from '~/components/const/consts'
-import { VillageUserSettings } from '~/components/village/user-settings/village-user-settings'
 
 @Component({
   components: {}
@@ -142,16 +140,9 @@ export default class MessageInput extends Vue {
       default:
         return ''
     }
-    if (this.isDarkTheme) className += ' dark-theme'
+    if (this.$store.getters.isDarkTheme) className += ' dark-theme'
     return className
   }
-
-  private get isDarkTheme(): boolean {
-    const settings: VillageUserSettings = this.$store.getters
-      .getVillageUserSettings
-    return settings.theme?.is_dark || false
-  }
-
 }
 </script>
 
