@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="[charSizeClass, isDarkTheme ? 'dark-theme' : '']"
+    :class="[charSizeClass, $store.getters.isDarkTheme ? 'dark-theme' : '']"
     class="village-wrapper"
   >
     <div v-if="!$window.isMobile" class="village-leftside-wrapper">
@@ -22,7 +22,7 @@
       />
       <div
         class="village-main-wrapper"
-        :class="isDarkTheme ? 'dark-theme' : ''"
+        :class="$store.getters.isDarkTheme ? 'dark-theme' : ''"
         :style="
           $window.isMobile
             ? 'max-width: 100vw;'
@@ -75,7 +75,7 @@
           <village-admin v-if="situation && situation.admin.admin" />
         </div>
         <action
-          v-if="situation && existsAction"
+          v-if="village && existsAction"
           @reload="reload"
           ref="action"
         ></action>
@@ -119,7 +119,6 @@ import VillageLatest from '~/components/type/village-latest'
 import Messages from '~/components/type/messages'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 import DebugVillage from '~/components/type/debug-village'
-import Charachip from '~/components/type/charachip'
 import { VILLAGE_STATUS } from '~/components/const/consts'
 import villageUserSettings, {
   VillageUserSettings
@@ -225,6 +224,14 @@ export default class extends Vue {
     return this.$store.getters.getSituation
   }
 
+  private get latestDay(): VillageDay | null {
+    return this.$store.getters.getLatestDay
+  }
+
+  private get isFiltering(): boolean {
+    return this.$store.getters.isFiltering
+  }
+
   /** 村名と状態 */
   private get villageName(): string {
     const status = this.village!.status
@@ -241,12 +248,6 @@ export default class extends Vue {
     )
   }
 
-  /** 最新村日付 */
-  private get latestDay(): VillageDay | null {
-    if (this.village == null) return null
-    return this.village.day.day_list[this.village.day.day_list.length - 1]
-  }
-
   /** ローカル環境か */
   private get isDebug(): boolean {
     return (process.env as any).ENV === 'local'
@@ -257,45 +258,8 @@ export default class extends Vue {
     return this.isDebug && this.debugVillage != null && this.situation != null
   }
 
-  /** 自動的に最新発言を読み込むか */
-  private get shouldLoadMessage(): boolean {
-    // 最新日の最新ページを見ていない場合は勝手に更新したくない
-    if (!this.isViewingLatest) return false
-    // 発言入力中も勝手に更新したくない
-    if (this.refs.action && this.refs.action.isInputting) return false
-    // 発言抽出中も勝手に更新したくない
-    if (this.refs.footer.isFiltering) return false
-    return true
-  }
-
-  /** 最新日・最新ページを見ているか */
-  private get isViewingLatest(): boolean {
-    // 最新日を見ていない
-    if (this.displayVillageDay!.id !== this.latestDay!.id) return false
-    // 最新ページを見ていない
-    if (
-      this.messages!.all_page_count != null &&
-      this.currentPageNum !== this.messages!.all_page_count
-    )
-      return false
-
-    return true
-  }
-
   private get existsAction(): boolean {
     return !!this.situation && actionHelper.existsAction(this.situation)
-  }
-
-  private get refs(): any {
-    return this.$refs
-  }
-
-  private get isNotFinished(): boolean {
-    const status = this.village!.status.code
-    return (
-      this.village!.status.code !== VILLAGE_STATUS.COMPLETE &&
-      this.village!.status.code !== VILLAGE_STATUS.CANCEL
-    )
   }
 
   private get isAlreadyAuthenticated(): boolean {
@@ -303,24 +267,10 @@ export default class extends Vue {
   }
 
   private get charSizeClass(): string {
-    return this.isCharSizeLarge ? 'is-size-6' : 'is-size-7'
-  }
-
-  private get isCharSizeLarge(): boolean {
-    const cookie = villageUserSettings.getCookie(this)
-    if (!cookie) return false
-    return villageUserSettings.getMessageDisplay(this).is_char_large
-  }
-
-  private get isFiltering(): boolean {
-    if (!this.refs || !this.refs.footer) return false
-    return this.refs.footer.isFiltering
-  }
-
-  private get isDarkTheme(): boolean {
     const settings: VillageUserSettings = this.$store.getters
       .getVillageUserSettings
-    return settings.theme?.is_dark || false
+    const isCharSizeLarge: boolean = settings.message_display?.is_char_large || false
+    return isCharSizeLarge ? 'is-size-6' : 'is-size-7'
   }
 
   // ----------------------------------------------------------------
@@ -348,14 +298,14 @@ export default class extends Vue {
       this.charaFilter({participant})
     }
     // キャラチップ名
-    this.charachipName = await this.loadCharachipName()
+    this.charachipName = await api.fetchCharachipName(this, this.village!)
     // 定期的に最新発言がないかチェックする
-    if (this.isNotFinished) {
+    if (isNotFinished(this.village!)) {
       this.latestTimer = this.setLatestTimer()
-      this.daychangeTimer = this.setDaychangeTimer()
+      this.daychangeTimer = setDaychangeTimer(this.$refs.footer)
     } else {
       // 1回だけ実行
-      this.updateDaychangeTimer()
+      updateDaychangeTimer(this.$refs.footer)
     }
   }
 
@@ -396,9 +346,7 @@ export default class extends Vue {
   /** 村を読み込み */
   private async loadVillage(): Promise<void> {
     this.loadingVillage = true
-    await this.$store.dispatch('STORE_VILLAGE', {
-      village: await api.fetchVillage(this, this.villageId)
-    })
+    await this.$store.dispatch('LOAD_VILLAGE')
     this.loadingVillage = false
   }
 
@@ -416,7 +364,7 @@ export default class extends Vue {
     // 表示する日付
     const displayDay = isDispLatestDay ? this.latestDay : this.displayVillageDay
     // 読み込み
-    this.$store.dispatch('STORE_MESSAGES', {
+    await this.$store.dispatch('STORE_MESSAGES', {
       messages: await api.fetchMessageList(
         this,
         this.villageId,
@@ -451,11 +399,6 @@ export default class extends Vue {
     this.loadingSituation = false
   }
 
-  /** キャラチップ名を読み込み */
-  private loadCharachipName(): Promise<string> {
-    return api.fetchCharachipName(this, this.village!)
-  }
-
   /** デバッグ用村情報を読み込み */
   private loadDebugVillage(): Promise<DebugVillage> {
     return api.fetchDebugVillage(this, this.villageId)
@@ -473,18 +416,21 @@ export default class extends Vue {
     // 最新日を表示
     this.displayVillageDay = this.latestDay!
     this.existsNewMessages = false
-    if (this.isNotFinished) {
+    if (isNotFinished(this.village!)) {
       // 能力行使等をリセット
-      if (this.existsAction) this.refs.action.reset()
+      // @ts-ignore
+      if (this.existsAction) this.$refs.action.reset()
     }
     this.toBottom()
 
     // 発言抽出欄を初期状態に戻す
     if (cancelFilter) {
-      this.refs.footer.filterRefresh()
+      // @ts-ignore
+      this.$refs.footer.filterRefresh()
     }
     // アンカーメッセージを非表示にする
-    if (this.refs.messageCards) this.refs.messageCards.clearAnchorMessages()
+    // @ts-ignore
+    if (this.$refs.messageCards) this.$refs.messageCards.clearAnchorMessages()
   }
 
   private async reloadVillage(): Promise<void> {
@@ -527,12 +473,14 @@ export default class extends Vue {
   }
 
   private charaFilter({ participant }) {
-    this.refs.footer.charaFilter(participant)
+    // @ts-ignore
+    this.$refs.footer.charaFilter(participant)
     this.hideSlider()
   }
 
   private cancelFiltering(): void {
-    this.refs.footer.filterRefresh()
+    // @ts-ignore
+    this.$refs.footer.filterRefresh()
   }
 
   /** 発言内容の最上部にスクロール */
@@ -555,11 +503,6 @@ export default class extends Vue {
   /** 定期的に最新発言がないかチェック */
   private setLatestTimer(): any {
     return setInterval(this.loadVillageLatest, 30 * 1000)
-  }
-
-  /** 更新までの残り時間を表示 */
-  private setDaychangeTimer(): any {
-    return setInterval(this.updateDaychangeTimer, 1000)
   }
 
   /** 最新発言チェックを解除 */
@@ -588,7 +531,15 @@ export default class extends Vue {
     if (latest.village_day_id !== currentLatestVillageDayId) {
       // 日付が変わった
       this.existsNewMessages = true
-      if (this.shouldLoadMessage) {
+      if (shouldLoadMessage(
+        this.latestDay!, 
+        this.displayVillageDay!, 
+        this.messages!, 
+        this.currentPageNum,
+        // @ts-ignore
+        this.$refs.action && this.$refs.action.isInputting,
+        this.isFiltering
+      )) {
         this.reload()
         toast.info(this, '日付が変わりました')
       } else {
@@ -597,16 +548,20 @@ export default class extends Vue {
     } else if (this.latestMessageUnixTimeMilli < latest.unix_time_milli) {
       // 発言が増えた
       this.existsNewMessages = true
-      if (this.shouldLoadMessage) {
+      if (shouldLoadMessage(
+        this.latestDay!, 
+        this.displayVillageDay!, 
+        this.messages!, 
+        this.currentPageNum,
+        // @ts-ignore
+        this.$refs.action && this.$refs.action.isInputting,
+        this.isFiltering
+      )) {
         this.loadMessage()
         toast.info(this, '最新発言を読み込みました')
         this.existsNewMessages = false
       }
     }
-  }
-
-  private updateDaychangeTimer(): void {
-    ;(this.$refs as any).footer.refreshTimer()
   }
 
   private toggleSlider(): void {
@@ -621,12 +576,55 @@ export default class extends Vue {
   private resizeTimeout: any = null
   private resizeHeight(): void {
     if (this.resizeTimeout) clearTimeout(this.resizeTimeout)
-    this.resizeTimeout = setTimeout(() => {
-      const vh = window.innerHeight * 0.01
-      document.documentElement.style.setProperty('--vh', `${vh}px`)
-    }, 500)
+    this.resizeTimeout = setTimeout(() => setWindowHeight(), 500)
   }
 }
+
+/** 自動的に最新発言を読み込むか */
+const shouldLoadMessage = (
+  latestDay: VillageDay,
+  displayVillageDay: VillageDay,
+  messages: Messages,
+  currentPageNum: number | null,
+  isInputting: boolean,
+  isFiltering: boolean
+): boolean => {
+  // 最新日の最新ページを見ていない場合は勝手に更新したくない
+  if (!isViewingLatest(latestDay, displayVillageDay, messages, currentPageNum)) return false
+  // 発言入力中や発言抽出中は勝手に更新したくない
+  if (isInputting || isFiltering) return false
+  return true
+}
+
+/** 最新日の最新ページを見ているか */
+const isViewingLatest = (
+  latestDay: VillageDay,
+  displayVillageDay: VillageDay,
+  messages: Messages,
+  currentPageNum: number | null
+): boolean => {
+  // 最新日を見ていない
+  if (displayVillageDay!.id !== latestDay.id) return false
+  // 最新ページを見ていない
+  const allPageCount: number | null = messages.all_page_count
+  if (!!allPageCount && currentPageNum !== allPageCount) return false
+
+  return true
+}
+
+const isNotFinished = (village: Village): boolean => {
+  const status = village.status.code
+  return (
+    status !== VILLAGE_STATUS.COMPLETE &&
+    status !== VILLAGE_STATUS.CANCEL
+  )
+}
+
+/** 更新までの残り時間を表示 */
+const updateDaychangeTimer = (footer: any): void => footer.refreshTimer()
+const setDaychangeTimer = (footer: any): any => setInterval(() => updateDaychangeTimer(footer), 1000) 
+
+const setWindowHeight = (): void => document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`)
 </script>
 
 <style lang="scss">

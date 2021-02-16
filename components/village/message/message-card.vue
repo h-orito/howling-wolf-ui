@@ -3,7 +3,7 @@
     <div
       v-if="message != null"
       class="card"
-      :class="isDarkTheme ? 'dark-theme' : ''"
+      :class="$store.getters.isDarkTheme ? 'dark-theme' : ''"
     >
       <message-say
         v-if="isSayType"
@@ -19,7 +19,7 @@
         :key="mes.id"
         :message="mes"
         :is-progress="isProgress"
-        :is-anchor-message="isAnchorTrue"
+        :is-anchor-message="true"
         @click-anchor="clickAnchorMessage($event)"
       ></message-card>
     </div>
@@ -80,20 +80,6 @@ export default class MessageCard extends Vue {
 
   private anchorMessages: Message[] = []
 
-  private get village(): Village {
-    return this.$store.getters.getVillage!
-  }
-
-  private get isDarkTheme(): boolean {
-    const settings: VillageUserSettings = this.$store.getters
-      .getVillageUserSettings
-    return settings.theme?.is_dark || false
-  }
-
-  private get isAnchorTrue(): boolean {
-    return true
-  }
-
   private get isSayType(): boolean {
     return [
       MESSAGE_TYPE.NORMAL_SAY,
@@ -144,9 +130,7 @@ export default class MessageCard extends Vue {
   ): Promise<VillageAnchorMessage | null> {
     try {
       return await this.$axios.$get(
-        `/village/${
-          this.village!.id
-        }/message/type/${messageTypeCode}/number/${messageNumber}`
+        `/village/${this.$store.getters.getVillageId!}/message/type/${messageTypeCode}/number/${messageNumber}`
       )
     } catch (error) {
       return null

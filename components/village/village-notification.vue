@@ -6,7 +6,6 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
-import { VillageUserSettings} from '~/components/village/user-settings/village-user-settings'
 
 @Component({
   components: {}
@@ -18,14 +17,8 @@ export default class VillageNotification extends Vue {
   private get className(): string[] {
     const classNames: string[] = []
     classNames.push(`is-${this.type}`)
-    if (this.isDarkTheme) classNames.push('dark-theme')
+    if (this.$store.getters.isDarkTheme) classNames.push('dark-theme')
     return classNames
-  }
-
-  private get isDarkTheme(): boolean {
-    const settings: VillageUserSettings = this.$store.getters
-      .getVillageUserSettings
-    return settings.theme?.is_dark || false
   }
 }
 </script>

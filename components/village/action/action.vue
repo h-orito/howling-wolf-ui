@@ -1,6 +1,6 @@
 <template>
   <div class="village-action-wrapper" :class="containerSizeClass">
-    <div class="village-action-header" :class="isDarkTheme ? 'dark-theme' : ''">
+    <div class="village-action-header" :class="$store.getters.isDarkTheme ? 'dark-theme' : ''">
       <b-button
         v-for="tab in activeTabs"
         :key="tab.name"
@@ -95,7 +95,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'nuxt-property-decorator'
+import { Component, Vue } from 'nuxt-property-decorator'
 // components
 import ability from '~/components/village/action/ability/ability.vue'
 import vote from '~/components/village/action/vote/vote.vue'
@@ -106,7 +106,7 @@ import VillageAbilitySituation from '~/components/type/village-ability-situation
 import actionHelper, {
   VillageAction
 } from '~/components/village/action/village-action-helper'
-import villageUserSettings, { VillageUserSettings } from '~/components/village/user-settings/village-user-settings'
+import villageUserSettings from '~/components/village/user-settings/village-user-settings'
 // dynamic imports
 const participate = () =>
   import('~/components/village/action/participate/participate.vue')
@@ -205,12 +205,6 @@ export default class Action extends Vue {
 
   private get containerSizeClass(): string {
     return `action-${containerSizeClasses[this.actionContainerSize]}`
-  }
-
-  private get isDarkTheme(): boolean {
-    const settings: VillageUserSettings = this.$store.getters
-      .getVillageUserSettings
-    return settings.theme?.is_dark || false
   }
 
   /** method */

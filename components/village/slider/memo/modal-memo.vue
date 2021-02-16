@@ -7,7 +7,7 @@
     aria-modal
     :on-cancel="close"
   >
-    <div class="modal-card" :class="isDarkTheme ? 'dark-theme' : ''">
+    <div class="modal-card" :class="$store.getters.isDarkTheme ? 'dark-theme' : ''">
       <header class="modal-card-head">
         <p class="modal-card-title has-text-left">メモ</p>
       </header>
@@ -93,12 +93,6 @@ export default class ModalMemo extends Vue {
 
   private get isPrologue(): boolean {
     return !this.village || this.village.status.code === VILLAGE_STATUS.PROLOGUE
-  }
-
-  private get isDarkTheme(): boolean {
-    const settings: VillageUserSettings = this.$store.getters
-      .getVillageUserSettings
-    return settings.theme?.is_dark || false
   }
 
   private save(): void {
