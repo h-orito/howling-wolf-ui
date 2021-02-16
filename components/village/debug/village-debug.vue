@@ -1,5 +1,5 @@
 <template>
-  <div :class="isDarkTheme ? 'dark-theme' : ''">
+  <div :class="$store.getters.isDarkTheme ? 'dark-theme' : ''">
     <hr />
     <action-card :title="'デバッグメニュー'" :exists-footer="false">
       <template v-slot:content>
@@ -149,12 +149,6 @@ export default class Action extends Vue {
       })
     }
     return list
-  }
-
-  private get isDarkTheme(): boolean {
-    const settings: VillageUserSettings = this.$store.getters
-      .getVillageUserSettings
-    return settings.theme?.is_dark || false
   }
 
   // ----------------------------------------------------------------

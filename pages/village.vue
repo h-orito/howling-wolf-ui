@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="[charSizeClass, isDarkTheme ? 'dark-theme' : '']"
+    :class="[charSizeClass, $store.getters.isDarkTheme ? 'dark-theme' : '']"
     class="village-wrapper"
   >
     <div v-if="!$window.isMobile" class="village-leftside-wrapper">
@@ -22,7 +22,7 @@
       />
       <div
         class="village-main-wrapper"
-        :class="isDarkTheme ? 'dark-theme' : ''"
+        :class="$store.getters.isDarkTheme ? 'dark-theme' : ''"
         :style="
           $window.isMobile
             ? 'max-width: 100vw;'
@@ -75,7 +75,7 @@
           <village-admin v-if="situation && situation.admin.admin" />
         </div>
         <action
-          v-if="existsAction"
+          v-if="village && existsAction"
           @reload="reload"
           ref="action"
         ></action>
@@ -119,7 +119,6 @@ import VillageLatest from '~/components/type/village-latest'
 import Messages from '~/components/type/messages'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 import DebugVillage from '~/components/type/debug-village'
-import Charachip from '~/components/type/charachip'
 import { VILLAGE_STATUS } from '~/components/const/consts'
 import villageUserSettings, {
   VillageUserSettings
@@ -274,12 +273,6 @@ export default class extends Vue {
     return isCharSizeLarge ? 'is-size-6' : 'is-size-7'
   }
 
-  private get isDarkTheme(): boolean {
-    const settings: VillageUserSettings = this.$store.getters
-      .getVillageUserSettings
-    return settings.theme?.is_dark || false
-  }
-
   // ----------------------------------------------------------------
   // created
   // ----------------------------------------------------------------
@@ -371,7 +364,7 @@ export default class extends Vue {
     // 表示する日付
     const displayDay = isDispLatestDay ? this.latestDay : this.displayVillageDay
     // 読み込み
-    this.$store.dispatch('STORE_MESSAGES', {
+    await this.$store.dispatch('STORE_MESSAGES', {
       messages: await api.fetchMessageList(
         this,
         this.villageId,

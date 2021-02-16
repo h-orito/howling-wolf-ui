@@ -8,7 +8,7 @@
         >.&nbsp;</span
       >
       <p class="hw-message-name">
-        {{ message.from.chara.chara_name.full_name }}
+        {{ chara.chara_name.full_name }}
       </p>
       <p v-if="comingout" class="coming-out">{{ comingout }}</p>
       <p class="hw-message-player" v-if="message.from.player">
@@ -18,7 +18,7 @@
           >{{ message.from.player.twitter_user_name }}</a
         >]
       </p>
-      <p class="hw-message-datetime" :class="isDarkTheme ? 'dark-theme' : ''">
+      <p class="hw-message-datetime" :class="$store.getters.isDarkTheme ? 'dark-theme' : ''">
         {{ isAnchorMessage ? message.time.day + 'd' : '' }}
         {{ messageCount }}
         {{ messageDatetime }}
@@ -28,7 +28,7 @@
       <div class="hw-message-face-area">
         <chara-image
           :chara="chara"
-          :face-type="faceType"
+          :face-type="message.content.face_code"
           :is-large="isImgLarge"
         />
       </div>
@@ -45,11 +45,10 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import messageText from '~/components/village/message/message-text.vue'
-import Village from '~/components/type/village'
 import Message from '~/components/type/message'
 import Chara from '~/components/type/chara'
 import { MESSAGE_TYPE } from '~/components/const/consts'
-import villageUserSettings, {VillageUserSettings} from '~/components/village/user-settings/village-user-settings'
+import villageUserSettings from '~/components/village/user-settings/village-user-settings'
 const charaImage = () => import('~/components/village/chara-image.vue')
 
 @Component({
@@ -68,47 +67,15 @@ export default class MessageSay extends Vue {
   @Prop({ type: Boolean, default: false })
   private isAnchorMessage?: boolean
 
-  private get village(): Village | null {
-    return this.$store.getters.getVillage
-  }
-
-  private messageClassMap: Map<string, string> = new Map([
-    [MESSAGE_TYPE.NORMAL_SAY, 'normal-say'],
-    [MESSAGE_TYPE.WEREWOLF_SAY, 'werewolf-say'],
-    [MESSAGE_TYPE.MONOLOGUE_SAY, 'monologue-say'],
-    [MESSAGE_TYPE.GRAVE_SAY, 'grave-say'],
-    [MESSAGE_TYPE.SPECTATE_SAY, 'spectate-say']
-  ])
-
-  private anchorPrefixMap: Map<string, string> = new Map([
-    [MESSAGE_TYPE.NORMAL_SAY, ''],
-    [MESSAGE_TYPE.MONOLOGUE_SAY, '-'],
-    [MESSAGE_TYPE.GRAVE_SAY, '+'],
-    [MESSAGE_TYPE.WEREWOLF_SAY, '*'],
-    [MESSAGE_TYPE.MASON_SAY, '='],
-    [MESSAGE_TYPE.SPECTATE_SAY, '@'],
-    [MESSAGE_TYPE.CREATOR_SAY, '#']
-  ])
-
   private get chara(): Chara {
     return this.message.from!.chara
   }
 
-  private get faceType(): string {
-    return this.message.content.face_code!
-  }
-
   private get messageClass(): string {
-    let className = this.messageClassMap.get(this.message.content.type.code)
-    if (className == null) className = ''
-    if (this.isDarkTheme) className += ' dark-theme'
+    let className = messageClassMap.get(this.message.content.type.code)
+    if (!className) className = ''
+    if (this.$store.getters.isDarkTheme) className += ' dark-theme'
     return className
-  }
-
-  private get isDarkTheme(): boolean {
-    const settings: VillageUserSettings = this.$store.getters
-      .getVillageUserSettings
-    return settings.theme?.is_dark || false
   }
 
   private get comingout(): string | null {
@@ -118,14 +85,10 @@ export default class MessageSay extends Vue {
   }
 
   private get messageCount(): string {
-    if (this.message.content.count == null || this.village == null) return ''
-    const restrict = this.village.setting.rules.message_restrict.restrict_list.find(
-      restrict => {
-        return restrict.type.code === this.message.content.type.code
-      }
-    )
-    if (!restrict) return ''
-    return `(${this.message.content.count}/${restrict.count})`
+    if (this.message.content.count == null) return ''
+    const count: number | undefined = this.$store.getters.getRestrictCountMap.get(this.message.content.type.code)
+    if (count == null) return ''
+    return `(${this.message.content.count}/${count})`
   }
 
   private get messageDatetime(): string {
@@ -143,7 +106,7 @@ export default class MessageSay extends Vue {
   }
 
   private get anchorString(): string {
-    const prefix = this.anchorPrefixMap.get(this.message.content.type.code)
+    const prefix = anchorPrefixMap.get(this.message.content.type.code)
     if (prefix == null) return ''
     return `>>${prefix}${this.message.content.num}`
   }
@@ -168,6 +131,23 @@ export default class MessageSay extends Vue {
     })
   }
 }
+const messageClassMap :Map<string, string> = new Map([
+  [MESSAGE_TYPE.NORMAL_SAY, 'normal-say'],
+  [MESSAGE_TYPE.WEREWOLF_SAY, 'werewolf-say'],
+  [MESSAGE_TYPE.MONOLOGUE_SAY, 'monologue-say'],
+  [MESSAGE_TYPE.GRAVE_SAY, 'grave-say'],
+  [MESSAGE_TYPE.SPECTATE_SAY, 'spectate-say']
+])
+
+const anchorPrefixMap: Map<string, string> = new Map([
+  [MESSAGE_TYPE.NORMAL_SAY, ''],
+  [MESSAGE_TYPE.MONOLOGUE_SAY, '-'],
+  [MESSAGE_TYPE.GRAVE_SAY, '+'],
+  [MESSAGE_TYPE.WEREWOLF_SAY, '*'],
+  [MESSAGE_TYPE.MASON_SAY, '='],
+  [MESSAGE_TYPE.SPECTATE_SAY, '@'],
+  [MESSAGE_TYPE.CREATOR_SAY, '#']
+])
 </script>
 
 <style lang="scss" scoped>
@@ -268,6 +248,15 @@ export default class MessageSay extends Vue {
         color: $black;
       }
     }
+  }
+}
+</style>
+
+<style lang="scss">
+.hw-message-text {
+  a:not(.button):not(.is-current) {
+    color: $primary !important;
+    font-weight: bold;
   }
 }
 </style>

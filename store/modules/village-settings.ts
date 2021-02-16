@@ -23,7 +23,8 @@ const actions = {
 }
 
 const getters = {
-  getVillageUserSettings: (state): VillageUserSettings => state.settings
+  getVillageUserSettings: (state): VillageUserSettings => state.settings,
+  isDarkTheme: (state): boolean => state.settings.theme?.is_dark || false
 }
 
 export default {

@@ -1,5 +1,5 @@
 <template>
-  <div :class="isDarkTheme ? 'dark-theme' : ''">
+  <div :class="$store.getters.isDarkTheme ? 'dark-theme' : ''">
     <b-pagination
       v-if="messages.all_page_count != null && messages.all_page_count > 1"
       :total="messages.all_record_count"
@@ -108,12 +108,6 @@ export default class MessageCard extends Vue {
       statusCode === VILLAGE_STATUS.PROLOGUE ||
       statusCode === VILLAGE_STATUS.PROGRESS
     )
-  }
-
-  private get isDarkTheme(): boolean {
-    const settings: VillageUserSettings = this.$store.getters
-      .getVillageUserSettings
-    return settings.theme?.is_dark || false
   }
 
   private change(pageNum: number) {
