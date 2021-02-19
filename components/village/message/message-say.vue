@@ -1,7 +1,10 @@
 <template functional>
   <div
     class="hw-message-card"
-    :class="props.message.is_anchor_message ? 'anchor-message' : ''"
+    :class="[
+      props.message.is_anchor_message ? 'anchor-message' : '',
+      props.isDarkTheme ? 'dark-theme' : ''
+    ]"
   >
     <div class="hw-message-name-area">
       <span v-if="props.message.is_disp_anchor">
@@ -89,7 +92,7 @@ export default class MessageSay extends Vue {
   private message!: SayMessage
 
   @Prop({ type: Boolean })
-  private isDarkMode!: boolean
+  private isDarkTheme!: boolean
 
   @Prop({ type: Boolean })
   private isImgLarge!: boolean
