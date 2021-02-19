@@ -1,4 +1,4 @@
-const version = 34
+const version = 35
 
 export default async function({ app }) {
   const expectedVersion = await app.$axios.$get('/version')

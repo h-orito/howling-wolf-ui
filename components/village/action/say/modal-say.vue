@@ -12,7 +12,18 @@
       </header>
       <section class="modal-card-body has-text-left">
         <p>この内容で発言しますか？</p>
-        <message-card :message="confirmMessage" :is-progress="true" />
+        <message-card
+          :message="confirmMessage"
+          :is-progress="true"
+          :is-anchor-message="false"
+          :is-dark-theme="$store.getters.isDarkTheme"
+          :is-disp-date="
+            $store.getters.getVillageUserSettings.message_display.is_disp_date
+          "
+          :is-img-large="
+            $store.getters.getVillageUserSettings.message_display.is_img_large
+          "
+        />
         <div class="m-t-20" v-if="isNotFinished">
           <p style="font-weight: 700; margin-bottom: 6px;">誤爆防止確認</p>
           <p>発言しようとしている種別を選択してください</p>

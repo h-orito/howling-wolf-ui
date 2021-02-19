@@ -1,62 +1,32 @@
-<template>
-  <div class="card-content m-b-5" :class="messageClass">
+<template functional>
+  <div
+    class="card-content m-b-5"
+    :class="[
+      props.message.message_class,
+      props.isDarkTheme ? 'dark-theme' : ''
+    ]"
+  >
     <div class="content has-text-left">
-      <message-text
-        v-if="message.content.type.code !== 'PARTICIPANTS'"
-        :message-text="message.content.text"
-      />
-      <message-participant-list
-        v-if="message.content.type.code === 'PARTICIPANTS'"
-      />
+      <p class="hw-message-text">
+        <span v-for="line in props.message.message_lines" :key="line.id"
+          ><span v-html="line"></span><br
+        /></span>
+      </p>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
-import messageText from '~/components/village/message/message-text.vue'
-import messageParticipantList from '~/components/village/message/message-participant-list.vue'
-import Village from '~/components/type/village'
-import Message from '~/components/type/message'
-import { MESSAGE_TYPE } from '~/components/const/consts'
+import { SystemMessage } from '~/components/village/message/message-converter'
 
-@Component({
-  components: {
-    messageText,
-    messageParticipantList
-  }
-})
-export default class SystemMessage extends Vue {
+@Component({})
+export default class SystemMessageV extends Vue {
   @Prop({ type: Object })
-  private message!: Message
+  private message!: SystemMessage
 
-  private get messageClass(): string {
-    let clazz = ''
-    switch (this.message.content.type.code) {
-      case MESSAGE_TYPE.PUBLIC_SYSTEM:
-        clazz = ''
-        break
-      case MESSAGE_TYPE.PRIVATE_SYSTEM:
-        clazz = 'message-system-private'
-        break
-      case MESSAGE_TYPE.PRIVATE_SEER:
-        clazz = 'message-system-private-seer'
-        break
-      case MESSAGE_TYPE.PRIVATE_PSYCHIC:
-        clazz = 'message-system-private-psychic'
-        break
-      case MESSAGE_TYPE.PRIVATE_WEREWOLF:
-        clazz = 'message-system-private-werewolf'
-        break
-      case MESSAGE_TYPE.PRIVATE_MASON:
-        clazz = 'message-system-private-mason'
-        break
-      case MESSAGE_TYPE.PARTICIPANTS:
-      default:
-    }
-    if (this.$store.getters.isDarkTheme) clazz += ' dark-theme'
-    return clazz
-  }
+  @Prop({ type: Boolean })
+  private isDarkTheme!: boolean
 }
 </script>
 
