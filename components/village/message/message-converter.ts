@@ -129,9 +129,7 @@ const convertToSayMessageSentences = (text: string): SayMessageSentence[] => {
     .filter(mes => mes !== '')
     .map(splitedText => {
       return {
-        is_anchor:
-          /&gt;&gt;\d{1,5}/.test(splitedText) ||
-          /&gt;&gt;[+=@*#-]d{1,5}/.test(splitedText),
+        is_anchor: regexps.some(reg => reg.test(splitedText)),
         text: splitedText
       } as SayMessageSentence
     })
