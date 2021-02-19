@@ -1,5 +1,5 @@
 <template>
-  <div :class="$store.getters.isDarkTheme ? 'dark-theme' : ''">
+  <div :class="isDarkTheme ? 'dark-theme' : ''">
     <b-pagination
       v-if="messages.all_page_count != null && messages.all_page_count > 1"
       :total="messages.all_record_count"
@@ -25,8 +25,11 @@
       :message="message"
       :is-progress="isProgress"
       :index="idx"
+      :is-dark-theme="isDarkTheme"
+      :is-disp-date="isDispDate"
+      :is-img-large="isImgLarge"
       ref="messageCard"
-    ></message-card>
+    />
     <village-situation-message :is-latest-day="isLatestDay" />
     <div>
       <script
@@ -108,6 +111,20 @@ export default class MessageCard extends Vue {
       statusCode === VILLAGE_STATUS.PROLOGUE ||
       statusCode === VILLAGE_STATUS.PROGRESS
     )
+  }
+
+  private get isDarkTheme(): boolean {
+    return this.$store.getters.isDarkTheme
+  }
+
+  private get isDispDate(): boolean {
+    return this.$store.getters.getVillageUserSettings.message_display
+      .is_disp_date
+  }
+
+  private get isImgLarge(): boolean {
+    return this.$store.getters.getVillageUserSettings.message_display
+      .is_img_large
   }
 
   private change(pageNum: number) {

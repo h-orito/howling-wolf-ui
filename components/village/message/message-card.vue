@@ -1,18 +1,23 @@
 <template>
   <div>
-    <div
-      v-if="message != null"
-      class="card"
-      :class="$store.getters.isDarkTheme ? 'dark-theme' : ''"
-    >
+    <div class="card" :class="isDarkTheme ? 'dark-theme' : ''">
       <message-say
         v-if="isSayType"
-        :message="message"
-        :is-progress="isProgress"
-        :is-anchor-message="isAnchorMessage"
+        :message="sayMessage"
+        :is-dark-theme="isDarkTheme"
+        :is-disp-date="isDispDate"
+        :is-img-large="isImgLarge"
         @click-anchor="clickAnchorMessage($event)"
+        @copy-anchor-string="copyAnchorString"
       />
-      <message-system v-if="isSystemType" :message="message" />
+      <message-system
+        v-if="isSystemType"
+        :message="systemMessage"
+        :is-dark-theme="isDarkTheme"
+      />
+      <message-participant-list
+        v-if="message.content.type.code === 'PARTICIPANTS'"
+      />
       <!-- アンカーメッセージ -->
       <message-card
         v-for="mes in anchorMessages"
@@ -20,10 +25,12 @@
         :message="mes"
         :is-progress="isProgress"
         :is-anchor-message="true"
-        @click-anchor="clickAnchorMessage($event)"
+        :is-dark-theme="isDarkTheme"
+        :is-disp-date="isDispDate"
+        :is-img-large="isImgLarge"
       ></message-card>
     </div>
-    <div v-if="index == 19 || index == 39">
+    <div v-if="false && (index == 19 || index == 39)">
       <script
         async
         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
@@ -47,27 +54,34 @@
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import messageSay from '~/components/village/message/message-say.vue'
 import messageSystem from '~/components/village/message/message-system.vue'
-import messageText from '~/components/village/message/message-text.vue'
 import messageCard from '~/components/village/message/message-card.vue'
 // type
-import Village from '~/components/type/village'
 import Message from '~/components/type/message'
 import VillageAnchorMessage from '~/components/type/village-anchor-message'
 import { MESSAGE_TYPE } from '~/components/const/consts'
-import { VillageUserSettings } from '~/components/village/user-settings/village-user-settings'
+import {
+  convertToSayMessage,
+  convertToSystemMessage,
+  getAnchorType,
+  getAnchorNum,
+  SayMessage,
+  SystemMessage
+} from '~/components/village/message/message-converter'
+const messageParticipantList = () =>
+  import('~/components/village/message/message-participant-list.vue')
 
 @Component({
   name: 'message-card',
   components: {
-    messageText,
     messageSay,
     messageSystem,
-    messageCard
+    messageCard,
+    messageParticipantList
   }
 })
 export default class MessageCard extends Vue {
   @Prop({ type: Object })
-  private message!: Message
+  message!: Message
 
   @Prop({ type: Boolean })
   private isProgress!: boolean
@@ -78,76 +92,122 @@ export default class MessageCard extends Vue {
   @Prop({ type: Number, default: null })
   private index?: number
 
+  @Prop({ type: Boolean })
+  private isDarkTheme!: boolean
+
+  @Prop({ type: Boolean })
+  private isDispDate!: boolean
+
+  @Prop({ type: Boolean })
+  private isImgLarge!: boolean
+
   private anchorMessages: Message[] = []
 
+  private get maxCount(): number | null {
+    if (!this.$store.getters.getRestrictCountMap) return null
+    return (
+      this.$store.getters.getRestrictCountMap.get(
+        this.message.content.type.code
+      ) || null
+    )
+  }
+
+  private get sayMessage(): SayMessage | null {
+    if (!this.isSayType) return null
+    return convertToSayMessage(
+      this.message,
+      this.isAnchorMessage || false,
+      this.isProgress,
+      this.maxCount!,
+      this.isDispDate
+    )
+  }
+
+  private get systemMessage(): SystemMessage | null {
+    if (!this.isSystemType) return null
+    return convertToSystemMessage(this.message)
+  }
+
   private get isSayType(): boolean {
-    return [
-      MESSAGE_TYPE.NORMAL_SAY,
-      MESSAGE_TYPE.WEREWOLF_SAY,
-      MESSAGE_TYPE.GRAVE_SAY,
-      MESSAGE_TYPE.MONOLOGUE_SAY,
-      MESSAGE_TYPE.MASON_SAY,
-      MESSAGE_TYPE.SPECTATE_SAY
-    ].some(code => this.message.content.type.code === code)
+    const type = messageTypeMap.get(this.message.content.type.code)
+    return type === 'say'
   }
 
   private get isSystemType(): boolean {
-    return [
-      MESSAGE_TYPE.PUBLIC_SYSTEM,
-      MESSAGE_TYPE.PRIVATE_SYSTEM,
-      MESSAGE_TYPE.PRIVATE_SEER,
-      MESSAGE_TYPE.PRIVATE_PSYCHIC,
-      MESSAGE_TYPE.PRIVATE_WEREWOLF,
-      MESSAGE_TYPE.PRIVATE_MASON,
-      MESSAGE_TYPE.PARTICIPANTS
-    ].some(code => this.message.content.type.code === code)
+    const type = messageTypeMap.get(this.message.content.type.code)
+    return type === 'system'
   }
 
-  private async clickAnchorMessage({
-    messageTypeCode,
-    messageNumber
-  }): Promise<void> {
-    const villageAnchorMessage: VillageAnchorMessage | null = await this.loadAnchorMessage(
-      messageTypeCode,
-      messageNumber
-    )
-    if (villageAnchorMessage == null || villageAnchorMessage.message == null) {
+  private copyAnchorString(): void {
+    const text: string = this.sayMessage!.anchor_copy_string
+    // @ts-ignore
+    this.$copyText(text)
+    this.$buefy.toast.open({
+      message: `クリップボードにコピーしました: ${text}`,
+      type: 'is-info',
+      position: 'is-top'
+    })
+  }
+
+  private async clickAnchorMessage(anchorString: string): Promise<void> {
+    const typeCode: string = getAnchorType(anchorString) || ''
+    const number: number = getAnchorNum(anchorString)
+    if (this.anchorMessages.some(mes => isSameMessage(mes, typeCode, number))) {
+      this.anchorMessages = this.anchorMessages.filter(
+        mes => !isSameMessage(mes, typeCode, number)
+      )
       return
     }
-    const message = villageAnchorMessage.message
-    if (this.anchorMessages.some(mes => this.isSameMessage(mes, message))) {
-      this.anchorMessages = this.anchorMessages.filter(
-        mes => !this.isSameMessage(mes, message)
-      )
-    } else {
-      this.anchorMessages.unshift(message)
-    }
+    const anchorMessage: VillageAnchorMessage | null = await this.loadAnchorMessage(
+      typeCode,
+      number
+    )
+    if (anchorMessage?.message == null) return
+    this.anchorMessages.unshift(anchorMessage.message)
   }
 
   private async loadAnchorMessage(
-    messageTypeCode: string,
-    messageNumber: number
+    typeCode: string,
+    number: number
   ): Promise<VillageAnchorMessage | null> {
     try {
       return await this.$axios.$get(
-        `/village/${this.$store.getters.getVillageId!}/message/type/${messageTypeCode}/number/${messageNumber}`
+        `/village/${this.$store.getters
+          .getVillageId!}/message/type/${typeCode}/number/${number}`
       )
     } catch (error) {
       return null
     }
   }
 
-  private isSameMessage(message1: Message, message2: Message): boolean {
-    return (
-      message1.content.type.code === message2.content.type.code &&
-      message1.content.num === message2.content.num
-    )
-  }
-
   private clearAnchorMessages(): void {
     this.anchorMessages = []
   }
 }
+
+const isSameMessage = (
+  message: Message,
+  typeCode: string,
+  num: number
+): boolean => {
+  return message.content.type.code === typeCode && message.content.num === num
+}
+
+const messageTypeMap = new Map<string, string>([
+  [MESSAGE_TYPE.NORMAL_SAY, 'say'],
+  [MESSAGE_TYPE.WEREWOLF_SAY, 'say'],
+  [MESSAGE_TYPE.GRAVE_SAY, 'say'],
+  [MESSAGE_TYPE.MONOLOGUE_SAY, 'say'],
+  [MESSAGE_TYPE.MASON_SAY, 'say'],
+  [MESSAGE_TYPE.SPECTATE_SAY, 'say'],
+  [MESSAGE_TYPE.PUBLIC_SYSTEM, 'system'],
+  [MESSAGE_TYPE.PRIVATE_SYSTEM, 'system'],
+  [MESSAGE_TYPE.PRIVATE_SEER, 'system'],
+  [MESSAGE_TYPE.PRIVATE_PSYCHIC, 'system'],
+  [MESSAGE_TYPE.PRIVATE_WEREWOLF, 'system'],
+  [MESSAGE_TYPE.PRIVATE_MASON, 'system'],
+  [MESSAGE_TYPE.PARTICIPANTS, 'participants']
+])
 </script>
 
 <style lang="scss" scoped>
