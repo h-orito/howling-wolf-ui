@@ -269,7 +269,8 @@ export default class extends Vue {
   private get charSizeClass(): string {
     const settings: VillageUserSettings = this.$store.getters
       .getVillageUserSettings
-    const isCharSizeLarge: boolean = settings.message_display?.is_char_large || false
+    const isCharSizeLarge: boolean =
+      settings?.message_display?.is_char_large || false
     return isCharSizeLarge ? 'is-size-6' : 'is-size-7'
   }
 
@@ -294,8 +295,10 @@ export default class extends Vue {
     // 個人抽出があれば抽出
     if (this.filterId) {
       const filterId: number = parseInt(this.filterId!)
-      const participant = this.village!.participant.member_list.find(p => p.id === filterId)
-      this.charaFilter({participant})
+      const participant = this.village!.participant.member_list.find(
+        p => p.id === filterId
+      )
+      this.charaFilter({ participant })
     }
     // キャラチップ名
     this.charachipName = await api.fetchCharachipName(this, this.village!)
@@ -531,15 +534,17 @@ export default class extends Vue {
     if (latest.village_day_id !== currentLatestVillageDayId) {
       // 日付が変わった
       this.existsNewMessages = true
-      if (shouldLoadMessage(
-        this.latestDay!, 
-        this.displayVillageDay!, 
-        this.messages!, 
-        this.currentPageNum,
-        // @ts-ignore
-        this.$refs.action && this.$refs.action.isInputting,
-        this.isFiltering
-      )) {
+      if (
+        shouldLoadMessage(
+          this.latestDay!,
+          this.displayVillageDay!,
+          this.messages!,
+          this.currentPageNum,
+          // @ts-ignore
+          this.$refs.action && this.$refs.action.isInputting,
+          this.isFiltering
+        )
+      ) {
         this.reload()
         toast.info(this, '日付が変わりました')
       } else {
@@ -548,15 +553,17 @@ export default class extends Vue {
     } else if (this.latestMessageUnixTimeMilli < latest.unix_time_milli) {
       // 発言が増えた
       this.existsNewMessages = true
-      if (shouldLoadMessage(
-        this.latestDay!, 
-        this.displayVillageDay!, 
-        this.messages!, 
-        this.currentPageNum,
-        // @ts-ignore
-        this.$refs.action && this.$refs.action.isInputting,
-        this.isFiltering
-      )) {
+      if (
+        shouldLoadMessage(
+          this.latestDay!,
+          this.displayVillageDay!,
+          this.messages!,
+          this.currentPageNum,
+          // @ts-ignore
+          this.$refs.action && this.$refs.action.isInputting,
+          this.isFiltering
+        )
+      ) {
         this.loadMessage()
         toast.info(this, '最新発言を読み込みました')
         this.existsNewMessages = false
@@ -590,7 +597,8 @@ const shouldLoadMessage = (
   isFiltering: boolean
 ): boolean => {
   // 最新日の最新ページを見ていない場合は勝手に更新したくない
-  if (!isViewingLatest(latestDay, displayVillageDay, messages, currentPageNum)) return false
+  if (!isViewingLatest(latestDay, displayVillageDay, messages, currentPageNum))
+    return false
   // 発言入力中や発言抽出中は勝手に更新したくない
   if (isInputting || isFiltering) return false
   return true
@@ -614,17 +622,19 @@ const isViewingLatest = (
 
 const isNotFinished = (village: Village): boolean => {
   const status = village.status.code
-  return (
-    status !== VILLAGE_STATUS.COMPLETE &&
-    status !== VILLAGE_STATUS.CANCEL
-  )
+  return status !== VILLAGE_STATUS.COMPLETE && status !== VILLAGE_STATUS.CANCEL
 }
 
 /** 更新までの残り時間を表示 */
 const updateDaychangeTimer = (footer: any): void => footer.refreshTimer()
-const setDaychangeTimer = (footer: any): any => setInterval(() => updateDaychangeTimer(footer), 1000) 
+const setDaychangeTimer = (footer: any): any =>
+  setInterval(() => updateDaychangeTimer(footer), 1000)
 
-const setWindowHeight = (): void => document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`)
+const setWindowHeight = (): void =>
+  document.documentElement.style.setProperty(
+    '--vh',
+    `${window.innerHeight * 0.01}px`
+  )
 </script>
 
 <style lang="scss">
@@ -730,6 +740,9 @@ html {
         background-color: transparent;
         color: #fff;
       }
+    }
+    .field .label {
+      color: $white;
     }
   }
 }

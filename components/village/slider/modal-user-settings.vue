@@ -73,10 +73,7 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 // type
 import Village from '~/components/type/village'
 // component
-import villageUserSettings, {
-  VillageUserSettings,
-  PagingSettings
-} from '~/components/village/user-settings/village-user-settings'
+import villageUserSettings from '~/components/village/user-settings/village-user-settings'
 
 @Component({
   components: {}

@@ -17,6 +17,7 @@ const mutations = {
 
 const actions = {
   async [INIT_VILLAGE_SETTINGS]({ commit }) {
+    villageUserSettings.createCookieIfNeeded(<any>this)
     const settings = villageUserSettings.getCookie(<any>this)
     await commit('initSettings', { settings })
   }
