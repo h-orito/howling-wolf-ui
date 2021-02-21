@@ -30,7 +30,7 @@
         :is-img-large="isImgLarge"
       ></message-card>
     </div>
-    <div v-if="false && (index == 19 || index == 39)">
+    <div v-if="index == 19 || index == 39">
       <script
         async
         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
@@ -81,7 +81,7 @@ const messageParticipantList = () =>
 })
 export default class MessageCard extends Vue {
   @Prop({ type: Object })
-  message!: Message
+  private message!: Message
 
   @Prop({ type: Boolean })
   private isProgress!: boolean
@@ -205,7 +205,7 @@ const messageTypeMap = new Map<string, string>([
   [MESSAGE_TYPE.PRIVATE_SEER, 'system'],
   [MESSAGE_TYPE.PRIVATE_PSYCHIC, 'system'],
   [MESSAGE_TYPE.PRIVATE_WEREWOLF, 'system'],
-  [MESSAGE_TYPE.PRIVATE_MASON, 'system'],
+  [MESSAGE_TYPE.PRIVATE_SYMPATHIZER, 'system'],
   [MESSAGE_TYPE.PARTICIPANTS, 'participants']
 ])
 </script>

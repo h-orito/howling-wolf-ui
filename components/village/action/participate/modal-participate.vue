@@ -11,7 +11,18 @@
         <p class="modal-card-title has-text-left">入村確認</p>
       </header>
       <section class="modal-card-body has-text-left">
-        <message-card :message="confirmMessage" :is-progress="true" />
+        <message-card
+          :message="confirmMessage"
+          :is-progress="true"
+          :is-anchor-message="false"
+          :is-dark-theme="$store.getters.isDarkTheme"
+          :is-disp-date="
+            $store.getters.getVillageUserSettings.message_display.is_disp_date
+          "
+          :is-img-large="
+            $store.getters.getVillageUserSettings.message_display.is_img_large
+          "
+        />
       </section>
       <section class="modal-card-body has-text-left">
         <div class="field">
