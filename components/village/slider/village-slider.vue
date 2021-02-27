@@ -28,10 +28,7 @@
               />
             </span>
           </a>
-          <participant-list
-            v-if="village"
-            @chara-filter="$emit('chara-filter', $event)"
-          />
+          <participant-list v-if="village" />
         </b-collapse>
         <a class="side-item" @click="openMemoModal">
           <b-icon
