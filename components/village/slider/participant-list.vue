@@ -18,13 +18,10 @@
             {{ comingout(participant) }}
           </p>
           <p class="chara-filter">
-            <nuxt-link
-              :to="{
-                path: '/village',
-                query: { id: villageId, filterId: participant.id }
-              }"
-              target="_blank"
-              >抽出</nuxt-link
+            <a
+              href="javascript:void(0);"
+              @click="handleFilterClick(participant.id)"
+              >抽出</a
             >
           </p>
         </div>
@@ -55,13 +52,10 @@
               {{ comingout(participant) }}
             </p>
             <p class="chara-filter">
-              <nuxt-link
-                :to="{
-                  path: '/village',
-                  query: { id: villageId, filterId: participant.id }
-                }"
-                target="_blank"
-                >抽出</nuxt-link
+              <a
+                href="javascript:void(0);"
+                @click="handleFilterClick(participant.id)"
+                >抽出</a
               >
             </p>
           </div>
@@ -82,8 +76,8 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import Village from '~/components/type/village'
 import VillageParticipant from '~/components/type/village-participant'
 import Messages from '~/components/type/messages'
-import Chara from '~/components/type/chara'
 import { VILLAGE_STATUS, FACE_TYPE } from '~/components/const/consts'
+import villageUserSettings from '~/components/village/user-settings/village-user-settings'
 const charaImage = () => import('~/components/village/chara-image.vue')
 
 @Component({
@@ -203,6 +197,25 @@ export default class VillageSlider extends Vue {
   private sayCount(participantId: number): number {
     if (!this.messages) return 0
     return this.messages.today_message_count_map[participantId]
+  }
+
+  private handleFilterClick(participantId: number): void {
+    const isNewTab: boolean = villageUserSettings.getOperation(this)
+      .is_open_filter_newtab
+    if (isNewTab) {
+      const routeData = this.$router.resolve({
+        path: '/village',
+        query: {
+          id: this.villageId.toString(),
+          filterId: participantId.toString()
+        }
+      })
+      window.open(routeData.href, '_blank')
+    } else {
+      this.$emit('chara-filter', {
+        participantId
+      })
+    }
   }
 }
 </script>

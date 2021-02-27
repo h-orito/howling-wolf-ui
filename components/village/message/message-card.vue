@@ -8,7 +8,7 @@
         :is-disp-date="isDispDate"
         :is-img-large="isImgLarge"
         @click-anchor="clickAnchorMessage($event)"
-        @copy-anchor-string="copyAnchorString"
+        @copy-anchor-string="handleCopyAnchorString"
       />
       <message-system
         v-if="isSystemType"
@@ -67,6 +67,7 @@ import {
   SayMessage,
   SystemMessage
 } from '~/components/village/message/message-converter'
+import villageUserSettings from '~/components/village/user-settings/village-user-settings'
 const messageParticipantList = () =>
   import('~/components/village/message/message-participant-list.vue')
 
@@ -138,8 +139,16 @@ export default class MessageCard extends Vue {
     return type === 'system'
   }
 
-  private copyAnchorString(): void {
+  private handleCopyAnchorString(): void {
     const text: string = this.sayMessage!.anchor_copy_string
+    const isPaste: boolean = villageUserSettings.getOperation(this)
+      .is_paste_anchor
+    if (isPaste) {
+      this.$emit('paste-message-input', {
+        text
+      })
+      return
+    }
     // @ts-ignore
     this.$copyText(text)
     this.$buefy.toast.open({

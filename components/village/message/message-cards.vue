@@ -29,6 +29,7 @@
       :is-disp-date="isDispDate"
       :is-img-large="isImgLarge"
       ref="messageCard"
+      @paste-message-input="$emit('paste-message-input', $event)"
     />
     <village-situation-message :is-latest-day="isLatestDay" />
     <div>

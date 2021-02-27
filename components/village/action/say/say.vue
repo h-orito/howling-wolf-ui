@@ -1,7 +1,10 @@
 <template>
   <div>
     <div class="content has-text-left m-b-5">
-      <div class="say-area" :class="$store.getters.isDarkTheme ? 'dark-theme' : ''">
+      <div
+        class="say-area"
+        :class="$store.getters.isDarkTheme ? 'dark-theme' : ''"
+      >
         <b-field class="m-b-5">
           <b-radio-button
             v-for="messageTypeSituation in situation.say
@@ -189,6 +192,10 @@ export default class Say extends Vue {
 
   private closeSayModal(): void {
     this.isSayModalOpen = false
+  }
+
+  private pasteToMessageInput(text: string): void {
+    this.message += text
   }
 }
 </script>

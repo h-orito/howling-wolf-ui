@@ -58,6 +58,17 @@ const villageUserSettings = {
     const cookie = this.getCookie(app)
     cookie.theme = settings
     this.setCookie(app, cookie)
+  },
+  getOperation(app: Vue): OperationSettings {
+    const cookie = this.getCookie(app)
+    if (cookie.operation) return cookie.operation
+    this.setOperation(app, DEFAULT_OPERATION)
+    return DEFAULT_OPERATION
+  },
+  setOperation(app: Vue, settings: OperationSettings): void {
+    const cookie = this.getCookie(app)
+    cookie.operation = settings
+    this.setCookie(app, cookie)
   }
 }
 
@@ -68,6 +79,7 @@ export interface VillageUserSettings {
   action_window?: ActionWindowSettings
   message_display?: MessageDisplaySettings
   theme?: ThemeSettings
+  operation?: OperationSettings
 }
 
 export interface PagingSettings {
@@ -90,6 +102,11 @@ export interface ThemeSettings {
   is_dark: boolean
 }
 
+export interface OperationSettings {
+  is_open_filter_newtab: boolean
+  is_paste_anchor: boolean
+}
+
 const DEFAULT_PAGING: PagingSettings = {
   is_paging: true,
   message_per_page: 50
@@ -110,9 +127,15 @@ const DEFAULT_THEME: ThemeSettings = {
   is_dark: false
 }
 
+const DEFAULT_OPERATION: OperationSettings = {
+  is_open_filter_newtab: false,
+  is_paste_anchor: false
+}
+
 const DEFAULT_SETTINGS: VillageUserSettings = {
   paging: DEFAULT_PAGING,
   action_window: DEFAULT_ACTION_WINDOW,
   message_display: DEFAULT_MESSAGE_DISPLAY,
-  theme: DEFAULT_THEME
+  theme: DEFAULT_THEME,
+  operation: DEFAULT_OPERATION
 }
