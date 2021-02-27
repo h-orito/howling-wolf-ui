@@ -9,7 +9,6 @@
         :is-expanded="isSliderExpanded"
         @refresh="reload"
         @hide-slider="hideSlider"
-        @chara-filter="charaFilter($event)"
         ref="slider"
       />
     </div>
@@ -95,7 +94,6 @@
         :is-expanded="isSliderExpanded"
         @refresh="reload"
         @hide-slider="hideSlider"
-        @chara-filter="charaFilter($event)"
         ref="slider"
       />
     </div>
@@ -294,11 +292,7 @@ export default class extends Vue {
     await this.reload(true)
     // 個人抽出があれば抽出
     if (this.filterId) {
-      const filterId: number = parseInt(this.filterId!)
-      const participant = this.village!.participant.member_list.find(
-        p => p.id === filterId
-      )
-      this.charaFilter({ participant })
+      await this.charaFilter({ participantId: parseInt(this.filterId!) })
     }
     // キャラチップ名
     this.charachipName = await api.fetchCharachipName(this, this.village!)
@@ -475,9 +469,9 @@ export default class extends Vue {
     await this.loadMessage()
   }
 
-  private charaFilter({ participant }) {
+  private async charaFilter({ participantId }) {
     // @ts-ignore
-    this.$refs.footer.charaFilter(participant)
+    await this.$refs.footer.charaFilter(participantId)
     this.hideSlider()
   }
 

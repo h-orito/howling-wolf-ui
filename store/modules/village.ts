@@ -35,7 +35,7 @@ const mutations = {
     state.villageId = villageId
     state.village = null
     state.latestDay = null
-    state.restrictCountMap= null
+    state.restrictCountMap = null
     state.messages = null
     state.situation = null
   },
@@ -44,7 +44,12 @@ const mutations = {
     state.village = v
     if (!v) return
     state.latestDay = v.day.day_list[v.day.day_list.length - 1]
-    state.restrictCountMap = new Map(v.setting.rules.message_restrict.restrict_list.map(r => [r.type.code, r.count]))
+    state.restrictCountMap = new Map(
+      v.setting.rules.message_restrict.restrict_list.map(r => [
+        r.type.code,
+        r.count
+      ])
+    )
   },
   saveMessages(state, { messages }) {
     state.messages = messages
@@ -62,7 +67,6 @@ const actions = {
     await commit('init', { villageId })
   },
   async [LOAD_VILLAGE]({ commit, state }) {
-    await commit('saveVillage', { village: null })
     const village = await api.fetchVillage(<any>this, state.villageId)
     await commit('saveVillage', { village })
   },
@@ -71,7 +75,6 @@ const actions = {
     await commit('saveMessages', { messages })
   },
   async [STORE_SITUATION]({ commit }, { situation }) {
-    await commit('saveSituation', { situation: null })
     await commit('saveSituation', { situation })
   },
   async [STORE_FILTERING]({ commit }, { isFiltering }) {
@@ -83,7 +86,8 @@ const getters = {
   getVillageId: (state): number => state.villageId,
   getVillage: (state): Village | null => state.village,
   getLatestDay: (state): VillageDay | null => state.latestDay,
-  getRestrictCountMap: (state): Map<string, number> | null => state.restrictCountMap,
+  getRestrictCountMap: (state): Map<string, number> | null =>
+    state.restrictCountMap,
   getMessages: state => state.messages,
   getSituation: state => state.situation,
   isFiltering: state => state.isFiltering

@@ -99,9 +99,9 @@ export default class VillageFooter extends Vue {
     this.closeFilterModal()
   }
 
-  private charaFilter(participant) {
+  private async charaFilter(participantId: number): Promise<void> {
     // @ts-ignore
-    this.$refs.filter.charaFilter(participant)
+    await this.$refs.filter.charaFilter(participantId)
   }
 
   private filterRefresh() {
