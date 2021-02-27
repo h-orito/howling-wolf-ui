@@ -1,6 +1,9 @@
 <template>
   <div class="village-action-wrapper" :class="containerSizeClass">
-    <div class="village-action-header" :class="$store.getters.isDarkTheme ? 'dark-theme' : ''">
+    <div
+      class="village-action-header"
+      :class="$store.getters.isDarkTheme ? 'dark-theme' : ''"
+    >
       <b-button
         v-for="tab in activeTabs"
         :key="tab.name"
@@ -259,6 +262,12 @@ export default class Action extends Vue {
     if (actionWindowSetting.size >= 2) actionWindowSetting.size = 2
     villageUserSettings.setActionWindow(this, actionWindowSetting)
     this.actionContainerSize = actionWindowSetting.size
+  }
+
+  private pasteToMessageInput(text: string): void {
+    if (!this.$refs.say) return
+    // @ts-ignore
+    this.$refs.say.pasteToMessageInput(text)
   }
 }
 </script>

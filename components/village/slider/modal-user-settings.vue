@@ -46,10 +46,19 @@
             >キャラ画像を大きく表示する（要リロード）</b-switch
           >
         </div>
-        <p class="title is-6 m-t-20">テーマ（調整中）</p>
+        <p class="title is-6 m-t-20">テーマ</p>
         <div class="field">
           <b-switch v-model="isDarkTheme"
             >ダークテーマにする（要リロード）</b-switch
+          >
+        </div>
+        <p class="title is-6 m-t-20">操作</p>
+        <div class="field">
+          <b-switch v-model="openFilterNewTab">個人抽出を別タブで開く</b-switch>
+        </div>
+        <div class="field">
+          <b-switch v-model="pasteAnchor"
+            >アンカークリック時に発言欄に貼り付ける</b-switch
           >
         </div>
       </section>
@@ -88,6 +97,8 @@ export default class ModalUserSettings extends Vue {
   private isCharLarge: boolean = false
   private isImgLarge: boolean = false
   private isDarkTheme: boolean = false
+  private openFilterNewTab: boolean = false
+  private pasteAnchor: boolean = false
 
   private get village(): Village | null {
     return this.$store.getters.getVillage
@@ -105,6 +116,10 @@ export default class ModalUserSettings extends Vue {
     })
     villageUserSettings.setTheme(this, {
       is_dark: this.isDarkTheme
+    })
+    villageUserSettings.setOperation(this, {
+      is_open_filter_newtab: this.openFilterNewTab,
+      is_paste_anchor: this.pasteAnchor
     })
     this.$emit('refresh')
     this.close()
@@ -124,6 +139,9 @@ export default class ModalUserSettings extends Vue {
     this.isImgLarge = messageDisplaySettings.is_img_large
     const theme = villageUserSettings.getTheme(this)
     this.isDarkTheme = theme.is_dark
+    const operation = villageUserSettings.getOperation(this)
+    this.openFilterNewTab = operation.is_open_filter_newtab
+    this.pasteAnchor = operation.is_paste_anchor
   }
 }
 </script>
