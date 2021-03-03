@@ -296,6 +296,10 @@ export default class extends Vue {
     // 個人抽出があれば抽出
     if (this.filterId) {
       await this.charaFilter({ participantId: parseInt(this.filterId!) })
+    } else {
+      // なければリセット（初期状態が全員チェックなしなので独り言が見えない）
+      // @ts-ignore
+      this.$refs.footer.filterRefresh()
     }
     // キャラチップ名
     this.charachipName = await api.fetchCharachipName(this, this.village!)
