@@ -1,3 +1,4 @@
+import Player from '~/components/type/player'
 import Villages from '~/components/type/villages'
 
 interface MyselfPlayer {
@@ -9,6 +10,7 @@ interface MyselfPlayer {
   participate_finished_villages: Villages
   create_progress_villages: Villages
   create_finished_villages: Villages
+  blacklist_players: Player[]
 }
 
 export default MyselfPlayer

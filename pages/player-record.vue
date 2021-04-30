@@ -11,11 +11,12 @@
         <h2 class="title is-size-6">自己紹介</h2>
         <div class="m-b-20">
           <p class="is-size-7 m-b-20">
-            他人狼サイトでのID: {{ otherSiteName ? otherSiteName : '未登録' }}
+            他人狼サイトでのID:
+            {{ player.other_site_name ? player.other_site_name : '未登録' }}
           </p>
-          <div v-if="introduction" class="is-size-7 has-text-left">
+          <div v-if="player.introduction" class="is-size-7 has-text-left">
             <p
-              v-for="intro in escapeAndSplitMessage(introduction)"
+              v-for="intro in introductionLines"
               :key="intro.id"
               v-html="intro"
               style="word-break: break-word;"
@@ -29,11 +30,30 @@
             @click="isModalOpen = true"
             >編集する</b-button
           >
+          <b-button
+            class="m-t-20"
+            v-if="user && !isMyself && !containsBlacklist"
+            type="is-warning"
+            size="is-small"
+            @click="addBlacklist"
+            :disabled="blacklistPlayers.length >= 5"
+            >ブラックリスト対象に追加する</b-button
+          >
+          <b-button
+            class="m-t-20"
+            v-if="user && !isMyself && containsBlacklist"
+            type="is-danger"
+            size="is-small"
+            @click="removeBlacklist"
+            >ブラックリスト対象から外す</b-button
+          >
           <modal-intro
             :is-open="isModalOpen"
-            :current-other-site-name="otherSiteName"
-            :current-intro="introduction"
+            :current-other-site-name="player.other_site_name"
+            :current-intro="player.introduction"
+            :blacklist-players="blacklistPlayers"
             @close-modal="isModalOpen = false"
+            @remove-blacklist="removeBlacklistById($event)"
             @refresh="refresh"
           />
         </div>
@@ -44,8 +64,8 @@
               <div class="column is-12 chart-container m-b-20">
                 <doughnut-chart
                   :chart-data="wholeData"
-                  :options="chartOption"
-                  :styles="chartStyles"
+                  :options="chart.option"
+                  :styles="chart.styles"
                   :text="'全体'"
                 />
                 <div>
@@ -62,8 +82,8 @@
               >
                 <doughnut-chart
                   :chart-data="campData(campRecord)"
-                  :options="chartOption"
-                  :styles="chartStyles"
+                  :options="chart.option"
+                  :styles="chart.styles"
                   :text="campRecord.camp.name"
                 />
                 <p class="is-size-7">{{ campResult(campRecord) }}</p>
@@ -74,10 +94,7 @@
             <h2 class="title is-size-6">役職戦績</h2>
             <div class="m-b-20">
               <div
-                v-for="chunkRecords in chunk(
-                  playerRecords.skill_record_list,
-                  2
-                )"
+                v-for="chunkRecords in skillRecordChunks"
                 :key="chunkRecords[0].skill.code"
                 class="columns is-mobile"
               >
@@ -88,8 +105,8 @@
                 >
                   <doughnut-chart
                     :chart-data="skillData(skillRecord)"
-                    :options="chartOption"
-                    :styles="chartStyles"
+                    :options="chart.option"
+                    :styles="chart.styles"
                     :text="skillRecord.skill.name"
                   />
                   <p class="is-size-7">{{ skillResult(skillRecord) }}</p>
@@ -110,6 +127,7 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
 import { ChartData, ChartOptions } from 'chart.js'
+import firebase from '~/plugins/firebase'
 // components
 import loading from '~/components/loading.vue'
 import modalIntro from '~/components/player-record/modal-intro.vue'
@@ -117,8 +135,8 @@ import modalIntro from '~/components/player-record/modal-intro.vue'
 import PlayerRecords from '~/components/type/player-records'
 import CampRecord from '~/components/type/camp-record'
 import SkillRecord from '~/components/type/skill-record'
-import ParticipateVillage from '~/components/type/participate-village'
 import MyselfPlayer from '~/components/type/myself-player'
+import Player from '~/components/type/player'
 
 const doughnutChart = () =>
   import('~/components/player-record/doughnut-chart.vue')
@@ -138,55 +156,41 @@ export default class extends Vue {
   }
 
   /** data */
-  private playerId: number = 0
+  private playerId: string = '0'
   private playerRecords: PlayerRecords | null = null
   private loadingRecords: boolean = false
   private isModalOpen: boolean = false
+  private user: MyselfPlayer | null = null
 
-  private emptyData: ChartData = {
-    labels: ['no data'],
-    datasets: [
-      {
-        data: [1],
-        backgroundColor: ['#ccc'],
-        borderColor: 'transparent'
+  private chart = {
+    option: {
+      legend: {
+        display: false
       }
-    ]
-  }
-
-  private chartOption: ChartOptions = {
-    legend: {
-      display: false
+    },
+    styles: {
+      height: '100%',
+      width: '100%'
     }
   }
 
-  private chartStyles = {
-    height: '100%',
-    width: '100%'
-  }
-
   /** computed */
+  private get blacklistPlayers(): Player[] {
+    if (!this.user) return []
+    return this.user.blacklist_players
+  }
+
+  private get player(): Player {
+    return this.playerRecords!.player
+  }
+
   private get playerName(): string {
-    if (this.loadingRecords || !this.playerRecords) return ''
-    const player = this.playerRecords.player
-    return `${player.nickname}@${player.twitter_user_name}`
-  }
-
-  private get otherSiteName(): string | null {
-    if (this.loadingRecords || !this.playerRecords) return null
-    const player = this.playerRecords.player
-    return player.other_site_name
-  }
-
-  private get introduction(): string | null {
-    if (this.loadingRecords || !this.playerRecords) return null
-    const player = this.playerRecords.player
-    return player.introduction
+    return `${this.player.nickname}@${this.player.twitter_user_name}`
   }
 
   private get wholeData(): ChartData {
     const wholeRecords = this.playerRecords!.whole_record
-    return this.chartData(wholeRecords.win_count, this.wholeLoseCount)
+    return chartData(wholeRecords.win_count, this.wholeLoseCount)
   }
 
   private get wholeLoseCount(): number {
@@ -196,15 +200,11 @@ export default class extends Vue {
 
   private get wholeResult(): string {
     const wholeRecords = this.playerRecords!.whole_record
-    return this.titleString(
+    return titleString(
       wholeRecords.win_count,
       this.wholeLoseCount,
       wholeRecords.win_rate
     )
-  }
-
-  private get user(): MyselfPlayer | null {
-    return this.$store.getters.getPlayer
   }
 
   private get isMyself(): boolean {
@@ -213,24 +213,31 @@ export default class extends Vue {
     return this.user.id === this.playerRecords.player.id
   }
 
+  private get isAlreadyAuthenticated(): boolean {
+    return this.$store.getters.isAuthenticated
+  }
+
   /** created */
   private async created(): Promise<any> {
+    await this.auth()
+    await this.loadUser()
     await this.loadRecord()
   }
 
   /** methods */
-  private chartData(winNum: number, loseNum: number): ChartData {
-    if (winNum === 0 && loseNum === 0) return this.emptyData
-    return {
-      labels: ['win', 'lose'],
-      datasets: [
-        {
-          data: [winNum, loseNum],
-          backgroundColor: ['rgb(86,161,229,1)', 'rgb(237,111,133,1)'],
-          borderColor: 'transparent'
-        }
-      ]
-    }
+  private async auth(): Promise<void> {
+    // 認証済みなら何もしない
+    if (this.isAlreadyAuthenticated) return
+    const user = await new Promise((resolve, reject) => {
+      firebase.auth().onAuthStateChanged(user => resolve(user))
+    })
+    await this.$store.dispatch('LOGINOUT', {
+      user
+    })
+  }
+
+  private async loadUser(): Promise<void> {
+    this.user = await this.$axios.$get('/my-player')
   }
 
   private async loadRecord(): Promise<void> {
@@ -247,16 +254,8 @@ export default class extends Vue {
     await this.loadRecord()
   }
 
-  private titleString(
-    winCount: number,
-    loseCount: number,
-    winRate: number
-  ): string {
-    return `${winCount}勝${loseCount}負 (${winRate * 100}%)`
-  }
-
   private campData(campRecord: CampRecord): ChartData {
-    return this.chartData(campRecord.win_count, this.campLoseCount(campRecord))
+    return chartData(campRecord.win_count, this.campLoseCount(campRecord))
   }
 
   private campLoseCount(campRecord: CampRecord): number {
@@ -264,7 +263,7 @@ export default class extends Vue {
   }
 
   private campResult(campRecord: CampRecord): string {
-    return this.titleString(
+    return titleString(
       campRecord.win_count,
       this.campLoseCount(campRecord),
       campRecord.win_rate
@@ -272,10 +271,7 @@ export default class extends Vue {
   }
 
   private skillData(skillRecord: SkillRecord): ChartData {
-    return this.chartData(
-      skillRecord.win_count,
-      this.skillLoseCount(skillRecord)
-    )
+    return chartData(skillRecord.win_count, this.skillLoseCount(skillRecord))
   }
 
   private skillLoseCount(skillRecord: SkillRecord): number {
@@ -283,35 +279,97 @@ export default class extends Vue {
   }
 
   private skillResult(skillRecord: SkillRecord): string {
-    return this.titleString(
+    return titleString(
       skillRecord.win_count,
       this.skillLoseCount(skillRecord),
       skillRecord.win_rate
     )
   }
 
-  private chunk<T extends any[]>(arr: T, size: number): Array<Array<T>> {
-    return arr.reduce(
-      (newarr, _, i) =>
-        i % size ? newarr : [...newarr, arr.slice(i, i + size)],
-      [] as T[][]
-    )
+  private get containsBlacklist(): boolean {
+    return this.blacklistPlayers.some(it => it.id === parseInt(this.playerId))
   }
 
-  private escapeAndSplitMessage = (message: string): string[] => {
-    return message
-      .replace(/(\r\n|\n|\r)/gm, '<br>')
-      .split('<br>')
-      .map(item => {
-        item = item
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#39;')
-        return item
-      })
+  private async addBlacklist(): Promise<void> {
+    await this.$axios.$post(
+      `/player/blacklist-player/register/${this.playerId}`
+    )
+    await this.loadUser()
   }
+
+  private async removeBlacklist(): Promise<void> {
+    await this.removeBlacklistById({
+      id: this.playerId
+    })
+  }
+
+  private async removeBlacklistById({ id }): Promise<void> {
+    await this.$axios.$post(`/player/blacklist-player/remove/${id}`)
+    await this.loadUser()
+  }
+
+  private get skillRecordChunks(): SkillRecord[][][] {
+    return chunk(this.playerRecords!.skill_record_list, 2)
+  }
+
+  private get introductionLines(): string[] {
+    return escapeAndSplitMessage(this.player.introduction!)
+  }
+}
+
+const chartData = (winNum: number, loseNum: number): ChartData => {
+  if (winNum === 0 && loseNum === 0) return emptyData
+  return {
+    labels: ['win', 'lose'],
+    datasets: [
+      {
+        data: [winNum, loseNum],
+        backgroundColor: ['rgb(86,161,229,1)', 'rgb(237,111,133,1)'],
+        borderColor: 'transparent'
+      }
+    ]
+  }
+}
+
+const emptyData: ChartData = {
+  labels: ['no data'],
+  datasets: [
+    {
+      data: [1],
+      backgroundColor: ['#ccc'],
+      borderColor: 'transparent'
+    }
+  ]
+}
+
+const titleString = (
+  winCount: number,
+  loseCount: number,
+  winRate: number
+): string => {
+  return `${winCount}勝${loseCount}負 (${winRate * 100}%)`
+}
+
+const chunk = <T extends any[]>(arr: T, size: number): Array<Array<T>> => {
+  return arr.reduce(
+    (newarr, _, i) => (i % size ? newarr : [...newarr, arr.slice(i, i + size)]),
+    [] as T[][]
+  )
+}
+
+const escapeAndSplitMessage = (message: string): string[] => {
+  return message
+    .replace(/(\r\n|\n|\r)/gm, '<br>')
+    .split('<br>')
+    .map(item => {
+      item = item
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+      return item
+    })
 }
 </script>
 
