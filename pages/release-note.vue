@@ -4,6 +4,7 @@
       <h1 class="title is-5">更新情報</h1>
       <div class="content">
         <ul class="has-text-left is-size-7">
+          <li>2021/04/30 ブラックリスト機能を追加</li>
           <li>2021/02/20 内部処理改善</li>
           <li>2021/02/15 発言抽出を別窓で開くよう変更</li>
           <li>2021/02/07 ダークテーマを追加</li>
