@@ -220,7 +220,7 @@ export default class extends Vue {
   /** created */
   private async created(): Promise<any> {
     await this.auth()
-    await this.loadUser()
+    this.user = this.$store.getters.getPlayer
     await this.loadRecord()
   }
 
