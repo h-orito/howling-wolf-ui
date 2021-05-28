@@ -28,9 +28,16 @@ const villageUserSettings = {
   },
   getActionWindow(app: Vue): ActionWindowSettings {
     const cookie = this.getCookie(app)
-    if (cookie.action_window) return cookie.action_window
-    this.setActionWindow(app, DEFAULT_ACTION_WINDOW)
-    return DEFAULT_ACTION_WINDOW
+    if (cookie.action_window == null) {
+      this.setActionWindow(app, DEFAULT_ACTION_WINDOW)
+      return DEFAULT_ACTION_WINDOW
+    }
+    if (cookie.action_window!.is_fixed == null) {
+      cookie.action_window.is_fixed = DEFAULT_ACTION_WINDOW.is_fixed
+      cookie.action_window.open_map = DEFAULT_ACTION_WINDOW.open_map
+      this.setActionWindow(app, cookie.action_window)
+    }
+    return cookie.action_window
   },
   setActionWindow(app: Vue, settings: ActionWindowSettings): void {
     const cookie = this.getCookie(app)
@@ -88,8 +95,8 @@ export interface PagingSettings {
 }
 
 export interface ActionWindowSettings {
-  size: number
-  tab_code: string
+  is_fixed?: boolean
+  open_map?: Map<string, boolean>
 }
 
 export interface MessageDisplaySettings {
@@ -113,8 +120,8 @@ const DEFAULT_PAGING: PagingSettings = {
 }
 
 const DEFAULT_ACTION_WINDOW: ActionWindowSettings = {
-  size: 1,
-  tab_code: 'myself'
+  is_fixed: false,
+  open_map: new Map<string, boolean>()
 }
 
 const DEFAULT_MESSAGE_DISPLAY: MessageDisplaySettings = {

@@ -32,8 +32,8 @@ export default class VillageNotification extends Vue {
   text-align: left;
 
   &.is-default {
-    border: 1px solid $monologue-say;
-    background-color: $monologue-say;
+    border: 1px solid #eee;
+    background-color: #eee;
 
     &.dark-theme {
       background-color: rgba(0, 0, 0, 0.2);

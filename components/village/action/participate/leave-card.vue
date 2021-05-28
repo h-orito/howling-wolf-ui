@@ -1,21 +1,34 @@
 <template>
   <div>
-    <b-button @click="confirmLeave" type="is-danger" size="is-small" expanded>
-      退村する
-    </b-button>
+    <action-card title="退村" :id="id" :is-open="isOpen" :exists-footer="false">
+      <template v-slot:content>
+        <div class="action-button-area">
+          <b-button @click="confirmLeave" type="is-danger" size="is-small">
+            退村する
+          </b-button>
+        </div>
+      </template>
+    </action-card>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
-import Village from '~/components/type/village'
+import actionCard from '~/components/village/action/action-card.vue'
 import api from '~/components/village/village-api'
 import toast from '~/components/village/village-toast'
+import villageUserSettings from '~/components/village/user-settings/village-user-settings'
 
 @Component({
-  components: {}
+  components: { actionCard }
 })
 export default class Leave extends Vue {
+  private id: string = 'leave-aria-id'
+  private isOpen: boolean =
+    villageUserSettings.getActionWindow(this).open_map![this.id] == null
+      ? true
+      : villageUserSettings.getActionWindow(this).open_map![this.id]
+
   private get villageId(): number {
     return this.$store.getters.getVillageId!
   }

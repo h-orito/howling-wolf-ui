@@ -1,45 +1,58 @@
 <template>
   <div>
-    <div class="content has-text-left">
-      <p>現在のセット先: {{ currentTargetName }}</p>
-      <p style="font-weight: 700; margin-bottom: 6px;">対象</p>
-      <b-field>
-        <b-select
-          v-model="participantId"
-          :disable="vote.target_list.length === 0"
-          expanded
-          size="is-small"
-        >
-          <option
-            v-for="participant in vote.target_list"
-            :value="participant.id.toString()"
-            :key="participant.id.toString()"
-            >{{ participant.chara.chara_name.full_name }}</option
-          >
-        </b-select>
-      </b-field>
-    </div>
-    <b-button @click="setVote" type="is-primary" size="is-small" expanded>
-      投票する
-    </b-button>
+    <action-card title="投票" :id="id" :is-open="isOpen" :exists-footer="false">
+      <template v-slot:content>
+        <div class="content has-text-left">
+          <p>現在のセット先: {{ currentTargetName }}</p>
+          <p style="font-weight: 700; margin-bottom: 6px;">対象</p>
+          <b-field>
+            <b-select
+              v-model="participantId"
+              :disable="vote.target_list.length === 0"
+              expanded
+              size="is-small"
+            >
+              <option
+                v-for="participant in vote.target_list"
+                :value="participant.id.toString()"
+                :key="participant.id.toString()"
+                >{{ participant.chara.chara_name.full_name }}</option
+              >
+            </b-select>
+          </b-field>
+        </div>
+        <div class="action-button-area">
+          <b-button @click="setVote" type="is-primary" size="is-small">
+            投票する
+          </b-button>
+        </div>
+      </template>
+    </action-card>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
-import Chara from '~/components/type/chara'
+import actionCard from '~/components/village/action/action-card.vue'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
 import VillageVoteSituation from '~/components/type/village-vote-situation'
 import api from '~/components/village/village-api'
 import toast from '~/components/village/village-toast'
+import villageUserSettings from '~/components/village/user-settings/village-user-settings'
 
 @Component({
-  components: {}
+  components: { actionCard }
 })
 export default class Vote extends Vue {
   private submitting: boolean = false
   private participantId: number | null =
     this.vote.target == null ? null : this.vote.target.id
+
+  private id: string = 'vote-aria-id'
+  private isOpen: boolean =
+    villageUserSettings.getActionWindow(this).open_map![this.id] == null
+      ? true
+      : villageUserSettings.getActionWindow(this).open_map![this.id]
 
   private get villageId(): number {
     return this.$store.getters.getVillageId!

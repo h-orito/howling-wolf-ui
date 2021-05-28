@@ -1,7 +1,11 @@
 <template>
   <div :class="$store.getters.isDarkTheme ? 'dark-theme' : ''">
-    <hr />
-    <action-card :title="'デバッグメニュー'" :exists-footer="false">
+    <action-card
+      :title="'デバッグメニュー'"
+      :exists-footer="false"
+      :id="id"
+      :is-open="isOpen"
+    >
       <template v-slot:content>
         <div class="content has-text-left">
           <p style="font-weight: 700; margin-bottom: 6px;">参加させる</p>
@@ -81,7 +85,7 @@ import actionCard from '~/components/village/action/action-card.vue'
 import DebugVillage from '~/components/type/debug-village'
 import VillageParticipant from '~/components/type/village-participant'
 import { VILLAGE_STATUS } from '~/components/const/consts'
-import { VillageUserSettings } from '~/components/village/user-settings/village-user-settings'
+import villageUserSettings from '~/components/village/user-settings/village-user-settings'
 
 @Component({
   components: { actionCard }
@@ -102,6 +106,11 @@ export default class Action extends Vue {
       : 1
 
   private playerId: number = this.playerList[0].player_id
+  private id: string = 'debug-aria-id'
+  private isOpen: boolean =
+    villageUserSettings.getActionWindow(this).open_map![this.id] == null
+      ? true
+      : villageUserSettings.getActionWindow(this).open_map![this.id]
 
   // ----------------------------------------------------------------
   // computed
