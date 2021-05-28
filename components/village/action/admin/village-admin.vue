@@ -1,7 +1,11 @@
 <template>
-  <div :class="$store.getters.isDarkTheme ? 'dark-theme' : ''">
-    <hr />
-    <action-card :title="'管理者メニュー'" :exists-footer="false">
+  <div>
+    <action-card
+      title="管理メニュー"
+      :id="id"
+      :is-open="isOpen"
+      :exists-footer="false"
+    >
       <template v-slot:content>
         <div class="content has-text-left">
           <b-table
@@ -44,6 +48,7 @@
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 // component
 import actionCard from '~/components/village/action/action-card.vue'
+import villageUserSettings from '~/components/village/user-settings/village-user-settings'
 // type
 import VillageAdminSituation from '~/components/type/village-admin-situation'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
@@ -52,6 +57,12 @@ import SituationAsParticipant from '~/components/type/situation-as-participant'
   components: { actionCard }
 })
 export default class VillageAdmin extends Vue {
+  private id: string = 'admin-aria-id'
+  private isOpen: boolean =
+    villageUserSettings.getActionWindow(this).open_map![this.id] == null
+      ? true
+      : villageUserSettings.getActionWindow(this).open_map![this.id]
+
   private get situation(): SituationAsParticipant {
     return this.$store.getters.getSituation!
   }

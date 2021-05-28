@@ -222,7 +222,7 @@ export default class VillageSlider extends Vue {
     transition-duration: 200ms;
     transition-delay: 0s;
     transition-timing-function: ease;
-    z-index: 5;
+    z-index: 20;
 
     .close-icon {
       position: absolute;
@@ -245,7 +245,7 @@ export default class VillageSlider extends Vue {
   }
   .village-side-menu-outside.is-active {
     display: block;
-    z-index: 5;
+    z-index: 20;
   }
 }
 @media screen and (min-width: 768px) {

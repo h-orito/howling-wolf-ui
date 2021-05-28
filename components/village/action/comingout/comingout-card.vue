@@ -1,73 +1,89 @@
 <template>
   <div>
-    <div class="content has-text-left">
-      <p>現在のカミングアウト: {{ currentComingout }}</p>
-      <p style="font-weight: 700; margin-bottom: 6px;">CO対象（2つまで）</p>
-      <b-field>
-        <b-select v-model="co1" expanded size="is-small">
-          <option value="">COを取り消す</option>
-          <option
-            v-for="skill in selectableSkills"
-            :value="skill.code"
-            :key="skill.code"
-            >{{ skill.name }}</option
-          >
-        </b-select>
-        <b-button size="is-small" type="is-primary" @click="cancelFirst"
-          >消す</b-button
-        >
-      </b-field>
-      <b-field>
-        <b-select
-          v-model="co2"
-          expanded
-          size="is-small"
-          :disabled="!co1 || co1 === ''"
-        >
-          <option
-            v-for="skill in selectableSkills"
-            :value="skill.code"
-            :key="skill.code"
-            >{{ skill.name }}</option
-          >
-        </b-select>
-        <b-button
-          size="is-small"
-          type="is-primary"
-          :disabled="!co1 || co1 === ''"
-          @click="cancelSecond"
-          >消す</b-button
-        >
-      </b-field>
-    </div>
-    <b-button
-      :disabled="!canSubmit"
-      @click="setComingout"
-      type="is-primary"
-      size="is-small"
-      expanded
-      >カミングアウトする</b-button
+    <action-card
+      title="カミングアウト"
+      :id="id"
+      :is-open="isOpen"
+      :exists-footer="false"
     >
+      <template v-slot:content>
+        <div class="content has-text-left">
+          <p>現在のカミングアウト: {{ currentComingout }}</p>
+          <p style="font-weight: 700; margin-bottom: 6px;">CO対象（2つまで）</p>
+          <b-field>
+            <b-select v-model="co1" expanded size="is-small">
+              <option value="">COを取り消す</option>
+              <option
+                v-for="skill in selectableSkills"
+                :value="skill.code"
+                :key="skill.code"
+                >{{ skill.name }}</option
+              >
+            </b-select>
+            <b-button size="is-small" type="is-primary" @click="cancelFirst"
+              >消す</b-button
+            >
+          </b-field>
+          <b-field>
+            <b-select
+              v-model="co2"
+              expanded
+              size="is-small"
+              :disabled="!co1 || co1 === ''"
+            >
+              <option
+                v-for="skill in selectableSkills"
+                :value="skill.code"
+                :key="skill.code"
+                >{{ skill.name }}</option
+              >
+            </b-select>
+            <b-button
+              size="is-small"
+              type="is-primary"
+              :disabled="!co1 || co1 === ''"
+              @click="cancelSecond"
+              >消す</b-button
+            >
+          </b-field>
+        </div>
+        <div class="action-button-area">
+          <b-button
+            :disabled="!canSubmit"
+            @click="setComingout"
+            type="is-primary"
+            size="is-small"
+            >カミングアウトする</b-button
+          >
+        </div>
+      </template>
+    </action-card>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'nuxt-property-decorator'
+import { Component, Vue } from 'nuxt-property-decorator'
 // components
+import actionCard from '~/components/village/action/action-card.vue'
 // type
-import Village from '~/components/type/village'
-import Chara from '~/components/type/chara'
 import Skill from '~/components/type/skill'
 import VillageComingOutSituation from '~/components/type/village-coming-out-situation'
 import api from '~/components/village/village-api'
 import toast from '~/components/village/village-toast'
+import villageUserSettings from '~/components/village/user-settings/village-user-settings'
 @Component({
-  components: {}
+  components: { actionCard }
 })
 export default class Comingout extends Vue {
   private submitting: boolean = false
   private co1: string | null = null
   private co2: string | null = null
+  private id: string = 'comingout-aria-id'
+  private isOpen: boolean =
+    villageUserSettings.getActionWindow(this).open_map![this.id] == null
+      ? true
+      : villageUserSettings.getActionWindow(this).open_map![this.id]
+
   private get currentComingout(): string {
     const colist = this.situation.current_coming_outs.list
     if (colist.length === 0) return 'なし'

@@ -70,16 +70,12 @@
             @current-day-change="changeDisplayDay($event)"
           />
           <div id="message-bottom" />
-          <div v-if="isDispDebugMenu">
-            <village-debug :village="debugVillage" @reload="reload" />
-          </div>
-          <village-admin v-if="situation && situation.admin.admin" />
+          <actions
+            v-if="village && existsAction"
+            @reload="reload"
+            ref="action"
+          ></actions>
         </div>
-        <action
-          v-if="village && existsAction"
-          @reload="reload"
-          ref="action"
-        ></action>
       </div>
       <village-footer
         class="village-footer-wrapper"
@@ -105,11 +101,10 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
-import qs from 'qs'
 import firebase from '~/plugins/firebase'
 // components
 import loading from '~/components/loading.vue'
-import action from '~/components/village/action/action.vue'
+import actions from '~/components/village/action/actions.vue'
 import villageFooter from '~/components/village/footer/village-footer.vue'
 import villageHeader from '~/components/village/header/village-header.vue'
 import villageSlider from '~/components/village/slider/village-slider.vue'
@@ -119,7 +114,6 @@ import VillageDay from '~/components/type/village-day'
 import VillageLatest from '~/components/type/village-latest'
 import Messages from '~/components/type/messages'
 import SituationAsParticipant from '~/components/type/situation-as-participant'
-import DebugVillage from '~/components/type/debug-village'
 import { VILLAGE_STATUS } from '~/components/const/consts'
 import villageUserSettings, {
   VillageUserSettings
@@ -130,23 +124,17 @@ import toast from '~/components/village/village-toast'
 // dynamic imports
 const messageCards = () =>
   import('~/components/village/message/message-cards.vue')
-const villageDebug = () =>
-  import('~/components/village/debug/village-debug.vue')
 const villageDayList = () => import('~/components/village/village-day-list.vue')
-const villageAdmin = () =>
-  import('~/components/village/admin/village-admin.vue')
 
 @Component({
   components: {
     loading,
     messageCards,
-    action,
-    villageDebug,
+    actions,
     villageDayList,
     villageFooter,
     villageHeader,
-    villageSlider,
-    villageAdmin
+    villageSlider
   },
   asyncData({ query }) {
     return {
@@ -185,8 +173,6 @@ export default class extends Vue {
   private loadingMessage: boolean = false
   /** 参加状況を取得中か */
   private loadingSituation: boolean = false
-  /** ローカル環境限定の村情報 */
-  private debugVillage: DebugVillage | null = null
   /** 現在の発言ページ番号 */
   private currentPageNum: number | null = 1
   /** 1ページあたりの表示件数 */
@@ -239,24 +225,13 @@ export default class extends Vue {
     if (status.code !== VILLAGE_STATUS.PROGRESS || !this.displayVillageDay) {
       return this.village!.name + ' - ' + status.name
     }
-    return (
-      this.village!.name +
-      ' - ' +
-      status.name +
-      ' - ' +
-      this.displayVillageDay!.day +
-      '日目'
-    )
+    const day = this.displayVillageDay!.day
+    return `${this.village!.name} - ${status.name} - ${day}日目`
   }
 
   /** ローカル環境か */
   private get isDebug(): boolean {
     return (process.env as any).ENV === 'local'
-  }
-
-  /** デバッグメニューを表示するか */
-  private get isDispDebugMenu(): boolean {
-    return this.isDebug && this.debugVillage != null && this.situation != null
   }
 
   private get existsAction(): boolean {
@@ -404,8 +379,9 @@ export default class extends Vue {
   }
 
   /** デバッグ用村情報を読み込み */
-  private loadDebugVillage(): Promise<DebugVillage> {
-    return api.fetchDebugVillage(this, this.villageId)
+  private async loadDebugVillageIfNeeded(): Promise<void> {
+    if (!this.isDebug) return
+    await this.$store.dispatch('LOAD_DEBUGVILLAGE')
   }
 
   /** もろもろ読み込み */
@@ -416,7 +392,7 @@ export default class extends Vue {
       this.loadSituation()
     ])
     // デバッグ用村情報
-    if (this.isDebug) this.debugVillage = await this.loadDebugVillage()
+    await this.loadDebugVillageIfNeeded()
     // 最新日を表示
     this.displayVillageDay = this.latestDay!
     this.existsNewMessages = false
@@ -430,14 +406,6 @@ export default class extends Vue {
     // アンカーメッセージを非表示にする
     // @ts-ignore
     if (this.$refs.messageCards) this.$refs.messageCards.clearAnchorMessages()
-  }
-
-  private async reloadVillage(): Promise<void> {
-    await this.loadVillage()
-    // デバッグ用村情報
-    if (this.isDebug) this.debugVillage = await this.loadDebugVillage()
-    // 最新日を表示
-    this.displayVillageDay = this.latestDay!
   }
 
   /** 表示する村日付を変更 */
@@ -490,7 +458,8 @@ export default class extends Vue {
     const element = document.getElementById('message-bottom')
     if (element == null) return
     this.$scrollTo(element, {
-      container: '.village-article-wrapper'
+      container: '.village-article-wrapper',
+      offset: -window.innerHeight
     })
   }
 
@@ -691,16 +660,12 @@ html {
       .village-article-wrapper {
         flex: 1;
         overflow-y: scroll;
+        padding-left: 10px;
+        padding-right: 10px;
 
         .village-name {
           margin: 10px 5px;
         }
-      }
-      .village-action-wrapper {
-        display: flex;
-        flex-shrink: 0;
-        flex-direction: column;
-        justify-content: space-between;
       }
     }
   }

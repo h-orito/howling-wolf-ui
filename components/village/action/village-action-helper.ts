@@ -15,8 +15,6 @@ const actionHelper = {
       actions.push({ code: 'say', name: '発言', icon: 'comment-dots' })
     if (this.isDispParticipate(situation))
       actions.push({ code: 'participate', name: '入村', icon: 'sign-in-alt' })
-    if (this.isDispSpectate(situation))
-      actions.push({ code: 'spectate', name: '見学', icon: 'sign-in-alt' })
     if (this.isDispSkillRequest(situation))
       actions.push({ code: 'skill_request', name: '役職希望', icon: 'star' })
     if (this.isDispLeave(situation))
