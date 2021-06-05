@@ -103,12 +103,6 @@ const notification = () =>
 })
 export default class Say extends Vue {
   // ----------------------------------------------------------------
-  // props
-  // ----------------------------------------------------------------
-  @Prop({ type: Number })
-  private windowSize!: number
-
-  // ----------------------------------------------------------------
   // data
   // ----------------------------------------------------------------
   private messageTypeFaceTypeMap: Map<string, string> = new Map([
@@ -163,12 +157,6 @@ export default class Say extends Vue {
 
   private get skillDescription(): string {
     return this.myself.skill!.description.replace('。', '。\n')
-  }
-
-  // 縦幅に合わせる
-  private get rowSize(): number {
-    if (this.windowSize < 2) return 3
-    return 9
   }
 
   private get faceTypeCode(): string {
