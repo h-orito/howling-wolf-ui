@@ -29,7 +29,7 @@ export default class MessageInput extends Vue {
   @Prop({ type: String })
   private messageType!: string
 
-  @Prop({ type: Number, default: 6 })
+  @Prop({ type: Number, default: 9 })
   private rowSize!: number
 
   private get situation(): SituationAsParticipant {

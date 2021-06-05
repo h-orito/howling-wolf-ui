@@ -124,6 +124,7 @@ export default class ActionCard extends Vue {
   z-index: 10;
   width: 100%;
   bottom: $village-footer-height;
+  bottom: calc(#{$village-footer-height} + env(safe-area-inset-bottom));
   max-height: 30vh;
   margin: 0 -10px;
   border-right: 0;
