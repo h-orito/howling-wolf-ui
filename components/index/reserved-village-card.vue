@@ -3,18 +3,7 @@
     <div class="card village-card">
       <div class="card-content">
         <div class="content has-text-left is-size-7">
-          <p>
-            作成日時:
-            {{ reservedVillage.village_create_datetime.substring(0, 16) }}
-          </p>
-          <p>
-            開始日時:
-            {{ reservedVillage.village_start_datetime.substring(0, 16) }}
-          </p>
-          <p>
-            更新時間:
-            {{ daychangeTime(reservedVillage.village_start_datetime) }}
-          </p>
+          <p>更新時間: {{ reservedVillage.start_time.substring(0, 5) }}</p>
           <p>編成: {{ organization }}</p>
           <p>発言可能時間: {{ sayableTime }}</p>
           <p>ダミー役欠け: {{ dummySkill }}</p>
@@ -49,10 +38,6 @@ export default class ReservedVillageCard extends Vue {
     const org = this.reservedVillage.organization
     const shortOrg = ORGANIZATION_TEMPLATE.get(org)
     return shortOrg ? `${org}（${shortOrg}編成）` : `${org.length}人: ${org}`
-  }
-
-  private daychangeTime(datetime: string): string {
-    return datetime.substring(11, 16)
   }
 
   private get dummySkill(): string {
