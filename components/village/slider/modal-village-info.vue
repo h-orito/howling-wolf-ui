@@ -268,7 +268,7 @@ export default class ModalVillageInfo extends Vue {
       name: '時短希望',
       value: rules.available_commit ? 'あり' : 'なし',
       description:
-        '「あり」の場合、生存者全員が時短を希望すると、日付が更新されます。\n時短により余った時間は翌日に繰り越されます。\n自動生成村の場合、常に「なし」となります。'
+        '「あり」の場合、生存者全員が時短を希望すると、日付が更新されます。\n時短により余った時間は翌日に繰り越されます。\n自動生成村の場合、常に「あり」となります。'
     })
     // 発言制限
     const restricts = rules.message_restrict.restrict_list
