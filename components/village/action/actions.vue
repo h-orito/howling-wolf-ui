@@ -34,6 +34,11 @@
         ref="comingout"
         @reload="$emit('reload', $event)"
       />
+      <commit
+        v-if="isDispCommit"
+        ref="commit"
+        @reload="$emit('reload', $event)"
+      />
       <village-debug
         v-if="isDispDebugMenu"
         :village="debugVillage"
@@ -65,6 +70,8 @@ const skillRequest = () =>
 const say = () => import('~/components/village/action/say/say-card.vue')
 const comingout = () =>
   import('~/components/village/action/comingout/comingout-card.vue')
+const commit = () =>
+  import('~/components/village/action/commit/commit-card.vue')
 const villageDebug = () =>
   import('~/components/village/action/debug/village-debug.vue')
 const villageAdmin = () =>
@@ -79,6 +86,7 @@ const villageAdmin = () =>
     vote,
     ability,
     comingout,
+    commit,
     villageDebug,
     villageAdmin
   }
@@ -121,6 +129,10 @@ export default class Action extends Vue {
 
   private get isDispComingout(): boolean {
     return this.situation.coming_out.available_coming_out
+  }
+
+  private get isDispCommit(): boolean {
+    return this.situation.commit.available_commit
   }
 
   private get isDispDebugMenu(): boolean {
