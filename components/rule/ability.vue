@@ -121,12 +121,46 @@
         </li>
       </ul>
     </div>
+    <h4 class="is-7" id="forcesuicide"><strong>道連れ</strong></h4>
+    <div class="content">
+      <ul>
+        <li>
+          処刑死した場合、処刑処理時点で自分へ投票した生存者から1名をランダムで道連れにします。
+        </li>
+        <li>
+          処刑処理前に自身が死亡していた場合は処刑による道連れは発動しません。
+        </li>
+        <li>
+          襲撃死した場合、人狼が設定した襲撃担当者を道連れにします。
+        </li>
+        <li>
+          襲撃処理前に自身が死亡していた場合は襲撃による道連れは発動しません。
+        </li>
+        <li>
+          道連れになった対象は無惨な死体となって発見されます。（死因は呪殺死扱い）
+        </li>
+        <li>
+          メッセージ例（エピローグまで見えません）
+          <div class="card">
+            <div
+              class="card-content p-t-10 p-b-10 m-b-5 message-system-private"
+            >
+              <div class="content has-text-left">
+                <p class="hw-message-text">
+                  [槍] 槍使い ヘンリエッタは、[僧] 僧侶 セシリーを道連れにした。
+                </p>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
     <h4 class="is-7" id="attack"><strong>襲撃</strong></h4>
     <div class="content">
       <ul>
         <li>毎晩1名を襲撃し、無惨な死体として死亡させられます。</li>
         <li>
-          襲撃対象は襲撃能力者全員で連動しているので、誰かが変更すると自分の画面でも変わります。
+          襲撃担当者や襲撃対象は襲撃能力者全員で連動しているので、誰かが変更すると自分の画面でも変わります。
         </li>
         <li>
           1日目はダミーキャラ（きぐるみ

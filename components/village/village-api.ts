@@ -78,10 +78,12 @@ const api = {
   postAbility(
     app: Vue,
     villageId: number,
+    myselfId: number | null,
     targetId: number | null,
     abilityType: string
   ): Promise<void> {
     return app.$axios.$post(`/village/${villageId}/ability`, {
+      myself_id: myselfId,
       target_id: targetId,
       ability_type: abilityType
     })

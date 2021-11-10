@@ -156,7 +156,7 @@ export default class Say extends Vue {
   }
 
   private get skillDescription(): string {
-    return this.myself.skill!.description.replace('。', '。\n')
+    return this.myself.skill!.description.replaceAll('。', '。\n')
   }
 
   private get faceTypeCode(): string {

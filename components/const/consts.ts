@@ -18,7 +18,9 @@ export const MESSAGE_TYPE: {
   PRIVATE_SEER: string
   PRIVATE_PSYCHIC: string
   PRIVATE_WEREWOLF: string
+  PRIVATE_FANATIC: string
   PRIVATE_MASON: string
+  PRIVATE_FOX: string
   PRIVATE_SYMPATHIZER: string
   NORMAL_SAY: string
   MONOLOGUE_SAY: string
@@ -35,7 +37,9 @@ export const MESSAGE_TYPE: {
   PRIVATE_SEER: 'PRIVATE_SEER',
   PRIVATE_PSYCHIC: 'PRIVATE_PSYCHIC',
   PRIVATE_WEREWOLF: 'PRIVATE_WEREWOLF',
+  PRIVATE_FANATIC: 'PRIVATE_FANATIC',
   PRIVATE_MASON: 'PRIVATE_MASON',
+  PRIVATE_FOX: 'PRIVATE_FOX',
   PRIVATE_SYMPATHIZER: 'PRIVATE_SYMPATHIZER',
   NORMAL_SAY: 'NORMAL_SAY',
   MONOLOGUE_SAY: 'MONOLOGUE_SAY',
@@ -73,6 +77,7 @@ export const ORGANIZATION_TEMPLATE: Map<string, string> = new Map([
   ['狼狼狂占霊狩狐村村村村村', '12B'],
   ['狼狼狼狂占霊狩村村村村村村', 'G13'],
   ['狼狼狼狂占霊狩村村村村村村村', 'G14'],
+  ['狼狼狼信占霊狩猫共共狐背村村', '14D猫'],
   ['狼狼狼狂占霊狩村村村村村村村村', 'G15'],
   ['狼狼狼狂占霊狩村村村村村村村村村', 'G16'],
   ['狼狼狼狂占霊狩狐共共村村村村村村', '汝'],

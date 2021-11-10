@@ -14,7 +14,40 @@
           <notification type="default" class="m-b-5">
             <span style="white-space: pre-line;">{{ skillDescription }}</span>
           </notification>
-          <p>現在のセット先: {{ currentTargetName }}</p>
+          <div v-if="ability.usable && ability.attacker_list.length > 0">
+            <p>現在の襲撃担当者: {{ currentAttackerName }}</p>
+            <b-collapse :open="false" aria-id="contentIdForA11y1">
+              <template #trigger>
+                <p style="font-weight: 700; margin-bottom: 6px;">
+                  襲撃担当者
+                  <a aria-controls="contentIdForA11y1">
+                    <b-icon
+                      pack="fas"
+                      icon="question-circle"
+                      size="is-small"
+                    ></b-icon>
+                  </a>
+                </p>
+              </template>
+              <div class="notification">
+                <div class="content">
+                  <p>猫又を襲撃した場合、襲撃担当者が道連れとなります。</p>
+                </div>
+              </div>
+            </b-collapse>
+            <b-field>
+              <b-select v-model="attackerId" expanded size="is-small">
+                <option
+                  v-for="participant in ability.attacker_list"
+                  :value="participant.id.toString()"
+                  :key="participant.id.toString()"
+                  >{{ participant.chara.chara_name.full_name }}</option
+                >
+              </b-select>
+            </b-field>
+            <hr />
+          </div>
+          <p>{{ `現在の${ability.type.name}先: ${currentTargetName}` }}</p>
           <p style="font-weight: 700; margin-bottom: 6px;">対象</p>
           <b-field>
             <b-select
@@ -72,6 +105,9 @@ export default class Ability extends Vue {
   private ability!: VillageAbilitySituation
 
   private submitting: boolean = false
+  private attackerId: number | null =
+    this.ability.attacker == null ? null : this.ability.attacker.id
+
   private participantId: number | null =
     this.ability.target == null ? null : this.ability.target.id
 
@@ -98,7 +134,12 @@ export default class Ability extends Vue {
   }
 
   private get skillDescription(): string {
-    return this.myself.skill!.description.replace('。', '。\n')
+    return this.myself.skill!.description.replaceAll('。', '。\n')
+  }
+
+  private get currentAttackerName(): string {
+    if (!this.ability.attacker) return 'なし'
+    return this.ability.attacker.chara.chara_name.full_name
   }
 
   private get currentTargetName(): string {
@@ -129,6 +170,7 @@ export default class Ability extends Vue {
     await api.postAbility(
       this,
       this.villageId,
+      this.attackerId,
       this.participantId,
       this.ability.type.code
     )
