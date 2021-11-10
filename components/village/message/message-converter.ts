@@ -199,7 +199,9 @@ const systemMessageClassMap: Map<string, string> = new Map([
   [MESSAGE_TYPE.PRIVATE_SEER, 'message-system-private-seer'],
   [MESSAGE_TYPE.PRIVATE_PSYCHIC, 'message-system-private-psychic'],
   [MESSAGE_TYPE.PRIVATE_WEREWOLF, 'message-system-private-werewolf'],
+  [MESSAGE_TYPE.PRIVATE_FANATIC, 'message-system-private-werewolf'],
   [MESSAGE_TYPE.PRIVATE_MASON, 'message-system-private-mason'],
+  [MESSAGE_TYPE.PRIVATE_FOX, 'message-system-private-fox'],
   [MESSAGE_TYPE.PRIVATE_SYMPATHIZER, 'message-system-private-mason'],
   [MESSAGE_TYPE.PARTICIPANTS, '']
 ])
