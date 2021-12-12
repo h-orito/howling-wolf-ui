@@ -18,6 +18,7 @@
             <p>編成: {{ organization }}</p>
             <p>発言可能時間: {{ sayableTime }}</p>
             <p>ダミー役欠け: {{ dummySkill }}</p>
+            <p>役職希望: {{ skillRequest }}</p>
           </div>
         </div>
       </div>
@@ -111,6 +112,10 @@ export default class VillageCard extends Vue {
 
   private get dummySkill(): string {
     return this.village.setting.rules.available_dummy_skill ? 'あり' : 'なし'
+  }
+
+  private get skillRequest(): string {
+    return this.village.setting.rules.available_skill_request ? '可能' : '不可'
   }
 }
 </script>

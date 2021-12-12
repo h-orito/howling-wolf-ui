@@ -6,6 +6,7 @@ interface ReservedVillage {
   sayable_end: string
   available_dummy_skill: boolean
   for_beginner: boolean
+  can_skill_request: boolean
 }
 
 export default ReservedVillage

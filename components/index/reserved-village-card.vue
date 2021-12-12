@@ -8,6 +8,7 @@
           <p>発言可能時間: {{ sayableTime }}</p>
           <p>ダミー役欠け: {{ dummySkill }}</p>
           <p>初心者村か: {{ forBeginner }}</p>
+          <p>役職希望: {{ skillRequest }}</p>
         </div>
       </div>
     </div>
@@ -46,6 +47,10 @@ export default class ReservedVillageCard extends Vue {
 
   private get forBeginner(): string {
     return this.reservedVillage.for_beginner ? 'はい' : 'いいえ'
+  }
+
+  private get skillRequest(): string {
+    return this.reservedVillage.can_skill_request ? '可能' : '不可'
   }
 }
 </script>
