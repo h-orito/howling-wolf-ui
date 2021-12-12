@@ -1,24 +1,36 @@
 <template>
   <div :class="isDarkTheme ? 'dark-theme' : ''">
-    <b-pagination
+    <div
       v-if="messages.all_page_count != null && messages.all_page_count > 1"
-      :total="messages.all_record_count"
-      :current="messages.current_page_num"
-      :range-before="range"
-      :range-after="range"
-      order="is-right"
-      size="is-small"
-      :per-page="perPage"
-      icon-pack="fas"
-      icon-prev="chevron-left"
-      icon-next="chevron-right"
-      aria-next-label="Next page"
-      aria-previous-label="Previous page"
-      aria-page-label="Page"
-      aria-current-label="Current page"
-      @change="change($event)"
       class="m-l-5 m-r-5 m-t-10 m-b-10"
-    />
+      style="display: flex;"
+    >
+      <b-pagination
+        :total="messages.all_record_count"
+        :current="messages.current_page_num"
+        :range-before="range"
+        :range-after="range"
+        order="is-right"
+        size="is-small"
+        :per-page="perPage"
+        icon-pack="fas"
+        icon-prev="chevron-left"
+        icon-next="chevron-right"
+        aria-next-label="Next page"
+        aria-previous-label="Previous page"
+        aria-page-label="Page"
+        aria-current-label="Current page"
+        @change="change($event)"
+        style="flex: 1;"
+      />
+      <b-button
+        size="is-small"
+        class="m-l-10 latest-button"
+        :class="isLatestDay && messages.is_latest ? 'active' : ''"
+        @click="$emit('disp-latest')"
+        >最新</b-button
+      >
+    </div>
     <message-card
       v-for="(message, idx) in messages.list"
       :key="message.time.unix_time_milli"
@@ -31,7 +43,10 @@
       ref="messageCard"
       @paste-message-input="$emit('paste-message-input', $event)"
     />
-    <village-situation-message :is-latest-day="isLatestDay" />
+    <village-situation-message
+      :is-latest-day="isLatestDay"
+      :messages="messages"
+    />
     <div>
       <script
         async
@@ -49,25 +64,37 @@
         ;(adsbygoogle = window.adsbygoogle || []).push({})
       </script>
     </div>
-    <b-pagination
+    <div
       v-if="messages.all_page_count != null && messages.all_page_count > 1"
-      :total="messages.all_record_count"
-      :current="messages.current_page_num"
-      :range-before="range"
-      :range-after="range"
-      order="is-right"
-      size="is-small"
-      :per-page="perPage"
-      icon-pack="fas"
-      icon-prev="chevron-left"
-      icon-next="chevron-right"
-      aria-next-label="Next page"
-      aria-previous-label="Previous page"
-      aria-page-label="Page"
-      aria-current-label="Current page"
-      @change="change($event)"
       class="m-l-5 m-r-5 m-t-10 m-b-10"
-    />
+      style="display: flex;"
+    >
+      <b-pagination
+        :total="messages.all_record_count"
+        :current="messages.current_page_num"
+        :range-before="range"
+        :range-after="range"
+        order="is-right"
+        size="is-small"
+        :per-page="perPage"
+        icon-pack="fas"
+        icon-prev="chevron-left"
+        icon-next="chevron-right"
+        aria-next-label="Next page"
+        aria-previous-label="Previous page"
+        aria-page-label="Page"
+        aria-current-label="Current page"
+        @change="change($event)"
+        style="flex: 1;"
+      />
+      <b-button
+        size="is-small"
+        class="m-l-10 latest-button"
+        :class="isLatestDay && messages.is_latest ? 'active' : ''"
+        @click="$emit('disp-latest')"
+        >最新</b-button
+      >
+    </div>
   </div>
 </template>
 
@@ -150,6 +177,20 @@ export default class MessageCard extends Vue {
 .dark-theme {
   a.pagination-link {
     color: #eee;
+  }
+  .latest-button {
+    background-color: transparent;
+    color: #14b4ff;
+  }
+}
+.latest-button {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+  border-radius: 4px;
+  &.active {
+    background-color: #3991f4;
+    border-color: #3991f4;
+    color: #fff;
   }
 }
 </style>

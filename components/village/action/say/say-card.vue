@@ -51,7 +51,6 @@
                 <message-input
                   v-model="message"
                   :message-type="messageType"
-                  :row-size="rowSize"
                   ref="messageInput"
                 />
               </div>

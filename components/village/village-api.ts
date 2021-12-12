@@ -20,6 +20,7 @@ const api = {
     villageId: number,
     displayDay: VillageDay | null,
     isDispLatestPage: boolean,
+    isDispLatest: boolean,
     currentPageNum: number | null,
     messageTypeFilter: string[] | null,
     participantIdFilter: number[] | null,
@@ -34,6 +35,7 @@ const api = {
     if (pagingSetting.is_paging) {
       params.page_size = pagingSetting.message_per_page
       params.page_num = isDispLatestPage ? 10000 : currentPageNum
+      params.is_disp_latest = isDispLatest
     }
     return app.$axios.$get(
       `/village/${villageId}/day/${displayDay!.day}/time/${
