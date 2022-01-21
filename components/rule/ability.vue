@@ -87,7 +87,7 @@
             >
               <div class="content has-text-left">
                 <p class="hw-message-text">
-                  勇者 アスベルは人狼のないようだ。
+                  勇者 アスベルは人狼のようだ。
                 </p>
               </div>
             </div>
