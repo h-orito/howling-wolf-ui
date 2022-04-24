@@ -17,37 +17,6 @@
           投げ銭いただける方は以下のいずれかの方法でお願いします。
         </p>
         <h2 class="title is-size-6 m-b-10">
-          Amazonギフトカード（15円〜、手数料なし）
-        </h2>
-        <div class="content">
-          <p>
-            Kampa!というサービスを利用することで、個人情報をやりとりすることなくAmazonギフトカードで投げ銭することができます。<br />
-            以下の手順でお願いします。
-          </p>
-          <ol>
-            <li>
-              「Amazonギフトカードで投げ銭する」よりKampa!サイトへ遷移
-            </li>
-            <li>
-              表示されたページのメールアドレスをコピーし、Kampa!ボタンをクリック
-            </li>
-            <li>
-              「金額」に投げ銭していただける金額を入力、「受取人」にコピーしたメールアドレスを貼り付けし、購入
-              （応援メッセージをいただけると喜びます）<br />
-              <p class="has-text-danger">
-                Amazonページ遷移時、デフォルトは10,000円に設定されており、
-                Amazonにログインしている場合は贈り主に氏名が自動入力されているようなのでご注意ください。※金額は15円〜で設定可能です。
-              </p>
-            </li>
-          </ol>
-          <a
-            href="http://kampa.me/t/lxc"
-            target="_blank"
-            class="button is-small is-primary"
-            >Amazonギフトカードで投げ銭する</a
-          >
-        </div>
-        <h2 class="title is-size-6 m-b-10">
           Amazonほしいものリスト
         </h2>
         <div class="content">
@@ -59,7 +28,7 @@
             >Amazonほしいものリスト</a
           >
         </div>
-        <h2 class="title is-size-6 m-b-10">
+        <h2 class="title is-size-6 m-t-10 m-b-10">
           Amazonアソシエイト経由でお買い物
         </h2>
         <div class="content">
