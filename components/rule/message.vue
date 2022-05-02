@@ -129,7 +129,7 @@ export default class RuleMessage extends Vue {
             {
               type: 'NORMAL',
               name: '',
-              image_url: 'https://wolfort.net/wmansion/6/00_100_A.png'
+              image_url: 'https://wolfort.net/wmansion/6/000_A.png'
             }
           ]
         },

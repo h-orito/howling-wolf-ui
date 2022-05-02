@@ -8,6 +8,7 @@ export default function({ store, $axios, app }) {
     if (token && user) {
       token = await refreshTokenIfNeeded(token, app, user)
       config.headers.common.Authorization = 'Bearer ' + token
+      config.headers.common.Client = 'Client ' + getClientToken(app)
     }
     return config
   })
@@ -24,6 +25,15 @@ export default function({ store, $axios, app }) {
       duration: 5000,
       queue: false
     })
+  })
+}
+
+function getClientToken(app) {
+  let token = app.$cookies.get('client-token')
+  if (token) return token
+  token = Math.random().toString(32).substring(2)
+  app.$cookies.set('client-token', token, {
+    path: '/'
   })
 }
 
