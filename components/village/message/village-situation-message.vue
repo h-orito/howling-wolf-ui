@@ -27,6 +27,7 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 // type
 import Village from '~/components/type/village'
 import VillageParticipant from '~/components/type/village-participant'
+import VillageDay from '~/components/type/village-day'
 import Messages from '~/components/type/messages'
 import { VILLAGE_STATUS } from '~/components/const/consts'
 import villageUserSettings from '~/components/village/user-settings/village-user-settings'
@@ -42,6 +43,10 @@ export default class MessageCard extends Vue {
 
   private get village(): Village {
     return this.$store.getters.getVillage!
+  }
+
+  private get latestDay(): VillageDay | null {
+    return this.$store.getters.getLatestDay
   }
 
   private get messages(): Messages {
@@ -163,17 +168,11 @@ export default class MessageCard extends Vue {
   }
 
   private get silentTimeMessage(): string {
-    return `通常発言ができない時間です。\n${this.sayableTime}に通常発言できます。`
+    return `通常発言ができない時間です。\n${this.sayableTime}から発言できます。`
   }
 
   private get sayableTime(): string {
-    const timeSetting = this.village.setting.time
-    const silentHours = timeSetting.silent_hours
-    const start = timeSetting.sayable_start.substring(0, 5)
-    const end = timeSetting.sayable_end.substring(0, 5)
-    const isNextday =
-      parseInt(start.substring(0, 2)) > parseInt(end.substring(0, 2))
-    return `${start} - ${isNextday ? '翌' : ''}${end}`
+    return this.latestDay!.sayable_start_time.substring(0, 5)
   }
 
   private get charSizeClass(): string {
