@@ -2,6 +2,7 @@ import VillageParticipantSituation from '~/components/type/village-participant-s
 
 interface VillageAdminSituation {
   admin: boolean
+  available_kick: boolean
   participant_list: VillageParticipantSituation[]
 }
 

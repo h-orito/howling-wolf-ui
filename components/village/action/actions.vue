@@ -44,7 +44,10 @@
         :village="debugVillage"
         @reload="$emit('reload', $event)"
       />
-      <village-admin v-if="situation && situation.admin.admin" />
+      <village-admin
+        v-if="situation && situation.admin.admin"
+        @reload="$emit('reload', $event)"
+      />
     </div>
   </div>
 </template>
