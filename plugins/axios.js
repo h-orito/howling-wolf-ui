@@ -29,12 +29,11 @@ export default function({ store, $axios, app }) {
 }
 
 function getClientToken(app) {
-  let token = app.$cookies.get('client-token')
+  let token = localStorage.getItem('client-token')
   if (token) return token
   token = Math.random().toString(32).substring(2)
-  app.$cookies.set('client-token', token, {
-    path: '/'
-  })
+  localStorage.setItem('client-token', token)
+  return token
 }
 
 async function refreshTokenIfNeeded(token, app, user) {
