@@ -11,6 +11,8 @@ interface MyselfPlayer {
   create_progress_villages: Villages
   create_finished_villages: Villages
   blacklist_players: Player[]
+  introduce_players: Player[]
+  introduced_players: Player[]
 }
 
 export default MyselfPlayer

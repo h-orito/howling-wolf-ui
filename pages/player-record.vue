@@ -8,6 +8,42 @@
       ></loading>
       <div v-if="!loadingRecords && playerRecords">
         <h1 class="title is-5 m-b-30" v-if="playerName">{{ playerName }}</h1>
+        <p v-if="!hasIntroduced" class="has-text-danger is-size-7 m-b-20">
+          まだ誰からも招待を受けていないプレイヤーです。
+        </p>
+        <div v-if="isMyself && !hasIntroduced" class="p-5 m-b-20">
+          <p class="is-size-7">
+            招待してくれた方にURLを伝え、「招待して入村できるようにする」ボタンを押してもらってください。
+          </p>
+          <b-button
+            class="m-t-5"
+            type="is-primary"
+            size="is-small"
+            @click="copyUrl"
+            >URLをコピー</b-button
+          >
+        </div>
+        <div v-if="canIntroduce && !hasIntroduced" class="m-b-20">
+          <p class="is-size-7 has-text-danger m-b-10 ">
+            荒らし対策のため、1名以上から招待されていないと入村できないようにしています。<br />
+            招待する場合、このプレイヤーに規約やルールを守らせるようお願いします。
+          </p>
+          <b-button type="is-primary" size="is-small" @click="introduce"
+            >招待して入村できるようにする</b-button
+          >
+        </div>
+        <div v-if="canIntroduce && introducing" class="m-b-20">
+          <p class="is-size-7 m-b-10 ">
+            あなたはこのプレイヤーを招待しています。
+          </p>
+          <b-button
+            v-if="introducing"
+            type="is-danger"
+            size="is-small"
+            @click="removeIntroduce"
+            >招待を取り消す</b-button
+          >
+        </div>
         <h2 class="title is-size-6">自己紹介</h2>
         <div class="m-b-20">
           <p class="is-size-7 m-b-20">
@@ -22,99 +58,45 @@
               style="word-break: break-word;"
             ></p>
           </div>
-          <b-button
-            class="m-t-20"
-            v-if="isMyself"
-            type="is-primary"
-            size="is-small"
-            @click="isModalOpen = true"
-            >編集する</b-button
-          >
-          <b-button
-            class="m-t-20"
-            v-if="user && !isMyself && !containsBlacklist"
-            type="is-warning"
-            size="is-small"
-            @click="addBlacklist"
-            :disabled="blacklistPlayers.length >= 5"
-            >ブラックリスト対象に追加する</b-button
-          >
-          <b-button
-            class="m-t-20"
-            v-if="user && !isMyself && containsBlacklist"
-            type="is-danger"
-            size="is-small"
-            @click="removeBlacklist"
-            >ブラックリスト対象から外す</b-button
-          >
-          <modal-intro
-            :is-open="isModalOpen"
-            :current-other-site-name="player.other_site_name"
-            :current-intro="player.introduction"
-            :blacklist-players="blacklistPlayers"
-            @close-modal="isModalOpen = false"
-            @remove-blacklist="removeBlacklistById($event)"
-            @refresh="refresh"
-          />
-        </div>
-        <div class="columns">
-          <div class="column is-6">
-            <h2 class="title is-size-6">総合戦績</h2>
-            <div class="columns is-mobile">
-              <div class="column is-12 chart-container m-b-20">
-                <doughnut-chart
-                  :chart-data="wholeData"
-                  :options="chart.option"
-                  :styles="chart.styles"
-                  :text="'全体'"
-                />
-                <div>
-                  <p class="is-size-7">{{ wholeResult }}</p>
-                </div>
-              </div>
-            </div>
-            <h2 class="title is-size-6">陣営戦績</h2>
-            <div class="columns is-mobile">
-              <div
-                v-for="campRecord in playerRecords.camp_record_list"
-                :key="campRecord.camp.code"
-                class="column is-4 chart-container m-b-20"
-              >
-                <doughnut-chart
-                  :chart-data="campData(campRecord)"
-                  :options="chart.option"
-                  :styles="chart.styles"
-                  :text="campRecord.camp.name"
-                />
-                <p class="is-size-7">{{ campResult(campRecord) }}</p>
-              </div>
-            </div>
+          <div v-if="isMyself" class="m-t-20">
+            <b-button
+              v-if="isMyself"
+              type="is-primary"
+              size="is-small"
+              @click="isModalOpen = true"
+              >編集する</b-button
+            >
+            <modal-intro
+              :is-open="isModalOpen"
+              :current-other-site-name="player.other_site_name"
+              :current-intro="player.introduction"
+              :blacklist-players="blacklistPlayers"
+              @close-modal="isModalOpen = false"
+              @remove-blacklist="removeBlacklistById($event)"
+              @refresh="refresh"
+            />
           </div>
-          <div class="column is-6">
-            <h2 class="title is-size-6">役職戦績</h2>
-            <div class="m-b-20">
-              <div
-                v-for="chunkRecords in skillRecordChunks"
-                :key="chunkRecords[0].skill.code"
-                class="columns is-mobile"
-              >
-                <div
-                  v-for="skillRecord in chunkRecords"
-                  :key="skillRecord.skill.code"
-                  class="column is-6 chart-container m-b-20"
-                >
-                  <doughnut-chart
-                    :chart-data="skillData(skillRecord)"
-                    :options="chart.option"
-                    :styles="chart.styles"
-                    :text="skillRecord.skill.name"
-                  />
-                  <p class="is-size-7">{{ skillResult(skillRecord) }}</p>
-                </div>
-              </div>
-            </div>
+          <div v-if="user && !isMyself">
+            <b-button
+              class="m-t-20"
+              v-if="!containsBlacklist"
+              type="is-warning"
+              size="is-small"
+              @click="addBlacklist"
+              :disabled="blacklistPlayers.length >= 5"
+              >ブラックリスト対象に追加する</b-button
+            >
+            <b-button
+              class="m-t-20"
+              v-if="containsBlacklist"
+              type="is-danger"
+              size="is-small"
+              @click="removeBlacklist"
+              >ブラックリスト対象から外す</b-button
+            >
           </div>
         </div>
+        <player-record-chart :player-records="playerRecords" />
         <h2 class="title is-size-5">参加した村</h2>
         <participate-village-list
           :participate-village-list="playerRecords.participate_village_list"
@@ -126,25 +108,27 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
-import { ChartData, ChartOptions } from 'chart.js'
 import firebase from '~/plugins/firebase'
 // components
 import loading from '~/components/loading.vue'
 import modalIntro from '~/components/player-record/modal-intro.vue'
 // type
 import PlayerRecords from '~/components/type/player-records'
-import CampRecord from '~/components/type/camp-record'
-import SkillRecord from '~/components/type/skill-record'
 import MyselfPlayer from '~/components/type/myself-player'
 import Player from '~/components/type/player'
 
-const doughnutChart = () =>
-  import('~/components/player-record/doughnut-chart.vue')
 const participateVillageList = () =>
   import('~/components/player-record/participate-village-list.vue')
+const playerRecordChart = () =>
+  import('~/components/player-record/player-record-chart.vue')
 
 @Component({
-  components: { loading, doughnutChart, participateVillageList, modalIntro },
+  components: {
+    loading,
+    playerRecordChart,
+    participateVillageList,
+    modalIntro
+  },
   asyncData({ query }) {
     return { playerId: query.id }
   }
@@ -162,18 +146,6 @@ export default class extends Vue {
   private isModalOpen: boolean = false
   private user: MyselfPlayer | null = null
 
-  private chart = {
-    option: {
-      legend: {
-        display: false
-      }
-    },
-    styles: {
-      height: '100%',
-      width: '100%'
-    }
-  }
-
   /** computed */
   private get blacklistPlayers(): Player[] {
     if (!this.user) return []
@@ -188,29 +160,31 @@ export default class extends Vue {
     return `${this.player.nickname}@${this.player.twitter_user_name}`
   }
 
-  private get wholeData(): ChartData {
-    const wholeRecords = this.playerRecords!.whole_record
-    return chartData(wholeRecords.win_count, this.wholeLoseCount)
-  }
-
-  private get wholeLoseCount(): number {
-    const wholeRecords = this.playerRecords!.whole_record
-    return wholeRecords.participate_count - wholeRecords.win_count
-  }
-
-  private get wholeResult(): string {
-    const wholeRecords = this.playerRecords!.whole_record
-    return titleString(
-      wholeRecords.win_count,
-      this.wholeLoseCount,
-      wholeRecords.win_rate
-    )
-  }
-
   private get isMyself(): boolean {
     if (!this.user) return false
     if (this.loadingRecords || !this.playerRecords) return false
     return this.user.id === this.playerRecords.player.id
+  }
+
+  // 紹介
+  private get canIntroduce(): boolean {
+    return (
+      !!this.user &&
+      !this.isMyself &&
+      this.user.participate_finished_villages.list.length > 0
+    )
+  }
+
+  private get hasIntroduced(): boolean {
+    if (!this.playerRecords?.player) return false
+    return this.playerRecords.player.introduced
+  }
+
+  private get introducing(): boolean {
+    if (!this.user) return false
+    return this.user.introduce_players.some(
+      ip => ip.id === this.playerRecords?.player.id
+    )
   }
 
   private get isAlreadyAuthenticated(): boolean {
@@ -254,38 +228,6 @@ export default class extends Vue {
     await this.loadRecord()
   }
 
-  private campData(campRecord: CampRecord): ChartData {
-    return chartData(campRecord.win_count, this.campLoseCount(campRecord))
-  }
-
-  private campLoseCount(campRecord: CampRecord): number {
-    return campRecord.participate_count - campRecord.win_count
-  }
-
-  private campResult(campRecord: CampRecord): string {
-    return titleString(
-      campRecord.win_count,
-      this.campLoseCount(campRecord),
-      campRecord.win_rate
-    )
-  }
-
-  private skillData(skillRecord: SkillRecord): ChartData {
-    return chartData(skillRecord.win_count, this.skillLoseCount(skillRecord))
-  }
-
-  private skillLoseCount(skillRecord: SkillRecord): number {
-    return skillRecord.participate_count - skillRecord.win_count
-  }
-
-  private skillResult(skillRecord: SkillRecord): string {
-    return titleString(
-      skillRecord.win_count,
-      this.skillLoseCount(skillRecord),
-      skillRecord.win_rate
-    )
-  }
-
   private get containsBlacklist(): boolean {
     return this.blacklistPlayers.some(it => it.id === parseInt(this.playerId))
   }
@@ -308,53 +250,30 @@ export default class extends Vue {
     await this.loadUser()
   }
 
-  private get skillRecordChunks(): SkillRecord[][][] {
-    return chunk(this.playerRecords!.skill_record_list, 2)
+  private async introduce(): Promise<void> {
+    await this.$axios.$post(`/player/introduce/${this.playerId}`)
+    location.reload()
+  }
+
+  private async removeIntroduce(): Promise<void> {
+    await this.$axios.$post(`/player/remove-introduce/${this.playerId}`)
+    location.reload()
   }
 
   private get introductionLines(): string[] {
     return escapeAndSplitMessage(this.player.introduction!)
   }
-}
 
-const chartData = (winNum: number, loseNum: number): ChartData => {
-  if (winNum === 0 && loseNum === 0) return emptyData
-  return {
-    labels: ['win', 'lose'],
-    datasets: [
-      {
-        data: [winNum, loseNum],
-        backgroundColor: ['rgb(86,161,229,1)', 'rgb(237,111,133,1)'],
-        borderColor: 'transparent'
-      }
-    ]
+  private copyUrl() {
+    const text = `https://howling-wolf.com/player-record?id=${this.playerId}`
+    // @ts-ignore
+    this.$copyText(text)
+    this.$buefy.toast.open({
+      message: `クリップボードにコピーしました: ${text}`,
+      type: 'is-info',
+      position: 'is-top'
+    })
   }
-}
-
-const emptyData: ChartData = {
-  labels: ['no data'],
-  datasets: [
-    {
-      data: [1],
-      backgroundColor: ['#ccc'],
-      borderColor: 'transparent'
-    }
-  ]
-}
-
-const titleString = (
-  winCount: number,
-  loseCount: number,
-  winRate: number
-): string => {
-  return `${winCount}勝${loseCount}負 (${winRate * 100}%)`
-}
-
-const chunk = <T extends any[]>(arr: T, size: number): Array<Array<T>> => {
-  return arr.reduce(
-    (newarr, _, i) => (i % size ? newarr : [...newarr, arr.slice(i, i + size)]),
-    [] as T[][]
-  )
 }
 
 const escapeAndSplitMessage = (message: string): string[] => {

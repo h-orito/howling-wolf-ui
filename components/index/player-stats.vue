@@ -37,6 +37,11 @@
             }}
           </p>
         </div>
+        <div v-if="!hasIntroduced" class="m-b-20">
+          <p class="is-size-7">
+            詳細戦績ページで招待を受けることができます。<br />1名以上に招待を受けると参加することができます。
+          </p>
+        </div>
         <div class="columns">
           <div class="column is-6">
             <b-button
@@ -104,6 +109,10 @@ export default class extends Vue {
   /** computed */
   public get isLogin(): boolean {
     return this.$store.getters.isLogin
+  }
+
+  private get hasIntroduced(): boolean {
+    return this.$store.getters.hasIntroduced
   }
 
   private get participatingVillages(): SimpleVillage[] {
