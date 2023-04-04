@@ -1,30 +1,7 @@
 <template>
   <div>
     <div class="navbar-side-menu" :class="isMenuExpanded ? 'is-active' : ''">
-      <div class="navbar-side-user-area m-b-20">
-        <div v-if="isLogin" class="twitter-user">
-          <div class="m-r-10 p-t-5">
-            <img :src="photoURL" class="navbar-twitter-icon" />
-          </div>
-          <div class="twitter-user-name">
-            <p class="has-text-left is-white">
-              <strong>{{ twitterNickname }}</strong>
-            </p>
-            <p class="has-text-left">{{ twitterUserName }}</p>
-          </div>
-        </div>
-        <div v-if="!isLogin">
-          <b-button
-            type="is-primary"
-            icon-pack="mdi"
-            icon-left="twitter"
-            @click="signin"
-          >
-            ログイン
-          </b-button>
-        </div>
-      </div>
-      <div>
+      <div class="m-t-40">
         <nuxt-link
           :to="{ path: '/' }"
           class="navbar-item"
@@ -88,31 +65,6 @@ import firebase from '~/plugins/firebase'
 export default class NavBar extends Vue {
   @Prop({ type: Boolean })
   private isMenuExpanded!: boolean
-
-  private get isLogin(): boolean {
-    return this.$store.getters.isLogin
-  }
-
-  private get twitterUserName(): string {
-    if (!this.isLogin) return ''
-    const player = this.$store.getters.getPlayer
-    return `@${player.twitter_user_name}`
-  }
-
-  private get twitterNickname(): string {
-    if (!this.isLogin) return ''
-    const player = this.$store.getters.getPlayer
-    return player.nickname
-  }
-
-  private get photoURL(): any {
-    return this.$store.getters.getPhotoUrl
-  }
-
-  private async signin(): Promise<void> {
-    const provider = new firebase.auth.TwitterAuthProvider()
-    await firebase.auth().signInWithRedirect(provider)
-  }
 }
 </script>
 

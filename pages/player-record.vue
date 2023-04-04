@@ -68,6 +68,7 @@
             >
             <modal-intro
               :is-open="isModalOpen"
+              :current-nickname="nickname"
               :current-other-site-name="player.other_site_name"
               :current-intro="player.introduction"
               :blacklist-players="blacklistPlayers"
@@ -157,7 +158,16 @@ export default class extends Vue {
   }
 
   private get playerName(): string {
-    return `${this.player.nickname}@${this.player.twitter_user_name}`
+    if (this.player.twitter_user_name) {
+      return `${this.player.nickname}@${this.player.twitter_user_name}`
+    } else {
+      return this.player.nickname
+    }
+  }
+
+  private get nickname(): string {
+    if (this.loadingRecords || !this.playerRecords) return ''
+    return this.playerRecords.player.nickname
   }
 
   private get isMyself(): boolean {

@@ -4,6 +4,10 @@
       <h1 class="title is-5">更新情報</h1>
       <div class="content">
         <ul class="has-text-left is-size-7">
+          <li>
+            2023/04/04
+            Googleログインを追加、既存のTwitterアカウントとの紐付けも追加
+          </li>
           <li>2022/07/28 1名以上に招待されないと参加できないよう変更</li>
           <li>2022/05/03 時短で日付更新した場合突然死しないよう変更</li>
           <li>

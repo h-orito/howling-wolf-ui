@@ -26,6 +26,12 @@
         >]
       </p>
       <p
+        class="hw-message-player"
+        v-if="!props.message.twitter_user_name && props.message.nickname"
+      >
+        [{{ props.message.nickname }}]
+      </p>
+      <p
         class="hw-message-datetime"
         :class="props.isDarkTheme ? 'dark-theme' : ''"
       >

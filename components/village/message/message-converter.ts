@@ -12,6 +12,7 @@ export interface SayMessage {
   day: number
   chara_name: string
   comingout: string | null
+  nickname: string | null
   twitter_user_name: string | null
   current_count: number | null
   max_count: number
@@ -66,6 +67,7 @@ export const convertToSayMessage = (
         : message
             .from!.coming_outs.list.map(co => co.skill.short_name)
             .join(',') + 'CO',
+    nickname: message.from!.player?.nickname,
     twitter_user_name: message.from!.player?.twitter_user_name,
     current_count: message.content.count,
     max_count: maxCount,

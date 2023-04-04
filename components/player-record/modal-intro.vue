@@ -12,11 +12,30 @@
         <p class="modal-card-title has-text-left">自己紹介編集</p>
       </header>
       <section class="modal-card-body has-text-left">
+        <notification>
+          <li>
+            戦績サイトに登録されるIDは以下の優先度となります。
+            <ul>
+              <li>他人狼サイトのID</li>
+              <li>Twitterアカウントのユーザー名</li>
+              <li>ニックネーム</li>
+            </ul>
+          </li>
+        </notification>
+        <section>
+          <p style="font-weight: 700; margin-bottom: 6px;">ニックネーム</p>
+          <p class="is-size-7">エピローグで全員に公開されます。<br /></p>
+          <b-field>
+            <b-input v-model="nickname" size="is-small" />
+          </b-field>
+          <p class="has-text-danger is-size-7" v-if="!validNickname">
+            50字以内で入力してください
+          </p>
+        </section>
         <section>
           <p style="font-weight: 700; margin-bottom: 6px;">他人狼サイトのID</p>
           <p class="is-size-7">
-            戦績サイトにこのIDで登録されます。未登録の場合はtwitter
-            idで登録されます。
+            エピローグまでにこのIDを入力しておくと、戦績サイトにこのIDで登録されます。
           </p>
           <b-field>
             <b-input v-model="otherSiteName" size="is-small" />
@@ -99,9 +118,10 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 // component
 // type
 import Player from '~/components/type/player'
+const notification = () => import('~/components/common/notification.vue')
 
 @Component({
-  components: {}
+  components: { notification }
 })
 export default class ModalIntro extends Vue {
   // ----------------------------------------------------------------
@@ -109,6 +129,9 @@ export default class ModalIntro extends Vue {
   // ----------------------------------------------------------------
   @Prop({ type: Boolean })
   private isOpen: boolean = false
+
+  @Prop({ type: String })
+  private currentNickname!: string
 
   @Prop({ type: String })
   private currentOtherSiteName!: string | null
@@ -122,19 +145,24 @@ export default class ModalIntro extends Vue {
   // ----------------------------------------------------------------
   // data
   // ----------------------------------------------------------------
+  private nickname: string = this.currentNickname
   private otherSiteName: string | null = this.currentOtherSiteName
   private intro: string | null = this.currentIntro
 
   // ----------------------------------------------------------------
   // computed
   // ----------------------------------------------------------------
+  private get validNickname(): boolean {
+    return this.nickname.length <= 50
+  }
+
   private get validOtherSiteName(): boolean {
     return !this.otherSiteName || this.otherSiteName.length <= 20
   }
 
   private get canSave(): boolean {
     const validIntro: boolean = !this.intro || this.intro.length <= 2000
-    return this.validOtherSiteName && validIntro
+    return this.validNickname && this.validOtherSiteName && validIntro
   }
 
   private get counter(): string {
@@ -151,6 +179,7 @@ export default class ModalIntro extends Vue {
   // ----------------------------------------------------------------
   private async save(): Promise<void> {
     await this.$axios.$post(`/player/detail`, {
+      nickname: this.nickname,
       other_site_name: this.otherSiteName,
       introduction: this.intro
     })

@@ -6,17 +6,6 @@
         class="spotlight-intro spotlight-shadow is-size-4 has-text-white"
         v-html="catchCopy"
       ></p>
-      <b-button
-        v-if="!isLogin"
-        type="is-white"
-        icon-pack="fab"
-        icon-left="twitter"
-        outlined
-        class="spotlight-signin-button spotlight-shadow"
-        @click="$emit('signin')"
-      >
-        <strong>Sign in</strong>
-      </b-button>
     </div>
     <div
       class="spotlight-mobile has-text-left is-block-mobile is-hidden-tablet"

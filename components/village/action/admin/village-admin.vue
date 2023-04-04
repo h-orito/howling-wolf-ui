@@ -37,11 +37,13 @@
               </b-table-column>
               <b-table-column field="twitter" label="twitter">
                 <a
+                  v-if="props.row.twitter_user_name"
                   :href="`https://twitter.com/${props.row.twitter_user_name}`"
                   target="_blank"
                 >
                   {{ props.row.nickname }}@{{ props.row.twitter_user_name }}
                 </a>
+                <p v-else>{{ props.row.nickname }}</p>
               </b-table-column>
               <b-table-column field="skill" label="役職">
                 {{ props.row.skill_name }}
