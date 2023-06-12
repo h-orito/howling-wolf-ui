@@ -4,6 +4,7 @@
       <h1 class="title is-5">更新情報</h1>
       <div class="content">
         <ul class="has-text-left is-size-7">
+          <li>2023/06/13 猫又噛みの際に襲撃者が死亡していた場合、生存している人狼からランダムで1名を道連れにするよう変更</li>
           <li>
             2023/04/04
             Googleログインを追加、既存のTwitterアカウントとの紐付けも追加
