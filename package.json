@@ -48,7 +48,7 @@
     "eslint-plugin-nuxt": "^0.5.0",
     "node-sass": "^4.14.1",
     "prettier": "^1.19.1",
-    "qs": "^6.10.1",
+    "qs": "^6.10.3",
     "sass-loader": "^8.0.2"
   }
 }
