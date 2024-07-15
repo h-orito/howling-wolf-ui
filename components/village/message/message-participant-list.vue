@@ -1,5 +1,8 @@
 <template>
-  <div class="card-content m-b-5" :class="$store.getters.isDarkTheme ? 'dark-theme' : ''">
+  <div
+    class="card-content m-b-5"
+    :class="$store.getters.isDarkTheme ? 'dark-theme' : ''"
+  >
     <div class="content has-text-left">
       <div class="hw-message-text">
         <strong>参加者一覧</strong>
@@ -15,13 +18,14 @@
             <div class="chara-name">
               <p>{{ charaName(participant) }}</p>
               <p class="twitter-username">
-                <a
+                {{ participant.player.nickname
+                }}<a
+                  v-if="participant.player.twitter_user_name"
                   :href="
                     `https://twitter.com/${participant.player.twitter_user_name}`
                   "
                   target="_blank"
-                >
-                  @{{ participant.player.twitter_user_name }}
+                  >@{{ participant.player.twitter_user_name }}
                 </a>
               </p>
               <p class="chara-status" :class="charaStatusClass(participant)">
@@ -38,7 +42,10 @@
           <div class="button-area m-l-5 is-size-7">
             <b-button
               tag="nuxt-link"
-              :to="{ path: '/player-record', query: { id: participant.player.id } }"
+              :to="{
+                path: '/player-record',
+                query: { id: participant.player.id }
+              }"
               target="_blank"
               size="is-small"
               icon-pack="fas"

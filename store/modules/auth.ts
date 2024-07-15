@@ -66,7 +66,8 @@ const getters = {
   getPlayer: state => state.player,
   isLogin: state => state.player != null,
   hasIntroduced: state =>
-    !!state.player && state.player.introduced_players.length > 0
+    !!state.player && state.player.introduced_players.length > 0,
+  getUser: state => state.user
 }
 
 export default {

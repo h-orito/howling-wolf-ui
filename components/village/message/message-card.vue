@@ -28,6 +28,8 @@
         :is-dark-theme="isDarkTheme"
         :is-disp-date="isDispDate"
         :is-img-large="isImgLarge"
+        @click-anchor="clickAnchorMessage($event)"
+        @paste-message-input="$emit('paste-message-input', $event)"
       ></message-card>
     </div>
     <div v-if="index == 19 || index == 39">

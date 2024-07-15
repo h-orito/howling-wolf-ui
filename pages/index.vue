@@ -1,6 +1,6 @@
 <template>
   <div class="menu-wrap">
-    <spotlight @signin="signin" />
+    <spotlight />
     <div
       v-if="isStg"
       class="p-t-30 p-b-30 p-l-30 p-r-30"
@@ -17,7 +17,10 @@
     <player-stats
       :myself-player="user"
       :is-loading="loadingAuth"
-      @signin="signin"
+      @signin-with-twitter="signinWithTwitter"
+      @signin-with-google="signinWithGoogle"
+      @link-with-twitter="linkWithTwitter"
+      @link-with-google="linkWithGoogle"
       @logout="logout"
     />
     <village-list :loading-villages="isLoadingVillages" :villages="villages" />
@@ -169,9 +172,26 @@ export default class TopPage extends Vue {
       })
   }
 
-  private async signin(): Promise<void> {
+  private async signinWithTwitter(): Promise<void> {
     const provider = new firebase.auth.TwitterAuthProvider()
     await firebase.auth().signInWithRedirect(provider)
+  }
+
+  private async signinWithGoogle(): Promise<void> {
+    const provider = new firebase.auth.GoogleAuthProvider()
+    await firebase.auth().signInWithRedirect(provider)
+  }
+
+  private async linkWithTwitter(): Promise<void> {
+    const provider = new firebase.auth.TwitterAuthProvider()
+    // @ts-ignore
+    await firebase.auth().currentUser.linkWithRedirect(provider)
+  }
+
+  private async linkWithGoogle(): Promise<void> {
+    const provider = new firebase.auth.GoogleAuthProvider()
+    // @ts-ignore
+    await firebase.auth().currentUser.linkWithRedirect(provider)
   }
 
   private async registerUserIfNeeded(): Promise<void> {
@@ -179,7 +199,10 @@ export default class TopPage extends Vue {
     if (!redirectResult.additionalUserInfo || !redirectResult.user) {
       return
     }
-    const twitterUsername = redirectResult.additionalUserInfo.username
+    let twitterUsername: string | null = null
+    if (redirectResult.credential?.providerId === 'twitter.com') {
+      twitterUsername = redirectResult.additionalUserInfo.username ?? null
+    }
     const user = redirectResult.user
     const idToken = await user.getIdToken(false)
     this.$cookies.set('id-token', idToken, {
