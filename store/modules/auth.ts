@@ -65,8 +65,10 @@ const getters = {
   isAuthenticated: state => state.authenticated,
   getPlayer: state => state.player,
   isLogin: state => state.player != null,
-  hasIntroduced: state =>
-    !!state.player && state.player.introduced_players.length > 0,
+  // hasIntroduced: state =>
+  //   !!state.player && state.player.introduced_players.length > 0,
+  // 招待制をいったん廃止
+  hasIntroduced: state => true,
   getUser: state => state.user
 }
 
