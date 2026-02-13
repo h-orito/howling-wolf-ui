@@ -7,23 +7,23 @@ HOWLING WOLF UI を Nuxt 2 (Vue 2) から Nuxt 4 (Vue 3) に移行する。
 
 ### 現行スタック → 新スタック
 
-| 項目 | 現行 (Nuxt 2) | 移行先 (Nuxt 4) |
-|------|---------------|-----------------|
-| フレームワーク | Nuxt 2.14 + Vue 2 | Nuxt 4 + Vue 3 |
-| コンポーネント | Class-based (nuxt-property-decorator) | Composition API (`<script setup>`) |
-| 状態管理 | Vuex (modules) | Pinia (Composition API) |
-| UIフレームワーク | Buefy (Bulma) | Tailwind CSS + 独自UI |
-| CSS | SCSS/SASS | Tailwind CSS |
-| HTTP | @nuxtjs/axios | $fetch + useApi composable |
-| 認証 | Firebase 8 + カスタムplugin | Firebase 12 + nuxt-vuefire |
-| アイコン | FontAwesome (webfonts) | @heroicons/vue |
-| バリデーション | なし (手動) | vee-validate + yup |
-| ビルド | Webpack | Vite |
-| パッケージマネージャ | npm | pnpm |
-| Lint | ESLint 6 + @nuxtjs/eslint-config | ESLint 9 + @nuxt/eslint |
-| フォーマット | Prettier 1 | Prettier 3 |
-| テスト | なし | Vitest + Playwright |
-| Node.js | 不明 | 22.14.0 |
+| 項目                 | 現行 (Nuxt 2)                         | 移行先 (Nuxt 4)                    |
+| -------------------- | ------------------------------------- | ---------------------------------- |
+| フレームワーク       | Nuxt 2.14 + Vue 2                     | Nuxt 4 + Vue 3                     |
+| コンポーネント       | Class-based (nuxt-property-decorator) | Composition API (`<script setup>`) |
+| 状態管理             | Vuex (modules)                        | Pinia (Composition API)            |
+| UIフレームワーク     | Buefy (Bulma)                         | Tailwind CSS + 独自UI              |
+| CSS                  | SCSS/SASS                             | Tailwind CSS                       |
+| HTTP                 | @nuxtjs/axios                         | $fetch + useApi composable         |
+| 認証                 | Firebase 8 + カスタムplugin           | Firebase 12 + nuxt-vuefire         |
+| アイコン             | FontAwesome (webfonts)                | @heroicons/vue                     |
+| バリデーション       | なし (手動)                           | vee-validate + yup                 |
+| ビルド               | Webpack                               | Vite                               |
+| パッケージマネージャ | npm                                   | pnpm                               |
+| Lint                 | ESLint 6 + @nuxtjs/eslint-config      | ESLint 9 + @nuxt/eslint            |
+| フォーマット         | Prettier 1                            | Prettier 3                         |
+| テスト               | なし                                  | Vitest + Playwright                |
+| Node.js              | 不明                                  | 22.14.0                            |
 
 ### 移行方針
 
@@ -35,16 +35,16 @@ HOWLING WOLF UI を Nuxt 2 (Vue 2) から Nuxt 4 (Vue 3) に移行する。
 
 ## ファイル数の規模感
 
-| 種別 | 現行ファイル数 | 備考 |
-|------|---------------|------|
-| Vueコンポーネント | 63 | 全てClass-based → Composition API変換が必要 |
-| 型定義ファイル (TS) | 82 | `components/type/` 配下、interface定義 |
-| ページ | 12 | pages/ 配下 |
-| レイアウト | 3 | layouts/ 配下 |
-| ストアモジュール | 3 | Vuex modules → Pinia変換 |
-| プラグイン | 3 | 全て書き直し |
-| ミドルウェア | 3 | Nuxt 4形式に書き直し |
-| 定数ファイル | 1 | components/const/consts.ts |
+| 種別                | 現行ファイル数 | 備考                                        |
+| ------------------- | -------------- | ------------------------------------------- |
+| Vueコンポーネント   | 63             | 全てClass-based → Composition API変換が必要 |
+| 型定義ファイル (TS) | 82             | `components/type/` 配下、interface定義      |
+| ページ              | 12             | pages/ 配下                                 |
+| レイアウト          | 3              | layouts/ 配下                               |
+| ストアモジュール    | 3              | Vuex modules → Pinia変換                    |
+| プラグイン          | 3              | 全て書き直し                                |
+| ミドルウェア        | 3              | Nuxt 4形式に書き直し                        |
+| 定数ファイル        | 1              | components/const/consts.ts                  |
 
 ---
 
@@ -60,7 +60,7 @@ HOWLING WOLF UI を Nuxt 2 (Vue 2) から Nuxt 4 (Vue 3) に移行する。
   - `.prettierrc` (prettier-plugin-tailwindcss含む)
   - `eslint.config.js` (@nuxt/eslint ベース)
   - `.gitignore` (Nuxt 4用に更新)
-  - `.env` / `.env.example` (NUXT_PUBLIC_* 形式に変換)
+  - `.env` / `.env.example` (NUXT*PUBLIC*\* 形式に変換)
 - [ ] `package.json` 作成
   - pnpm に移行
   - 依存関係を Nuxt 4 互換に置き換え
@@ -470,17 +470,17 @@ NUXT_PUBLIC_API_BASE_URL=http://localhost:8086/howling-wolf
 
 ## 移行から除外するもの
 
-| 除外項目 | 理由 |
-|---------|------|
-| `vue-datetime` | 使用箇所を確認し代替検討 (HTML5 date input等) |
-| `vue-scrollto` | VueUse の useScrollTo で代替 |
-| `nuxt-clipboard2` | Navigator Clipboard API で直接実装 |
-| `cookie-universal-nuxt` | Nuxt 4 の useCookie で代替 |
-| `@nuxtjs/dotenv` | Nuxt 4 の runtimeConfig で代替 |
-| `@nuxtjs/style-resources` | Tailwind CSS移行により不要 |
-| `node-sass` / `sass-loader` | SCSS → Tailwind CSS移行により不要 |
-| `vuexfire` | Pinia + nuxt-vuefire で代替 |
-| `weekstart` | 使用箇所を確認、不要なら除外 |
+| 除外項目                    | 理由                                          |
+| --------------------------- | --------------------------------------------- |
+| `vue-datetime`              | 使用箇所を確認し代替検討 (HTML5 date input等) |
+| `vue-scrollto`              | VueUse の useScrollTo で代替                  |
+| `nuxt-clipboard2`           | Navigator Clipboard API で直接実装            |
+| `cookie-universal-nuxt`     | Nuxt 4 の useCookie で代替                    |
+| `@nuxtjs/dotenv`            | Nuxt 4 の runtimeConfig で代替                |
+| `@nuxtjs/style-resources`   | Tailwind CSS移行により不要                    |
+| `node-sass` / `sass-loader` | SCSS → Tailwind CSS移行により不要             |
+| `vuexfire`                  | Pinia + nuxt-vuefire で代替                   |
+| `weekstart`                 | 使用箇所を確認、不要なら除外                  |
 
 ---
 
@@ -492,35 +492,35 @@ firewolf-uiのコードを参考にする際、以下のAPI仕様差分に注意
 
 #### HowlingWolfにのみ存在するエンドポイント
 
-| メソッド | パス | 説明 |
-|---------|------|------|
-| POST | `/player/introduce/{playerId}` | 紹介登録 |
-| POST | `/player/remove-introduce/{playerId}` | 紹介解除 |
-| POST | `/player/blacklist-player/register/{playerId}` | ブラックリスト登録 |
-| POST | `/player/blacklist-player/remove/{playerId}` | ブラックリスト解除 |
-| POST | `/auto-generated-village` | 自動生成村登録 |
-| POST | `/admin/village/{villageId}/kick` | 管理者キック (admin-controller) |
+| メソッド | パス                                           | 説明                            |
+| -------- | ---------------------------------------------- | ------------------------------- |
+| POST     | `/player/introduce/{playerId}`                 | 紹介登録                        |
+| POST     | `/player/remove-introduce/{playerId}`          | 紹介解除                        |
+| POST     | `/player/blacklist-player/register/{playerId}` | ブラックリスト登録              |
+| POST     | `/player/blacklist-player/remove/{playerId}`   | ブラックリスト解除              |
+| POST     | `/auto-generated-village`                      | 自動生成村登録                  |
+| POST     | `/admin/village/{villageId}/kick`              | 管理者キック (admin-controller) |
 
 #### FireWolfにのみ存在するエンドポイント (HowlingWolfには不要)
 
-| メソッド | パス | 説明 |
-|---------|------|------|
-| POST | `/village` | 村作成 (HWは自動生成のみ) |
-| POST | `/village/confirm` | 村作成確認 |
-| POST | `/village/{villageId}/setting/confirm` | 設定変更確認 |
-| POST | `/village/{villageId}/notification-setting` | 通知設定 (Discord webhook) |
-| POST | `/village/{villageId}/change-name` | キャラ名変更 |
-| POST | `/village/{villageId}/action` | アクション発言 |
-| POST | `/village/{villageId}/action-confirm` | アクション確認 |
-| POST | `/creator/village/{villageId}/say` | 村建て発言 |
-| POST | `/creator/village/{villageId}/say-confirm` | 村建て発言確認 |
-| POST | `/creator/village/{villageId}/kick` | 村建てキック |
-| POST | `/creator/village/{villageId}/extend-epilogue` | エピローグ延長 |
-| POST | `/creator/village/{villageId}/cancel` | 村キャンセル |
-| POST | `/reserved-village` | 予約村登録 |
-| DELETE | `/reserved-village/{id}` | 予約村削除 |
-| GET | `/charachips` | キャラチップ一覧 (新パス) |
-| GET | `/charas` | キャラ一覧 |
+| メソッド | パス                                           | 説明                       |
+| -------- | ---------------------------------------------- | -------------------------- |
+| POST     | `/village`                                     | 村作成 (HWは自動生成のみ)  |
+| POST     | `/village/confirm`                             | 村作成確認                 |
+| POST     | `/village/{villageId}/setting/confirm`         | 設定変更確認               |
+| POST     | `/village/{villageId}/notification-setting`    | 通知設定 (Discord webhook) |
+| POST     | `/village/{villageId}/change-name`             | キャラ名変更               |
+| POST     | `/village/{villageId}/action`                  | アクション発言             |
+| POST     | `/village/{villageId}/action-confirm`          | アクション確認             |
+| POST     | `/creator/village/{villageId}/say`             | 村建て発言                 |
+| POST     | `/creator/village/{villageId}/say-confirm`     | 村建て発言確認             |
+| POST     | `/creator/village/{villageId}/kick`            | 村建てキック               |
+| POST     | `/creator/village/{villageId}/extend-epilogue` | エピローグ延長             |
+| POST     | `/creator/village/{villageId}/cancel`          | 村キャンセル               |
+| POST     | `/reserved-village`                            | 予約村登録                 |
+| DELETE   | `/reserved-village/{id}`                       | 予約村削除                 |
+| GET      | `/charachips`                                  | キャラチップ一覧 (新パス)  |
+| GET      | `/charas`                                      | キャラ一覧                 |
 
 ### スキーマ差分 (主要なもの)
 

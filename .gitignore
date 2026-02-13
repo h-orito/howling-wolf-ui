@@ -58,6 +58,9 @@ typings/
 
 # dotenv environment variables file
 .env
+.env.local
+.env.production
+.env.test
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -67,6 +70,7 @@ typings/
 
 # nuxt.js build output
 .nuxt
+.output
 
 # Nuxt generate
 dist
@@ -83,9 +87,52 @@ dist
 # Service worker
 sw.*
 
+# pnpm
+.pnpm-debug.log*
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# Vitest
+coverage/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Nitro
+.nitro
+
+# Firebase
+.firebase/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Bundle analysis
+stats.html
+
+# Lighthouse CI
+.lighthouse
+
 # neighborhood project
 .firewolf-ui
 
 # Claude
 .claude/settings.local.json
+.mcp.json
+
+# Serena cache files
 .serena
+
+# Playwright MCP
+.playwright-mcp
+
