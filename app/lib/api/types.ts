@@ -169,6 +169,7 @@ export interface VillageDayView {
   day: number
   noon_night: string
   start_datetime: string
+  day_change_datetime: string
   end_datetime: string | null
 }
 
@@ -179,6 +180,8 @@ export interface VillageDaysView {
 export interface VillageTimeView {
   start_datetime: string
   silent_hours: number | null
+  sayable_start: string | null
+  sayable_end: string | null
 }
 
 export interface VillageMessageRestrict {
@@ -261,7 +264,24 @@ export interface SimpleVillageView {
 }
 
 export interface VillagesView {
-  list: SimpleVillageView[]
+  list: VillageView[]
+}
+
+// HW固有: 予約村
+export interface ReservedVillageView {
+  id: number
+  start_time: string
+  organization: string
+  silent_hours: number
+  sayable_start: string
+  sayable_end: string
+  available_dummy_skill: boolean
+  for_beginner: boolean
+  can_skill_request: boolean
+}
+
+export interface ReservedVillagesView {
+  list: ReservedVillageView[]
 }
 
 // プレイヤー関連型
@@ -313,10 +333,18 @@ export interface PlayerRecord {
   lose_count: number
 }
 
+export interface ParticipateDeadView {
+  village_day: { day: number }
+  reason: string
+}
+
 export interface ParticipateVillageView {
   village: SimpleVillageView
   chara_name: CharaName
   skill_name: string | null
+  dead: ParticipateDeadView | null
+  camp_name: string | null
+  win_status: string
 }
 
 export interface PlayerRecordsView {
