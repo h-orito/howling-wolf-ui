@@ -111,6 +111,34 @@ export interface Skill {
   name: string
 }
 
+// /skill/list API レスポンス用の詳細型
+export interface AbilityType {
+  code: string
+  name: string
+}
+
+export interface SkillMessageType {
+  code: string
+  name: string
+}
+
+export interface SkillDetailView {
+  name: string
+  short_name: string
+  win_judge_camp: Camp | null
+  manual_ability_list: AbilityType[]
+  divine_result_wolf: boolean
+  psychic_result_wolf: boolean
+  sayable_skill_message_type_list: SkillMessageType[]
+  viewable_skill_message_type_list: SkillMessageType[]
+  count_camp: Camp | null
+  description: string
+}
+
+export interface SkillDetailListView {
+  list: SkillDetailView[]
+}
+
 export interface SkillRequest {
   first: Skill
   second: Skill
