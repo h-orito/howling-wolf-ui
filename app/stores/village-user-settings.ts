@@ -1,38 +1,12 @@
 import { defineStore } from 'pinia'
-
-// HW用ユーザー設定型
-export interface VillageUserSettings {
-  paging: PagingSettings
-  actionWindow?: ActionWindowSettings
-  messageDisplay?: MessageDisplaySettings
-  theme?: ThemeSettings
-  operation?: OperationSettings
-}
-
-export interface PagingSettings {
-  isPaging: boolean
-  messagePerPage: number
-}
-
-export interface ActionWindowSettings {
-  isFixed?: boolean
-  openMap?: Record<string, boolean>
-}
-
-export interface MessageDisplaySettings {
-  isDispDate: boolean
-  isCharLarge: boolean
-  isImgLarge: boolean
-}
-
-export interface ThemeSettings {
-  isDark: boolean
-}
-
-export interface OperationSettings {
-  isOpenFilterNewtab: boolean
-  isPasteAnchor: boolean
-}
+import type {
+  VillageUserSettings,
+  PagingSettings,
+  ActionWindowSettings,
+  MessageDisplaySettings,
+  ThemeSettings,
+  OperationSettings
+} from '~/composables/village/useUserSettings'
 
 /**
  * 村ページのユーザー設定状態管理Store

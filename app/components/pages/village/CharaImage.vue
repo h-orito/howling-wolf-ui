@@ -10,10 +10,11 @@
 </template>
 
 <script setup lang="ts">
+import type { DeepReadonly } from 'vue'
 import type { CharaView, CharaFace } from '~/lib/api/types'
 
 interface Props {
-  chara: CharaView
+  chara: DeepReadonly<CharaView> | CharaView
   faceType?: string
   isSmall?: boolean
   isLarge?: boolean
@@ -27,7 +28,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const charaImageUrl = computed(() => {
   const face = props.chara.face_list.find(
-    (f: CharaFace) => f.type === props.faceType
+    (f: DeepReadonly<CharaFace> | CharaFace) => f.type === props.faceType
   )
   return face?.image_url ?? ''
 })
