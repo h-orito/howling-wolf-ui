@@ -2,3 +2,89 @@
 
 /* Tailwindのダークモードを.darkクラスベースに設定 */
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* CSS変数 */
+:root {
+  /* 独自UIコンポーネント用のプライマリ色 */
+  --ui-primary: #4488ff;
+  --ui-info: #209cee;
+  --ui-success: #23d160;
+  --ui-warning: #ffdd57;
+  --ui-error: #ff3860;
+
+  /* 人狼ゲーム固有の発言色 */
+  --color-say-normal: #ffffff;
+  --color-say-werewolf: #f2cece;
+  --color-say-werewolf-dark: #f2aeae;
+  --color-say-mason: #f2f2ce;
+  --color-say-mason-dark: #f2f2ae;
+  --color-say-monologue: #ddd;
+  --color-say-monologue-dark: #aaa;
+  --color-say-grave: #ceedf2;
+  --color-say-grave-dark: #a9edf7;
+  --color-say-spectate: #f2f2ce;
+  --color-say-spectate-dark: #f2f2ae;
+  --color-say-secret: #cecef2;
+  --color-say-secret-dark: #aa99aa;
+
+  /* システムメッセージ色 */
+  --color-system-private-border: #ccc;
+  --color-system-private-bg: #eee;
+  --color-system-private-bg-dark: #404040;
+  --color-system-seer-border: #0f0;
+  --color-system-seer-bg: #efe;
+  --color-system-seer-bg-dark: #334033;
+  --color-system-psychic-border: #00f;
+  --color-system-psychic-bg: #eef;
+  --color-system-psychic-bg-dark: #333340;
+  --color-system-werewolf-border: #f00;
+  --color-system-werewolf-bg: #fee;
+  --color-system-werewolf-bg-dark: #403333;
+  --color-system-mason-border: #fa0;
+  --color-system-mason-bg: #fec;
+  --color-system-mason-bg-dark: #404033;
+  --color-system-fox-border: #fa0;
+  --color-system-fox-border-dark: #ff0;
+  --color-system-fox-bg: #ffc;
+  --color-system-fox-bg-dark: #404033;
+  --color-system-creator-border: #c0f;
+  --color-system-creator-bg: #fef;
+  --color-system-creator-bg-dark: #403340;
+
+  /* Village layout specific heights */
+  --spacing-village-header: 2rem;
+  --spacing-village-footer: 2rem;
+}
+
+.dark {
+  --ui-primary: #66aaff;
+}
+
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.1s;
+}
+.page-enter,
+.page-leave-active {
+  opacity: 0;
+}
+
+/** iOS端末でwhite-space: pre-wrapだとruby-align: start状態になる対策 */
+ruby {
+  white-space: normal !important;
+}
+
+.netabare {
+  color: #333;
+  background-color: #333;
+  cursor: pointer;
+}
+
+@layer base {
+  /** ボタン要素のカーソルスタイル */
+  button,
+  [role='button'] {
+    @apply cursor-pointer;
+    @apply disabled:cursor-not-allowed;
+  }
+}

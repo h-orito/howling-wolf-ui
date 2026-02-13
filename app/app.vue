@@ -1,15 +1,12 @@
 <template>
-  <!-- TODO: Phase 3で追加 <OfflineBanner /> -->
+  <OfflineBanner />
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
-  <!-- TODO: Phase 3で追加 <Toast /> -->
+  <Toast />
 </template>
 
 <script setup lang="ts">
-// TODO: Phase 2で追加 - Auth store初期化
-// const { initializeAuth } = useAuthStore()
-// onMounted(() => {
-//   initializeAuth()
-// })
+import Toast from '~/components/ui/feedback/Toast.vue'
+import OfflineBanner from '~/components/ui/feedback/OfflineBanner.vue'
 </script>
