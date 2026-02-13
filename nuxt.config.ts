@@ -11,6 +11,8 @@ export default defineNuxtConfig({
     port: 3000
   },
 
+  spaLoadingTemplate: './app/spa-loading-template.html',
+
   app: {
     head: {
       titleTemplate: '%s | HOWLING WOLF',

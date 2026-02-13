@@ -79,12 +79,18 @@ app/
 
 ## Development Workflow
 
-- Branch naming: `feature/{description}` (include `#{issue-number}` if linked)
-- Base branch: `develop`
-- Before commit: `pnpm lint && pnpm format && pnpm type-check`
-- No emoji in commit messages
-- Use `/prepare-commit` slash command for commit preparation
-- Use `/review` slash command for code review via the reviewer agent
+1. **実装**:
+   1. 指定されたタスクを `implementer` で実施
+   2. 実装できたら、`/reviewer` でレビューし、指摘事項がある場合、再度 `implementer` に修正させる
+   3. タスクが完了したら、ユーザーに確認を依頼
+
+2. **品質チェック**:
+   1. `doc/guidelines` の開発ガイドラインに沿っているか確認
+   2. **commit 前に必ず実行**: `pnpm lint && pnpm format && pnpm type-check`
+
+3. **コミット**:
+   1. ユーザーの承認を得てから、適切な粒度でコミット
+      1. **commit message に絵文字を使用しない**
 
 ## Communication
 
