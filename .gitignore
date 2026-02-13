@@ -82,3 +82,10 @@ dist
 
 # Service worker
 sw.*
+
+# neighborhood project
+.firewolf-ui
+
+# Claude
+.claude/settings.local.json
+.serena
