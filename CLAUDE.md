@@ -89,7 +89,7 @@ app/
    2. **commit 前に必ず実行**: `pnpm lint && pnpm format && pnpm type-check`
 
 3. **コミット**:
-   1. ユーザーの承認を得てから、適切な粒度でコミット
+   1. 適切な粒度でコミット
       1. **commit message に絵文字を使用しない**
 
 ## Communication
