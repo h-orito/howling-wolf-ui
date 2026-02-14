@@ -27,9 +27,25 @@ export default defineNuxtConfig({
             'width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover'
         },
         { name: 'format-detection', content: 'telephone=no' },
-        { name: 'theme-color', content: '#ffffff' }
+        { name: 'theme-color', content: '#ffffff' },
+        {
+          name: 'description',
+          content: '人狼ゲームが無料で遊べるサービスです。'
+        },
+        { name: 'keywords', content: '人狼,人狼ゲーム,長期人狼' },
+        { property: 'og:site_name', content: 'HOWLING WOLF' },
+        { property: 'og:type', content: 'website' },
+        { property: 'og:title', content: 'HOWLING WOLF' },
+        {
+          property: 'og:description',
+          content: '人狼ゲームが無料で遊べるサービスです。'
+        },
+        { property: 'og:image', content: '/image/ogp/top.jpg' },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:site', content: '@ort_dev' }
       ],
       link: [
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
         { rel: 'icon', type: 'image/png', href: '/image/icons/icon.png' },
         {
           rel: 'apple-touch-icon',
@@ -37,7 +53,16 @@ export default defineNuxtConfig({
         },
         { rel: 'preconnect', href: 'https://apis.google.com' },
         { rel: 'preconnect', href: 'https://www.googleapis.com' },
-        { rel: 'preconnect', href: 'https://identitytoolkit.googleapis.com' }
+        { rel: 'preconnect', href: 'https://identitytoolkit.googleapis.com' },
+        {
+          rel: 'preconnect',
+          href: 'https://pagead2.googlesyndication.com',
+          crossorigin: ''
+        },
+        {
+          rel: 'dns-prefetch',
+          href: 'https://www.googletagmanager.com'
+        }
       ]
     }
   },
@@ -245,7 +270,8 @@ export default defineNuxtConfig({
     public: {
       apiBaseUrl:
         process.env.NUXT_PUBLIC_API_BASE_URL ||
-        'http://localhost:8086/howling-wolf'
+        'http://localhost:8086/howling-wolf',
+      gaMeasurementId: process.env.NUXT_PUBLIC_GA_MEASUREMENT_ID || ''
     }
   },
 
