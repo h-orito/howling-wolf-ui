@@ -30,7 +30,11 @@ const charaImageUrl = computed(() => {
   const face = props.chara.face_list.find(
     (f: DeepReadonly<CharaFace> | CharaFace) => f.type === props.faceType
   )
-  return face?.image_url ?? ''
+  const url = face?.image_url ?? ''
+  if (url && url.startsWith('/')) {
+    return `https://wolfort.net${url}`
+  }
+  return url
 })
 
 const imageWidth = computed(() => {

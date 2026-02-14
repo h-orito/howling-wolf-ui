@@ -84,6 +84,7 @@ import { useVillageRefresh } from '~/composables/village/useVillageRefresh'
 import { useUserSettings } from '~/composables/village/useUserSettings'
 import { useVillageMessageFilter } from '~/composables/village/useVillageMessageFilter'
 import { useVillageSlider } from '~/composables/village/useVillageSlider'
+import { useVillageNavigation } from '~/composables/village/useVillageNavigation'
 import { useWindowResize } from '~/composables/useWindowResize'
 import { useSayInputProvider } from '~/composables/village/useSayInput'
 import VillageHeader from '~/components/pages/village/VillageHeader.vue'
@@ -185,15 +186,7 @@ const handleRetry = async () => {
   await initialize()
 }
 
-const scrollToTop = () => {
-  const el = document.getElementById('village-article-wrapper')
-  if (el) el.scrollTop = 0
-}
-
-const scrollToBottom = () => {
-  const el = document.getElementById('message-bottom')
-  if (el) el.scrollIntoView({ behavior: 'smooth' })
-}
+const { scrollToTop, scrollToBottom } = useVillageNavigation()
 
 const initialize = async () => {
   if (!villageId.value) {
