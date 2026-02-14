@@ -37,10 +37,10 @@ const componentType = computed(() => {
   text-decoration: none;
   transition: all 0.2s;
   text-shadow:
-    2px 2px 5px rgba(97, 69, 69, 1),
-    -2px 2px 5px rgba(97, 69, 69, 1),
-    2px -2px 5px rgba(97, 69, 69, 1),
-    -2px -2px 5px rgba(97, 69, 69, 1);
+    2px 2px 5px rgba(69, 97, 133, 1),
+    -2px 2px 5px rgba(69, 97, 133, 1),
+    2px -2px 5px rgba(69, 97, 133, 1),
+    -2px -2px 5px rgba(69, 97, 133, 1);
 }
 
 .spotlight-button:hover {
