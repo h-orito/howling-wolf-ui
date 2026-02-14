@@ -7,26 +7,28 @@
     </div>
     <div class="grid gap-4 md:grid-cols-2">
       <PagesIndexSpotlightButton to="/about">
-        <UiIconIcon name="book" class="mr-2" />
+        <Icon name="book" class="mr-2" />
         <strong>このサイトは</strong>
       </PagesIndexSpotlightButton>
       <PagesIndexSpotlightButton to="/rule">
-        <UiIconIcon name="book" class="mr-2" />
+        <Icon name="book" class="mr-2" />
         <strong>ルール</strong>
       </PagesIndexSpotlightButton>
       <PagesIndexSpotlightButton to="/faq">
-        <UiIconIcon name="circle-question" class="mr-2" />
+        <Icon name="circle-question" class="mr-2" />
         <strong>よくある質問</strong>
       </PagesIndexSpotlightButton>
       <PagesIndexSpotlightButton to="/release-note">
-        <UiIconIcon name="wrench" class="mr-2" />
+        <Icon name="wrench" class="mr-2" />
         <strong>更新情報</strong>
       </PagesIndexSpotlightButton>
     </div>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Icon from '~/components/ui/icon/Icon.vue'
+</script>
 
 <style scoped>
 .menu-area {

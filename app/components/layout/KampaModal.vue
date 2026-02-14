@@ -1,5 +1,5 @@
 <template>
-  <UiModalModal v-model="isOpen" title="投げ銭について" @close="close">
+  <Modal v-model="isOpen" title="投げ銭について" @close="close">
     <div class="text-sm">
       <p>
         開発を応援してくださりありがとうございます。<br />
@@ -49,10 +49,12 @@
         閉じる
       </UiButton>
     </template>
-  </UiModalModal>
+  </Modal>
 </template>
 
 <script setup lang="ts">
+import Modal from '~/components/ui/modal/Modal.vue'
+
 interface Props {
   open: boolean
 }

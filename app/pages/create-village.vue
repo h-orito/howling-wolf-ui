@@ -89,37 +89,37 @@
       <h2 class="mb-4 text-xl font-semibold">村を作成</h2>
       <div class="rounded-lg bg-white p-6 shadow">
         <div class="space-y-4">
-          <UiFormFormGroup label="開始日時">
+          <FormGroup label="開始日時">
             <input
               v-model="form.startDatetime"
               type="datetime-local"
               class="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-[var(--ui-primary)] focus:ring-2 focus:ring-[var(--ui-primary)]/20 focus:outline-none"
             />
-          </UiFormFormGroup>
+          </FormGroup>
 
-          <UiFormFormGroup label="編成">
-            <UiFormFormInput
+          <FormGroup label="編成">
+            <FormInput
               v-model="form.organization"
               placeholder="編成"
               size="sm"
             />
-          </UiFormFormGroup>
+          </FormGroup>
 
-          <UiFormFormGroup label="沈黙時間（時間）">
-            <UiFormFormNumberInput
+          <FormGroup label="沈黙時間（時間）">
+            <FormNumberInput
               v-model="form.silentHours"
               :min="0"
               :max="24"
               size="sm"
             />
-          </UiFormFormGroup>
+          </FormGroup>
 
-          <UiFormFormSwitch
+          <FormSwitch
             v-model="form.availableDummySkill"
             label="ダミー役欠けあり"
           />
 
-          <UiFormFormSwitch v-model="form.forBeginner" label="初心者村" />
+          <FormSwitch v-model="form.forBeginner" label="初心者村" />
 
           <div class="pt-4">
             <UiButton
@@ -137,6 +137,10 @@
 </template>
 
 <script setup lang="ts">
+import FormGroup from '~/components/ui/form/FormGroup.vue'
+import FormInput from '~/components/ui/form/FormInput.vue'
+import FormNumberInput from '~/components/ui/form/FormNumberInput.vue'
+import FormSwitch from '~/components/ui/form/FormSwitch.vue'
 import type {
   ReservedVillagesView,
   ReservedVillageView,

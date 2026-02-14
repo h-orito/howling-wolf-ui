@@ -1,5 +1,5 @@
 <template>
-  <UiModalModal v-model="isOpen" title="自己紹介編集">
+  <Modal v-model="isOpen" title="自己紹介編集">
     <div class="space-y-4">
       <UiFeedbackAlert type="default">
         <ul class="list-disc pl-4 text-sm">
@@ -22,7 +22,7 @@
         <p class="mb-2 text-xs text-gray-500">
           エピローグで全員に公開されます。
         </p>
-        <UiFormFormInput
+        <FormInput
           v-model="nickname"
           size="sm"
           :maxlength="50"
@@ -41,7 +41,7 @@
         <p class="mb-2 text-xs text-gray-500">
           エピローグまでにこのIDを入力しておくと、戦績サイトにこのIDで登録されます。
         </p>
-        <UiFormFormInput
+        <FormInput
           v-model="otherSiteName"
           size="sm"
           :maxlength="20"
@@ -57,12 +57,7 @@
         <label class="mb-1 block text-sm font-semibold text-gray-700">
           自己紹介
         </label>
-        <UiFormFormTextarea
-          v-model="intro"
-          size="sm"
-          :rows="10"
-          :maxlength="2000"
-        />
+        <FormTextarea v-model="intro" size="sm" :rows="10" :maxlength="2000" />
         <p class="mt-1 text-right text-xs" :class="introCountClass">
           文字数: {{ introLength }}/2000
         </p>
@@ -105,10 +100,13 @@
         保存する
       </UiButton>
     </template>
-  </UiModalModal>
+  </Modal>
 </template>
 
 <script setup lang="ts">
+import Modal from '~/components/ui/modal/Modal.vue'
+import FormInput from '~/components/ui/form/FormInput.vue'
+import FormTextarea from '~/components/ui/form/FormTextarea.vue'
 import type { PlayerView } from '~/lib/api/types'
 
 interface Props {

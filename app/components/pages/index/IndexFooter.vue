@@ -8,19 +8,19 @@
         href="https://twitter.com/ort_dev"
         target="_blank"
       >
-        <UiIconIcon name="twitter" class="mr-2" />
+        <Icon name="twitter" class="mr-2" />
         <strong>要望、改善提案、不具合報告</strong>
       </PagesIndexSpotlightButton>
       <PagesIndexSpotlightButton @click="openKampaModal">
-        <UiIconIcon name="gift" class="mr-2" />
+        <Icon name="gift" class="mr-2" />
         <strong>投げ銭</strong>
       </PagesIndexSpotlightButton>
       <PagesIndexSpotlightButton @click="openTermModal">
-        <UiIconIcon name="book-open" class="mr-2" />
+        <Icon name="book-open" class="mr-2" />
         <strong>利用規約</strong>
       </PagesIndexSpotlightButton>
       <PagesIndexSpotlightButton @click="openPolicyModal">
-        <UiIconIcon name="book-open" class="mr-2" />
+        <Icon name="book-open" class="mr-2" />
         <strong>プライバシーポリシー</strong>
       </PagesIndexSpotlightButton>
     </div>
@@ -42,6 +42,8 @@
 </template>
 
 <script setup lang="ts">
+import Icon from '~/components/ui/icon/Icon.vue'
+
 const isKampaModalOpen = ref(false)
 const isTermModalOpen = ref(false)
 const isPolicyModalOpen = ref(false)

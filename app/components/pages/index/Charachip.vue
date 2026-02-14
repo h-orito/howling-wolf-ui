@@ -5,14 +5,16 @@
     </div>
     <div class="grid grid-cols-1">
       <PagesIndexSpotlightButton to="/charachip-list">
-        <UiIconIcon name="image" class="mr-2" />
+        <Icon name="image" class="mr-2" />
         <strong>キャラチップ一覧</strong>
       </PagesIndexSpotlightButton>
     </div>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Icon from '~/components/ui/icon/Icon.vue'
+</script>
 
 <style scoped>
 .menu-area {

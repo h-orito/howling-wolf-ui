@@ -21,7 +21,7 @@
     <!-- 村一覧 -->
     <div class="menu-area">
       <div v-if="isLoadingVillages" class="flex justify-center py-8">
-        <UiIconIcon name="spinner" class="animate-spin text-4xl" />
+        <Icon name="spinner" class="animate-spin text-4xl" />
       </div>
       <div v-else>
         <h2 class="spotlight-shadow mb-8 text-2xl font-semibold">開催中の村</h2>
@@ -45,7 +45,7 @@
     <!-- 予約村 -->
     <div class="menu-area">
       <div v-if="isLoadingReservedVillages" class="flex justify-center py-8">
-        <UiIconIcon name="spinner" class="animate-spin text-4xl" />
+        <Icon name="spinner" class="animate-spin text-4xl" />
       </div>
       <div v-else>
         <h2 class="spotlight-shadow mb-8 text-2xl font-semibold">
@@ -69,11 +69,13 @@
     <PagesIndexCharachip />
 
     <!-- フッター -->
-    <PagesIndexIndexFooter />
+    <IndexFooter />
   </div>
 </template>
 
 <script setup lang="ts">
+import Icon from '~/components/ui/icon/Icon.vue'
+import IndexFooter from '~/components/pages/index/IndexFooter.vue'
 import type {
   VillagesView,
   VillageView,

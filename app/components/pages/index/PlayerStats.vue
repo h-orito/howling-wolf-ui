@@ -27,14 +27,14 @@
         </div>
         <div class="grid gap-4 md:grid-cols-3">
           <PagesIndexSpotlightButton :to="`/player-record?id=${user?.id}`">
-            <UiIconIcon name="chart-bar" class="mr-2" />
+            <Icon name="chart-bar" class="mr-2" />
             <strong>マイページ</strong>
           </PagesIndexSpotlightButton>
           <PagesIndexSpotlightButton @click="openLinkModal">
             <strong>他SNSアカウント連携</strong>
           </PagesIndexSpotlightButton>
           <PagesIndexSpotlightButton @click="handleLogout">
-            <UiIconIcon name="right-from-bracket" class="mr-2" />
+            <Icon name="right-from-bracket" class="mr-2" />
             <strong>ログアウト</strong>
           </PagesIndexSpotlightButton>
         </div>
@@ -62,6 +62,7 @@
 </template>
 
 <script setup lang="ts">
+import Icon from '~/components/ui/icon/Icon.vue'
 import type { MyselfPlayerView, VillageView } from '~/lib/api/types'
 import { VILLAGE_STATUS } from '~/lib/api/village-status-constants'
 

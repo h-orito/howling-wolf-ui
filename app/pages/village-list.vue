@@ -4,7 +4,7 @@
       <h1 class="mb-4 text-xl font-semibold">終了した村一覧</h1>
 
       <div class="mb-4 flex items-center justify-center">
-        <UiFormFormCheckbox
+        <FormCheckbox
           v-model="includeCancelVillage"
           label="廃村も表示する"
           @update:model-value="handleIncludeCancelChange"
@@ -86,6 +86,7 @@
 </template>
 
 <script setup lang="ts">
+import FormCheckbox from '~/components/ui/form/FormCheckbox.vue'
 import type { VillagesView, VillageView } from '~/lib/api/types'
 import { VILLAGE_STATUS } from '~/lib/api/village-status-constants'
 import { ORGANIZATION_TEMPLATE } from '~/lib/api/organization-constants'

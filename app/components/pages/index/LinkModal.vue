@@ -1,5 +1,5 @@
 <template>
-  <UiModalModal v-model="isOpen" title="他SNSアカウント連携" @close="close">
+  <Modal v-model="isOpen" title="他SNSアカウント連携" @close="close">
     <div class="text-sm">
       <p>
         追加でログインすると、現在ログインしているアカウントに紐付けることができます。<br />
@@ -20,7 +20,7 @@
           :disabled="isAlreadyTwitterLinked"
           @click="link('twitter')"
         >
-          <UiIconIcon name="twitter" class="mr-2" />
+          <Icon name="twitter" class="mr-2" />
           Twitterログイン
         </UiButton>
         <UiFeedbackAlert v-if="!isAlreadyTwitterLinked" class="my-4 text-sm">
@@ -39,7 +39,7 @@
           :disabled="isAlreadyGoogleLinked"
           @click="link('google')"
         >
-          <UiIconIcon name="google" class="mr-2" />
+          <Icon name="google" class="mr-2" />
           Googleログイン
         </UiButton>
         <UiFeedbackAlert v-if="!isAlreadyGoogleLinked" class="my-4 text-sm">
@@ -58,10 +58,12 @@
         閉じる
       </UiButton>
     </template>
-  </UiModalModal>
+  </Modal>
 </template>
 
 <script setup lang="ts">
+import Modal from '~/components/ui/modal/Modal.vue'
+import Icon from '~/components/ui/icon/Icon.vue'
 import { useAuthStore } from '~/stores/auth'
 
 const props = defineProps<{

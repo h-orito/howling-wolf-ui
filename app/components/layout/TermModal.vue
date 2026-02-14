@@ -1,5 +1,5 @@
 <template>
-  <UiModalModal v-model="isOpen" title="利用規約" @close="close">
+  <Modal v-model="isOpen" title="利用規約" @close="close">
     <div class="max-h-96 overflow-y-auto text-sm">
       <h3 class="mb-2 font-semibold">利用規約</h3>
       <p class="mb-3">
@@ -77,10 +77,12 @@
         閉じる
       </UiButton>
     </template>
-  </UiModalModal>
+  </Modal>
 </template>
 
 <script setup lang="ts">
+import Modal from '~/components/ui/modal/Modal.vue'
+
 interface Props {
   open: boolean
 }

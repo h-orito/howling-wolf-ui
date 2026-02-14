@@ -1,5 +1,5 @@
 <template>
-  <UiModalModal v-model="isOpen" title="ログイン" @close="close">
+  <Modal v-model="isOpen" title="ログイン" @close="close">
     <div class="text-sm">
       <p>いずれかのアカウントと連携してログインしてください。</p>
       <UiFeedbackAlert type="warning" class="my-4 text-sm">
@@ -16,7 +16,7 @@
       <div class="mt-6 mb-6">
         <hr class="mb-3" />
         <UiButton color="primary" @click="signin('twitter')">
-          <UiIconIcon name="twitter" class="mr-2" />
+          <Icon name="twitter" class="mr-2" />
           Twitterログイン
         </UiButton>
         <UiFeedbackAlert class="my-4 text-sm">
@@ -30,7 +30,7 @@
       <div class="my-6">
         <hr class="mb-3" />
         <UiButton color="primary" @click="signin('google')">
-          <UiIconIcon name="google" class="mr-2" />
+          <Icon name="google" class="mr-2" />
           Googleログイン
         </UiButton>
         <UiFeedbackAlert class="my-4 text-sm">
@@ -47,10 +47,13 @@
         閉じる
       </UiButton>
     </template>
-  </UiModalModal>
+  </Modal>
 </template>
 
 <script setup lang="ts">
+import Modal from '~/components/ui/modal/Modal.vue'
+import Icon from '~/components/ui/icon/Icon.vue'
+
 const props = defineProps<{
   modelValue: boolean
 }>()
