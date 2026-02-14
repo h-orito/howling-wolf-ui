@@ -103,6 +103,8 @@ const createMessage = (type: string, text: string): MessageView => {
   }
 
   const time: MessageTimeView = {
+    village_day_id: 1,
+    day: 1,
     datetime: '2000/01/01 23:59:59',
     unix_time_milli: 1
   }
