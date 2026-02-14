@@ -1,5 +1,5 @@
 <template>
-  <div class="my-1 border-b border-gray-200 px-1 py-1.5 text-left text-xs">
+  <div class="my-1 px-1 py-1.5 text-left text-xs">
     <SayMessage
       v-if="isSay"
       :message="message"
