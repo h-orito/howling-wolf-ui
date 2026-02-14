@@ -28,61 +28,127 @@
         </ul>
       </li>
     </ul>
-    <div class="mt-4 space-y-2">
-      <div class="say-example say-example-normal">
-        <div class="say-example-header">通常発言</div>
-        <p class="say-example-text">
-          通常発言です。<br />参加していない人も含め全員が見ることができます。
-        </p>
-      </div>
-      <div class="say-example say-example-werewolf">
-        <div class="say-example-header">人狼の囁き</div>
-        <p class="say-example-text">
-          人狼の囁きです。<br />進行中は一部の役職しか見ることができません。<br />エピローグを迎えると全員が見ることができます。
-        </p>
-      </div>
-      <div class="say-example say-example-monologue">
-        <div class="say-example-header">独り言</div>
-        <p class="say-example-text">
-          独り言です。<br />進行中は自分しか見ることができません。<br />エピローグを迎えると全員が見ることができます。
-        </p>
-      </div>
-      <div class="say-example say-example-grave">
-        <div class="say-example-header">死者の呻き</div>
-        <p class="say-example-text">
-          死者の呻きです。<br />進行中は死亡した人しか見ることができません。<br />エピローグを迎えると全員が見ることができます。
-        </p>
-      </div>
+    <div class="mt-4 space-y-2 border border-gray-200 p-4">
+      <MessageCard :message="normalSay" />
+      <MessageCard :message="werewolfSay" />
+      <MessageCard :message="masonSay" />
+      <MessageCard :message="monologueSay" />
+      <MessageCard :message="graveSay" />
     </div>
   </div>
 </template>
 
-<style scoped>
-.say-example {
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 8px 12px;
-  font-size: 14px;
+<script setup lang="ts">
+import type {
+  MessageView,
+  MessageContent,
+  MessageTimeView,
+  MessageType,
+  VillageParticipantView,
+  CharaView,
+  CharaFace,
+  CharaName
+} from '~/lib/api/types'
+import { MESSAGE_TYPE } from '~/lib/api/message-constants'
+import MessageCard from '~/components/pages/village/message/MessageCard.vue'
+
+const createMessage = (type: string, text: string): MessageView => {
+  const charaName: CharaName = {
+    name: 'ピギー',
+    short_name: 'ピギー'
+  }
+
+  const face: CharaFace = {
+    type: 'NORMAL',
+    image_url: 'https://wolfort.net/wmansion/6/000_A.png'
+  }
+
+  const chara: CharaView = {
+    id: 1,
+    chara_name: charaName,
+    charachip_id: 1,
+    default_message: {
+      join_message: ''
+    },
+    display: {
+      width: 50,
+      height: 77
+    },
+    face_list: [face]
+  }
+
+  const participant: VillageParticipantView = {
+    id: 1,
+    chara,
+    player: null,
+    dead: null,
+    spectator: false,
+    skill: null,
+    skill_request: null,
+    win: null,
+    coming_outs: []
+  }
+
+  const messageType: MessageType = {
+    code: type,
+    name: ''
+  }
+
+  const content: MessageContent = {
+    type: messageType,
+    num: 1,
+    count: null,
+    text,
+    face_code: 'NORMAL'
+  }
+
+  const time: MessageTimeView = {
+    datetime: '2000/01/01 23:59:59',
+    unix_time_milli: 1
+  }
+
+  const message: MessageView = {
+    from: participant,
+    to: null,
+    time,
+    content
+  }
+
+  return message
 }
-.say-example-header {
-  font-weight: bold;
-  font-size: 12px;
-  margin-bottom: 4px;
-  color: #666;
-}
-.say-example-text {
-  line-height: 1.6;
-}
-.say-example-normal {
-  background-color: var(--color-say-normal);
-}
-.say-example-werewolf {
-  background-color: var(--color-say-werewolf);
-}
-.say-example-monologue {
-  background-color: var(--color-say-monologue);
-}
-.say-example-grave {
-  background-color: var(--color-say-grave);
-}
-</style>
+
+const normalSay = computed(() =>
+  createMessage(
+    MESSAGE_TYPE.NORMAL_SAY,
+    '通常発言です。\n参加していない人も含め全員が見ることができます。'
+  )
+)
+
+const werewolfSay = computed(() =>
+  createMessage(
+    MESSAGE_TYPE.WEREWOLF_SAY,
+    '人狼の囁きです。\n進行中は一部の役職しか見ることができません。\nエピローグを迎えると全員が見ることができます。'
+  )
+)
+
+const masonSay = computed(() =>
+  createMessage(
+    MESSAGE_TYPE.MASON_SAY,
+    '共有者の小声です。\n進行中は共有者しか見ることができません。\nエピローグを迎えると全員が見ることができます。'
+  )
+)
+
+const monologueSay = computed(() =>
+  createMessage(
+    MESSAGE_TYPE.MONOLOGUE_SAY,
+    '独り言です。\n進行中は自分しか見ることができません。\nエピローグを迎えると全員が見ることができます。'
+  )
+)
+
+const graveSay = computed(() =>
+  createMessage(
+    MESSAGE_TYPE.GRAVE_SAY,
+    '死者の呻きです。\n進行中は死亡した人しか見ることができません。\nエピローグを迎えると全員が見ることができます。'
+  )
+)
+</script>

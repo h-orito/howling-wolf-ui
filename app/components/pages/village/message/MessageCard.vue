@@ -10,7 +10,7 @@
           v-if="chara"
           :chara="chara"
           :face-type="message.content.face_code ?? 'NORMAL'"
-          :is-small="!isImgLarge"
+          :is-large="isImgLarge"
         />
       </div>
       <div class="min-w-0 flex-1">
@@ -87,12 +87,14 @@ const messageClass = computed(() => {
 })
 
 const chara = computed((): DeepReadonly<CharaView> | CharaView | null => {
-  if (!props.message.from?.chara?.id) return null
-  if (!charachips.value || charachips.value.length === 0) return null
+  if (!props.message.from?.chara) return null
+  if (!charachips.value || charachips.value.length === 0) {
+    return props.message.from.chara
+  }
   return (
     charachips.value[0]?.chara_list.find(
       (c) => c.id === props.message.from?.chara?.id
-    ) ?? null
+    ) ?? props.message.from.chara
   )
 })
 
