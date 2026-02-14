@@ -9,14 +9,6 @@
         :options="charaOptions"
       />
 
-      <!-- 役職希望 -->
-      <FormSelect
-        v-if="situation.participate.available_participate"
-        v-model="selectedSkillCode"
-        label="希望役職"
-        :options="skillOptions"
-      />
-
       <!-- 入村パスワード -->
       <FormInput
         v-model="joinPassword"
@@ -60,26 +52,15 @@ const { refresh } = useVillageRefresh()
 const { apiCall } = useApi()
 
 const selectedCharaId = ref<string>('')
-const selectedSkillCode = ref<string>('')
 const joinPassword = ref('')
 
 const charaOptions = computed(() => {
   return (
-    situation.value?.participate.chara_list.map((chara) => ({
+    situation.value?.participate.selectable_chara_list.map((chara) => ({
       value: String(chara.id),
       label: chara.chara_name.name
     })) ?? []
   )
-})
-
-const skillOptions = computed(() => {
-  return [
-    { value: '', label: 'おまかせ' },
-    ...(situation.value?.participate.skill_list.map((skill) => ({
-      value: skill.code,
-      label: skill.name
-    })) ?? [])
-  ]
 })
 
 const canParticipate = computed(
@@ -104,8 +85,6 @@ const submitParticipation = async (isSpectate: boolean) => {
       method: 'POST',
       body: {
         chara_id: Number(selectedCharaId.value),
-        first_request_skill: selectedSkillCode.value || '',
-        second_request_skill: '',
         join_message: '',
         join_password: joinPassword.value || undefined,
         spectator: isSpectate

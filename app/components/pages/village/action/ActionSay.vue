@@ -36,8 +36,8 @@
 
       <!-- 残り発言数 -->
       <div v-if="currentRestrict" class="text-gray-500">
-        残り{{ currentRestrict.remaining_count }}/{{
-          currentRestrict.max_count
+        残り{{ currentRestrict.remaining_count ?? 0 }}/{{
+          currentRestrict.max_count ?? 0
         }}回 (最大{{ currentRestrict.max_length }}文字)
       </div>
 
@@ -118,7 +118,10 @@ const sayPlaceholder = computed(() => {
 
 const canSay = computed(() => {
   if (!messageText.value.trim()) return false
-  if (currentRestrict.value && currentRestrict.value.remaining_count <= 0)
+  if (
+    currentRestrict.value &&
+    (currentRestrict.value.remaining_count ?? 0) <= 0
+  )
     return false
   if (isSecretSay.value && !selectedTargetId.value) return false
   return true

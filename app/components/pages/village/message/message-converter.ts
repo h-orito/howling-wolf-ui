@@ -153,8 +153,13 @@ export const getMessageNumber = (
 export const getComingOutString = (
   message: DeepReadonly<MessageView> | MessageView
 ): string | null => {
-  if (!message.from?.coming_outs || message.from.coming_outs.length === 0) {
+  if (
+    !message.from?.coming_outs ||
+    message.from.coming_outs.list.length === 0
+  ) {
     return null
   }
-  return message.from.coming_outs.map((co) => co.skill.name).join(',') + 'CO'
+  return (
+    message.from.coming_outs.list.map((co) => co.skill.name).join(',') + 'CO'
+  )
 }

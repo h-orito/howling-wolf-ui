@@ -70,7 +70,7 @@ export const useMessage = () => {
 
       // URLの構築
       const day = currentVillageDay.value
-      const url = `/village/${villageId.value}/day/${day.day}/time/${day.noon_night}/message-list`
+      const url = `/village/${villageId.value}/day/${day.day}/time/${day.noonnight}/message-list`
       const query = new URLSearchParams()
       Object.entries(params).forEach(([key, value]) => {
         if (Array.isArray(value)) {

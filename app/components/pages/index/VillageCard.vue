@@ -22,12 +22,12 @@
 </template>
 
 <script setup lang="ts">
-import type { VillageView } from '~/lib/api/types'
+import type { SimpleVillageView } from '~/lib/api/types'
 import { VILLAGE_STATUS } from '~/lib/api/village-status-constants'
 import { ORGANIZATION_TEMPLATE } from '~/lib/api/organization-constants'
 
 const props = defineProps<{
-  village: VillageView
+  village: SimpleVillageView
 }>()
 
 const villageName = computed(() => {
@@ -91,7 +91,9 @@ const sayableTime = computed(() => {
   const start = timeSetting.sayable_start
   const end = timeSetting.sayable_end
   if (!start || !end || start === end) return '24時間'
-  return `${start.substring(0, 5)} - ${end.substring(0, 5)}（${24 - silentHours}時間）`
+  const formatTime = (t: { hour?: number; minute?: number }) =>
+    `${String(t.hour ?? 0).padStart(2, '0')}:${String(t.minute ?? 0).padStart(2, '0')}`
+  return `${formatTime(start)} - ${formatTime(end)}（${24 - silentHours}時間）`
 })
 
 const organization = computed(() => {

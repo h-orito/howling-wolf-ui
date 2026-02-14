@@ -2,7 +2,7 @@
   <div class="village-card">
     <div class="card-content">
       <div class="text-left text-sm">
-        <p>更新時間: {{ reservedVillage.start_time.substring(0, 5) }}</p>
+        <p>更新時間: {{ formatLocalTime(reservedVillage.start_time) }}</p>
         <p>編成: {{ organization }}</p>
         <p>発言可能時間: {{ sayableTime }}</p>
         <p>ダミー役欠け: {{ dummySkill }}</p>
@@ -21,12 +21,18 @@ const props = defineProps<{
   reservedVillage: ReservedVillageView
 }>()
 
+const formatLocalTime = (time: { hour?: number; minute?: number }) => {
+  const h = String(time.hour ?? 0).padStart(2, '0')
+  const m = String(time.minute ?? 0).padStart(2, '0')
+  return `${h}:${m}`
+}
+
 const sayableTime = computed(() => {
   const silentHours = props.reservedVillage.silent_hours
   const start = props.reservedVillage.sayable_start
   const end = props.reservedVillage.sayable_end
-  if (start === end) return '24時間'
-  return `${start.substring(0, 5)} - ${end.substring(0, 5)}（${24 - silentHours}時間）`
+  if (start.hour === end.hour && start.minute === end.minute) return '24時間'
+  return `${formatLocalTime(start)} - ${formatLocalTime(end)}（${24 - silentHours}時間）`
 })
 
 const organization = computed(() => {

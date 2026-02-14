@@ -41,17 +41,12 @@
                 >
                   初心者村
                 </th>
-                <th
-                  class="px-3 py-3 text-left text-sm font-semibold text-gray-900"
-                >
-                  削除
-                </th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white">
-              <tr v-for="rv in reservedVillages" :key="rv.id">
+              <tr v-for="(rv, idx) in reservedVillages" :key="idx">
                 <td class="px-3 py-2 text-sm whitespace-nowrap text-gray-900">
-                  {{ rv.start_time }}
+                  {{ formatLocalTime(rv.start_time) }}
                 </td>
                 <td class="px-3 py-2 text-sm text-gray-900">
                   {{ rv.organization }}
@@ -64,16 +59,6 @@
                 </td>
                 <td class="px-3 py-2 text-sm whitespace-nowrap text-gray-900">
                   {{ rv.for_beginner ? 'はい' : 'いいえ' }}
-                </td>
-                <td class="px-3 py-2 text-sm whitespace-nowrap">
-                  <UiButton
-                    color="error"
-                    size="xs"
-                    :disabled="deleting"
-                    @click="deleteReservedVillage(rv.id)"
-                  >
-                    削除
-                  </UiButton>
                 </td>
               </tr>
             </tbody>
@@ -151,8 +136,11 @@ const { apiCall } = useApi()
 
 const reservedVillages = ref<ReservedVillageView[]>([])
 const loadingReserved = ref(true)
-const deleting = ref(false)
 const submitting = ref(false)
+
+const formatLocalTime = (t: { hour?: number; minute?: number }): string => {
+  return `${String(t.hour ?? 0).padStart(2, '0')}:${String(t.minute ?? 0).padStart(2, '0')}`
+}
 
 const defaultStartDatetime = (): string => {
   const dt = new Date()
@@ -216,20 +204,6 @@ const createVillage = async () => {
     console.error('村の作成に失敗しました')
   } finally {
     submitting.value = false
-  }
-}
-
-const deleteReservedVillage = async (id: number) => {
-  deleting.value = true
-  try {
-    await apiCall(`/reserved-village/${id}`, {
-      method: 'DELETE'
-    })
-    await loadReservedVillages()
-  } catch {
-    console.error('予約村の削除に失敗しました')
-  } finally {
-    deleting.value = false
   }
 }
 

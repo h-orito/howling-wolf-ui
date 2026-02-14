@@ -11,10 +11,10 @@
 
 <script setup lang="ts">
 import type { DeepReadonly } from 'vue'
-import type { CharaView, CharaFace } from '~/lib/api/types'
+import type { CharaView, Chara, CharaFace } from '~/lib/api/types'
 
 interface Props {
-  chara: DeepReadonly<CharaView> | CharaView
+  chara: DeepReadonly<CharaView> | CharaView | DeepReadonly<Chara> | Chara
   faceType?: string
   isSmall?: boolean
   isLarge?: boolean

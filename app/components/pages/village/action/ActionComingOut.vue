@@ -52,13 +52,13 @@ const { apiCall } = useApi()
 const selectedSkillCode = ref('')
 
 const currentComingOuts = computed(() => {
-  return situation.value?.coming_out.current_coming_outs ?? []
+  return situation.value?.coming_out.current_coming_outs.list ?? []
 })
 
 const skillOptions = computed(() => {
   return [
     { value: '', label: '選択してください' },
-    ...(situation.value?.coming_out.skill_list.map((skill) => ({
+    ...(situation.value?.coming_out.selectable_skill_list.map((skill) => ({
       value: skill.code,
       label: skill.name
     })) ?? [])

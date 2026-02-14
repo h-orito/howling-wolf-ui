@@ -49,7 +49,10 @@
               <div class="flex flex-col items-center">
                 <DoughnutChart
                   :win-count="playerRecords.whole_record.win_count"
-                  :lose-count="playerRecords.whole_record.lose_count"
+                  :lose-count="
+                    playerRecords.whole_record.participate_count -
+                    playerRecords.whole_record.win_count
+                  "
                   label="全体"
                   :size="120"
                 />
@@ -70,7 +73,9 @@
                 >
                   <DoughnutChart
                     :win-count="campRecord.win_count"
-                    :lose-count="campRecord.lose_count"
+                    :lose-count="
+                      campRecord.participate_count - campRecord.win_count
+                    "
                     :label="campRecord.camp.name"
                     :size="100"
                   />
@@ -95,7 +100,9 @@
               >
                 <DoughnutChart
                   :win-count="skillRecord.win_count"
-                  :lose-count="skillRecord.lose_count"
+                  :lose-count="
+                    skillRecord.participate_count - skillRecord.win_count
+                  "
                   :label="skillRecord.skill.name"
                   :size="80"
                 />
@@ -140,47 +147,45 @@
               <tbody class="divide-y divide-gray-200 bg-white">
                 <tr
                   v-for="pv in playerRecords.participate_village_list"
-                  :key="pv.village.village_id"
+                  :key="pv.village.id"
                 >
                   <td class="px-2 py-2 text-left">
                     <NuxtLink
-                      :to="`/village?id=${pv.village.village_id}`"
+                      :to="`/village?id=${pv.village.id}`"
                       class="text-blue-600 hover:text-blue-800 hover:underline"
                     >
-                      {{ pv.village.village_name }}
+                      {{ pv.village.name }}
                     </NuxtLink>
                   </td>
                   <td class="px-2 py-2 text-gray-900">
-                    {{ pv.village.participant_count }}人
+                    {{ pv.village.participant.count }}人
                   </td>
                   <td class="px-2 py-2 text-gray-900">
-                    {{ pv.chara_name.name }}
+                    {{ pv.participant.chara.chara_name.name }}
                   </td>
                   <td class="px-2 py-2 text-gray-900">
-                    {{ pv.skill_name ?? '-' }}
+                    {{ pv.participant.skill?.name ?? '-' }}
                   </td>
                   <td class="px-2 py-2 text-gray-900">
                     {{ getStatus(pv) }}
                   </td>
                   <td class="px-2 py-2 text-gray-900">
-                    {{ pv.camp_name ?? '' }}
+                    {{ pv.participant.skill?.win_judge_camp?.name ?? '' }}
                   </td>
                   <td class="px-2 py-2">
                     <span
-                      v-if="pv.win_status === '勝利'"
+                      v-if="pv.participant.win === true"
                       class="font-medium text-blue-600"
                     >
                       勝利
                     </span>
                     <span
-                      v-else-if="pv.win_status === '敗北'"
+                      v-else-if="pv.participant.win === false"
                       class="font-medium text-red-600"
                     >
                       敗北
                     </span>
-                    <span v-else class="text-gray-500">{{
-                      pv.win_status
-                    }}</span>
+                    <span v-else class="text-gray-500">-</span>
                   </td>
                 </tr>
               </tbody>
@@ -222,6 +227,7 @@ import type {
   ParticipateVillageView,
   PlayerView
 } from '~/lib/api/types'
+import LoadingSpinner from '~/components/ui/feedback/LoadingSpinner.vue'
 
 const DoughnutChart = defineAsyncComponent(
   () => import('~/components/pages/player-record/DoughnutChart.vue')
@@ -266,7 +272,7 @@ const introduction = computed(() => {
 const wholeResult = computed(() => {
   if (!playerRecords.value) return ''
   const r = playerRecords.value.whole_record
-  return titleString(r.win_count, r.lose_count)
+  return recordString(r.participate_count, r.win_count)
 })
 
 const isMyself = computed(() => {
@@ -279,23 +285,24 @@ const blacklistPlayers = computed<PlayerView[]>(() => {
   return myselfPlayer.value.blacklist_players
 })
 
-const titleString = (winCount: number, loseCount: number) => {
-  const total = winCount + loseCount
-  const winRate = total > 0 ? Math.round((winCount / total) * 100) : 0
+const recordString = (participateCount: number, winCount: number) => {
+  const loseCount = participateCount - winCount
+  const winRate =
+    participateCount > 0 ? Math.round((winCount / participateCount) * 100) : 0
   return `${winCount}勝${loseCount}負 (${winRate}%)`
 }
 
 const campResult = (campRecord: CampRecord) => {
-  return titleString(campRecord.win_count, campRecord.lose_count)
+  return recordString(campRecord.participate_count, campRecord.win_count)
 }
 
 const skillResult = (skillRecord: SkillRecord) => {
-  return titleString(skillRecord.win_count, skillRecord.lose_count)
+  return recordString(skillRecord.participate_count, skillRecord.win_count)
 }
 
 const getStatus = (pv: ParticipateVillageView) => {
-  if (!pv.dead) return '生存'
-  return `${pv.dead.village_day.day}d ${pv.dead.reason}死`
+  if (!pv.participant.dead) return '生存'
+  return `${pv.participant.dead.village_day.day}d ${pv.participant.dead.reason}死`
 }
 
 const escapeAndSplitMessage = (message: string): string[] => {

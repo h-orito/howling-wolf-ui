@@ -87,13 +87,14 @@
 
 <script setup lang="ts">
 import FormCheckbox from '~/components/ui/form/FormCheckbox.vue'
-import type { VillagesView, VillageView } from '~/lib/api/types'
+import LoadingSpinner from '~/components/ui/feedback/LoadingSpinner.vue'
+import type { VillagesView, SimpleVillageView } from '~/lib/api/types'
 import { VILLAGE_STATUS } from '~/lib/api/village-status-constants'
 import { ORGANIZATION_TEMPLATE } from '~/lib/api/organization-constants'
 
 const { apiCall } = useApi()
 
-const villages = ref<VillageView[]>([])
+const villages = ref<SimpleVillageView[]>([])
 const loading = ref(true)
 const includeCancelVillage = ref(false)
 
@@ -126,7 +127,7 @@ const tableVillages = computed<TableVillage[]>(() => {
       name: village.name,
       participantCount,
       organization,
-      winCamp: village.win_camp?.camp.name ?? '廃村'
+      winCamp: village.win_camp?.name ?? '廃村'
     }
   })
 })

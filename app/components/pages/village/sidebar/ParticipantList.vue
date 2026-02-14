@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import type { DeepReadonly } from 'vue'
-import type { CharaView } from '~/lib/api/types'
+import type { Chara } from '~/lib/api/types'
 import CharaImage from '~/components/pages/village/CharaImage.vue'
 import { useVillage } from '~/composables/village/useVillage'
 import { useVillageMessageFilter } from '~/composables/village/useVillageMessageFilter'
@@ -46,7 +46,7 @@ const participants = computed(() => {
 
 const findChara = (participant: {
   chara: { id: number }
-}): DeepReadonly<CharaView> | CharaView | null => {
+}): DeepReadonly<Chara> | Chara | null => {
   if (!charachips.value || charachips.value.length === 0) return null
   return (
     charachips.value[0]?.chara_list.find(

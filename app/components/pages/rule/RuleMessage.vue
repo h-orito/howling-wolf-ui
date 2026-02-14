@@ -47,19 +47,21 @@ import type {
   VillageParticipantView,
   CharaView,
   CharaFace,
-  CharaName
+  CharaNameView
 } from '~/lib/api/types'
 import { MESSAGE_TYPE } from '~/lib/api/message-constants'
 import MessageCard from '~/components/pages/village/message/MessageCard.vue'
 
 const createMessage = (type: string, text: string): MessageView => {
-  const charaName: CharaName = {
+  const charaName: CharaNameView = {
     name: 'ピギー',
-    short_name: 'ピギー'
+    short_name: 'ピギー',
+    full_name: 'ピギー'
   }
 
   const face: CharaFace = {
     type: 'NORMAL',
+    name: '通常',
     image_url: 'https://wolfort.net/wmansion/6/000_A.png'
   }
 
@@ -67,9 +69,7 @@ const createMessage = (type: string, text: string): MessageView => {
     id: 1,
     chara_name: charaName,
     charachip_id: 1,
-    default_message: {
-      join_message: ''
-    },
+    default_message: {},
     display: {
       width: 50,
       height: 77
@@ -80,13 +80,8 @@ const createMessage = (type: string, text: string): MessageView => {
   const participant: VillageParticipantView = {
     id: 1,
     chara,
-    player: null,
-    dead: null,
     spectator: false,
-    skill: null,
-    skill_request: null,
-    win: null,
-    coming_outs: []
+    coming_outs: { list: [] }
   }
 
   const messageType: MessageType = {
@@ -97,7 +92,6 @@ const createMessage = (type: string, text: string): MessageView => {
   const content: MessageContent = {
     type: messageType,
     num: 1,
-    count: null,
     text,
     face_code: 'NORMAL'
   }
@@ -111,7 +105,6 @@ const createMessage = (type: string, text: string): MessageView => {
 
   const message: MessageView = {
     from: participant,
-    to: null,
     time,
     content
   }

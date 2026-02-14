@@ -35,7 +35,7 @@ const selectedSecondSkillCode = ref('')
 const skillOptions = computed(() => {
   return [
     { value: '', label: 'おまかせ' },
-    ...(situation.value?.skill_request.skill_list.map((skill) => ({
+    ...(situation.value?.skill_request.selectable_skill_list.map((skill) => ({
       value: skill.code,
       label: skill.name
     })) ?? [])

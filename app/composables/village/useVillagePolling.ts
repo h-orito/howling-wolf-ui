@@ -30,7 +30,7 @@ export const useVillagePolling = () => {
   }
 
   /**
-   * 最新情報をチェック（HW版：day_change_datetimeとメッセージ日時で判定）
+   * 最新情報をチェック（スキーマ版：village_day_idとunix_time_milliで判定）
    */
   const checkLatest = async () => {
     try {
@@ -42,23 +42,16 @@ export const useVillagePolling = () => {
         return
       }
 
-      // 日付変更をチェック
-      if (latest.day_change_datetime !== currentLatest.day_change_datetime) {
+      // 日付変更をチェック（village_day_idで比較）
+      if (latest.village_day_id !== currentLatest.village_day_id) {
         villageStore.saveExistsNewMessages(true)
         handleDayChange()
         villageStore.saveVillageLatest(latest)
         return
       }
 
-      // 新着発言をチェック（最新メッセージのunix_time_milliを比較）
-      const currentMaxTime = getMaxUnixTime(
-        currentLatest.latest_day_message_datetime_list
-      )
-      const latestMaxTime = getMaxUnixTime(
-        latest.latest_day_message_datetime_list
-      )
-
-      if (latestMaxTime > currentMaxTime) {
+      // 新着発言をチェック（unix_time_milliで比較）
+      if (latest.unix_time_milli > currentLatest.unix_time_milli) {
         villageStore.saveExistsNewMessages(true)
         handleNewMessage()
         villageStore.saveVillageLatest(latest)
@@ -66,13 +59,6 @@ export const useVillagePolling = () => {
     } catch (error) {
       console.error('最新情報の取得に失敗しました:', error)
     }
-  }
-
-  const getMaxUnixTime = (
-    list: readonly { readonly unix_time_milli: number }[] | undefined
-  ): number => {
-    if (!list || list.length === 0) return 0
-    return Math.max(...list.map((m) => m.unix_time_milli))
   }
 
   const loadVillageLatest = async (): Promise<VillageLatestView> => {

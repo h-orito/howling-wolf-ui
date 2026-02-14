@@ -56,8 +56,8 @@
           class="mb-4 grid gap-4 md:grid-cols-2"
         >
           <PagesIndexReservedVillageCard
-            v-for="rv in reservedVillages"
-            :key="rv.id"
+            v-for="(rv, idx) in reservedVillages"
+            :key="idx"
             :reserved-village="rv"
           />
         </div>
@@ -78,7 +78,7 @@ import Icon from '~/components/ui/icon/Icon.vue'
 import IndexFooter from '~/components/pages/index/IndexFooter.vue'
 import type {
   VillagesView,
-  VillageView,
+  SimpleVillageView,
   ReservedVillagesView,
   ReservedVillageView
 } from '~/lib/api/types'
@@ -103,10 +103,10 @@ const { apiCall } = useApi()
 // State
 const isLoadingVillages = ref(false)
 const isLoadingReservedVillages = ref(false)
-const villages = ref<VillageView[]>([])
+const villages = ref<SimpleVillageView[]>([])
 const reservedVillages = ref<ReservedVillageView[]>([])
 const loadingAuth = ref(true)
-const participateVillages = ref<VillageView[]>([])
+const participateVillages = ref<SimpleVillageView[]>([])
 
 // 村データ取得
 const fetchVillages = async () => {

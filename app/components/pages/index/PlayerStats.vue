@@ -63,13 +63,13 @@
 
 <script setup lang="ts">
 import Icon from '~/components/ui/icon/Icon.vue'
-import type { MyselfPlayerView, VillageView } from '~/lib/api/types'
+import type { MyselfPlayerView, SimpleVillageView } from '~/lib/api/types'
 import { VILLAGE_STATUS } from '~/lib/api/village-status-constants'
 
 interface Props {
   user: MyselfPlayerView | null
   isLoading: boolean
-  participateVillages: VillageView[]
+  participateVillages: SimpleVillageView[]
 }
 
 const props = defineProps<Props>()
@@ -93,7 +93,7 @@ const displayName = computed(() => {
   return nickname
 })
 
-const participatingVillages = computed<VillageView[]>(() => {
+const participatingVillages = computed<SimpleVillageView[]>(() => {
   return props.participateVillages.filter(
     (village) =>
       village.status.code === VILLAGE_STATUS.IN_PROGRESS ||
