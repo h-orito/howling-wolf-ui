@@ -432,13 +432,23 @@ const handleSecretTargetSelect = (participantId: number) => {
 
 /**
  * 発言リクエストボディを生成
- * HW固有: target_idフィールドなし
  */
-const createSayBody = () => ({
-  message_type: selectedMessageType.value,
-  message: messageText.value,
-  face_type: selectedFaceType.value
-})
+const createSayBody = () => {
+  const body: {
+    message_type: string
+    message: string
+    face_type: string
+    target_id?: number
+  } = {
+    message_type: selectedMessageType.value,
+    message: messageText.value,
+    face_type: selectedFaceType.value
+  }
+  if (isSecretSay.value && targetParticipantId.value) {
+    body.target_id = Number(targetParticipantId.value)
+  }
+  return body
+}
 
 /**
  * 発言確認へボタンのハンドラ
