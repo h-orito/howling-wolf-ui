@@ -1,5 +1,7 @@
 <template>
-  <ul class="my-2 flex flex-wrap gap-1 px-1.5 text-left text-xs">
+  <ul
+    class="mx-auto my-2 flex max-w-160 flex-wrap gap-1 px-1.5 text-left text-xs"
+  >
     <li v-for="(day, idx) in dayList" :key="day.id" class="inline">
       <span v-if="idx !== 0" class="text-gray-400"> &gt; </span>
       <a

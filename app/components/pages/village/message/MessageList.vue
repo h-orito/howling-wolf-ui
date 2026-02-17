@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="relative mx-auto max-w-160">
     <!-- ローディング -->
     <div v-if="loading" class="py-4 text-center text-xs text-gray-500">
       発言を読み込み中...
