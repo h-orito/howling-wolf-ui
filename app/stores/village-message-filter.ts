@@ -41,6 +41,7 @@ export const useVillageMessageFilterStore = defineStore(
       ...ALL_MESSAGE_TYPE_GROUPS
     ])
     const participantIdFilter = ref<number[] | null>(null)
+    const toParticipantIdFilter = ref<number[] | null>(null)
     const keywordFilter = ref<string | null>(null)
 
     // Computed
@@ -65,6 +66,7 @@ export const useVillageMessageFilterStore = defineStore(
     const setMessageFilter = (filter: {
       messageTypeGroups?: MessageTypeGroup[] | null
       participantIdList?: number[] | null
+      toParticipantIdList?: number[] | null
       keyword?: string | null
     }) => {
       if (filter.messageTypeGroups !== undefined) {
@@ -74,6 +76,9 @@ export const useVillageMessageFilterStore = defineStore(
       }
       if (filter.participantIdList !== undefined) {
         participantIdFilter.value = filter.participantIdList
+      }
+      if (filter.toParticipantIdList !== undefined) {
+        toParticipantIdFilter.value = filter.toParticipantIdList
       }
       if (filter.keyword !== undefined) {
         keywordFilter.value = filter.keyword
@@ -86,6 +91,7 @@ export const useVillageMessageFilterStore = defineStore(
     const resetMessageFilter = () => {
       messageTypeGroups.value = [...ALL_MESSAGE_TYPE_GROUPS]
       participantIdFilter.value = null
+      toParticipantIdFilter.value = null
       keywordFilter.value = null
     }
 
@@ -93,6 +99,7 @@ export const useVillageMessageFilterStore = defineStore(
       // Filter state
       messageTypeGroups: readonly(messageTypeGroups),
       participantIdFilter: readonly(participantIdFilter),
+      toParticipantIdFilter: readonly(toParticipantIdFilter),
       keywordFilter: readonly(keywordFilter),
 
       // Computed

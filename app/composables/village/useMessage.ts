@@ -14,8 +14,13 @@ export const useMessage = () => {
   const messageStore = useVillageMessageStore()
   const { villageId, currentVillageDay, village } = useVillage()
   const { paging } = useUserSettings()
-  const { messageTypeGroups, messageTypes, participantIds, keyword } =
-    useVillageMessageFilter()
+  const {
+    messageTypeGroups,
+    messageTypes,
+    participantIds,
+    toParticipantIds,
+    keyword
+  } = useVillageMessageFilter()
   const { apiCall } = useApi()
 
   /**
@@ -53,6 +58,14 @@ export const useMessage = () => {
         participantIds.value.length < allParticipantCount
       ) {
         params.participant_id_list = [...participantIds.value]
+      }
+
+      if (
+        toParticipantIds.value &&
+        toParticipantIds.value.length > 0 &&
+        toParticipantIds.value.length < allParticipantCount
+      ) {
+        params.to_participant_id_list = [...toParticipantIds.value]
       }
 
       if (keyword.value) {
@@ -106,12 +119,14 @@ export const useMessage = () => {
   const setFilter = (filter: {
     messageTypeGroups?: MessageTypeGroup[] | null
     participantIdList?: number[] | null
+    toParticipantIdList?: number[] | null
     keyword?: string | null
   }) => {
     const { applyFilter } = useVillageMessageFilter()
     applyFilter(
       filter.messageTypeGroups ?? null,
       filter.participantIdList ?? null,
+      filter.toParticipantIdList ?? null,
       filter.keyword ?? null
     )
   }

@@ -609,6 +609,12 @@
             "in": "path",
             "required": true,
             "schema": { "type": "integer", "format": "int32" }
+          },
+          {
+            "name": "form",
+            "in": "query",
+            "required": true,
+            "schema": { "$ref": "#/components/schemas/VillageLatestForm" }
           }
         ],
         "responses": {
@@ -1102,11 +1108,12 @@
         }
       },
       "MessageType": {
-        "required": ["code", "name"],
+        "required": ["code", "is_say_type", "name"],
         "type": "object",
         "properties": {
           "code": { "type": "string" },
-          "name": { "type": "string" }
+          "name": { "type": "string" },
+          "is_say_type": { "type": "boolean" }
         }
       },
       "MessageView": {
@@ -1175,10 +1182,10 @@
           },
           "count_camp": { "$ref": "#/components/schemas/Camp" },
           "description": { "type": "string" },
-          "abilities": { "$ref": "#/components/schemas/AbilityTypes" },
-          "is_fox_count": { "type": "boolean" },
           "is_viewable_werewolf_say": { "type": "boolean" },
-          "is_available_werewolf_say": { "type": "boolean" }
+          "is_available_werewolf_say": { "type": "boolean" },
+          "abilities": { "$ref": "#/components/schemas/AbilityTypes" },
+          "is_fox_count": { "type": "boolean" }
         }
       },
       "SkillRequest": {
@@ -1489,11 +1496,11 @@
           "code": { "type": "string" },
           "name": { "type": "string" },
           "is_canceled": { "type": "boolean" },
-          "is_progress": { "type": "boolean" },
+          "is_finished": { "type": "boolean" },
           "is_prologue": { "type": "boolean" },
           "is_epilogue": { "type": "boolean" },
           "is_solved": { "type": "boolean" },
-          "is_finished": { "type": "boolean" }
+          "is_progress": { "type": "boolean" }
         }
       },
       "VillageTimeView": {
@@ -1793,6 +1800,10 @@
           "message": { "$ref": "#/components/schemas/MessageView" }
         }
       },
+      "VillageLatestForm": {
+        "type": "object",
+        "properties": { "from": { "type": "integer", "format": "int64" } }
+      },
       "VillageLatestView": {
         "required": ["unix_time_milli", "village_day_id"],
         "type": "object",
@@ -1809,6 +1820,10 @@
             "items": { "type": "string" }
           },
           "participant_id_list": {
+            "type": "array",
+            "items": { "type": "integer", "format": "int32" }
+          },
+          "to_participant_id_list": {
             "type": "array",
             "items": { "type": "integer", "format": "int32" }
           },
@@ -1913,6 +1928,7 @@
           "is_gone",
           "is_sayable_grave_say",
           "is_sayable_monologue_say",
+          "is_sayable_secret_say",
           "is_sayable_spectate_say",
           "is_sayable_werewolf_say",
           "is_spectator",
@@ -1921,6 +1937,8 @@
           "is_viewable_fox_message",
           "is_viewable_grave_say",
           "is_viewable_mason_message",
+          "is_viewable_monologue_say",
+          "is_viewable_private_system_message",
           "is_viewable_psychic_message",
           "is_viewable_secret_say",
           "is_viewable_spectate_say",
@@ -1944,22 +1962,25 @@
             "items": { "$ref": "#/components/schemas/AccessInfo" }
           },
           "is_alive": { "type": "boolean" },
-          "is_dead": { "type": "boolean" },
-          "is_admin": { "type": "boolean" },
           "is_available_coming_out": { "type": "boolean" },
-          "is_viewable_fox_message": { "type": "boolean" },
-          "is_viewable_mason_message": { "type": "boolean" },
           "is_viewable_grave_say": { "type": "boolean" },
           "is_sayable_grave_say": { "type": "boolean" },
+          "is_viewable_monologue_say": { "type": "boolean" },
           "is_sayable_monologue_say": { "type": "boolean" },
           "is_viewable_secret_say": { "type": "boolean" },
-          "is_viewable_spectate_say": { "type": "boolean" },
-          "is_sayable_spectate_say": { "type": "boolean" },
+          "is_sayable_secret_say": { "type": "boolean" },
           "is_viewable_werewolf_say": { "type": "boolean" },
           "is_sayable_werewolf_say": { "type": "boolean" },
+          "is_viewable_fox_message": { "type": "boolean" },
+          "is_viewable_mason_message": { "type": "boolean" },
           "is_available_vote": { "type": "boolean" },
+          "is_viewable_spectate_say": { "type": "boolean" },
+          "is_sayable_spectate_say": { "type": "boolean" },
+          "is_dead": { "type": "boolean" },
+          "is_admin": { "type": "boolean" },
           "is_viewable_attack_message": { "type": "boolean" },
           "is_viewable_fanatic_message": { "type": "boolean" },
+          "is_viewable_private_system_message": { "type": "boolean" },
           "is_viewable_psychic_message": { "type": "boolean" },
           "is_available_skill_request": { "type": "boolean" }
         }

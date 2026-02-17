@@ -14,11 +14,13 @@ export const useVillageMessageFilter = () => {
   const applyFilter = (
     messageTypeGroups: MessageTypeGroup[] | null,
     participantIdList: number[] | null,
+    toParticipantIdList: number[] | null,
     keywordText: string | null
   ) => {
     filterStore.setMessageFilter({
       messageTypeGroups,
       participantIdList,
+      toParticipantIdList,
       keyword: keywordText
     })
   }
@@ -26,7 +28,8 @@ export const useVillageMessageFilter = () => {
   const resetFilter = () => {
     filterStore.resetMessageFilter()
     filterStore.setMessageFilter({
-      participantIdList: [...allParticipantIds.value]
+      participantIdList: [...allParticipantIds.value],
+      toParticipantIdList: [...allParticipantIds.value]
     })
   }
 
@@ -42,6 +45,7 @@ export const useVillageMessageFilter = () => {
     const totalParticipantCount = allParticipantIds.value.length
     const groups = filterStore.messageTypeGroups
     const pidFilter = filterStore.participantIdFilter
+    const toPidFilter = filterStore.toParticipantIdFilter
     const kFilter = filterStore.keywordFilter
 
     return (
@@ -50,6 +54,9 @@ export const useVillageMessageFilter = () => {
       (pidFilter &&
         pidFilter.length > 0 &&
         pidFilter.length !== totalParticipantCount) ||
+      (toPidFilter &&
+        toPidFilter.length > 0 &&
+        toPidFilter.length !== totalParticipantCount) ||
       !!kFilter
     )
   })
@@ -57,6 +64,7 @@ export const useVillageMessageFilter = () => {
   return {
     messageTypeGroups: computed(() => filterStore.messageTypeGroups),
     participantIds: computed(() => filterStore.participantIdFilter),
+    toParticipantIds: computed(() => filterStore.toParticipantIdFilter),
     keyword: computed(() => filterStore.keywordFilter),
     messageTypes: computed(() => filterStore.messageTypeFilter),
     isFiltering,

@@ -49,7 +49,7 @@ import type {
   CharaFace,
   CharaNameView
 } from '~/lib/api/types'
-import { MESSAGE_TYPE } from '~/lib/api/message-constants'
+import { MESSAGE_TYPE, isSayType } from '~/lib/api/message-constants'
 import MessageCard from '~/components/pages/village/message/MessageCard.vue'
 
 const createMessage = (type: string, text: string): MessageView => {
@@ -86,7 +86,8 @@ const createMessage = (type: string, text: string): MessageView => {
 
   const messageType: MessageType = {
     code: type,
-    name: ''
+    name: '',
+    is_say_type: isSayType(type)
   }
 
   const content: MessageContent = {

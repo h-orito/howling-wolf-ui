@@ -68,6 +68,11 @@
         <!-- サイドバー (モバイルのみ: オーバーレイ) -->
         <VillageSidebar v-if="isMobile" />
       </div>
+
+      <!-- 右サイドバー (デスクトップのみ: 1024px以上) -->
+      <div v-if="isDesktop" class="h-full shrink-0">
+        <VillageFilterSidebar />
+      </div>
     </div>
   </div>
 </template>
@@ -95,6 +100,9 @@ import LoadingSpinner from '~/components/ui/feedback/LoadingSpinner.vue'
 import { VILLAGE_STATUS } from '~/lib/api/village-status-constants'
 
 // 遅延ローディング
+const VillageFilterSidebar = defineAsyncComponent(
+  () => import('~/components/pages/village/VillageFilterSidebar.vue')
+)
 const MessageList = defineAsyncComponent(
   () => import('~/components/pages/village/message/MessageList.vue')
 )

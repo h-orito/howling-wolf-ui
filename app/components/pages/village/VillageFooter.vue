@@ -30,8 +30,9 @@
       <Icon name="i-heroicons-arrow-down-20-solid" class="h-5 w-5" />
     </button>
 
-    <!-- フィルタボタン -->
+    <!-- フィルタボタン (デスクトップではサイドバーが常時表示のため非表示) -->
     <button
+      v-if="!isDesktop"
       class="flex cursor-pointer items-center justify-center border-0 border-l border-[#555]"
       :class="[
         isMobile ? 'min-w-[60px]' : 'w-[120px]',
@@ -46,6 +47,12 @@
       />
       <span v-if="isFiltering" class="ml-1 text-blue-400">解除</span>
     </button>
+
+    <!-- フィルタモーダル (モバイル/タブレット用) -->
+    <ModalFilter
+      :is-open="isOpenFilterModal"
+      @close="isOpenFilterModal = false"
+    />
 
     <!-- タイマー -->
     <div
@@ -65,6 +72,10 @@ import { useVillageSlider } from '~/composables/village/useVillageSlider'
 import { useMessage } from '~/composables/village/useMessage'
 import { useWindowResize } from '~/composables/useWindowResize'
 
+const ModalFilter = defineAsyncComponent(
+  () => import('~/components/pages/village/footer/ModalFilter.vue')
+)
+
 defineEmits<{
   'to-bottom': []
 }>()
@@ -74,10 +85,12 @@ const { timerText, startTimer } = useVillageTimer()
 const { isFiltering } = useVillageMessageFilter()
 const { resetFilter, loadMessages } = useMessage()
 const { toggle: toggleSlider } = useVillageSlider()
-const { isMobile } = useWindowResize()
+const { isMobile, isDesktop } = useWindowResize()
 
 const villageStore = useVillageStore()
 const existsNewMessages = computed(() => villageStore.existsNewMessages)
+
+const isOpenFilterModal = ref(false)
 
 const handleRefresh = async () => {
   await refresh()
@@ -88,7 +101,7 @@ const handleFilterClick = () => {
     resetFilter()
     loadMessages()
   } else {
-    // TODO: フィルタモーダルを開く
+    isOpenFilterModal.value = true
   }
 }
 
