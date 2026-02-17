@@ -1,5 +1,15 @@
 import type { FetchError } from 'ofetch'
 
+// クライアントトークンを取得（不正防止用）
+// 初回呼び出し時にランダム文字列を生成し、localStorageに保存
+function getClientToken(): string {
+  let token = localStorage.getItem('client-token')
+  if (token) return token
+  token = Math.random().toString(32).substring(2)
+  localStorage.setItem('client-token', token)
+  return token
+}
+
 // 認証付きAPI呼び出し用composable
 export const useApi = () => {
   const { getAuthToken } = useAuthStore()
@@ -21,7 +31,10 @@ export const useApi = () => {
         headers: {
           'Content-Type': 'application/json',
           ...(options?.headers || {}),
-          ...(token && { Authorization: `Bearer ${token}` })
+          ...(token && {
+            Authorization: `Bearer ${token}`,
+            Client: `Client ${getClientToken()}`
+          })
         },
         ...options
       }
