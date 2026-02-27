@@ -50,6 +50,21 @@
           @update:model-value="handleImgLargeToggle"
         />
       </div>
+
+      <!-- 操作設定 -->
+      <div>
+        <h3 class="mb-2 font-bold">操作</h3>
+        <FormSwitch
+          :model-value="operation.isPasteAnchor"
+          label="アンカークリック時に発言欄に挿入する"
+          @update:model-value="handlePasteAnchorToggle"
+        />
+        <FormSwitch
+          :model-value="operation.isOpenFilterNewtab"
+          label="個人発言抽出を新しいタブで開く"
+          @update:model-value="handleOpenFilterNewtabToggle"
+        />
+      </div>
     </div>
   </Modal>
 </template>
@@ -78,9 +93,11 @@ const {
   paging,
   theme,
   messageDisplay,
+  operation,
   setPaging,
   setTheme,
-  setMessageDisplay
+  setMessageDisplay,
+  setOperation
 } = useUserSettings()
 const { loadMessages } = useMessage()
 
@@ -108,5 +125,13 @@ const handleCharLargeToggle = (value: boolean) => {
 
 const handleImgLargeToggle = (value: boolean) => {
   setMessageDisplay({ ...messageDisplay.value, isImgLarge: value })
+}
+
+const handlePasteAnchorToggle = (value: boolean) => {
+  setOperation({ ...operation.value, isPasteAnchor: value })
+}
+
+const handleOpenFilterNewtabToggle = (value: boolean) => {
+  setOperation({ ...operation.value, isOpenFilterNewtab: value })
 }
 </script>

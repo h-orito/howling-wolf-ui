@@ -18,7 +18,7 @@
       <Icon
         name="i-heroicons-arrow-path-20-solid"
         class="h-5 w-5"
-        :class="existsNewMessages ? 'text-blue-400' : 'text-white'"
+        :class="existsNewMessages ? 'animate-spin text-blue-400' : 'text-white'"
       />
     </button>
 
@@ -71,6 +71,7 @@ import { useVillageMessageFilter } from '~/composables/village/useVillageMessage
 import { useVillageSlider } from '~/composables/village/useVillageSlider'
 import { useMessage } from '~/composables/village/useMessage'
 import { useWindowResize } from '~/composables/useWindowResize'
+import { useVillageNavigation } from '~/composables/village/useVillageNavigation'
 
 const ModalFilter = defineAsyncComponent(
   () => import('~/components/pages/village/footer/ModalFilter.vue')
@@ -86,6 +87,7 @@ const { isFiltering } = useVillageMessageFilter()
 const { resetFilter, loadMessages } = useMessage()
 const { toggle: toggleSlider } = useVillageSlider()
 const { isMobile, isDesktop } = useWindowResize()
+const { scrollToBottom } = useVillageNavigation()
 
 const villageStore = useVillageStore()
 const existsNewMessages = computed(() => villageStore.existsNewMessages)
@@ -94,6 +96,8 @@ const isOpenFilterModal = ref(false)
 
 const handleRefresh = async () => {
   await refresh()
+  await loadMessages()
+  scrollToBottom()
 }
 
 const handleFilterClick = () => {

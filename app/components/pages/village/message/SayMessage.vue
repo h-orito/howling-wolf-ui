@@ -8,7 +8,7 @@
         <span v-if="shouldDispAnchor && anchorString">
           <a
             href="javascript:void(0);"
-            class="cursor-pointer text-blue-600 hover:underline"
+            class="cursor-pointer text-blue-600 hover:underline dark:text-(--ui-primary)"
             @click="handleCopyAnchor"
           >
             {{ anchorString }} </a
@@ -16,7 +16,7 @@
         </span>
 
         <!-- キャラクター名 -->
-        <span class="font-bold whitespace-nowrap">
+        <span class="font-bold whitespace-nowrap dark:text-[#eee]">
           {{ characterName }}
           <span v-if="targetCharacterName">→ {{ targetCharacterName }}</span>
         </span>
@@ -34,7 +34,7 @@
           [<a
             :href="`https://twitter.com/${twitterUserName}`"
             target="_blank"
-            class="text-blue-600 hover:underline"
+            class="text-blue-600 hover:underline dark:text-(--ui-primary)"
           >
             {{ twitterUserName }} </a
           >]
@@ -43,7 +43,7 @@
       </div>
 
       <!-- 右側: 発言回数と時間 -->
-      <div class="ml-auto text-right text-xs text-gray-400">
+      <div class="ml-auto text-right text-xs text-gray-400 dark:text-[#ddd]">
         <span v-if="isAnchorMessage"> {{ message.time.day }}d </span>
         <span v-if="message.content.count && maxCount">
           ({{ message.content.count }}/{{ maxCount }})
@@ -83,7 +83,7 @@
           <a
             v-if="canReply && shouldDispAnchor"
             href="javascript:void(0);"
-            class="cursor-pointer text-xs text-blue-600 hover:underline"
+            class="cursor-pointer text-xs text-blue-600 hover:underline dark:text-(--ui-primary)"
             @click="handleReply"
           >
             >>返信
@@ -91,7 +91,7 @@
           <a
             v-if="canSecret"
             href="javascript:void(0);"
-            class="cursor-pointer text-xs text-blue-600 hover:underline"
+            class="cursor-pointer text-xs text-blue-600 hover:underline dark:text-(--ui-primary)"
             @click="handleSecret"
           >
             >>秘話
@@ -273,23 +273,23 @@ const messageClass = computed(() => {
   const typeCode = props.message.content.type.code
   switch (typeCode) {
     case 'NORMAL_SAY':
-      return 'bg-white text-[#0a0a0a] border-gray-300'
+      return 'bg-white dark:bg-white text-[#0a0a0a] dark:text-[#0a0a0a] border-gray-300 dark:border-gray-300'
     case 'WEREWOLF_SAY':
-      return 'bg-[#f2cece] text-[#0a0a0a] border-gray-300'
+      return 'bg-[#f2cece] dark:bg-[#f2aeae] text-[#0a0a0a] dark:text-[#0a0a0a] border-gray-300 dark:border-[#f2aeae]'
     case 'MASON_SAY':
-      return 'bg-[#cef2ce] text-[#0a0a0a] border-gray-300'
+      return 'bg-[#cef2ce] dark:bg-[#aef2ae] text-[#0a0a0a] dark:text-[#0a0a0a] border-gray-300 dark:border-[#aef2ae]'
     case 'MONOLOGUE_SAY':
-      return 'bg-[#dddddd] text-[#0a0a0a] border-gray-300'
+      return 'bg-[#dddddd] dark:bg-[#aaa] text-[#0a0a0a] dark:text-[#0a0a0a] border-gray-300 dark:border-[#aaa]'
     case 'GRAVE_SAY':
-      return 'bg-[#ceedf2] text-[#0a0a0a] border-gray-300'
+      return 'bg-[#ceedf2] dark:bg-[#a9edf7] text-[#0a0a0a] dark:text-[#0a0a0a] border-gray-300 dark:border-[#a9edf7]'
     case 'SPECTATE_SAY':
-      return 'bg-[#f2f2ce] text-[#0a0a0a] border-gray-300'
+      return 'bg-[#f2f2ce] dark:bg-[#f2f2ae] text-[#0a0a0a] dark:text-[#0a0a0a] border-gray-300 dark:border-[#f2f2ae]'
     case 'SECRET_SAY':
-      return 'bg-[#cecef2] text-[#0a0a0a] border-gray-300'
+      return 'bg-[#cecef2] dark:bg-[#a9a] text-[#0a0a0a] dark:text-[#0a0a0a] border-gray-300 dark:border-[#a9a]'
     case 'CREATOR_SAY':
-      return 'bg-[#fef] text-[#0a0a0a] border-gray-300'
+      return 'bg-[#fef] dark:bg-[#403340] text-[#0a0a0a] dark:text-[#eee] border-gray-300 dark:border-[#c0f]'
     default:
-      return 'bg-white text-[#0a0a0a] border-gray-300'
+      return 'bg-white dark:bg-white text-[#0a0a0a] dark:text-[#0a0a0a] border-gray-300 dark:border-gray-300'
   }
 })
 
