@@ -360,6 +360,76 @@
         </ul>
       </div>
 
+      <h3 class="mt-6 mb-3 text-lg font-bold">文字装飾</h3>
+      <div>
+        <ul class="ml-4 list-disc space-y-2">
+          <li>
+            [[#ff0000]]文字列[[/#]]で文字に色をつけられます。
+            <ul class="my-2 ml-6 list-disc">
+              <li>
+                [[#ff0000]]文字列[[/#]] →
+                <span style="color: #ff0000">文字列</span>
+              </li>
+            </ul>
+          </li>
+          <li>
+            [[large]]文字列[[/large]]で文字を大きくできます。
+            <ul class="my-2 ml-6 list-disc">
+              <li>
+                [[large]]文字列[[/large]] →
+                <span style="font-size: 16px">文字列</span>
+              </li>
+            </ul>
+          </li>
+          <li>
+            [[small]]文字列[[/small]]で文字を小さくできます。
+            <ul class="my-2 ml-6 list-disc">
+              <li>
+                [[small]]文字列[[/small]] →
+                <span style="font-size: 10px">文字列</span>
+              </li>
+            </ul>
+          </li>
+          <li>
+            [[b]]文字列[[/b]]で文字を太くできます。
+            <ul class="my-2 ml-6 list-disc">
+              <li>[[b]]文字列[[/b]] → <strong>文字列</strong></li>
+            </ul>
+          </li>
+          <li>
+            [[s]]文字列[[/s]]で文字に打ち消し線をつけられます。
+            <ul class="my-2 ml-6 list-disc">
+              <li>
+                [[s]]文字列[[/s]] →
+                <span style="text-decoration: line-through">文字列</span>
+              </li>
+            </ul>
+          </li>
+          <li>
+            [[ruby]]文字列[[rt]]ルビ[[/rt]][[/ruby]]でルビを振れます。
+            <ul class="my-2 ml-6 list-disc">
+              <li>
+                [[ruby]]文字列[[rt]]ルビ[[/rt]][[/ruby]] →
+                <ruby>文字列<rt>ルビ</rt></ruby>
+              </li>
+            </ul>
+          </li>
+          <li>
+            [[cw]]文字列[[/cw]]で文字を隠せます（クリックで除去できます）。
+            <ul class="my-2 ml-6 list-disc">
+              <li>
+                [[cw]]文字列[[/cw]] →
+                <span
+                  class="netabare cursor-pointer"
+                  @click="removeNetabare($event)"
+                  >文字列</span
+                >
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
       <h3 class="mt-6 mb-3 text-lg font-bold">その他</h3>
       <div>
         <ul class="ml-4 list-disc space-y-2">
@@ -379,6 +449,11 @@ import type { SkillDetailView, SkillDetailListView } from '~/lib/api/types'
 const config = useRuntimeConfig()
 
 const skillList = ref<SkillDetailView[]>([])
+
+const removeNetabare = (event: MouseEvent) => {
+  const target = event.target as HTMLElement
+  target.classList.remove('netabare')
+}
 
 const camps = [
   {
