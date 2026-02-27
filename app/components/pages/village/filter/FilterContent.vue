@@ -130,7 +130,7 @@
     <!-- 宛先 -->
     <section>
       <p class="mb-2 font-bold">宛先</p>
-      <div class="mb-2 flex gap-2 text-sm">
+      <div class="mb-2 flex gap-1 text-sm">
         <UiButton
           size="xs"
           variant="link"
@@ -252,11 +252,10 @@ const messageTypeOptionsRow1 = [
 const messageTypeOptionsRow2 = [
   { value: MESSAGE_TYPE_GROUP.CREATOR_SAY, label: '村建て' },
   { value: MESSAGE_TYPE_GROUP.WEREWOLF_SAY, label: '囁き' },
-  { value: MESSAGE_TYPE_GROUP.MASON_SAY, label: '共鳴' }
+  { value: MESSAGE_TYPE_GROUP.GRAVE_SAY, label: '墓下見学' }
 ]
 
 const messageTypeOptionsRow3 = [
-  { value: MESSAGE_TYPE_GROUP.GRAVE_SAY, label: '墓下見学' },
   { value: MESSAGE_TYPE_GROUP.SYSTEM, label: '公開システム' },
   { value: MESSAGE_TYPE_GROUP.PRIVATE_SYSTEM, label: '非公開システム' }
 ]
