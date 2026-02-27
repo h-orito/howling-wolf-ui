@@ -29,7 +29,7 @@
       <div v-if="messageList.length > 0">
         <MessageCard
           v-for="message in messageList"
-          :key="message.content.num"
+          :key="message.time.unix_time_milli"
           :message="message"
           :is-progress="isProgress"
           :is-img-large="messageDisplay.isImgLarge"
