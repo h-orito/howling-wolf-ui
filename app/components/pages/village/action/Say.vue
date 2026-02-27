@@ -1,5 +1,19 @@
 <template>
   <ActionPanel id="say-panel" title="発言" panel-key="say">
+    <!-- 死亡通知 -->
+    <Alert v-if="myself?.dead" type="info" class="mb-4">
+      あなたは死亡しました。
+    </Alert>
+
+    <!-- 役職説明 -->
+    <Alert
+      v-if="myself?.skill?.description"
+      type="default"
+      class="mb-4 whitespace-pre-line"
+    >
+      {{ skillDescription }}
+    </Alert>
+
     <!-- 参加者情報 -->
     <div v-if="myself" class="mb-4 text-sm">
       <span class="font-bold">
@@ -200,6 +214,7 @@ import FormTextarea from '~/components/ui/form/FormTextarea.vue'
 import FormRadioGroup from '~/components/ui/form/FormRadioGroup.vue'
 import Modal from '~/components/ui/modal/Modal.vue'
 import UiButton from '~/components/ui/button/index.vue'
+import Alert from '~/components/ui/feedback/Alert.vue'
 import CharaImage from '../CharaImage.vue'
 import MessageDecorators from './decorator/MessageDecorators.vue'
 import { useSay } from '~/composables/village/action/useSay'
@@ -331,6 +346,13 @@ const myself = computed(() => situation.value?.participate.myself)
 
 // キャラクター情報
 const chara = computed(() => myself.value?.chara)
+
+// 役職説明（句点で改行を挿入）
+const skillDescription = computed(() => {
+  const desc = myself.value?.skill?.description
+  if (!desc) return ''
+  return desc.replaceAll('。', '。\n')
+})
 
 // 計算プロパティ
 const messageTypeOptions = computed(() =>
