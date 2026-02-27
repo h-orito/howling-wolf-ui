@@ -34,7 +34,6 @@
         <FormTextarea
           v-model="memoTexts[activeTab]"
           :rows="15"
-          :maxlength="1000"
           placeholder="1000文字まで保存できます。"
           size="sm"
         />
