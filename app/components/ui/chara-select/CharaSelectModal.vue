@@ -12,7 +12,7 @@
         class="hover:border-primary-500 focus:ring-primary-500 flex flex-col items-center rounded-lg border border-gray-300 p-3 transition-all hover:font-semibold focus:ring-2 focus:outline-none"
         @click="selectChara(chara)"
       >
-        <CharaImage :chara="chara" is-small class="mb-2" />
+        <CharaImage :chara="chara" class="mb-2" />
         <p class="text-center text-xs">{{ chara.chara_name.name }}</p>
       </button>
     </div>
