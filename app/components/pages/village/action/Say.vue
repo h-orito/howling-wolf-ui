@@ -3,7 +3,6 @@
     <!-- 参加者情報 -->
     <div v-if="myself" class="mb-4 text-sm">
       <span class="font-bold">
-        [{{ myself.chara.chara_name.short_name }}]
         {{ myself.chara.chara_name.full_name }}
       </span>
       <span v-if="myself.skill" class="text-gray-600 dark:text-gray-400">
