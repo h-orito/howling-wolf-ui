@@ -8,9 +8,7 @@
       <!-- 先頭へボタン -->
       <button
         type="button"
-        :disabled="
-          !messages.current_page_num || messages.current_page_num === 1
-        "
+        :disabled="!isLatestActive && effectiveCurrentPage === 1"
         :class="firstButtonClass"
         aria-label="最初のページ"
         @click="handleFirst"
@@ -35,7 +33,9 @@
           type="button"
           :class="getPageButtonClass(page)"
           :aria-current="
-            page === messages.current_page_num ? 'page' : undefined
+            !isLatestActive && page === effectiveCurrentPage
+              ? 'page'
+              : undefined
           "
           @click="handleChangePage(page)"
         >
@@ -46,7 +46,7 @@
       <!-- 次へボタン -->
       <button
         type="button"
-        :disabled="!messages.exist_next_page"
+        :disabled="!isLatestActive && !messages?.exist_next_page"
         :class="nextButtonClass"
         aria-label="次のページ"
         @click="handleNext"
@@ -58,9 +58,8 @@
       <button
         type="button"
         :disabled="
-          !messages.current_page_num ||
-          !messages.all_page_count ||
-          messages.current_page_num === messages.all_page_count
+          !messages?.all_page_count ||
+          (!isLatestActive && effectiveCurrentPage === messages.all_page_count)
         "
         :class="lastButtonClass"
         aria-label="最後のページ"
@@ -90,8 +89,7 @@ import { useVillage } from '~/composables/village/useVillage'
 import { useVillageNavigation } from '~/composables/village/useVillageNavigation'
 
 // Composables
-const { messages, currentPageNum, isDispLatest, setPageNum, setDispLatest } =
-  useMessage()
+const { messages, isDispLatest, setPageNum, setDispLatest } = useMessage()
 const { isCurrentVillageDayLatest, latestDay, changeCurrentVillageDay } =
   useVillage()
 const { theme } = useUserSettings()
@@ -114,6 +112,14 @@ const canGoPrev = computed(() => {
   return isLatestActive.value || messages.value?.exist_pre_page
 })
 
+// 最新状態での有効ページ数（全ボタンを有効にするために使用）
+const effectiveCurrentPage = computed(() => {
+  if (isLatestActive.value && messages.value?.all_page_count) {
+    return messages.value.all_page_count
+  }
+  return messages.value?.current_page_num ?? 1
+})
+
 // 前へボタンのクラス
 const prevButtonClass = computed(() => {
   if (!canGoPrev.value) {
@@ -128,7 +134,7 @@ const prevButtonClass = computed(() => {
 
 // 次へボタンのクラス
 const nextButtonClass = computed(() => {
-  const isDisabled = !messages.value?.exist_next_page
+  const isDisabled = !isLatestActive.value && !messages.value?.exist_next_page
   if (isDisabled) {
     return isDarkTheme.value
       ? `${baseButtonClass} cursor-not-allowed border-gray-700 bg-gray-800 text-gray-600`
@@ -141,8 +147,7 @@ const nextButtonClass = computed(() => {
 
 // 先頭ボタンのクラス
 const firstButtonClass = computed(() => {
-  const isDisabled =
-    !messages.value?.current_page_num || messages.value.current_page_num === 1
+  const isDisabled = !isLatestActive.value && effectiveCurrentPage.value === 1
   if (isDisabled) {
     return isDarkTheme.value
       ? `${baseButtonClass} cursor-not-allowed border-gray-700 bg-gray-800 text-gray-600`
@@ -156,9 +161,9 @@ const firstButtonClass = computed(() => {
 // 末尾ボタンのクラス
 const lastButtonClass = computed(() => {
   const isDisabled =
-    !messages.value?.current_page_num ||
     !messages.value?.all_page_count ||
-    messages.value.current_page_num === messages.value.all_page_count
+    (!isLatestActive.value &&
+      effectiveCurrentPage.value === messages.value.all_page_count)
   if (isDisabled) {
     return isDarkTheme.value
       ? `${baseButtonClass} cursor-not-allowed border-gray-700 bg-gray-800 text-gray-600`
@@ -171,7 +176,7 @@ const lastButtonClass = computed(() => {
 
 // ページ番号ボタンのクラス
 const getPageButtonClass = (page: number) => {
-  const isActive = page === messages.value?.current_page_num
+  const isActive = !isLatestActive.value && page === effectiveCurrentPage.value
   if (isActive) {
     return `${baseButtonClass} border-blue-500 bg-blue-500 text-white`
   }
@@ -196,7 +201,7 @@ const visiblePages = computed((): number[] => {
   if (!messages.value || !messages.value.all_page_count) return []
 
   const totalPages = messages.value.all_page_count
-  const currentPage = messages.value.current_page_num ?? currentPageNum.value
+  const currentPage = effectiveCurrentPage.value
   const maxVisible = 5
 
   // 総ページ数が5以下の場合は全て表示
@@ -246,6 +251,11 @@ const handlePrev = () => {
 }
 
 const handleNext = () => {
+  // 最新状態のときは最終ページを開く
+  if (isLatestActive.value && messages.value?.all_page_count) {
+    handleChangePage(messages.value.all_page_count)
+    return
+  }
   if (
     messages.value?.current_page_num &&
     messages.value?.all_page_count &&
