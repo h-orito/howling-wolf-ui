@@ -327,8 +327,10 @@ const currentLineCount = computed(() => {
   return messageText.value.split('\n').length
 })
 
-// 現在の文字数
-const currentCharCount = computed(() => messageText.value.length)
+// 現在の文字数（改行を除く）
+const currentCharCount = computed(
+  () => messageText.value.replace(/\n/g, '').length
+)
 
 // 制限超過判定
 const isCountExceeded = computed(
