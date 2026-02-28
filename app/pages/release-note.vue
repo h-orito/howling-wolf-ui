@@ -5,6 +5,22 @@
       <div class="rounded-lg bg-white p-4 shadow">
         <ul class="list-disc space-y-1 pl-6 text-left text-sm">
           <li>
+            2026/03/01 FIREWOLFに存在している以下の機能を移植
+            <ul class="mt-1 ml-6 list-inside list-disc">
+              <li>発言下書き自動保存機能を追加</li>
+              <li>文字装飾機能を追加</li>
+              <li>国主からの秘話機能を追加</li>
+              <li>各発言への返信・秘話ボタンを追加</li>
+              <li>PCの場合、村画面で発言抽出を常に表示するよう変更</li>
+              <li>発言抽出に宛先を追加</li>
+              <li>村画面の横幅制限を追加</li>
+              <li>表情切り替え機能を追加</li>
+            </ul>
+          </li>
+          <li>
+            2026/03/01 フレームワークアップグレードのため、UI側を全て作り直した
+          </li>
+          <li>
             2026/02/06 変動編成から固定編成に再変更
             <ul class="mt-1 ml-6 list-inside list-disc">
               <li>末尾0:村狼狼占霊狩村村（8人編成）</li>
