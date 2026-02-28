@@ -37,10 +37,6 @@
           :is-large-text="messageDisplay.isCharLarge"
         />
       </div>
-      <div v-else-if="!loading" class="py-8 text-center text-xs text-gray-400">
-        発言はまだありません
-      </div>
-
       <!-- 状況メッセージ -->
       <VillageSituationMessage />
 

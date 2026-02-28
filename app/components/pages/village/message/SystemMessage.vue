@@ -35,29 +35,30 @@ const formattedMessageText = computed(() =>
 // メッセージクラス（背景色とボーダー色用）
 const messageClass = computed(() => {
   const typeCode = props.message.content.type.code
+  const base = 'text-[#0a0a0a] dark:text-white whitespace-pre-wrap '
   switch (typeCode) {
     case 'PUBLIC_SYSTEM':
-      return 'text-[#0a0a0a] border-gray-300'
+      return base + 'border-gray-300 dark:border-white'
     case 'PRIVATE_SYSTEM':
-      return 'bg-[#eee] text-[#0a0a0a] border-[#ccc]'
+      return 'bg-[#eee] dark:bg-[#404040] border-[#ccc] dark:border-[#ccc]'
     case 'PRIVATE_SEER':
-      return 'bg-[#efe] text-[#0a0a0a] border-[#0f0]'
+      return 'bg-[#efe] dark:bg-[#334033] border-[#0f0] dark:border-[#0f0]'
     case 'PRIVATE_PSYCHIC':
-      return 'bg-[#eef] text-[#0a0a0a] border-[#00f]'
+      return 'bg-[#eef] dark:bg-[#333340] border-[#00f] dark:border-[#00f]'
     case 'PRIVATE_WEREWOLF':
-      return 'bg-[#fee] text-[#0a0a0a] border-[#f00]'
+      return 'bg-[#fee] dark:bg-[#403333] border-[#f00] dark:border-[#f00]'
     case 'PRIVATE_FANATIC':
-      return 'bg-[#fee] text-[#0a0a0a] border-[#f00]'
+      return 'bg-[#fee] dark:bg-[#403333] border-[#f00] dark:border-[#f00]'
     case 'PRIVATE_MASON':
-      return 'bg-[#fec] text-[#0a0a0a] border-[#fa0]'
+      return 'bg-[#fec] dark:bg-[#404033] border-[#fa0] dark:border-[#fa0]'
     case 'PRIVATE_FOX':
-      return 'bg-[#ffc] text-[#0a0a0a] border-[#ff0]'
+      return 'bg-[#ffc] dark:bg-[#404033] border-[#ff0] dark:border-[#ff0]'
     case 'PRIVATE_SYMPATHIZER':
-      return 'bg-[#fec] text-[#0a0a0a] border-[#fa0]'
+      return 'bg-[#fec] dark:bg-[#404033] border-[#fa0] dark:border-[#fa0]'
     case 'CREATOR_SAY':
-      return 'bg-[#fef] text-[#0a0a0a] border-[#c0f]'
+      return 'bg-[#fef] dark:bg-[#403340] border-[#c0f] dark:border-[#c0f]'
     default:
-      return 'text-[#0a0a0a] border-gray-300'
+      return 'border-gray-300 dark:border-white'
   }
 })
 </script>

@@ -1,12 +1,14 @@
 <template>
-  <div class="participants-message rounded border border-gray-300 p-2 sm:p-3">
+  <div
+    class="participants-message rounded border border-gray-300 p-2 sm:p-3 dark:border-gray-600"
+  >
     <div class="mb-2 font-bold sm:mb-3" :class="textSizeClass">参加者一覧</div>
     <!-- 参加者一覧の表示 -->
     <div class="space-y-1 sm:space-y-2">
       <div
         v-for="participant in sortedParticipants"
         :key="participant.id"
-        class="flex items-start gap-2 border-t border-gray-200 pt-1 first:border-t-0 first:pt-0 sm:gap-3 sm:pt-2"
+        class="flex items-start gap-2 border-t border-gray-200 pt-1 first:border-t-0 first:pt-0 sm:gap-3 sm:pt-2 dark:border-gray-700"
       >
         <!-- キャラクター画像 -->
         <div class="shrink-0">
@@ -23,14 +25,14 @@
           <!-- キャラクター名とプレイヤー情報 -->
           <div class="mb-1 flex flex-wrap items-center gap-1">
             <span class="font-bold">{{ getCharaName(participant) }}</span>
-            <span class="text-gray-600">
+            <span class="text-gray-600 dark:text-gray-400">
               {{ participant.player?.nickname }}
             </span>
             <a
               v-if="participant.player?.twitter_user_name"
               :href="`https://twitter.com/${participant.player.twitter_user_name}`"
               target="_blank"
-              class="text-blue-600 hover:underline"
+              class="text-blue-600 hover:underline dark:text-(--ui-primary)"
             >
               @{{ participant.player.twitter_user_name }}
             </a>
@@ -45,7 +47,7 @@
           <!-- 役職・勝敗情報 -->
           <div class="flex flex-wrap items-center gap-1">
             <span class="font-medium">{{ getSkillName(participant) }}</span>
-            <span class="text-gray-600">{{
+            <span class="text-gray-600 dark:text-gray-400">{{
               getSkillRequest(participant)
             }}</span>
             <span
@@ -168,8 +170,9 @@ const getCharaStatus = (participant: ParticipantType): string => {
 const getCharaStatusClass = (participant: ParticipantType): string => {
   if (participant.spectator || !participant.dead) return ''
   const reason = participant.dead.reason
-  if (reason === '突然' || reason === '処刑') return 'text-blue-600'
-  return 'text-red-500'
+  if (reason === '突然' || reason === '処刑')
+    return 'text-blue-600 dark:text-(--ui-primary)'
+  return 'text-red-500 dark:text-red-400'
 }
 
 // 勝敗状態
@@ -181,7 +184,9 @@ const getWinStatus = (participant: ParticipantType): string => {
 // 勝敗状態のスタイルクラス
 const getWinStatusClass = (participant: ParticipantType): string => {
   if (participant.spectator) return ''
-  return participant.win ? 'text-green-600' : 'text-red-500'
+  return participant.win
+    ? 'text-green-600 dark:text-green-400'
+    : 'text-red-500 dark:text-red-400'
 }
 
 // 役職名
