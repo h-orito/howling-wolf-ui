@@ -223,6 +223,7 @@ import { useUserSettings } from '~/composables/village/useUserSettings'
 import { useSayInputRegister } from '~/composables/village/useSayInput'
 import { useVillageSayStatus } from '~/composables/village/useVillageSayStatus'
 import { useVillage } from '~/composables/village/useVillage'
+import { useSayDraft } from '~/composables/village/action/useSayDraft'
 import { useVillageNavigation } from '~/composables/village/useVillageNavigation'
 import { MESSAGE_TYPE } from '~/lib/api/message-constants'
 
@@ -250,7 +251,8 @@ const emit = defineEmits<{
 const { submitting, error: sayError, say, sayConfirm } = useSay()
 const { situation } = useSituation()
 const { messageDisplay } = useUserSettings()
-const { village } = useVillage()
+const { village, villageId } = useVillage()
+const { loadDraft, saveDraft, clearDraft } = useSayDraft()
 const { setHasInputText, setConfirmModalOpen, setSubmitting, reset } =
   useVillageSayStatus()
 const { scrollToElement } = useVillageNavigation()
@@ -502,6 +504,10 @@ const handleSay = async () => {
     showConfirmModal.value = false
     previewMessage.value = null
     replyTargetMessage.value = null
+    // 下書きをクリア
+    if (villageId.value) {
+      clearDraft(villageId.value)
+    }
     emit('complete')
   }
 }
@@ -591,6 +597,45 @@ onMounted(() => {
   initializeForm()
 })
 
+// 下書き復元フラグ（初回のみ復元するため）
+const draftRestored = ref(false)
+
+/**
+ * 下書きを復元する（初回のみ実行）
+ */
+const restoreDraft = () => {
+  if (draftRestored.value) return
+  if (availableMessageTypes.value.length === 0) return
+  if (!villageId.value) return
+
+  draftRestored.value = true
+  const draft = loadDraft(villageId.value)
+  if (!draft) return
+
+  messageText.value = draft.messageText
+  // 復元した発言種別が現在選択可能かチェック
+  const isTypeAvailable = availableMessageTypes.value.some(
+    (m) => m.message_type.code === draft.messageType
+  )
+  if (isTypeAvailable) {
+    selectedMessageType.value = draft.messageType
+  }
+  // 表情はnextTickで設定（selectedMessageTypeのwatchによるデフォルト上書きを待つ）
+  nextTick(() => {
+    const hasFace = chara.value?.face_list?.some(
+      (face) => face.type === draft.faceType
+    )
+    if (hasFace) {
+      selectedFaceType.value = draft.faceType
+    }
+  })
+}
+
+// マウント時に下書き復元を試みる
+onMounted(() => {
+  restoreDraft()
+})
+
 // situation/villageの変更を監視して初期化
 watch(
   () => [availableMessageTypes.value, chara.value],
@@ -604,6 +649,9 @@ watch(
     ) {
       initializeForm()
     }
+
+    // マウント時に未復元だった場合のフォールバック
+    restoreDraft()
   },
   { deep: true }
 )
@@ -635,6 +683,21 @@ watch(selectedMessageType, (newMessageType) => {
 // 入力状態をストアに反映（自動更新制御用）
 watch(messageText, (newValue) => {
   setHasInputText(newValue.length > 0)
+})
+
+// 下書き自動保存（1秒デバウンス）
+let draftSaveTimer: ReturnType<typeof setTimeout> | null = null
+watch([messageText, selectedMessageType, selectedFaceType], () => {
+  if (!villageId.value) return
+  if (draftSaveTimer) clearTimeout(draftSaveTimer)
+  draftSaveTimer = setTimeout(() => {
+    saveDraft(
+      villageId.value!,
+      messageText.value,
+      selectedMessageType.value,
+      selectedFaceType.value
+    )
+  }, 1000)
 })
 
 watch(showConfirmModal, (newValue) => {

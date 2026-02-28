@@ -44,6 +44,9 @@
       <!-- 状況メッセージ -->
       <VillageSituationMessage />
 
+      <!-- Google Adsense -->
+      <GoogleAdsMessageList />
+
       <!-- ページネーション（下部） -->
       <MessagePagination v-if="showPagination" />
     </template>
@@ -58,6 +61,7 @@ import { VILLAGE_STATUS } from '~/lib/api/village-status-constants'
 import MessageCard from './MessageCard.vue'
 import MessagePagination from './MessagePagination.vue'
 import VillageSituationMessage from './VillageSituationMessage.vue'
+import GoogleAdsMessageList from '~/components/layout/GoogleAdsMessageList.vue'
 
 const { messages, loading, error } = useMessage()
 const { paging, messageDisplay, theme } = useUserSettings()
