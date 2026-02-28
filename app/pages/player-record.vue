@@ -26,9 +26,6 @@
                 v-html="intro"
               ></p>
             </div>
-            <div v-else class="text-sm text-gray-500">
-              自己紹介が登録されていません
-            </div>
             <UiButton
               v-if="isMyself"
               class="mt-4"
@@ -38,6 +35,25 @@
             >
               編集する
             </UiButton>
+            <div v-if="auth.myselfPlayer.value && !isMyself" class="mt-4">
+              <UiButton
+                v-if="!containsBlacklist"
+                color="warning"
+                size="sm"
+                :disabled="blacklistPlayers.length >= 5"
+                @click="addBlacklist"
+              >
+                ブラックリスト対象に追加する
+              </UiButton>
+              <UiButton
+                v-if="containsBlacklist"
+                color="error"
+                size="sm"
+                @click="removeBlacklistOnPage"
+              >
+                ブラックリスト対象から外す
+              </UiButton>
+            </div>
           </div>
         </div>
 
@@ -240,7 +256,7 @@ const route = useRoute()
 const playerId = computed(() => route.query.id as string | undefined)
 
 const { apiCall } = useApi()
-const { myselfPlayer } = useAuth()
+const auth = useAuth()
 
 useHead({
   title: 'ユーザ戦績'
@@ -276,13 +292,20 @@ const wholeResult = computed(() => {
 })
 
 const isMyself = computed(() => {
-  if (!myselfPlayer.value || !playerRecords.value) return false
-  return myselfPlayer.value.id === playerRecords.value.player.id
+  if (!auth.myselfPlayer.value || !playerRecords.value) return false
+  return auth.myselfPlayer.value.id === playerRecords.value.player.id
 })
 
 const blacklistPlayers = computed<PlayerView[]>(() => {
-  if (!isMyself.value || !myselfPlayer.value) return []
-  return myselfPlayer.value.blacklist_players
+  if (!auth.myselfPlayer.value) return []
+  return auth.myselfPlayer.value.blacklist_players
+})
+
+const containsBlacklist = computed(() => {
+  if (!playerId.value) return false
+  return blacklistPlayers.value.some(
+    (it) => it.id === parseInt(playerId.value!)
+  )
 })
 
 const recordString = (participateCount: number, winCount: number) => {
@@ -345,18 +368,38 @@ const refresh = async () => {
 
 const removeBlacklist = async (targetPlayerId: number) => {
   try {
-    await apiCall(`/player/blacklist/${targetPlayerId}`, {
-      method: 'DELETE'
+    await apiCall(`/player/blacklist-player/remove/${targetPlayerId}`, {
+      method: 'POST'
     })
-    // プレイヤー情報を更新
-    const { refreshAuth } = useAuth()
-    await refreshAuth()
+    await auth.refreshAuth()
   } catch (error) {
     console.error('ブラックリスト解除に失敗しました:', error)
   }
 }
 
+const addBlacklist = async () => {
+  if (!playerId.value) return
+  try {
+    await apiCall(`/player/blacklist-player/register/${playerId.value}`, {
+      method: 'POST'
+    })
+    await auth.refreshAuth()
+  } catch (error) {
+    console.error('ブラックリスト登録に失敗しました:', error)
+  }
+}
+
+const removeBlacklistOnPage = async () => {
+  if (!playerId.value) return
+  await removeBlacklist(parseInt(playerId.value))
+}
+
 onMounted(async () => {
+  auth.initializeAuth()
+  const firebaseUser = await auth.waitForAuth()
+  if (firebaseUser) {
+    await auth.refreshAuth()
+  }
   await loadRecord()
 })
 </script>
