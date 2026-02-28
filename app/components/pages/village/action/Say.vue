@@ -400,7 +400,7 @@ const textareaStyleClass = computed(() => {
     case MESSAGE_TYPE.SECRET_SAY:
       return '!bg-[#cecef2] dark:!bg-[#aeaef2] !text-[#0a0a0a]'
     default:
-      return ''
+      return '!bg-white dark:!bg-white !text-[#0a0a0a]'
   }
 })
 
