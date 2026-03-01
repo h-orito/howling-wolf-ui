@@ -1,0 +1,70 @@
+# ==============================================
+# Netlify Configuration for HOWLING WOLF UI
+# ==============================================
+
+[build]
+  # ビルドコマンド
+  command = "pnpm install && pnpm exec nuxt generate"
+  # 公開ディレクトリ（Nuxt generate の出力先）
+  publish = "dist"
+  # Node.js バージョン
+  [build.environment]
+    NODE_VERSION = "22"
+
+# ==============================================
+# ブランチごとのビルド設定
+# ==============================================
+
+# feature/nuxt4 ブランチ用の設定
+[context.feature-nuxt4]
+  command = "pnpm install && pnpm exec nuxt generate"
+
+# プルリクエスト用のプレビュー設定
+[context.deploy-preview]
+  command = "pnpm install && pnpm exec nuxt generate"
+
+# ==============================================
+# リダイレクト設定（SPA用）
+# ==============================================
+# すべてのルートを index.html にフォールバック
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# ==============================================
+# ヘッダー設定
+# ==============================================
+
+# セキュリティヘッダー
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# 静的アセットのキャッシュ設定（ハッシュ付きファイル）
+[[headers]]
+  for = "/_nuxt/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# 画像のキャッシュ設定
+[[headers]]
+  for = "/image/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800, stale-while-revalidate=86400"
+
+# Service Worker はキャッシュしない
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+[[headers]]
+  for = "/workbox-*.js"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
