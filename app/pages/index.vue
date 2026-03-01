@@ -145,23 +145,18 @@ const fetchReservedVillages = async () => {
   }
 }
 
-// 参加中の村取得
-const fetchParticipateVillages = async () => {
-  try {
-    const response = await apiCall<VillagesView>('/village/list', {
-      params: {
-        village_status: [
-          VILLAGE_STATUS.PROLOGUE,
-          VILLAGE_STATUS.IN_PROGRESS,
-          VILLAGE_STATUS.EPILOGUE
-        ],
-        is_auto_generate: true
-      }
-    })
-    participateVillages.value = response.list ?? []
-  } catch {
-    // 参加中の村の取得失敗は無視
-  }
+// 参加中の村取得（MyselfPlayerViewから取得）
+const fetchParticipateVillages = () => {
+  const player = auth.myselfPlayer.value
+  if (!player) return
+  const progressVillages = player.participate_progress_villages?.list ?? []
+  const epilogueVillages = (
+    player.participate_finished_villages?.list ?? []
+  ).filter(
+    (village: SimpleVillageView) =>
+      village.status.code === VILLAGE_STATUS.EPILOGUE
+  )
+  participateVillages.value = progressVillages.concat(epilogueVillages)
 }
 
 // 認証処理
@@ -235,7 +230,7 @@ onMounted(async () => {
   // 認証済みの場合、プレイヤー情報を取得
   if (firebaseUser) {
     await auth.refreshAuth()
-    await fetchParticipateVillages()
+    fetchParticipateVillages()
   }
 
   loadingAuth.value = false
