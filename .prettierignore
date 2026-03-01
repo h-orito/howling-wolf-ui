@@ -1,0 +1,6 @@
+.old-nuxt2
+.nuxt
+.output
+dist
+node_modules
+pnpm-lock.yaml

@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://howling-wolf.com/sitemap.xml

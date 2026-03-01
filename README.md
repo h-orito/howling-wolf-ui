@@ -9,7 +9,6 @@
 ## Requirement for local development
 
 - npm
-
   - 最新版をインストールしてください
 
 - [howling-wolf-api](https://github.com/h-orito/howling-wolf-api) のセットアップもしておいてください
@@ -17,7 +16,6 @@
 ## Setup for local development
 
 - clone
-
   - 好きな場所にこのプロジェクトを clone してください
 
 - 起動
